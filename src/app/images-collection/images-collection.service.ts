@@ -5,6 +5,7 @@ import {ImagesCollection, PaginatedImagesCollections} from './images-collection'
 import {map} from 'rxjs/operators';
 import {Image, PaginatedImages} from './image';
 import {MetadataFile, PaginatedMetadataFiles} from './metadata-file';
+import {environment} from '../../environments/environment';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -17,7 +18,7 @@ import {MetadataFile, PaginatedMetadataFiles} from './metadata-file';
 })
 export class ImagesCollectionService {
 
-  private imagesCollectionsUrl = 'http://localhost:8080/api/imagesCollections';
+  private imagesCollectionsUrl = environment.apiRootUrl + '/imagesCollections';
 
   constructor(
     private http: HttpClient
@@ -38,7 +39,6 @@ export class ImagesCollectionService {
     console.log(httpOptions);
     return this.http.get<any>(this.imagesCollectionsUrl, httpOptions).pipe(
       map((result: any) => {
-        console.log(result); // <--it's an object
         result.imagesCollections = result._embedded.imagesCollections;
         return result;
       }));
@@ -120,4 +120,11 @@ export class ImagesCollectionService {
     return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {locked: true}, httpOptions);
   }
 
+  getImagesUrl(imagesCollection: ImagesCollection): string {
+    return `${this.imagesCollectionsUrl}/${imagesCollection.id}/images`;
+  }
+
+  getMetadataFilesUrl(imagesCollection: ImagesCollection): string {
+    return `${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`;
+  }
 }
