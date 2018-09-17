@@ -72,6 +72,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
           this.initFlow();
         }
         if (this.imagesCollection.numberImportingImages !== 0) {
+          // FIXME: throttle refresh
           // setTimeout(this.getImagesCollection, 5000);
           // this.getImagesCollection();
         }
@@ -86,7 +87,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
           const params = {
             pageIndex: this.imagesPaginator.pageIndex,
             size: this.pageSize
-          }
+          };
           return this.imagesCollectionService.getImages(this.imagesCollection, params);
         }),
         map(data => {
@@ -107,7 +108,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
           const params = {
             pageIndex: this.metadataFilesPaginator.pageIndex,
             size: this.pageSize
-          }
+          };
           return this.imagesCollectionService.getMetadataFiles(this.imagesCollection, params);
         }),
         map(data => {
@@ -167,7 +168,14 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.flowHolder.assignBrowse([this.browseDirBtn.nativeElement], true, false);
     this.flowHolder.assignDrop(this.dropArea.nativeElement);
 
-    this.flowHolder.opts.target = `http://localhost:8080/api/imagesCollections/${this.imagesCollection.id}/images`;
+    const imagesUploadUrl = this.imagesCollectionService.getImagesUrl(this.imagesCollection);
+    const metadataFilesUploadUrl = this.imagesCollectionService.getMetadataFilesUrl(this.imagesCollection);
+    this.flowHolder.opts.target = function(file) {
+      const imagesExtensions = ['tif', 'tiff', 'jpg', 'jpeg', 'png'];
+      const isImage = imagesExtensions.indexOf(
+        file.getExtension()) >= 0;
+      return isImage ? imagesUploadUrl : metadataFilesUploadUrl;
+    };
 
     const self = this;
     this.flowHolder.on('fileAdded', function(file, event) {
