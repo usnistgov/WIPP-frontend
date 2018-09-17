@@ -1,0 +1,21 @@
+.upload-drop-zone {
+  color: #ccc;
+  border-color: #ccc;
+  border-style: dashed;
+  min-height: 100px;
+  display: flex;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
+}
+.drop {
+  color: #222;
+  border-color: #222;
+  border-style: dashed;
+  min-height: 100px;
+  display: flex;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
+}
+table {
+  width: 100%;
+}

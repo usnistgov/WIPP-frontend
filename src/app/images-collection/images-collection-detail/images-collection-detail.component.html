@@ -1,0 +1,286 @@
+<h3>Collection detail</h3>
+<div>
+  <div class="row">
+    <div class="col-md-9">
+      <dl class="row">
+        <dt class="col-md-4">Name:</dt>
+        <dd class="col-md-8">
+          <!-- TODO: add inline edit for name -->
+          <!--<span data-editable-text="imagesCollection.name"-->
+                <!--data-onbeforesave="updateCollectionName($data)">-->
+              <!--{{imagesCollection.name}}-->
+          <!--</span>-->
+          {{imagesCollection.name}}
+        </dd>
+
+        <dt class="col-md-4">Creation date:</dt>
+        <dd class="col-md-8">{{imagesCollection.creationDate| date}}</dd>
+
+        <dt class="col-md-4">Number of files:</dt>
+        <dd class="col-md-8">{{getNbFiles()}}</dd>
+
+        <dt class="col-md-4">Total size:</dt>
+        <dd class="col-md-8">
+          {{
+          imagesCollection.imagesTotalSize
+          + imagesCollection.metadataFilesTotalSize
+          | bytes
+          }}
+        </dd>
+
+        <dt class="col-md-4">Source job:</dt>
+        <dd class="col-md-8">
+          <!-- FIXME: add link to source job if any -->
+          <a data-ng-if="sourceJob">
+             <!--data-ui-sref="imageProcessing.jobs.detail({jobId: sourceJob.id})">-->
+            <!--{{sourceJob.name}}-->
+          </a>
+          <span data-ng-if="!sourceJob">Uploaded</span>
+        </dd>
+      </dl>
+    </div>
+    <div class="col-md-3 text-right">
+      <a *ngIf="getNbFiles() > 0"
+         [href]="imagesCollection._links.download.href"
+         ngbTooltip="Download as zip"
+         placement="left"
+         class="btn btn-light">
+                  <span
+                        aria-hidden="true"><i class="fa fa-download"></i></span>
+      </a>
+      <!-- TODO: add copy collection -->
+      <!--<button type="button" class="btn btn-default"-->
+              <!--ng-click="vm.copyCollection();"-->
+              <!--data-uib-tooltip="Copy collection"-->
+              <!--data-tooltip-placement="left">-->
+        <!--<span class="glyphicon glyphicon-copy"></span>-->
+      <!--</button>-->
+      <button *ngIf="!imagesCollection.locked" type="button"
+              ngbTooltip="Delete collection"
+              placement="left"
+              class="btn btn-light" (click)="deleteCollection();">
+                  <span class="fa fa-times"
+                        aria-hidden="true"></span>
+      </button>
+      <button *ngIf="!imagesCollection.locked" type="button"
+              ngbTooltip="Lock collection"
+              placement="left"
+              class="btn btn-light" (click)="lockCollection();">
+        <span class="fa fa-lock-open"
+              aria-hidden="true"></span>
+      </button>
+      <div *ngIf="imagesCollection.locked"
+           ngbTooltip="Collection locked"
+           placement="left"
+           class="btn btn-light">
+        <span class="fa fa-lock"
+              aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!imagesCollection.locked">
+    <div class="col-md-4">
+      <button class="btn btn-light btn-block" #browseBtn>
+        Add files to collection
+      </button>
+      <button class="btn btn-light btn-block"  #browseDirBtn
+              [hidden]="!flowHolder.supportDirectory">
+        Add folder to collection
+      </button>
+    </div>
+    <div class="col-md-1 text-center">
+      OR
+    </div>
+    <div class="col-md-7">
+      <div class="upload-drop-zone" #dropArea>
+        Drag And Drop the files <span [hidden]="!flowHolder.supportDirectory">
+                      &nbsp;or a folder&nbsp;
+                  </span>
+        here.
+      </div>
+    </div>
+  </div>
+
+  <div  [hidden]="!hasFilesNotComplete(flowHolder.files)">
+    <h4 class="top10">Transfers</h4>
+    <div class="row">
+      <div class="col-sm-3">
+        Number of files: {{flowHolder.files.length}}
+      </div>
+    </div>
+    <table class="table table-hover table-bordered table-striped">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>File name</th>
+        <th>Size</th>
+        <th>Progress</th>
+        <th>Error</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let file of flowHolder.files; let index=index">
+        <td class="vert-align">{{index + 1}}</td>
+        <td class="vert-align">{{file.name}}</td>
+        <td class="vert-align">{{file.size | bytes}}</td>
+        <td *ngIf='!file.error'>
+          <ngb-progressbar max="1" value="file.progress()">
+          </ngb-progressbar>
+        </td>
+        <td *ngIf='file.error'>
+          {{file.errorMesage|| "Unknown upload error."}}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Images</h4>
+  <div class='row'>
+    <div class='col-sm-2'>
+      # of images: {{imagesCollection.numberOfImages}}
+    </div>
+    <div class='col-sm-2'>
+      Total size: {{imagesCollection.imagesTotalSize| bytes}}
+    </div>
+    <div class='col-sm-3'>
+      Images being converted: {{imagesCollection.numberImportingImages}}
+    </div>
+    <div class="col-sm-3">
+      Import errors: {{imagesCollection.numberOfImportErrors}}
+    </div>
+    <div class='col-sm-2 text-right'>
+      <button [hidden]="!imagesCollection.locked" type="button"
+              data-uib-tooltip="Delete all tiles"
+              data-tooltip-placement="left"
+              class="btn btn-default" ng-click="vm.deleteAllTiles();">
+                <span class="glyphicon glyphicon-remove"
+                      aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+  <table mat-table [dataSource]="images">
+
+    <!-- # Column -->
+    <ng-container matColumnDef="index">
+      <th mat-header-cell *matHeaderCellDef>#</th>
+      <td mat-cell *matCellDef="let id=index">
+        {{ (resultsLength * imagesPaginator.pageIndex) + id + 1 }}
+      </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.fileName }}
+        <span [hidden]="!row.importError"><br>{{row.importError}}</span>
+      </td>
+    </ng-container>
+
+    <!-- FileSize Column -->
+    <ng-container matColumnDef="size">
+      <th mat-header-cell *matHeaderCellDef>Size</th>
+      <td mat-cell *matCellDef="let row">{{ row.fileSize | bytes }}</td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <a *ngIf="!row.importing && !row.importError"
+           [href]="row._links.self.href"
+           ngbTooltip="Download image"
+           placement="left"
+           class="btn btn-light">
+                  <span
+                    aria-hidden="true"><i class="fa fa-download"></i></span>
+        </a>
+        <a *ngIf="!row.importing && !row.importError"
+           [href]="row._links.ome.href"
+           ngbTooltip="Download metadata"
+           placement="left"
+           class="btn btn-light">
+                  <span
+                    aria-hidden="true"><i class="fa fa-info-circle"></i></span>
+        </a>
+        <button *ngIf="!imagesCollection.locked" type="button"
+                ngbTooltip="Remove from collection"
+                placement="left"
+                class="btn btn-light" (click)="deleteImage(row);">
+                  <span class="fa fa-times"
+                        aria-hidden="true"></span>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsImages"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsImages;"></tr>
+  </table>
+
+
+  <mat-paginator [length]="resultsLength" [pageSize]="pageSize" #imagesPaginator></mat-paginator>
+
+  <h4>Metadata files</h4>
+  <div class='row'>
+    <div class='col-sm-2'>
+      # of files: {{imagesCollection.numberOfMetadataFiles}}
+    </div>
+    <div class='col-sm-2'>
+      Total size: {{imagesCollection.metadataFilesTotalSize| bytes}}
+    </div>
+  </div>
+  <table mat-table [dataSource]="metadataFiles" #metadataFilesSort>
+
+    <!-- # Column -->
+    <ng-container matColumnDef="index">
+      <th mat-header-cell *matHeaderCellDef>#</th>
+      <td mat-cell *matCellDef="let id=index">
+        {{ (resultsLength * imagesPaginator.pageIndex) + id + 1 }}
+      </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.fileName }}
+        <span [hidden]="!row.importError"><br>{{row.importError}}</span>
+      </td>
+    </ng-container>
+
+    <!-- FileSize Column -->
+    <ng-container matColumnDef="size">
+      <th mat-header-cell *matHeaderCellDef>Size</th>
+      <td mat-cell *matCellDef="let row">{{ row.fileSize | bytes }}</td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <a [href]="row._links.self.href"
+           ngbTooltip="Download file"
+           placement="left"
+           class="btn btn-light">
+                  <span
+                    aria-hidden="true"><i class="fa fa-download"></i></span>
+        </a>
+        <button *ngIf="!imagesCollection.locked" type="button"
+                ngbTooltip="Remove from collection"
+                placement="left"
+                class="btn btn-light" (click)="deleteMetadataFile(row);">
+                  <span class="fa fa-times"
+                        aria-hidden="true"></span>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsMetadata"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsMetadata;"></tr>
+  </table>
+
+
+  <mat-paginator [length]="resultsLength" [pageSize]="pageSize" #metadataFilesPaginator></mat-paginator>
+</div>
