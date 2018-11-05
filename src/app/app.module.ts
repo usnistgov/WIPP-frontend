@@ -12,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatTableModule} from '@angular/material/table';
 import {MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
+import {WorkflowModule} from './workflow/workflow.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import {FormsModule} from '@angular/forms';
     HttpClientModule,
     ImagesCollectionModule,
     PluginModule,
+    WorkflowModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
