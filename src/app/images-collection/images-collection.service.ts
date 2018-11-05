@@ -30,14 +30,27 @@ export class ImagesCollectionService {
       params: {}
     };
     if (params) {
-      console.log('here');
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
       const httpParams = new HttpParams().set('page', page).set('size', size);
       httpOptions.params = httpParams;
     }
-    console.log(httpOptions);
     return this.http.get<any>(this.imagesCollectionsUrl, httpOptions).pipe(
+      map((result: any) => {
+        result.imagesCollections = result._embedded.imagesCollections;
+        return result;
+      }));
+  }
+
+  getImagesCollectionsByNameContainingIgnoreCase(params, name): Observable<PaginatedImagesCollections> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+    const httpParams = new HttpParams().set('name', name);
+    httpOptions.params = httpParams;
+    console.log(httpOptions.params);
+    return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
         result.imagesCollections = result._embedded.imagesCollections;
         return result;

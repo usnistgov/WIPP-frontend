@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-md-12">Workflow name: {{workflow.name}}</div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <button class="btn btn-outline-dark" (click)="open(addStepModal)"
+            [disabled]="!workflow.name">Add step</button>
+  </div>
+</div>
+<table class="table table-bordered">
+  <thead>
+  <tr>
+    <th>Step</th>
+    <th>Name</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let step of workflowSteps">
+    <td>{{ step.step }}</td>
+    <td>{{ step.name }}</td>
+    <td>
+      <button class="btn btn-outline-danger">Remove</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="col-md-3">
+    <button class="btn btn-outline-dark" (click)="submitWorkflow()">Submit workflow</button>
+  </div>
+</div>
+
+<ng-template #addStepModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">New Step</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="pluginName">Plugin:</label>
+      <select id="pluginName" class="form-control" #pluginName (change)="updateSchema($event.target.value)">
+        <option *ngFor="let plugin of pluginList">{{ plugin.name }} {{ plugin.version }}</option>
+      </select>
+    </div>
+    <sf-form [schema]="defaultSchema" #jsonForm></sf-form>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">Add step</button>
+  </div>
+</ng-template>
