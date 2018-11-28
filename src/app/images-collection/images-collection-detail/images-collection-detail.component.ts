@@ -10,6 +10,7 @@ import {Image} from '../image';
 import {MatPaginator, MatSort} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
+import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -18,7 +19,7 @@ import {MetadataFile} from '../metadata-file';
 })
 
 @NgModule({
-  imports: [ NgbModule, NgMathPipesModule, BytesPipe ]
+  imports: [ NgbModule, NgMathPipesModule, BytesPipe, InlineEditorModule ]
 })
 export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
@@ -131,8 +132,11 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   updateCollectionName(name: string): void {
+    console.log(this.imagesCollection);
     this.imagesCollectionService.setImagesCollectionName(
-      this.imagesCollection, name);
+      this.imagesCollection, name).subscribe(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+    });
   }
 
   lockCollection(): void {
@@ -204,7 +208,5 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   transferNotCompleteFilter(flowFile) {
     return !flowFile.isComplete() || flowFile.error;
   }
-
-
 
 }
