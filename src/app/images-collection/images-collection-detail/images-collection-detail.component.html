@@ -5,12 +5,7 @@
       <dl class="row">
         <dt class="col-md-4">Name:</dt>
         <dd class="col-md-8">
-          <!-- TODO: add inline edit for name -->
-          <!--<span data-editable-text="imagesCollection.name"-->
-                <!--data-onbeforesave="updateCollectionName($data)">-->
-              <!--{{imagesCollection.name}}-->
-          <!--</span>-->
-          {{imagesCollection.name}}
+            <inline-editor type="text" [(ngModel)]="imagesCollection.name" (onSave)="updateCollectionName($event)" name="editableImageCollectionName" size="10">{{imagesCollection.name}}</inline-editor>
         </dd>
 
         <dt class="col-md-4">Creation date:</dt>

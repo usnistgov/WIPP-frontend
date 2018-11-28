@@ -8,6 +8,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableDataSource, MatTableModule} from '@angular/material';
 import { ImagesCollectionNewComponent } from './images-collection-new/images-collection-new.component';
 import {FormsModule} from '@angular/forms';
+import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import {FormsModule} from '@angular/forms';
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
-    FormsModule
+    FormsModule,
+    InlineEditorModule
   ],
   entryComponents: [ImagesCollectionNewComponent],
   declarations: [
