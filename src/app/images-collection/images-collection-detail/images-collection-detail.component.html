@@ -7,8 +7,8 @@
         <dd class="col-md-8">
           <!-- TODO: add inline edit for name -->
           <!--<span data-editable-text="imagesCollection.name"-->
-                <!--data-onbeforesave="updateCollectionName($data)">-->
-              <!--{{imagesCollection.name}}-->
+          <!--data-onbeforesave="updateCollectionName($data)">-->
+          <!--{{imagesCollection.name}}-->
           <!--</span>-->
           {{imagesCollection.name}}
         </dd>
@@ -32,7 +32,7 @@
         <dd class="col-md-8">
           <!-- FIXME: add link to source job if any -->
           <a data-ng-if="sourceJob">
-             <!--data-ui-sref="imageProcessing.jobs.detail({jobId: sourceJob.id})">-->
+            <!--data-ui-sref="imageProcessing.jobs.detail({jobId: sourceJob.id})">-->
             <!--{{sourceJob.name}}-->
           </a>
           <span data-ng-if="!sourceJob">Uploaded</span>
@@ -46,14 +46,14 @@
          placement="left"
          class="btn btn-light">
                   <span
-                        aria-hidden="true"><i class="fa fa-download"></i></span>
+                    aria-hidden="true"><i class="fa fa-download"></i></span>
       </a>
       <!-- TODO: add copy collection -->
       <!--<button type="button" class="btn btn-default"-->
-              <!--ng-click="vm.copyCollection();"-->
-              <!--data-uib-tooltip="Copy collection"-->
-              <!--data-tooltip-placement="left">-->
-        <!--<span class="glyphicon glyphicon-copy"></span>-->
+      <!--ng-click="vm.copyCollection();"-->
+      <!--data-uib-tooltip="Copy collection"-->
+      <!--data-tooltip-placement="left">-->
+      <!--<span class="glyphicon glyphicon-copy"></span>-->
       <!--</button>-->
       <button *ngIf="!imagesCollection.locked" type="button"
               ngbTooltip="Delete collection"
@@ -79,30 +79,62 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="!imagesCollection.locked">
-    <div class="col-md-4">
-      <button class="btn btn-light btn-block" #browseBtn>
-        Add files to collection
-      </button>
-      <button class="btn btn-light btn-block"  #browseDirBtn
-              [hidden]="!flowHolder.supportDirectory">
-        Add folder to collection
-      </button>
+  <div *ngIf="!imagesCollection.locked">
+    <h4>Upload Options</h4>
+    <div class="row">
+      <div class="col-md-9">
+        <dl class="row">
+          <dt class="col-md-4">Filename filtering pattern:</dt>
+          <dd class="col-md-8">{{getPattern()}}</dd>
+        </dl>
+      </div>
     </div>
-    <div class="col-md-1 text-center">
-      OR
+
+    <h5>Folder upload:</h5>
+    <div [hidden]="!flowHolder.supportDirectory">
+      <div class="col-md-11 ml-md-1">
+        <input type="radio" id="regular" name="upload" value="regular"
+               [(ngModel)]="uploadOption">
+        Upload images from folder and sub-folders (do not prefix images names with folders relative path)
+        <br/>
+        <input type="radio" id="includeSubsInPath"
+               name="upload" value="includeSubsInPath"
+               [(ngModel)]="uploadOption">
+        Upload images from folder and sub-folders (prefix images names with folders relative path)
+        <br/>
+        <input type="radio" id="ignoreSubFolders"
+               name="upload" value="ignoreSubs"
+               [(ngModel)]="uploadOption">
+        Ignore sub-folders
+        <br/>
+      </div>
     </div>
-    <div class="col-md-7">
-      <div class="upload-drop-zone" #dropArea>
-        Drag And Drop the files <span [hidden]="!flowHolder.supportDirectory">
+    <br/>
+
+    <div class="row">
+      <div class="col-md-4">
+        <button class="btn btn-light btn-block" #browseBtn>
+          Add files to collection
+        </button>
+        <button class="btn btn-light btn-block" #browseDirBtn
+                [hidden]="!flowHolder.supportDirectory">
+          Add folder to collection
+        </button>
+      </div>
+      <div class="col-md-1 text-center">
+        OR
+      </div>
+      <div class="col-md-7">
+        <div class="upload-drop-zone" #dropArea>
+          Drag And Drop the files <span [hidden]="!flowHolder.supportDirectory">
                       &nbsp;or a folder&nbsp;
                   </span>
-        here.
+          here.
+        </div>
       </div>
     </div>
   </div>
-
-  <div  [hidden]="!hasFilesNotComplete(flowHolder.files)">
+  <div [hidden]="!hasFilesNotComplete(flowHolder.files)">
     <h4 class="top10">Transfers</h4>
     <div class="row">
       <div class="col-sm-3">

@@ -30,6 +30,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   displayedColumnsImages: string[] = ['index', 'name', 'size', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
 
+  uploadOption = 'regular';
   resultsLength = 0;
   pageSize = 20;
 
@@ -76,7 +77,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
           // setTimeout(this.getImagesCollection, 5000);
           // this.getImagesCollection();
         }
-    });
+      });
   }
 
   getImages(): void {
@@ -161,6 +162,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       this.getImagesCollection();
     });
   }
+  getPattern(): string {
+    const imagesCollection = this.imagesCollection;
+    if (!imagesCollection.pattern) {
+      return 'Null';
+    }
+    return imagesCollection.pattern;
+  }
 
   initFlow(): void {
 
@@ -170,6 +178,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
     const imagesUploadUrl = this.imagesCollectionService.getImagesUrl(this.imagesCollection);
     const metadataFilesUploadUrl = this.imagesCollectionService.getMetadataFilesUrl(this.imagesCollection);
+
     this.flowHolder.opts.target = function(file) {
       const imagesExtensions = ['tif', 'tiff', 'jpg', 'jpeg', 'png'];
       const isImage = imagesExtensions.indexOf(
@@ -181,6 +190,38 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.flowHolder.on('fileAdded', function(file, event) {
       console.log('Added');
       console.log(file, event);
+
+      const nbElementsPath = (file.relativePath.match(/\//g) || []).length + 1;
+
+      console.log('file.name: ' + file.name);
+      if (file.name === '.DS_Store' || file.name === 'thumbs.db') {
+        return false;
+      }
+
+      switch (self.uploadOption) {
+        case 'regular': {
+          console.log('Upload option selected : regular');
+          break;
+        }
+        case 'includeSubsInPath': {
+          console.log('Upload option selected : includeSubsInPath');
+          file.name = file.relativePath.replace(/\//g, '_');
+          break;
+        }
+        case 'ignoreSubs': {
+          console.log('Upload option selected : ignoreSubs');
+          if (nbElementsPath > 2) {
+            console.log('must be ignored');
+            return false;
+          }
+          break;
+        }
+        default: {
+          console.log('default upload option is regular');
+          break;
+        }
+      }
+
     });
     this.flowHolder.on('fileSuccess', function(file, message) {
       this.removeFile(file);
@@ -204,7 +245,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   transferNotCompleteFilter(flowFile) {
     return !flowFile.isComplete() || flowFile.error;
   }
-
 
 
 }
