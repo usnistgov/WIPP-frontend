@@ -5,7 +5,7 @@ import {ImagesCollectionDetailComponent} from './images-collection-detail/images
 import {ImagesCollectionListComponent} from './images-collection-list/images-collection-list.component';
 import {NgMathPipesModule} from 'angular-pipes';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableDataSource, MatTableModule} from '@angular/material';
+import {MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableDataSource, MatTableModule, MatCheckboxModule} from '@angular/material';
 import { ImagesCollectionNewComponent } from './images-collection-new/images-collection-new.component';
 import {FormsModule} from '@angular/forms';
 
@@ -19,7 +19,8 @@ import {FormsModule} from '@angular/forms';
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
-    FormsModule
+    FormsModule,
+    MatCheckboxModule
   ],
   entryComponents: [ImagesCollectionNewComponent],
   declarations: [

@@ -66,7 +66,7 @@ export class ImagesCollectionListComponent implements OnInit {
   }
 
   createNew() {
-    const modalRef = this.modalService.open(ImagesCollectionNewComponent);
+    const modalRef = this.modalService.open(ImagesCollectionNewComponent, { size: 'lg' });
     modalRef.componentInstance.modalReference = modalRef;
     modalRef.result.then((result) => {
       this.imagesCollectionService.createImagesCollection(result).subscribe(imagesCollection => {

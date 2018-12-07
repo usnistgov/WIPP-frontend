@@ -13,6 +13,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {WorkflowModule} from './workflow/workflow.module';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {WorkflowModule} from './workflow/workflow.module';
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    FormsModule
+    FormsModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]
