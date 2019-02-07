@@ -17,25 +17,29 @@
 
         <!--  Title Line  -->
         <dt class="col-md-4">Title:</dt>
-         <dd class="col-md-8">{{plugin.title}}</dd>
+        <dd class="col-md-8">{{plugin.title}}</dd>
 
         <!--  Description Line  -->
         <dt class="col-md-4">Description:</dt>
         <dd class="col-md-8">{{plugin.description}}</dd>
 
-          <!--  ContainerId Line  -->
-         <dt class="col-md-4">Container ID:</dt>
-         <dd class="col-md-8">{{plugin.containerId}}</dd>
+        <!--  Creator Line  -->
+        <dt class="col-md-4">Creator :</dt>
+        <dd class="col-md-8" >{{plugin.creator || "N/A"}}</dd>
 
-         <!--  Creation Date Line  -->
-         <dt class="col-md-4">Creation date:</dt>
-         <dd class="col-md-8">{{plugin.creationDate | date }}</dd>
+        <!--  ContainerId Line  -->
+        <dt class="col-md-4">Container ID:</dt>
+        <dd class="col-md-8">{{plugin.containerId}}</dd>
 
-         <!--  Identifier Line  -->
-         <dt class="col-md-4">Identifier:</dt>
-         <dd class="col-md-8">{{plugin.identifier}}</dd>
+        <!--  Creation Date Line  -->
+        <dt class="col-md-4">Creation date:</dt>
+        <dd class="col-md-8">{{plugin.creationDate | date }}</dd>
 
-         <!--  Input List Line  -->
+        <!--  Identifier Line  -->
+        <dt class="col-md-4">Identifier:</dt>
+        <dd class="col-md-8">{{plugin.identifier}}</dd>
+
+        <!--  Input List Line  -->
         <dt class="col-md-4">List of Inputs:</dt>
         <dd class="col-md-8">
           <div style="border-bottom:1px solid black; padding-top: 10px" class="row" *ngFor="let ui of plugin.inputs; let i = index ">
