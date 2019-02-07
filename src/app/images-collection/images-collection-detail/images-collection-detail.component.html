@@ -152,12 +152,12 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let file of flowHolder.files; let index=index">
+      <tr *ngFor="let file of flowHolder.files | slice:0:10; let index=index">
         <td class="vert-align">{{index + 1}}</td>
         <td class="vert-align">{{file.name}}</td>
         <td class="vert-align">{{file.size | bytes}}</td>
         <td *ngIf='!file.error'>
-          <ngb-progressbar max="1" value="file.progress()">
+          <ngb-progressbar max="1" value="{{file.progress()}}">
           </ngb-progressbar>
         </td>
         <td *ngIf='file.error'>
