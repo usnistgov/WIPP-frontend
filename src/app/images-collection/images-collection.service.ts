@@ -61,12 +61,12 @@ export class ImagesCollectionService {
     return this.http.get<ImagesCollection>(`${this.imagesCollectionsUrl}/${id}`);
   }
 
-  setImagesCollectionName(imagesCollection: ImagesCollection, name: string) {
+  setImagesCollectionName(imagesCollection: ImagesCollection, name: string): Observable<ImagesCollection> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
-    return this.http.patch(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
   }
 
   getImages(imagesCollection: ImagesCollection, params): Observable<PaginatedImages> {

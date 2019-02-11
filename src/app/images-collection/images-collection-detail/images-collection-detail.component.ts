@@ -10,6 +10,7 @@ import {Image} from '../image';
 import {MatPaginator} from '@angular/material';
 import {merge, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
+import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -18,7 +19,7 @@ import {MetadataFile} from '../metadata-file';
 })
 
 @NgModule({
-  imports: [ NgbModule, NgMathPipesModule, BytesPipe ]
+  imports: [ NgbModule, NgMathPipesModule, BytesPipe, InlineEditorModule ]
 })
 export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
@@ -48,6 +49,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private elem: ElementRef,
     private imagesCollectionService: ImagesCollectionService) { }
 
   ngOnInit() {
@@ -63,6 +65,11 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // fixme: temporary fix while waiting for 1.0.0 release of ngx-inline-editor
+    const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
+    faRemoveElt.classList.remove('fa-remove');
+    faRemoveElt.classList.add('fa-times');
+
     this.refresh().subscribe(imagesCollection => {
       if (!imagesCollection.locked) {
         this.initFlow();
@@ -142,7 +149,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   updateCollectionName(name: string): void {
     this.imagesCollectionService.setImagesCollectionName(
-      this.imagesCollection, name);
+      this.imagesCollection, name).subscribe(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+    });
   }
 
   lockCollection(): void {
