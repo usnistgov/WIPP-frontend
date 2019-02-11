@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {MatPaginatorModule, MatSortModule, MatTableModule} from '@angular/material';
+import {MatCheckboxModule, MatPaginatorModule, MatSortModule, MatTableModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {PluginRoutingModule} from './plugin-routing.module';
 import {PluginListComponent} from './plugin-list/plugin-list.component';
+import {PluginDetailComponent} from './plugin-detail/plugin-detail.component';
 
 @NgModule({
   imports: [
@@ -14,10 +15,12 @@ import {PluginListComponent} from './plugin-list/plugin-list.component';
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
-    FormsModule
+    FormsModule,
+    MatCheckboxModule
   ],
   declarations: [
-    PluginListComponent
+    PluginListComponent,
+    PluginDetailComponent
   ]
 })
 export class PluginModule { }

@@ -5,7 +5,7 @@ import {ImagesCollectionDetailComponent} from './images-collection-detail/images
 import {ImagesCollectionListComponent} from './images-collection-list/images-collection-list.component';
 import {NgMathPipesModule} from 'angular-pipes';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableDataSource, MatTableModule} from '@angular/material';
+import {MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableDataSource, MatTableModule, MatCheckboxModule} from '@angular/material';
 import { ImagesCollectionNewComponent } from './images-collection-new/images-collection-new.component';
 import {FormsModule} from '@angular/forms';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
@@ -21,7 +21,8 @@ import {InlineEditorModule} from '@qontu/ngx-inline-editor';
     MatTableModule,
     MatSortModule,
     FormsModule,
-    InlineEditorModule
+    InlineEditorModule,
+    MatCheckboxModule
   ],
   entryComponents: [ImagesCollectionNewComponent],
   declarations: [

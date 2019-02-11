@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, NgModule, OnInit} from '@angular/core';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ImagesCollection} from '../images-collection';
 
@@ -11,10 +11,10 @@ export class ImagesCollectionNewComponent implements OnInit {
 
   @Input() modalReference: any;
   imagesCollection: ImagesCollection = new ImagesCollection();
+  usePattern = false;
   constructor(private activeModal: NgbActiveModal) { }
 
   ngOnInit() {
-    this.imagesCollection.uploadOption = 'REGULAR';
   }
   cancel() {
     this.modalReference.dismiss();
