@@ -13,7 +13,6 @@ import {MatTableModule} from '@angular/material/table';
 import {MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {WorkflowModule} from './workflow/workflow.module';
-import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 
 @NgModule({
   declarations: [
@@ -33,8 +32,7 @@ import {InlineEditorModule} from '@qontu/ngx-inline-editor';
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    FormsModule,
-    InlineEditorModule
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
