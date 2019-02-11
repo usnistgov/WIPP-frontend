@@ -4,7 +4,9 @@ import {Plugin} from '../plugin';
 import {PluginService} from '../plugin.service';
 import {MatPaginator} from '@angular/material';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {of as observableOf} from 'rxjs';
+import {from, of as observableOf} from 'rxjs';
+import {SelectionModel} from '@angular/cdk/collections';
+import {ActivatedRoute, Route, Router} from '@angular/router';
 
 
 @Component({
@@ -12,8 +14,11 @@ import {of as observableOf} from 'rxjs';
   templateUrl: './plugin-list.template.html'
 })
 export class PluginListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'version', 'description'];
+  displayedColumns: string[] = [ 'name', 'version', 'description'];
   plugins: Plugin[] = [];
+  selection = new SelectionModel<Plugin>(false, []);
+
+
 
   resultsLength = 0;
   pageSize = 20;
@@ -22,7 +27,9 @@ export class PluginListComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    private pluginService: PluginService
+    private pluginService: PluginService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -57,4 +64,9 @@ export class PluginListComponent implements OnInit {
     }, (result) => {
     });
   }
+
+
+public onClick(row) {
+  this.router.navigate(['/plugins/' + row.id ], { skipLocationChange: false } );
+}
 }

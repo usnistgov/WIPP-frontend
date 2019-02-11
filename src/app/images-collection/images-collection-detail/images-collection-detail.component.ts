@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, NgModule } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import { Router, ActivatedRoute} from '@angular/router';
+import {catchError, map, startWith, switchMap, throttleTime} from 'rxjs/operators';
 import * as Flow from '@flowjs/flow.js';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgMathPipesModule, BytesPipe } from 'angular-pipes';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
-import {MatPaginator, MatSort} from '@angular/material';
-import {merge, of as observableOf} from 'rxjs';
+import {MatPaginator} from '@angular/material';
+import {merge, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 
@@ -31,8 +31,10 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   displayedColumnsImages: string[] = ['index', 'name', 'size', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
 
+  uploadOption = 'regular';
   resultsLength = 0;
   pageSize = 20;
+  imageCollectionId = this.route.snapshot.paramMap.get('id');
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('browseDirBtn') browseDirBtn: ElementRef;
@@ -41,6 +43,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   // @ViewChild('imagesSort') sort: MatSort;
   @ViewChild('metadataFilesPaginator') metadataFilesPaginator: MatPaginator;
   // @ViewChild('metadataFilesSort') metadataFilesSort: MatSort;
+
+  $throttleRefresh: Subject<void> = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -54,7 +58,10 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       uploadMethod: 'POST',
       method: 'octet'
     });
-    this.getImagesCollection();
+    this.$throttleRefresh.pipe(
+      throttleTime(1000),
+      switchMap(() => this.refresh()))
+    .subscribe();
   }
 
   ngAfterViewInit() {
@@ -63,27 +70,30 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     faRemoveElt.classList.remove('fa-remove');
     faRemoveElt.classList.add('fa-times');
 
-    // this.initFlow();
+    this.refresh().subscribe(imagesCollection => {
+      if (!imagesCollection.locked) {
+        this.initFlow();
+      }
+    });
     // If the user changes the sort order, reset back to the first page.
     // this.sort.sortChange.subscribe(() => this.imagesPaginator.pageIndex = 0);
   }
 
-  getImagesCollection(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.imagesCollectionService.getImagesCollection(id)
-      .subscribe(imagesCollection => {
-        this.imagesCollection = imagesCollection;
-        this.getImages();
-        this.getMetadataFiles();
-        if (!this.imagesCollection.locked) {
-          this.initFlow();
-        }
-        if (this.imagesCollection.numberImportingImages !== 0) {
-          // FIXME: throttle refresh
-          // setTimeout(this.getImagesCollection, 5000);
-          // this.getImagesCollection();
-        }
-    });
+  refresh() {
+    return this.getImagesCollection().pipe(
+      map(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+      this.getImages();
+      this.getMetadataFiles();
+      if (this.imagesCollection.numberImportingImages !== 0) {
+        this.$throttleRefresh.next();
+      }
+      return imagesCollection;
+    }));
+  }
+
+  getImagesCollection() {
+    return this.imagesCollectionService.getImagesCollection(this.imageCollectionId);
   }
 
   getImages(): void {
@@ -161,14 +171,21 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   deleteImage(image: Image): void {
     this.imagesCollectionService.deleteImage(image).subscribe(result => {
-      this.getImagesCollection();
+       this.$throttleRefresh.next();
     });
   }
 
   deleteMetadataFile(metadataFile: MetadataFile): void {
     this.imagesCollectionService.deleteMetadataFile(metadataFile).subscribe(result => {
-      this.getImagesCollection();
+      this.$throttleRefresh.next();
     });
+  }
+  getPattern(): string {
+    const imagesCollection = this.imagesCollection;
+    if (!imagesCollection.pattern) {
+      return 'Null';
+    }
+    return imagesCollection.pattern;
   }
 
   initFlow(): void {
@@ -177,8 +194,10 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.flowHolder.assignBrowse([this.browseDirBtn.nativeElement], true, false);
     this.flowHolder.assignDrop(this.dropArea.nativeElement);
 
+    const id = this.route.snapshot.paramMap.get('id');
     const imagesUploadUrl = this.imagesCollectionService.getImagesUrl(this.imagesCollection);
     const metadataFilesUploadUrl = this.imagesCollectionService.getMetadataFilesUrl(this.imagesCollection);
+
     this.flowHolder.opts.target = function(file) {
       const imagesExtensions = ['tif', 'tiff', 'jpg', 'jpeg', 'png'];
       const isImage = imagesExtensions.indexOf(
@@ -190,10 +209,42 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.flowHolder.on('fileAdded', function(file, event) {
       console.log('Added');
       console.log(file, event);
+
+      const nbElementsPath = (file.relativePath.match(/\//g) || []).length + 1;
+
+      console.log('file.name: ' + file.name);
+      if (file.name === '.DS_Store' || file.name === 'thumbs.db') {
+        return false;
+      }
+
+      switch (self.uploadOption) {
+        case 'regular': {
+          console.log('Upload option selected : regular');
+          break;
+        }
+        case 'includeSubsInPath': {
+          console.log('Upload option selected : includeSubsInPath');
+          file.name = file.relativePath.replace(/\//g, '_');
+          break;
+        }
+        case 'ignoreSubs': {
+          console.log('Upload option selected : ignoreSubs');
+          if (nbElementsPath > 2) {
+            console.log('must be ignored');
+            return false;
+          }
+          break;
+        }
+        default: {
+          console.log('default upload option is regular');
+          break;
+        }
+      }
+
     });
     this.flowHolder.on('fileSuccess', function(file, message) {
       this.removeFile(file);
-      self.getImagesCollection();
+       self.$throttleRefresh.next();
     });
     this.flowHolder.on('fileError', function(file, message) {
       console.log('Error');
@@ -203,7 +254,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.flowHolder.on('filesSubmitted', function(files, event) {
       this.upload();
     });
-    console.log(this.flowHolder);
   }
 
   hasFilesNotComplete(files) {
