@@ -5,7 +5,11 @@
       <dl class="row">
         <dt class="col-md-4">Name:</dt>
         <dd class="col-md-8">
-            <inline-editor type="text" [(ngModel)]="imagesCollection.name" (onSave)="updateCollectionName($event)" name="editableImageCollectionName" size="10">{{imagesCollection.name}}</inline-editor>
+          <inline-editor type="text" [(ngModel)]="imagesCollection.name"
+                         (onSave)="updateCollectionName($event)" size="20"
+                         name="editableImageCollectionName">
+            {{imagesCollection.name}}
+          </inline-editor>
         </dd>
 
         <dt class="col-md-4">Creation date:</dt>
