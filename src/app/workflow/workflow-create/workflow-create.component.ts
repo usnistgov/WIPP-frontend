@@ -20,8 +20,7 @@ export class WorkflowCreateComponent implements OnInit {
     collections: []
   };
 
-  defaultSchema = null;
-  defaultSchemaName = '';
+  selectedSchema = null;
 
   pluginList = [];
   constructor(
@@ -31,7 +30,6 @@ export class WorkflowCreateComponent implements OnInit {
     private workflowService: WorkflowService) { }
 
   ngOnInit() {
-    // this.workflowService.resetCollection();
     this.workflowService.getWorkflow(this.id).subscribe(workflow =>
       this.workflow = workflow);
     this.pluginService.getPlugins(null)
@@ -43,10 +41,7 @@ export class WorkflowCreateComponent implements OnInit {
   }
 
   resetForm() {
-    this.defaultSchemaName = this.pluginList[0].name;
-    this.defaultSchema = this.pluginList[0]; // .properties;
-    // this.workflowService.getSchemaForm(this.defaultSchemaName)
-    //   .subscribe(schema => this.defaultSchema = schema);
+    this.selectedSchema = this.pluginList[0];
   }
 
   open(content) {
@@ -56,18 +51,16 @@ export class WorkflowCreateComponent implements OnInit {
       // configure job
       jsonStep['step'] = this.workflowStepId;
       jsonStep['name'] = this.workflow.name + '-' + this.workflowStepId;
-      console.log(this.defaultSchema);
-      console.log(result);
-      jsonStep['wippExecutable'] = this.defaultSchema.id;
+      jsonStep['wippExecutable'] = this.selectedSchema.id;
       jsonStep['wippWorkflow'] = this.workflow.id;
-      jsonStep['type'] = this.defaultSchemaName;
+      jsonStep['type'] = this.selectedSchema.name;
       jsonStep['dependencies'] = [];
       jsonStep['parameters'] = {
       };
       // add job parameters
       for (const inputEntry in result.inputs) {
         if (result.inputs.hasOwnProperty(inputEntry)) {
-          const type = this.defaultSchema.properties.inputs.properties[inputEntry]['format'];
+          const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
           let value = result.inputs[inputEntry];
           if (type === 'collection') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
@@ -78,12 +71,11 @@ export class WorkflowCreateComponent implements OnInit {
           jsonStep['parameters'][inputEntry] = value;
         }
       }
-      console.log(jsonStep);
       // push job
       this.workflowService.createJob(jsonStep).subscribe(job => {
         this.workflowSteps.push(jsonStep);
         // add job outputs to list of available outputs for next steps
-        this.defaultSchema.outputs.forEach(output => {
+        this.selectedSchema.outputs.forEach(output => {
           if (output.type === 'collection') {
             const outputCollection = {
               id: '{{ step.' + this.workflowStepId + '.output }}',
@@ -92,7 +84,6 @@ export class WorkflowCreateComponent implements OnInit {
               virtual: true
             };
             this.jobOutputs.collections.push(outputCollection);
-            console.log(this.jobOutputs);
           }
         });
         this.workflowStepId += 1;
@@ -101,13 +92,6 @@ export class WorkflowCreateComponent implements OnInit {
     }, (result) => {
       this.resetForm();
     });
-  }
-
-  updateSchema(schemaName) {
-    // this.workflowService.getSchemaForm(schemaName)
-    //   .subscribe(schema => this.defaultSchema = schema);
-
-    this.defaultSchemaName = schemaName;
   }
 
   submitWorkflow() {
@@ -178,7 +162,6 @@ export class WorkflowCreateComponent implements OnInit {
           }
         }
         plugin.properties.inputs.properties[input.name] = inputSchema;
-        console.log(plugin);
       });
     });
   }

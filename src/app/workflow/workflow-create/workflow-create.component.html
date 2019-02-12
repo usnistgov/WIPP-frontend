@@ -42,11 +42,11 @@
   <div class="modal-body">
     <div class="form-group">
       <label for="pluginName">Plugin:</label>
-      <select id="pluginName" class="form-control" #pluginName (change)="updateSchema($event.target.value)">
-        <option *ngFor="let plugin of pluginList">{{ plugin.name }} {{ plugin.version }}</option>
+      <select id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
+        <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}</option>
       </select>
     </div>
-    <sf-form [schema]="defaultSchema" #jsonForm></sf-form>
+    <sf-form [schema]="selectedSchema" #jsonForm></sf-form>
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">Add step</button>
