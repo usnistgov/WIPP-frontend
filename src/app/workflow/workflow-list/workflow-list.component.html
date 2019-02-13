@@ -13,7 +13,7 @@
   <!-- Name Column -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    <td mat-cell *matCellDef="let row"><a routerLink="/workflows/create/{{row.id}}">{{ row.name }}</a></td>
   </ng-container>
 
   <!-- Status Column -->
