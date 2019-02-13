@@ -1,34 +1,40 @@
-<div class="row">
-  <div class="col-md-12">Workflow name: {{workflow.name}}</div>
-</div>
-<div class="row">
-  <div class="col-md-3">
-    <button class="btn btn-outline-dark" (click)="open(addStepModal)"
-            [disabled]="!workflow.name">Add step</button>
+<h3>Workflow detail</h3>
+<div>
+  <div class="row">
+    <div class="col-md-12">Name: {{workflow.name}}</div>
   </div>
-</div>
-<table class="table table-bordered">
-  <thead>
-  <tr>
-    <th>Step</th>
-    <th>Name</th>
-    <th>Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let step of workflowSteps">
-    <td>{{ step.step }}</td>
-    <td>{{ step.name }}</td>
-    <td>
-      <button class="btn btn-outline-danger">Remove</button>
-    </td>
-  </tr>
-  </tbody>
-</table>
+  <div class="row">
+    <div class="col-md-12">Status: {{workflow.status}}</div>
+  </div>
 
-<div class="row">
-  <div class="col-md-3">
-    <button class="btn btn-outline-dark" (click)="submitWorkflow()">Submit workflow</button>
+  <div [hidden]="workflow.status!='CREATED'">
+    <h4>Workflow steps</h4>
+    <div class="row">
+      <div class="col-md-3">
+        <button class="btn btn-outline-dark" (click)="open(addStepModal)"
+                [disabled]="!workflow.name">Add step</button>
+      </div>
+    </div>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>Step</th>
+        <th>Name</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let step of workflowSteps">
+        <td>{{ step.step }}</td>
+        <td>{{ step.name }}</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="row">
+      <div class="col-md-3">
+        <button class="btn btn-outline-dark" (click)="submitWorkflow()">Submit workflow</button>
+      </div>
+    </div>
   </div>
 </div>
 
