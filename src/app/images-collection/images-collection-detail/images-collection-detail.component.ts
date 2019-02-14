@@ -2,8 +2,8 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, NgModule } fro
 import { Router, ActivatedRoute} from '@angular/router';
 import {catchError, map, startWith, switchMap, throttleTime} from 'rxjs/operators';
 import * as Flow from '@flowjs/flow.js';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgMathPipesModule, BytesPipe } from 'angular-pipes';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
@@ -42,6 +42,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   @ViewChild('imagesPaginator') imagesPaginator: MatPaginator;
   // @ViewChild('imagesSort') sort: MatSort;
   @ViewChild('metadataFilesPaginator') metadataFilesPaginator: MatPaginator;
+
   // @ViewChild('metadataFilesSort') metadataFilesSort: MatSort;
 
   $throttleRefresh: Subject<void> = new Subject<void>();
@@ -180,6 +181,19 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       this.$throttleRefresh.next();
     });
   }
+
+  deleteAllImages(): void {
+    this.imagesCollectionService.deleteAllImages(this.imagesCollection).subscribe(result => {
+      this.$throttleRefresh.next();
+    });
+  }
+
+  deleteAllMetadataFiles(): void {
+    this.imagesCollectionService.deleteAllMetadataFiles(this.imagesCollection).subscribe(result => {
+      this.$throttleRefresh.next();
+    });
+  }
+
   getPattern(): string {
     const imagesCollection = this.imagesCollection;
     if (!imagesCollection.pattern) {
