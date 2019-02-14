@@ -121,8 +121,20 @@ export class ImagesCollectionService {
     return this.http.delete<Image>(image._links.self.href);
   }
 
+  deleteAllImages(imagesCollection: ImagesCollection) {
+    if (imagesCollection.numberOfImages > 0) {
+      return this.http.delete(`${this.imagesCollectionsUrl}/${imagesCollection.id}/images`);
+    }
+  }
+
   deleteMetadataFile(metadata: MetadataFile) {
     return this.http.delete<Image>(metadata._links.self.href);
+  }
+
+  deleteAllMetadataFiles(imagesCollection: ImagesCollection) {
+    if (imagesCollection.numberOfMetadataFiles > 0) {
+      return this.http.delete(`${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`);
+    }
   }
 
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {

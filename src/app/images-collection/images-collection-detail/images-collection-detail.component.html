@@ -27,6 +27,7 @@
           }}
         </dd>
 
+
         <dt class="col-md-4">Source job:</dt>
         <dd class="col-md-8">
           <!-- FIXME: add link to source job if any -->
@@ -181,16 +182,20 @@
     <div class="col-sm-3">
       Import errors: {{imagesCollection.numberOfImportErrors}}
     </div>
+
+
     <div class='col-sm-2 text-right'>
-      <button [hidden]="!imagesCollection.locked" type="button"
-              data-uib-tooltip="Delete all tiles"
-              data-tooltip-placement="left"
-              class="btn btn-default" ng-click="vm.deleteAllTiles();">
-                <span class="glyphicon glyphicon-remove"
+      <button *ngIf="!imagesCollection.locked" type="button"
+              ngbTooltip="Delete all images"
+              placement="left"
+              class="btn btn-light"
+              (click)="deleteAllImages()">
+                <span class="fa fa-times"
                       aria-hidden="true"></span>
       </button>
     </div>
   </div>
+
   <table mat-table [dataSource]="images">
 
     <!-- # Column -->
@@ -261,7 +266,20 @@
     <div class='col-sm-2'>
       Total size: {{imagesCollection.metadataFilesTotalSize| bytes}}
     </div>
+    <div class='col-sm-3 text-right'></div>
+    <div class='col-sm-3 text-right'></div>
+    <div class='col-sm-2 text-right'>
+      <button *ngIf="!imagesCollection.locked" type="button"
+              ngbTooltip="Delete all metadata files"
+              placement="left"
+              class="btn btn-light"
+              (click)="deleteAllMetadataFiles()">
+                <span class="fa fa-times"
+                      aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
+
   <table mat-table [dataSource]="metadataFiles" #metadataFilesSort>
 
     <!-- # Column -->
