@@ -3,7 +3,7 @@
     {{ schema.description }} ({{ schema.format }})
   </label>
   <input [name]="name" class="text-widget.id textline-widget form-control" [formControl]="control"
-         [attr.type]="text" [attr.id]="id" [attr.placeholder]="schema.placeholder"
+         [attr.type]="'text'" [attr.id]="id" [attr.placeholder]="schema.placeholder"
          [ngbTypeahead]="search" #instance="ngbTypeahead"
          [inputFormatter]="formatter" [resultFormatter]="formatter">
 </div>
