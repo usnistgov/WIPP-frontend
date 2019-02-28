@@ -32,7 +32,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
 
   uploadOption = 'regular';
-  resultsLength = 0;
+  resultsLengthImages = 0;
+  resultsLengthMetadataFiles = 0;
   pageSize = 20;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
 
@@ -109,7 +110,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
           return this.imagesCollectionService.getImages(this.imagesCollection, params);
         }),
         map(data => {
-          this.resultsLength = data.page.totalElements;
+          this.resultsLengthImages = data.page.totalElements;
           return data.images;
         }),
         catchError(() => {
@@ -130,7 +131,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
           return this.imagesCollectionService.getMetadataFiles(this.imagesCollection, params);
         }),
         map(data => {
-          this.resultsLength = data.page.totalElements;
+          this.resultsLengthMetadataFiles = data.page.totalElements;
           return data.metadataFiles;
         }),
         catchError(() => {
