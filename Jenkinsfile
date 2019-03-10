@@ -20,6 +20,7 @@ pipeline {
             steps {
                 
 		    //sh 'ng build'
+              sh 'echo "build stage"'
             }
         }
         stage('Docker build') {
