@@ -12,14 +12,14 @@ pipeline {
 		//sh 'sudo apt-get update'
 		//sh 'sudo apt-get install docker.io -y'
 		sh 'sudo apt-get install nodejs npm -y'
-              sh 'npm install -g @angular/cli'
+              //sh 'npm install -g @angular/cli'
 		
             }
         }
         stage('Build App') {
             steps {
                 
-		    sh 'ng build'
+		    //sh 'ng build'
             }
         }
         stage('Docker build') {
