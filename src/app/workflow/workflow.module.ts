@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { WorkflowListComponent } from './workflow-list/workflow-list.component';
 import {MatPaginatorModule, MatTableModule} from '@angular/material';
 import {WorkflowRoutingModule} from './workflow-routing.module';
-import { WorkflowCreateComponent } from './workflow-create/workflow-create.component';
+import { WorkflowDetailComponent } from './workflow-detail/workflow-detail.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {SchemaFormModule, WidgetRegistry} from 'ngx-schema-form';
@@ -25,7 +25,7 @@ import { WorkflowNewComponent } from './workflow-new/workflow-new.component';
   entryComponents: [SearchWidgetComponent, WorkflowNewComponent],
   declarations: [
     WorkflowListComponent,
-    WorkflowCreateComponent,
+    WorkflowDetailComponent,
     SearchWidgetComponent,
     WorkflowNewComponent],
   providers: [{

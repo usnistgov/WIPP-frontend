@@ -59,7 +59,7 @@ export class WorkflowListComponent implements OnInit {
     modalRef.result.then((result) => {
       this.workflowService.createWorkflow(result).subscribe(workflow => {
         const workflowId = workflow ? workflow.id : null;
-        this.router.navigate(['workflows/create', workflowId ]);
+        this.router.navigate(['workflows/detail', workflowId ]);
       });
     }, (reason) => {
       console.log('dismissed');
