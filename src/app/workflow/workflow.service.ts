@@ -5,9 +5,10 @@ import {environment} from '../../environments/environment';
 import {HttpParams} from '../../../node_modules/@angular/common/http';
 import {map} from 'rxjs/operators';
 import {PaginatedWorkflows, Workflow} from './workflow';
+import {PaginatedJobs} from './job';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  headers: new HttpHeaders({'Content-Type': 'application/json'}),
   params: {}
 };
 
@@ -15,7 +16,8 @@ const httpOptions = {
 export class WorkflowService {
   constructor(
     private http: HttpClient
-  ) {}
+  ) {
+  }
 
   private workflowsUrl = environment.apiRootUrl + '/workflows';
   private jobsUrl = environment.apiRootUrl + '/jobs';
@@ -73,5 +75,20 @@ export class WorkflowService {
       null,
       httpOptions
     );
+  }
+
+  getJobs(workflow: Workflow, params): Observable<PaginatedJobs> {
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const wippWorkflow = workflow.id ? workflow.id : null;
+      const httpParams = new HttpParams().set('wippWorkflow', wippWorkflow).set('page', page).set('size', size);
+      httpOptions.params = httpParams;
+    }
+    return this.http.get<any>(`${this.jobsUrl}/search/findByWippWorkflow`, httpOptions).pipe(
+      map((result: any) => {
+        result.jobs = result._embedded.jobs;
+        return result;
+      }));
   }
 }

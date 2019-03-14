@@ -1,42 +1,54 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {PluginService} from '../../plugin/plugin.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
 import {ActivatedRoute} from '@angular/router';
 import {Workflow} from '../workflow';
+import {MatPaginator} from '@angular/material';
+import {merge, of as observableOf} from 'rxjs';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {Job} from '../job';
 
 @Component({
-  selector: 'app-workflow-create',
-  templateUrl: './workflow-create.component.html',
-  styleUrls: ['./workflow-create.component.css']
+  selector: 'app-workflow-detail',
+  templateUrl: './workflow-detail.component.html',
+  styleUrls: ['./workflow-detail.component.css']
 })
-export class WorkflowCreateComponent implements OnInit {
+
+export class WorkflowDetailComponent implements OnInit {
 
   workflow: Workflow = new Workflow();
-  id = this.route.snapshot.paramMap.get('id');
   workflowSteps = [];
   workflowStepId = 1;
+  selectedSchema = null;
+  pluginList = [];
   jobOutputs = {
     collections: []
   };
+  jobs: Job[] = [];
+  displayedColumnsJobs: string[] = ['index', 'type', 'name'];
+  resultsLength = 0;
+  pageSize = 20;
+  workflowId = this.route.snapshot.paramMap.get('id');
 
-  selectedSchema = null;
+  @ViewChild('jobsPaginator') jobsPaginator: MatPaginator;
 
-  pluginList = [];
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private pluginService: PluginService,
-    private workflowService: WorkflowService) { }
+    private workflowService: WorkflowService) {
+  }
 
   ngOnInit() {
-    this.workflowService.getWorkflow(this.id).subscribe(workflow =>
+    this.workflowService.getWorkflow(this.workflowId).subscribe(workflow =>
       this.workflow = workflow);
     this.pluginService.getPlugins(null)
       .subscribe(plugins => {
         this.pluginList = plugins.plugins;
         this.generateSchema(this.pluginList);
         this.resetForm();
+        this.getJobs();
       });
   }
 
@@ -55,8 +67,7 @@ export class WorkflowCreateComponent implements OnInit {
       jsonStep['wippWorkflow'] = this.workflow.id;
       jsonStep['type'] = this.selectedSchema.name;
       jsonStep['dependencies'] = [];
-      jsonStep['parameters'] = {
-      };
+      jsonStep['parameters'] = {};
       // add job parameters
       for (const inputEntry in result.inputs) {
         if (result.inputs.hasOwnProperty(inputEntry)) {
@@ -88,6 +99,7 @@ export class WorkflowCreateComponent implements OnInit {
         });
         this.workflowStepId += 1;
         this.resetForm();
+        this.getJobs();
       });
     }, (result) => {
       this.resetForm();
@@ -164,5 +176,26 @@ export class WorkflowCreateComponent implements OnInit {
         plugin.properties.inputs.properties[input.name] = inputSchema;
       });
     });
+  }
+
+  getJobs(): void {
+    merge(this.jobsPaginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          const params = {
+            pageIndex: this.jobsPaginator.pageIndex,
+            size: this.pageSize
+          };
+          return this.workflowService.getJobs(this.workflow, params);
+        }),
+        map(data => {
+          this.resultsLength = data.page.totalElements;
+          return data.jobs;
+        }),
+        catchError(() => {
+          return observableOf([]);
+        })
+      ).subscribe(data => this.jobs = data);
   }
 }
