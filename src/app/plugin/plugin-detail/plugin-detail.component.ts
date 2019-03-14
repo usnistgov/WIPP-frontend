@@ -11,6 +11,7 @@ import {Plugin} from '../plugin';
   styleUrls: ['./plugin-detail.component.css']
 })
 export class PluginDetailComponent implements OnInit {
+
   constructor(private pluginService: PluginService,
               private route: ActivatedRoute
   ) {
@@ -23,6 +24,9 @@ export class PluginDetailComponent implements OnInit {
   inputKeys: string[][] = [];
   inputOptionsKeys: string[][] = [];
   outputOptionsKeys: string[][] = [];
+  viewInputs = false;
+  viewOutputs = false;
+  viewUI = false;
 
   ngOnInit() {
     this.flowHolder = new Flow({
@@ -66,7 +70,7 @@ export class PluginDetailComponent implements OnInit {
    * Get the list (keys) of fields for the output, input and UI values of the plugin
    */
   getJson(fields: JSON[][], keyLists: string[][][]) {
-    for (let i = 0 ;  i < fields.length; i++) {
+    for (let i = 0; i < fields.length; i++) {
       const keyList = keyLists[i];
       const field = fields[i];
       for (const line of Object.keys(field)) {
@@ -82,6 +86,7 @@ export class PluginDetailComponent implements OnInit {
    */
   getJsonOptions(fields: JSON[][], keys: string[][][]) {
     for (let i = 0; i < fields.length; i++) {
+      const list = [];
       const field = fields[i];
       const key = keys[i];
       for (const line of Object.keys(field)) {
@@ -90,10 +95,26 @@ export class PluginDetailComponent implements OnInit {
         const val1 = Object.values(key1);
         for (let j = 0; j < keys1.length; j++) {
           if (val1[j] != null && Object.keys(field[line][keys1[j]]).length === 1) {
-            key.push(Object.keys(field[line][keys1[j]]));
+            if (!(list.indexOf(Object.keys(field[line][keys1[j]]).toString()) > -1)) {
+              list.push(Object.keys(field[line][keys1[j]]).toString());
+              key.push(Object.keys(field[line][keys1[j]]));
+            }
           }
         }
       }
+    }
+  }
+
+  /**
+   * Show the content of the input / output / ui
+   */
+  showContent(view: string) {
+    if (view === 'ui') {
+      this.viewUI = !this.viewUI;
+    } else if (view === 'input') {
+      this.viewInputs = !this.viewInputs;
+    } else if (view === 'output') {
+      this.viewOutputs = !this.viewOutputs;
     }
   }
 
