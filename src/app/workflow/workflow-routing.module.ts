@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {WorkflowListComponent} from './workflow-list/workflow-list.component';
-import {WorkflowCreateComponent} from './workflow-create/workflow-create.component';
+import {WorkflowDetailComponent} from './workflow-detail/workflow-detail.component';
 
 const workflowsRoutes: Routes = [
   { path: 'workflows', component: WorkflowListComponent },
-  { path: 'workflows/create/:id', component: WorkflowCreateComponent }
+  { path: 'workflows/detail/:id', component: WorkflowDetailComponent }
 ];
 
 @NgModule({
