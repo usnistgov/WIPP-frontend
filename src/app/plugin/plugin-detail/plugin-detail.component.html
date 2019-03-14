@@ -1,123 +1,147 @@
 <h3>Plugin detail</h3>
-<div>
-  <div class="row">
-    <dd class="col-md-9">
-      <div class="row">
 
-        <!--TO DISPLAY THE JSON DIRECTLY -->
-        <!--<pre>{{plugin |json}}</pre>-->
+<div style="height: 30px"></div>
 
-        <!--  Name Line  -->
-        <dt class="col-md-4">Name:</dt>
-        <dd class="col-md-8">{{plugin.name}}</dd>
+<!--TO DISPLAY THE JSON DIRECTLY -->
+<!--<pre>{{plugin |json}}</pre>-->
 
-        <!--  Vesrsion Line  -->
-        <dt class="col-md-4">Version:</dt>
-        <dd class="col-md-8">{{plugin.version}}</dd>
+<table class="t1">
 
-        <!--  Title Line  -->
-        <dt class="col-md-4">Title:</dt>
-        <dd class="col-md-8">{{plugin.title}}</dd>
+  <!--  Name Line  -->
+  <tr>
+    <th class="th1"><dt>Name:</dt></th>
+    <td><dd class="col-md-8">{{plugin.name}}</dd></td>
+  </tr>
 
-        <!--  Description Line  -->
-        <dt class="col-md-4">Description:</dt>
-        <dd class="col-md-8">{{plugin.description}}</dd>
+  <!--  Version Line  -->
+  <tr>
+    <th class="th1"><dt>Version:</dt></th>
+    <td><dd class="col-md-8">{{plugin.version}}</dd></td>
+  </tr>
 
-        <!--  Creator Line  -->
-        <dt class="col-md-4">Creator :</dt>
-        <dd class="col-md-8" >{{plugin.creator || "N/A"}}</dd>
+  <!--  Title Line  -->
+  <tr>
+    <th class="th1"><dt>Title:</dt></th>
+    <td><dd class="col-md-8">{{plugin.title}}</dd></td>
+  </tr>
 
-        <!--  ContainerId Line  -->
-        <dt class="col-md-4">Container ID:</dt>
-        <dd class="col-md-8">{{plugin.containerId}}</dd>
+  <!--  Description Line  -->
+  <tr>
+    <th class="th1"><dt>Description:</dt></th>
+    <td><dd class="col-md-8">{{plugin.description}}</dd></td>
+  </tr>
 
-        <!--  Creation Date Line  -->
-        <dt class="col-md-4">Creation date:</dt>
-        <dd class="col-md-8">{{plugin.creationDate | date }}</dd>
+  <!--  Creator Line  -->
+  <tr>
+    <th class="th1"><dt >Creator:</dt></th>
+    <td><dd class="col-md-8" >{{plugin.creator || "N/A"}}</dd></td>
+  </tr>
 
-        <!--  Identifier Line  -->
-        <dt class="col-md-4">Identifier:</dt>
-        <dd class="col-md-8">{{plugin.identifier}}</dd>
+  <!--  ContainerId Line  -->
+  <tr>
+    <th class="th1"><dt>Container ID:</dt></th>
+    <td><dd class="col-md-8">{{plugin.containerId}}</dd></td>
+  </tr>
 
-        <!--  Input List Line  -->
-        <dt class="col-md-4">List of Inputs:</dt>
-        <dd class="col-md-8">
-          <div style="border-bottom:1px solid black; padding-top: 10px" class="row" *ngFor="let ui of plugin.inputs; let i = index ">
+  <!--  Creation Date Line  -->
+  <tr>
+    <th class="th1"><dt>Creation date:</dt></th>
+    <td><dd class="col-md-8">{{plugin.creationDate | date }}</dd></td>
+  </tr>
+
+  <!--  Identifier Line  -->
+  <tr>
+    <th class="th1"><dt>Identifier:</dt></th>
+    <td><dd class="col-md-8">{{plugin.identifier}}</dd></td>
+  </tr>
+
+  <!--  Input List Line  -->
+  <tr class="pointer" (click)="showContent('input')">
+    <th class="th1"><dt  ngbTooltip="Click to show Inputs">List of Inputs:</dt></th>
+    <td>
+      <div class="col-md-8 h" [hidden]="viewInputs">Click to expand</div>
+      <div [hidden]="!viewInputs">
+        <table style="overflow-x: scroll">
+          <tr class="b" *ngFor="let ui of plugin.inputs; let i = index; let c = count">
+            <p style="color:dimgrey;" class="font-weight-bold  col-md-8">  Input {{i+1}}  / {{c}} </p>
             <dd class="col-md-12">
               <div class="row">
                 <dt class="col-md-12" *ngFor="let key of inputKeys[i];">
-                  <div>
-                    <p style="display: inline" class="font-weight-bold " *ngIf="plugin.inputs[i][key] != null"> {{key}} : </p>
-                    <p style="display: inline" class="font-weight-normal " *ngIf="key.toString() != 'options'">{{plugin.inputs[i][key]}} </p>
-                    <dd class="col-md-12">
-                      <div class="row">
-                        <div *ngIf="key.toString() == 'options' && plugin.inputs[i][key] != null">
-                          <dd class="col-md-12" *ngFor="let optKey of inputOptionsKeys">
-                            <h6 style="display: inline" class="font-weight-bold "
-                              *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null ">
-                              {{optKey}} : </h6>
-                            <h6 style="display: inline" class="font-weight-normal "
-                              *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null ">
-                              {{plugin.inputs[i]['options'][optKey]}} </h6>
-                          </dd>
-                        </div>
-                      </div>
+                  <p style="display: inline" class="font-weight-bold" *ngIf="plugin.inputs[i][key] != null"> {{key}} : </p>
+                  <p style="display: inline" class="font-weight-normal" *ngIf="key.toString() != 'options'">{{plugin.inputs[i][key]}} </p>
+                  <div class="row" style="word-break: break-word" *ngIf="key.toString() == 'options' && plugin.inputs[i][key] != null">
+                    <dd class="col-md-12" *ngFor="let optKey of inputOptionsKeys">
+                      <h6 style="display: inline; margin-left: 15px" class="font-weight-bold"
+                          *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null">
+                        {{optKey}} : </h6>
+                      <h6 style="display: inline;" class="font-weight-normal"
+                          *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null">
+                        {{plugin.inputs[i]['options'][optKey]}} </h6>
                     </dd>
                   </div>
                 </dt>
               </div>
             </dd>
-          </div>
-        </dd>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
 
-
-        <!--  Output List Line  -->
-        <dt class="col-md-4">List of Outputs:</dt>
-        <dd class="col-md-8">
-          <div style="border-bottom:1px solid black; padding-top: 10px" class="row" *ngFor="let ui of plugin.outputs; let i = index ">
+  <!--  Output List Line  -->
+  <tr class="pointer" (click)="showContent('output')">
+    <th class="th1"><dt ngbTooltip="Click to show Outputs">List of Outputs:</dt></th>
+    <td>
+      <div class="col-md-8 h" [hidden]="viewOutputs">Click to expand</div>
+      <div [hidden]="!viewOutputs">
+        <table>
+          <tr class="b2" *ngFor="let ui of plugin.outputs; let i = index; let c = count">
+            <p style="color:dimgrey;" class="font-weight-bold col-md-8">  Output {{i+1}}  / {{c}} </p>
             <dd class="col-md-12">
               <div class="row">
                 <dt class="col-md-12" *ngFor="let key of outputKeys[i];">
-                  <div>
-                    <p style="display: inline" class="font-weight-bold " *ngIf="plugin.outputs[i][key] != null"> {{key}} : </p>
-                    <p style="display: inline" class="font-weight-normal " *ngIf="key.toString() != 'options'">{{plugin.outputs[i][key]}} </p>
-                    <dd class="col-md-12">
-                      <div class="row">
-                        <div *ngIf="key.toString() == 'options' && plugin.outputs[i][key] != null">
-                          <dd class="col-md-12" *ngFor="let optKey of outputOptionsKeys">
-                            <h6 style="display: inline" class="font-weight-bold "
-                              *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null ">
-                              {{optKey}} : </h6>
-                            <h6 style="display: inline" class="font-weight-normal "
-                              *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null ">
-                              {{plugin.outputs[i]['options'][optKey]}} </h6>
-                          </dd>
-                        </div>
-                      </div>
+                  <p style="display: inline" class="font-weight-bold" *ngIf="plugin.outputs[i][key] != null"> {{key}} : </p>
+                  <p style="display: inline" class="font-weight-normal" *ngIf="key.toString() != 'options'">{{plugin.outputs[i][key]}} </p>
+                  <div class="row" style="word-break: break-word" *ngIf="key.toString() == 'options' && plugin.outputs[i][key] != null">
+                    <dd class="col-md-12" *ngFor="let optKey of outputOptionsKeys">
+                      <h6 style="display: inline; margin-left: 15px" class="font-weight-bold"
+                          *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null">
+                        {{optKey}} : </h6>
+                      <h6 style="display: inline" class="font-weight-normal"
+                          *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null">
+                        {{plugin.outputs[i]['options'][optKey]}} </h6>
                     </dd>
                   </div>
                 </dt>
               </div>
             </dd>
-          </div>
-        </dd>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
 
-        <!--  UI  Line  -->
-        <dt class="col-md-4">UI Description:</dt>
-        <dd class="col-md-8">
-          <div style="border-bottom:1px solid black; padding-top: 10px" class="row" *ngFor="let ui of plugin.ui; let i = index ">
+  <!--  UI  Line  -->
+  <tr class="pointer" (click)="showContent('ui')">
+    <th class="th1"><dt  ngbTooltip=" Click to show UIs">UI Description:</dt></th>
+    <td>
+      <div class="col-md-8 h" [hidden]="viewUI">Click to expand</div>
+      <div [hidden]="!viewUI">
+        <table>
+          <tr  class="b" *ngFor="let ui of plugin.ui; let i = index; let c = count">
+            <p style="color:dimgrey;" class="font-weight-bold col-md-8">  UI {{i+1}}  / {{c}} </p>
             <dd class="col-md-12">
-              <div class="row">
-                <dt class="col-md-12" *ngFor="let key of uiKeys[i];">
-                  <h6 style="display: inline">{{key}} : </h6>
-                  <h6 style="display: inline" class="font-weight-normal"> {{plugin.ui[i][key]}}</h6>
+              <div class="row" style="word-break: break-word">
+                <dt  class="col-md-12" *ngFor="let key of uiKeys[i];">
+                  <h6 style="display: inline" class="font-weight-bold">{{key}} : </h6>
+                  <h6 style="display: inline"> {{plugin.ui[i][key]}}</h6>
                 </dt>
               </div>
             </dd>
-          </div>
-        </dd>
-
+          </tr>
+        </table>
       </div>
-    </dd>
-  </div>
-</div>
+    </td>
+  </tr>
+
+</table>
