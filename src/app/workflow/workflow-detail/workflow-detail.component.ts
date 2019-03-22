@@ -91,8 +91,6 @@ export class WorkflowDetailComponent implements OnInit {
               virtual: true
             };
             this.jobOutputs.collections.push(outputCollection);
-            console.log( ' ID ===   '  + outputCollection.id);
-            console.log( ' NaME ===   '  + outputCollection.name);
           }
         });
         this.workflowStepId += 1;
