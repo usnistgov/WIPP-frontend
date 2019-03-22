@@ -12,11 +12,11 @@
   </div>
 
   <div [hidden]="workflow.status!='CREATED'" style="margin-top: 50px; margin-bottom: 20px">
-    <h4 style="margin-bottom: 20px">Workflow steps</h4>
+    <h4 style="margin-bottom: 20px">Workflow tasks</h4>
     <div class="row">
       <div class="col-md-6">
         <button class="btn btn-outline-dark" (click)="open(addStepModal)"
-                [disabled]="!workflow.name">Add step
+                [disabled]="!workflow.name">Add task
         </button>
       </div>
       <div class="col-md-6" style="right: -300px">
@@ -75,7 +75,7 @@
       <sf-form [schema]="selectedSchema" #jsonForm></sf-form>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">Add step</button>
+      <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">Add task</button>
     </div>
   </ng-template>
 </div>
