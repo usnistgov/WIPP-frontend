@@ -18,7 +18,6 @@ import {Job} from '../job';
 export class WorkflowDetailComponent implements OnInit {
 
   workflow: Workflow = new Workflow();
-  workflowStepId = 1;
   selectedSchema = null;
   pluginList = [];
   jobOutputs = {
@@ -60,7 +59,7 @@ export class WorkflowDetailComponent implements OnInit {
       const task = {};
 
       // configure job
-     task['name'] = this.workflow.name + '-' + result.taskName;
+      task['name'] = this.workflow.name + '-' + result.taskName;
       task['wippExecutable'] = this.selectedSchema.id;
       task['wippWorkflow'] = this.workflow.id;
       task['type'] = this.selectedSchema.name;
@@ -81,19 +80,18 @@ export class WorkflowDetailComponent implements OnInit {
         }
       }
       // push job
-      this.workflowService.createJob(task).subscribe(job => {
+      this.workflowService.createJob(task).subscribe( job => {
         this.selectedSchema.outputs.forEach(output => {
           if (output.type === 'collection') {
             const outputCollection = {
-              id: '{{ ' + this.workflow.name + '.' + this.selectedSchema.name + '-' + this.workflowStepId + '.' + output.name +  ' }}',
-              name: '{{ ' + this.selectedSchema.name + '-' + this.workflowStepId + '.' + output.name + ' }}',
+              id: '{{ ' + job.id + '.' + output.name + ' }}',
+              name: '{{ ' + job.name + '.' + output.name + ' }}',
               sourceJob: job['id'],
               virtual: true
             };
             this.jobOutputs.collections.push(outputCollection);
           }
         });
-        this.workflowStepId += 1;
         this.resetForm();
         this.getJobs();
       });
@@ -116,7 +114,7 @@ export class WorkflowDetailComponent implements OnInit {
           'description': 'Task name',
           'format': 'string',
           'widget': 'string',
-          'placeholder': 'Enter s name for this task'
+          'placeholder': 'Enter a name for this task'
         },
         // job inputs fields
         'inputs': {
