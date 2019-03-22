@@ -66,7 +66,6 @@ export class WorkflowService {
   }
 
   createJob(job): Observable<Job> {
-    console.log(job);
     return this.http.post<Job>(this.jobsUrl, job);
   }
 
