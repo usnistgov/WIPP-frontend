@@ -18,8 +18,6 @@ import {Job} from '../job';
 export class WorkflowDetailComponent implements OnInit {
 
   workflow: Workflow = new Workflow();
-  workflowSteps = [];
-  workflowStepId = 1;
   selectedSchema = null;
   pluginList = [];
   jobOutputs = {
@@ -58,16 +56,15 @@ export class WorkflowDetailComponent implements OnInit {
 
   open(content) {
     this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
-      const jsonStep = {};
+      const task = {};
 
       // configure job
-      jsonStep['step'] = this.workflowStepId;
-      jsonStep['name'] = this.workflow.name + '-' + this.workflowStepId;
-      jsonStep['wippExecutable'] = this.selectedSchema.id;
-      jsonStep['wippWorkflow'] = this.workflow.id;
-      jsonStep['type'] = this.selectedSchema.name;
-      jsonStep['dependencies'] = [];
-      jsonStep['parameters'] = {};
+      task['name'] = this.workflow.name + '-' + result.taskName;
+      task['wippExecutable'] = this.selectedSchema.id;
+      task['wippWorkflow'] = this.workflow.id;
+      task['type'] = this.selectedSchema.name;
+      task['dependencies'] = [];
+      task['parameters'] = {};
       // add job parameters
       for (const inputEntry in result.inputs) {
         if (result.inputs.hasOwnProperty(inputEntry)) {
@@ -75,29 +72,26 @@ export class WorkflowDetailComponent implements OnInit {
           let value = result.inputs[inputEntry];
           if (type === 'collection') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
-              jsonStep['dependencies'].push(value.sourceJob);
+              task['dependencies'].push(value.sourceJob);
             }
             value = value.hasOwnProperty('id') ? value.id : null;
           }
-          jsonStep['parameters'][inputEntry] = value;
+          task['parameters'][inputEntry] = value;
         }
       }
       // push job
-      this.workflowService.createJob(jsonStep).subscribe(job => {
-        this.workflowSteps.push(jsonStep);
-        // add job outputs to list of available outputs for next steps
+      this.workflowService.createJob(task).subscribe( job => {
         this.selectedSchema.outputs.forEach(output => {
           if (output.type === 'collection') {
             const outputCollection = {
-              id: '{{ step.' + this.workflowStepId + '.output }}',
-              name: '{{ step.' + this.workflowStepId + '.output }}',
+              id: '{{ ' + job.id + '.' + output.name + ' }}',
+              name: '{{ ' + job.name + '.' + output.name + ' }}',
               sourceJob: job['id'],
               virtual: true
             };
             this.jobOutputs.collections.push(outputCollection);
           }
         });
-        this.workflowStepId += 1;
         this.resetForm();
         this.getJobs();
       });
@@ -114,6 +108,15 @@ export class WorkflowDetailComponent implements OnInit {
   generateSchema(pluginList) {
     pluginList.forEach(plugin => {
       plugin.properties = {
+        // task name field
+        'taskName':  {
+          'type': 'string',
+          'description': 'Task name',
+          'format': 'string',
+          'widget': 'string',
+          'placeholder': 'Enter a name for this task'
+        },
+        // job inputs fields
         'inputs': {
           'type': 'object',
           'required': [],

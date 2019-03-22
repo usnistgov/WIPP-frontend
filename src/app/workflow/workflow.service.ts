@@ -5,7 +5,7 @@ import {environment} from '../../environments/environment';
 import {HttpParams} from '../../../node_modules/@angular/common/http';
 import {map} from 'rxjs/operators';
 import {PaginatedWorkflows, Workflow} from './workflow';
-import {PaginatedJobs} from './job';
+import {Job, PaginatedJobs} from './job';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
@@ -65,8 +65,8 @@ export class WorkflowService {
     return this.http.post<Workflow>(this.workflowsUrl, workflow);
   }
 
-  createJob(job): Observable<Object> {
-    return this.http.post<Object>(this.jobsUrl, job);
+  createJob(job): Observable<Job> {
+    return this.http.post<Job>(this.jobsUrl, job);
   }
 
   submitWorkflow(workflow): Observable<Workflow> {
