@@ -14,6 +14,7 @@ import {MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortMod
 import {FormsModule} from '@angular/forms';
 import {WorkflowModule} from './workflow/workflow.module';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatSortModule,
     MatProgressSpinnerModule,
     FormsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    NgbModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
