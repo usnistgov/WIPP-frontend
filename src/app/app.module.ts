@@ -15,16 +15,18 @@ import {FormsModule} from '@angular/forms';
 import {WorkflowModule} from './workflow/workflow.module';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {StitchingVectorModule} from './stitching-vetor/stitching-vector.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ImagesCollectionModule,
+    StitchingVectorModule,
     PluginModule,
     WorkflowModule,
     AppRoutingModule,
