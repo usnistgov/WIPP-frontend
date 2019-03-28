@@ -23,6 +23,7 @@ import {StitchingVectorRoutingModule} from './stitching-vector-routing.module';
     MatSortModule,
     FormsModule,
     InlineEditorModule,
+    MatCheckboxModule
   ],
   entryComponents: [StitchingVectorNewComponent],
   declarations: [
