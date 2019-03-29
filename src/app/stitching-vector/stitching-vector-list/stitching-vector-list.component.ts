@@ -5,7 +5,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVectorNewComponent} from '../stitching-vector-new/stitching-vector-new.component';
 import {StitchingVectorService} from '../stitching-vector.service';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {merge, of as observableOf} from 'rxjs';
+import {of as observableOf} from 'rxjs';
 
 @Component({
   selector: 'app-stitching-vector-list',
@@ -31,7 +31,6 @@ export class StitchingVectorListComponent implements OnInit {
   ) {
   }
 
-
   ngOnInit() {
       this.getStitchingVectors();
   }
@@ -53,9 +52,8 @@ export class StitchingVectorListComponent implements OnInit {
        catchError(() => {
         return observableOf([]);
       })
-    ).subscribe(data => this.stitchingVectors = data);
+    ).subscribe(data =>      this.stitchingVectors = data ) ;
   }
-
 
   createNew() {
     const modalRef = this.modalService.open(StitchingVectorNewComponent, {size: 'lg'});

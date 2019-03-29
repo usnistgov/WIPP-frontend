@@ -5,7 +5,9 @@ export class StitchingVector {
   pattern: string;
   note: string;
   file: File;
-
+  job: string;
+  numberOfTimeSlices: any;
+  tilesPattern: any;
   _links: any;
 }
 
