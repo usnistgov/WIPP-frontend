@@ -5,9 +5,6 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from './timeSlice';
-import {Workflow} from '../workflow/workflow';
-import {PaginatedJobs} from '../workflow/job';
-import {JoinPipe} from 'angular-pipes';
 import {Job} from './job';
 
 const httpOptions = {
@@ -22,9 +19,7 @@ export class StitchingVectorService {
   private stitchingVectorsUrl = environment.apiRootUrl + '/stitchingVectors';
 
   constructor(
-    private http: HttpClient
-  ) {
-  }
+    private http: HttpClient) {}
 
   uploadFile(stitchingVector: StitchingVector) {
     const formData = new FormData();
@@ -34,11 +29,12 @@ export class StitchingVectorService {
 
     this.http.post<StitchingVector>(this.stitchingVectorsUrl + '/upload', formData)
       .subscribe(res => {
+        console.log(res);
       });
   }
 
   getStitchingVector(id: string): Observable<StitchingVector> {
-    return this.http.get<StitchingVector>(`${this.stitchingVectorsUrl}/${id}`); // TODO: check path
+    return this.http.get<StitchingVector>(`${this.stitchingVectorsUrl}/${id}`);
   }
 
   getStitchingVectors(params): Observable<PaginatedStitchingVector> {

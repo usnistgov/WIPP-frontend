@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import {StitchingVectorListComponent} from './stitching-vector-list/stitching-vector-list.component';
 import {StitchingVectorDetailComponent} from './stitching-vector-detail/stitching-vector-detail.component';
 

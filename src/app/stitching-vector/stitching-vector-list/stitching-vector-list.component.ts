@@ -1,5 +1,5 @@
 import {Component, NgModule, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTable, MatTableDataSource, MatTableModule} from '@angular/material';
+import {MatPaginator, MatTable, MatTableDataSource, MatTableModule} from '@angular/material';
 import {StitchingVector} from '../stitching-vector';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVectorNewComponent} from '../stitching-vector-new/stitching-vector-new.component';
@@ -23,6 +23,7 @@ export class StitchingVectorListComponent implements OnInit {
   pageSize = 20;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
   // @ViewChild(MatSort) sort: MatSort;
 
   constructor(
@@ -32,10 +33,10 @@ export class StitchingVectorListComponent implements OnInit {
   }
 
   ngOnInit() {
-      this.getStitchingVectors();
+    this.getStitchingVectors();
   }
 
-   getStitchingVectors(): void {
+  getStitchingVectors(): void {
     this.paginator.page.pipe(
       startWith({}),
       switchMap(() => {
@@ -49,17 +50,21 @@ export class StitchingVectorListComponent implements OnInit {
         this.resultsLength = data.page.totalElements;
         return data.stitchingVectors;
       }),
-       catchError(() => {
+      catchError(() => {
         return observableOf([]);
       })
-    ).subscribe(data =>      this.stitchingVectors = data ) ;
+    ).subscribe(data => this.stitchingVectors = data);
   }
 
   createNew() {
     const modalRef = this.modalService.open(StitchingVectorNewComponent, {size: 'lg'});
     modalRef.componentInstance.modalReference = modalRef;
-    modalRef.result.then((result) =>
-      this.getStitchingVectors() );
+    modalRef.result.then((result) => {
+        this.getStitchingVectors();
+      },
+      (reason) => {
+        console.log('dismissed');
+      });
   }
 
 }
