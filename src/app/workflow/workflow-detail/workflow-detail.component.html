@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <table mat-table [dataSource]="jobs" #jobsSort>
+  <table mat-table class="table-hover" [dataSource]="jobs" #jobsSort>
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
@@ -53,7 +53,7 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumnsJobs"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumnsJobs;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsJobs;" (click)="displayJobModal(row.id)"></tr>
   </table>
 
   <mat-paginator [length]="resultsLength" [pageSize]="pageSize" #jobsPaginator></mat-paginator>

@@ -10,6 +10,7 @@ import {SchemaFormModule, WidgetRegistry} from 'ngx-schema-form';
 import {SearchWidgetComponent} from './widgets/search-widget/search-widget.component';
 import {WidgetsRegistry} from './widgets/widgets-registry';
 import { WorkflowNewComponent } from './workflow-new/workflow-new.component';
+import {JobModalComponent} from '../shared/job-modal/job-modal.component';
 
 @NgModule({
   imports: [
@@ -20,14 +21,16 @@ import { WorkflowNewComponent } from './workflow-new/workflow-new.component';
     FormsModule,
     ReactiveFormsModule,
     NgbModule.forRoot(),
-    SchemaFormModule.forRoot()
+    SchemaFormModule.forRoot(),
   ],
-  entryComponents: [SearchWidgetComponent, WorkflowNewComponent],
+  entryComponents: [SearchWidgetComponent, JobModalComponent, WorkflowNewComponent],
   declarations: [
     WorkflowListComponent,
     WorkflowDetailComponent,
     SearchWidgetComponent,
+    JobModalComponent,
     WorkflowNewComponent],
+
   providers: [{
     provide: WidgetRegistry,
     useClass: WidgetsRegistry
