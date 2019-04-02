@@ -5,6 +5,7 @@ export class Job {
   status: string;
   startTime: string;
   endTime: string;
+  runningTime: string;
   error: string;
   wippExecutable: string;
   dependencies: any[];

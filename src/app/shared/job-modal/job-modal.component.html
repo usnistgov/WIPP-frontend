@@ -1,0 +1,118 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">
+    <span class="glyphicon glyphicon-star"></span> Job detail
+  </h4>
+  <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+
+<div class="modal-body" *ngIf="job">
+  <div style="margin-top: 20px">
+    <table class="table table-striped">
+      <!--  Name Line  -->
+      <tr *ngIf="job.name">
+        <th>
+          <dt>Name:</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.name}}</dd>
+        </td>
+      </tr>
+      <!--  creationDate Line  -->
+      <tr *ngIf=" job.creationDate">
+        <th>
+          <dt>Creation date:</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.creationDate | date}}</dd>
+        </td>
+      </tr>
+      <!--  status Line  -->
+      <tr *ngIf="job.status">
+        <th>
+          <dt>Status:</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.status}}</dd>
+        </td>
+      </tr>
+      <!--  startTime Line  -->
+      <tr *ngIf="job.startTime">
+        <th>
+          <dt>Start time:</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.startTime}}</dd>
+        </td>
+      </tr>
+      <!--  endTime Line  -->
+      <tr *ngIf="job.endTime">
+        <th>
+          <dt>End time:</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.endTime}}</dd>
+        </td>
+      </tr>
+      <!--  runningTime Line  -->
+      <tr *ngIf="job.runningTime">
+        <th>
+          <dt>Running time:</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.runningTime}}</dd>
+        </td>
+      </tr>
+      <!--  wippVersion Line  -->
+      <tr *ngIf="job.wippVersion">
+        <th>
+          <dt>Computed in version:</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.wippVersion}}</dd>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!--Input Table -->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title2">
+    <span class="glyphicon glyphicon-star"></span> Inputs
+  </h4>
+</div>
+<div class="modal-body" *ngIf="job">
+  <div style="margin-top: 20px">
+    <table class="table table-striped">
+
+      <!--  InputId Line  -->
+      <tr *ngIf="job.parameters.input">
+        <th>
+          <dt>Input Id:</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.parameters.input}}</dd>
+        </td>
+      </tr>
+      <tr *ngIf="job.parameters.thresholdtype">
+        <th>
+          <dt>Thresholdtype:</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.parameters.thresholdtype}}</dd>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+<!--Output Table -->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title3">
+    <span class="glyphicon glyphicon-star"></span> Outputs
+  </h4>
+</div>
