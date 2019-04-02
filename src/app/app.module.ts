@@ -15,6 +15,7 @@ import {FormsModule} from '@angular/forms';
 import {WorkflowModule} from './workflow/workflow.module';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {StitchingVectorModule} from './stitching-vector/stitching-vector.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     HttpClientModule,
     ImagesCollectionModule,
+    StitchingVectorModule,
     PluginModule,
     WorkflowModule,
     AppRoutingModule,
