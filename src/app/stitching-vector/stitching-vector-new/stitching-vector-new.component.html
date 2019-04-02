@@ -10,25 +10,24 @@
 <div class="modal-body">
   <form name="stitchingVectorDialog">
     <div class="form-group">
-      <label for="name" >Name: </label>
-      <span  style="color: #e32"> * </span>
+
+      <label for="name">Name: </label>
+      <span style="color: #e32"> * </span>
       <input type="text" [(ngModel)]="stitchingVector.name" id="name" class="form-control" name="name" autofocus
              required>
       <small class="form-text text-muted">Enter the vector name.</small>
 
-      <label for="name">Note:</label>
+      <label for="name">Message:</label>
       <input type="text" [(ngModel)]="stitchingVector.note" id="note" class="form-control" name="note" autofocus
              required>
-      <small class="form-text text-muted">Enter the vector note.</small>
-
+      <small class="form-text text-muted">Enter the stitching vector message.</small>
       <div style="height: 30px"></div>
 
       <label for="name">Stitching Vector File:</label>
-      <span  style="color: #e32"> * </span>
+      <span style="color: #e32"> * </span>
       <input type="file" (change)="onFileSelected($event)" name="file" class="col-md-12" id="file" autofocus
              required>
-      <span  class="asterisk_input"></span>
-
+      <span class="asterisk_input"></span>
     </div>
   </form>
 </div>

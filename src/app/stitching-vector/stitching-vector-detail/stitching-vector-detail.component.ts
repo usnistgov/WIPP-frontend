@@ -36,7 +36,8 @@ export class StitchingVectorDetailComponent implements OnInit {
     this.stitchingVectorService.getStitchingVector(this.stitchingVectorId)
       .subscribe(stitchingVector => {
         this.stitchingVector = stitchingVector;
-      this.getJob(); } );
+        this.getJob();
+      });
     this.getTimeSlices();
   }
 
@@ -62,7 +63,9 @@ export class StitchingVectorDetailComponent implements OnInit {
   }
 
   getJob() {
-  this.stitchingVectorService.getJob(this.stitchingVector._links['job']['href']).subscribe(job => this.job = job);
+    if (this.stitchingVector._links['job']) {
+      this.stitchingVectorService.getJob(this.stitchingVector._links['job']['href']).subscribe(job => this.job = job);
+    }
   }
 
 }

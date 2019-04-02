@@ -4,15 +4,26 @@
   <div class="row">
     <div class="col-md-12"><b>Name: </b> {{stitchingVector.name}}</div>
   </div>
+
   <div class="row">
     <div class="col-md-12"><b>Creation Date: </b> {{stitchingVector.creationDate | date}}</div>
   </div>
-  <div class="row">
-    <div class="col-md-12"><b>Statistics file: </b> C'est quoi ???</div>
+
+  <div class="row" *ngIf="stitchingVector._links && stitchingVector._links.statistics">
+    <div class="col-md-12">
+      <b>Statistics file: </b>
+      <a [href]="stitchingVector._links.statistics.href"
+         ngbTooltip="Download"
+         placement="left">
+        Download
+      </a>
+    </div>
   </div>
+
   <div class="row" *ngIf="job">
     <!--Go to workflow page-->
-      <div class="col-md-12"><b>Stitching job: </b> <a routerLink="../../workflows/detail/{{job.wippWorkflow}}">{{job.name}}</a> </div>
+    <div class="col-md-12"><b>Stitching job: </b> <a routerLink="../../workflows/detail/{{job.wippWorkflow}}">{{job.name}}</a>
+    </div>
   </div>
 </div>
 

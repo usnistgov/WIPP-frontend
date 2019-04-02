@@ -1,7 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVector} from '../stitching-vector';
-import {ActivatedRoute} from '@angular/router';
 import {StitchingVectorService} from '../stitching-vector.service';
 
 @Component({
@@ -11,16 +10,15 @@ import {StitchingVectorService} from '../stitching-vector.service';
 })
 export class StitchingVectorNewComponent implements OnInit {
 
- @Input() modalReference: any;
+  @Input() modalReference: any;
 
   stitchingVector: StitchingVector = new StitchingVector();
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
 
   constructor(private activeModal: NgbActiveModal,
-              private route: ActivatedRoute,
-              private stitchingVectorService: StitchingVectorService
-  ) { }
+              private stitchingVectorService: StitchingVectorService) {
+  }
 
   ngOnInit() {
   }
@@ -35,7 +33,7 @@ export class StitchingVectorNewComponent implements OnInit {
 
   upload() {
     this.stitchingVectorService.uploadFile(this.stitchingVector);
-      this.modalReference.close(this.stitchingVector);
+    this.modalReference.close(this.stitchingVector);
   }
 
 }
