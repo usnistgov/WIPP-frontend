@@ -1,4 +1,3 @@
-
 pipeline {
 
     agent {
@@ -8,10 +7,10 @@ pipeline {
     stages {
         stage('Pre-requisites') {
             steps {
-		//sh 'echo "Installing pre-requisites "'
-		//sh 'sudo apt-get update'
-		//sh 'sudo apt-get install docker.io -y'
-		sh 'sudo apt-get install nodejs npm -y'
+		    //sh 'echo "Installing pre-requisites "'
+		    //sh 'sudo apt-get update'
+		    //sh 'sudo apt-get install docker.io -y'
+		    sh 'sudo apt-get install nodejs npm -y'
               //sh 'npm install -g @angular/cli'
 		
             }
@@ -19,19 +18,19 @@ pipeline {
         stage('Build App') {
             steps {
                 
-		    //sh 'ng build'
+		        //sh 'ng build'
               sh 'echo "build stage"'
             }
         }
         stage('Docker build') {
             steps {
                 script {
-			docker.withRegistry('https://684150170045.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-jenkins-build') {
+			      docker.withRegistry('https://684150170045.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-jenkins-build') {
                         docker.build("wipp_frontend", "--build-arg SOURCE_FOLDER=. --no-cache ./")
-			docker.image("wipp_frontend").push("${BUILD_ID}")
+			      docker.image("wipp_frontend").push("${BUILD_ID}")
                     }
-		}
-	}
+		   }
+	 }
 }
         
    }
