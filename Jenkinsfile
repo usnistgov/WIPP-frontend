@@ -28,7 +28,7 @@ pipeline {
                 script {
 			docker.withRegistry('https://684150170045.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-jenkins-build') {
                         docker.build("wipp_frontend", "--build-arg SOURCE_FOLDER=. --no-cache ./")
-			docker.image("wipp-frontend").push("${BUILD_ID}")
+			docker.image("wipp_frontend").push("${BUILD_ID}")
                     }
 		}
 	}
