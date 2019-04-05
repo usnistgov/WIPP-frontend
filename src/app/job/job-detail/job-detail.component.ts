@@ -4,7 +4,7 @@ import {PluginService} from '../../plugin/plugin.service';
 import {Job} from '../job';
 import {JobService} from '../job.service';
 
-  @Component({
+@Component({
   selector: 'app-job-detail',
   templateUrl: './job-detail.component.html',
   styleUrls: ['./job-detail.component.css']
@@ -20,6 +20,7 @@ export class JobDetailComponent implements OnInit {
   inputType: string;
   outputKeys: string[];
   tempInputName: string;
+  inputNamePlugin: string;
   inputName: string;
 
   constructor(private activeModal: NgbActiveModal,
@@ -45,10 +46,26 @@ export class JobDetailComponent implements OnInit {
     this.jobService.getPlugin(this.job.wippExecutable).subscribe(plugin => {
         this.inputKeys = this.pluginService.getPluginInputKeys(plugin);
         this.outputKeys = this.pluginService.getPluginOutputKeys(plugin);
-        this.inputName = this.inputKeys[0];
-        this.inputType = this.pluginService.getPluginInputType(plugin, this.inputName);
+        this.inputNamePlugin = this.inputKeys[0];
+        this.inputType = this.pluginService.getPluginInputType(plugin, this.inputNamePlugin);
+        if (!this.isOutput(this.job.parameters[this.inputNamePlugin])) {
+          this.getInputData();
+        }
       }
     );
+  }
+
+  getInputData() {
+    if (this.inputType === 'collection') {
+      this.jobService.getImagesCollection(this.job.parameters[this.inputNamePlugin]).subscribe(data => {
+        this.inputName = data.name;
+      });
+    }
+    if (this.inputType === 'stitchingVector') {
+      this.jobService.getStitchingVector(this.job.parameters[this.inputNamePlugin]).subscribe(data => {
+        this.inputName = data.name;
+      });
+    }
   }
 
   isOutput(inputName: string): boolean {
@@ -62,14 +79,15 @@ export class JobDetailComponent implements OnInit {
 
       const idToOutputDelimiter = inputName.indexOf('.');
       const idFirstLetter = inputName.indexOf(' ') + 1;
-      const outputName = inputName.substr(idToOutputDelimiter,  inputName.length - idToOutputDelimiter - idFirstLetter);
-      const id  = inputName.substr(idFirstLetter, idToOutputDelimiter - idFirstLetter);
+      const outputName = inputName.substr(idToOutputDelimiter, inputName.length - idToOutputDelimiter - idFirstLetter);
+      const id = inputName.substr(idFirstLetter, idToOutputDelimiter - idFirstLetter);
       this.jobService.getJob(id).subscribe(job => {
-        this.tempInputName = job.name + outputName ;
+        this.tempInputName = job.name + outputName;
       });
     } else {
       this.tempInputName = inputName;
     }
   }
+
 
 }

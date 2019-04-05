@@ -105,13 +105,14 @@
         </th>
         <td>
           <dd class="col-md-8" (click)="modalReference.dismiss('Cross click')">
-            <span *ngIf="!isOutput(job.parameters[inputName]);then normalInput else chainedInput"></span>
+            <span *ngIf="!isOutput(job.parameters[inputNamePlugin]);then normalInput else chainedInput"></span>
+
             <ng-template #normalInput>
-              <a *ngIf="inputType == 'collection'" routerLink="/images-collection/{{job.parameters[inputName]}}">{{inputName}}</a>
-              <a *ngIf="inputType == 'stitching'" routerLink="/stitching-vectors/{{job.parameters[inputName]}}">{{inputName}}</a>
+              <a *ngIf="inputType == 'collection'" routerLink="/images-collection/{{job.parameters[inputNamePlugin]}}">{{inputName}}</a>
+              <a *ngIf="inputType == 'stitchingVector'"
+                 routerLink="/stitching-vectors/{{job.parameters[inputNamePlugin]}}">{{inputName}}</a>
             </ng-template>
-              <!--<a [href]="stitchingVector._links.statistics.href"></a>-->
-            <ng-template #chainedInput> {{ '{' }}{{ '{' }} {{tempInputName}} {{ '}' }}{{ '}' }}  </ng-template>
+            <ng-template #chainedInput> {{ '{' }}{{ '{' }} {{tempInputName}} {{ '}' }}{{ '}' }}</ng-template>
           </dd>
         </td>
       </tr>
@@ -128,10 +129,10 @@
 
       <!--  other input parameters lines  -->
       <tr *ngFor="let inputKey of inputKeys">
-        <th *ngIf=" job.parameters[inputKey] && (!(inputKey == inputName)) ">
+        <th *ngIf=" job.parameters[inputKey] && (!(inputKey == inputNamePlugin)) ">
           <dt>{{inputKey}}</dt>
         </th>
-        <td *ngIf="job.parameters[inputKey] && (!(inputKey == inputName)) ">
+        <td *ngIf="job.parameters[inputKey] && (!(inputKey == inputNamePlugin)) ">
           <dd class="col-md-8">{{job.parameters[inputKey]}}</dd>
         </td>
       </tr>
