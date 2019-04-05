@@ -20,7 +20,7 @@ import {StitchingVectorModule} from './stitching-vector/stitching-vector.module'
 @NgModule({
   declarations: [
     AppComponent,
-    PageNotFoundComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +38,7 @@ import {StitchingVectorModule} from './stitching-vector/stitching-vector.module'
     MatProgressSpinnerModule,
     FormsModule,
     MatCheckboxModule,
-    NgbModule.forRoot(),
+    NgbModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
