@@ -1,13 +1,14 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material';
-import {ActivatedRoute} from '@angular/router';
+import {JobModalComponent} from '../../shared/job-modal/job-modal.component';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {StitchingVectorService} from '../stitching-vector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVector} from '../stitching-vector';
-import {TimeSlice} from '../timeSlice';
-import {StitchingVectorService} from '../stitching-vector.service';
+import {MatPaginator} from '@angular/material';
+import {ActivatedRoute} from '@angular/router';
+import {Job} from '../../shared/job-modal/job';
 import {merge, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {Job} from '../job';
+import {TimeSlice} from '../timeSlice';
 
 @Component({
   selector: 'app-stitching-vector-detail',
@@ -66,6 +67,17 @@ export class StitchingVectorDetailComponent implements OnInit {
     if (this.stitchingVector._links['job']) {
       this.stitchingVectorService.getJob(this.stitchingVector._links['job']['href']).subscribe(job => this.job = job);
     }
+  }
+
+  displayJobModal(jobId: string) {
+    const modalRef = this.modalService.open(JobModalComponent);
+    modalRef.componentInstance.modalReference = modalRef;
+    (modalRef.componentInstance as JobModalComponent).jobId = jobId;
+    modalRef.result.then((result) => {
+      }
+      , (reason) => {
+        console.log('dismissed');
+      });
   }
 
 }
