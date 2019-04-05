@@ -5,7 +5,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from './timeSlice';
-import {Job} from '../shared/job-modal/job';
+import {Job} from '../job/job';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),

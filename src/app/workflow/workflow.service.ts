@@ -5,7 +5,7 @@ import {environment} from '../../environments/environment';
 import {HttpParams} from '../../../node_modules/@angular/common/http';
 import {map} from 'rxjs/operators';
 import {PaginatedWorkflows, Workflow} from './workflow';
-import {Job, PaginatedJobs} from '../shared/job-modal/job';
+import {Job, PaginatedJobs} from '../job/job';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),

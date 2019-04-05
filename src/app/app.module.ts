@@ -20,7 +20,7 @@ import {StitchingVectorModule} from './stitching-vector/stitching-vector.module'
 @NgModule({
   declarations: [
     AppComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
