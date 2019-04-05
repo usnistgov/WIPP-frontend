@@ -14,6 +14,7 @@
       <b>Statistics file: </b>
       <a [href]="stitchingVector._links.statistics.href"
          ngbTooltip="Download"
+         style="color: blue"
          placement="left">
         Download
       </a>
@@ -21,8 +22,15 @@
   </div>
 
   <div class="row" *ngIf="job">
-    <!--Go to workflow page-->
-    <div class="col-md-12"><b>Stitching job: </b> <a routerLink="../../workflows/detail/{{job.wippWorkflow}}">{{job.name}}</a>
+    <div class="col-md-5">
+      <b> Stitching job: </b>
+      <a (click)="displayJobModal(job.id)"
+         class="underline-on-hover"
+         style="color:blue"
+         ngbTooltip="Show Job"
+         placement="left">
+        {{job.name}}
+      </a>
     </div>
   </div>
 </div>

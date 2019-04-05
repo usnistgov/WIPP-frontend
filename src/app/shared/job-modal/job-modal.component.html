@@ -7,11 +7,12 @@
   </button>
 </div>
 
-
+<!-- Job details Table -->
 <div class="modal-body" *ngIf="job">
   <div style="margin-top: 20px">
-    <table class="table table-striped">
-      <!--  Name Line  -->
+    <table class="table table-bordered">
+
+      <!--  name line  -->
       <tr *ngIf="job.name">
         <th>
           <dt>Name:</dt>
@@ -20,7 +21,8 @@
           <dd class="col-md-8">{{job.name}}</dd>
         </td>
       </tr>
-      <!--  creationDate Line  -->
+
+      <!--  creationDate line  -->
       <tr *ngIf=" job.creationDate">
         <th>
           <dt>Creation date:</dt>
@@ -29,7 +31,8 @@
           <dd class="col-md-8">{{job.creationDate | date}}</dd>
         </td>
       </tr>
-      <!--  status Line  -->
+
+      <!--  status line  -->
       <tr *ngIf="job.status">
         <th>
           <dt>Status:</dt>
@@ -38,7 +41,8 @@
           <dd class="col-md-8">{{job.status}}</dd>
         </td>
       </tr>
-      <!--  startTime Line  -->
+
+      <!--  startTime line  -->
       <tr *ngIf="job.startTime">
         <th>
           <dt>Start time:</dt>
@@ -47,7 +51,8 @@
           <dd class="col-md-8">{{job.startTime}}</dd>
         </td>
       </tr>
-      <!--  endTime Line  -->
+
+      <!--  endTime line  -->
       <tr *ngIf="job.endTime">
         <th>
           <dt>End time:</dt>
@@ -56,7 +61,8 @@
           <dd class="col-md-8">{{job.endTime}}</dd>
         </td>
       </tr>
-      <!--  runningTime Line  -->
+
+      <!--  runningTime line  -->
       <tr *ngIf="job.runningTime">
         <th>
           <dt>Running time:</dt>
@@ -65,7 +71,8 @@
           <dd class="col-md-8">{{job.runningTime}}</dd>
         </td>
       </tr>
-      <!--  wippVersion Line  -->
+
+      <!--  wippVersion line  -->
       <tr *ngIf="job.wippVersion">
         <th>
           <dt>Computed in version:</dt>
@@ -74,6 +81,7 @@
           <dd class="col-md-8">{{job.wippVersion}}</dd>
         </td>
       </tr>
+
     </table>
   </div>
 </div>
@@ -86,33 +94,70 @@
 </div>
 <div class="modal-body" *ngIf="job">
   <div style="margin-top: 20px">
-    <table class="table table-striped">
+    <table class="table table-bordered">
 
-      <!--  InputId Line  -->
-      <tr *ngIf="job.parameters.input">
+      <!--  input id or name line -->
+      <tr *ngIf="inputKeys">
         <th>
-          <dt>Input Id:</dt>
+          <dt>
+            {{inputKeys[0]}}
+          </dt>
         </th>
         <td>
-          <dd class="col-md-8">{{job.parameters.input}}</dd>
+          <dd class="col-md-8" (click)="modalReference.dismiss('Cross click')">
+            <span *ngIf="!isOutput(job.parameters[inputKeys[0]]);then normalInput else chainedInput"></span>
+            <ng-template #normalInput>
+              <a routerLink="/images-collection/{{job.parameters[inputKeys[0]]}}">{{job.parameters[inputKeys[0]]}}
+              </a></ng-template>
+            <ng-template #chainedInput>{{tempInputName}}</ng-template>
+          </dd>
         </td>
       </tr>
-      <tr *ngIf="job.parameters.thresholdtype">
+
+      <!--  input type line  -->
+      <tr>
         <th>
-          <dt>Thresholdtype:</dt>
+          <dt>Input Type</dt>
         </th>
         <td>
-          <dd class="col-md-8">{{job.parameters.thresholdtype}}</dd>
+          <dd class="col-md-8">{{inputType}}</dd>
         </td>
       </tr>
+
+      <!--  other input parameters lines  -->
+      <tr *ngFor="let inputKey of inputKeys">
+        <th *ngIf=" job.parameters[inputKey] && (!(inputKey == inputKeys[0])) ">
+          <dt>{{inputKey}}</dt>
+        </th>
+        <td *ngIf="job.parameters[inputKey] && (!(inputKey == inputKeys[0])) ">
+          <dd class="col-md-8">{{job.parameters[inputKey]}}</dd>
+        </td>
+      </tr>
+
     </table>
   </div>
 </div>
-
 
 <!--Output Table -->
 <div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title3">
     <span class="glyphicon glyphicon-star"></span> Outputs
   </h4>
+</div>
+<div class="modal-body" *ngIf="job">
+  <div style="margin-top: 20px">
+    <table class="table table-bordered">
+
+      <!--  output name line  -->
+      <tr *ngFor="let outputKey of outputKeys">
+        <th>
+          <dt>Output Name</dt>
+        </th>
+        <td>
+          <dd class="col-md-8">{{job.name}}-{{outputKey}}</dd>
+        </td>
+      </tr>
+
+    </table>
+  </div>
 </div>

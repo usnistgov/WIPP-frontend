@@ -7,8 +7,8 @@ import {Workflow} from '../workflow';
 import {MatPaginator} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {Job} from '../job';
 import {JobModalComponent} from '../../shared/job-modal/job-modal.component';
+import {Job} from '../../shared/job-modal/job';
 
 @Component({
   selector: 'app-workflow-detail',

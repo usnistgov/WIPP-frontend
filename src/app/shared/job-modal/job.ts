@@ -3,13 +3,13 @@ export class Job {
   name: string;
   creationDate: number;
   status: string;
-  startTime: string;
-  endTime: string;
-  runningTime: string;
+  startTime: Date;
+  endTime: Date;
+  runningTime: Date;
   error: string;
   wippExecutable: string;
   dependencies: any[];
-  parameters: {};
+  parameters: JSON;
   wippWorkflow: string;
   wippVersion: string;
   type: string;

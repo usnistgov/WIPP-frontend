@@ -5,7 +5,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from './timeSlice';
-import {Job} from './job';
+import {Job} from '../shared/job-modal/job';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
@@ -19,7 +19,8 @@ export class StitchingVectorService {
   private stitchingVectorsUrl = environment.apiRootUrl + '/stitchingVectors';
 
   constructor(
-    private http: HttpClient) {}
+    private http: HttpClient) {
+  }
 
   uploadFile(stitchingVector: StitchingVector) {
     const formData = new FormData();
