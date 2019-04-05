@@ -1,12 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {JobModalComponent} from '../../shared/job-modal/job-modal.component';
+import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {StitchingVectorService} from '../stitching-vector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVector} from '../stitching-vector';
 import {MatPaginator} from '@angular/material';
 import {ActivatedRoute} from '@angular/router';
-import {Job} from '../../shared/job-modal/job';
+import {Job} from '../../job/job';
 import {merge, of as observableOf} from 'rxjs';
 import {TimeSlice} from '../timeSlice';
 
@@ -70,9 +70,9 @@ export class StitchingVectorDetailComponent implements OnInit {
   }
 
   displayJobModal(jobId: string) {
-    const modalRef = this.modalService.open(JobModalComponent);
+    const modalRef = this.modalService.open(JobDetailComponent);
     modalRef.componentInstance.modalReference = modalRef;
-    (modalRef.componentInstance as JobModalComponent).jobId = jobId;
+    (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {
       }
       , (reason) => {
