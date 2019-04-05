@@ -1,14 +1,12 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {PaginatedPlugins, Plugin} from './plugin';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {HttpParams} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {ImagesCollection, PaginatedImagesCollections} from '../images-collection/images-collection';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  headers: new HttpHeaders({'Content-Type': 'application/json'}),
   params: {}
 };
 
@@ -16,7 +14,8 @@ const httpOptions = {
 export class PluginService {
   constructor(
     private http: HttpClient
-  ) {}
+  ) {
+  }
 
   private pluginsUrl = environment.apiRootUrl + '/plugins';
 
@@ -43,6 +42,30 @@ export class PluginService {
 
   getPlugin(id): Observable<Plugin> {
     return this.http.get<Plugin>(`${this.pluginsUrl}/${id}`);
+  }
+
+  getPluginInputType(plugin: Plugin, inputName: string): string {
+    for (const pluginInput of plugin.inputs) {
+      if (pluginInput['name'] = inputName) {
+        return (pluginInput['type']);
+      }
+    }
+  }
+
+  getPluginInputKeys(plugin: Plugin): string[] {
+    const inputKeys: string[] = [];
+    for (const pluginInput of plugin.inputs) {
+      inputKeys.push(pluginInput['name']);
+    }
+    return (inputKeys);
+  }
+
+    getPluginOutputKeys(plugin: Plugin): string[] {
+    const outputKeys: string[] = [];
+    for (const pluginInput of plugin.outputs) {
+      outputKeys.push(pluginInput['name']);
+    }
+    return (outputKeys);
   }
 
 }

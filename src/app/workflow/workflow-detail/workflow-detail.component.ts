@@ -7,7 +7,8 @@ import {Workflow} from '../workflow';
 import {MatPaginator} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {Job} from '../job';
+import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
+import {Job} from '../../job/job';
 
 @Component({
   selector: 'app-workflow-detail',
@@ -201,4 +202,15 @@ export class WorkflowDetailComponent implements OnInit {
         })
       ).subscribe(data => this.jobs = data);
   }
+
+  displayJobModal(jobId: string) {
+   const modalRef = this.modalService.open(JobDetailComponent);
+    modalRef.componentInstance.modalReference = modalRef;
+    (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
+    modalRef.result.then((result) => {}
+    , (reason) => {
+      console.log('dismissed');
+    });
+  }
+
 }

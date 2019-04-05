@@ -1,13 +1,15 @@
 export class Job {
   id: string;
   name: string;
-  creaionDate: number;
+  creationDate: number;
   status: string;
-  endTime: string;
+  startTime: Date;
+  endTime: Date;
+  runningTime: Date;
   error: string;
   wippExecutable: string;
   dependencies: any[];
-  parameters: {};
+  parameters: JSON;
   wippWorkflow: string;
   wippVersion: string;
   type: string;
