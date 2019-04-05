@@ -4,7 +4,6 @@ import {WorkflowService} from '../workflow.service';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {of as observableOf} from 'rxjs';
 import {Workflow} from '../workflow';
-import {ImagesCollectionNewComponent} from '../../images-collection/images-collection-new/images-collection-new.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
@@ -65,4 +64,5 @@ export class WorkflowListComponent implements OnInit {
       console.log('dismissed');
     });
   }
+
 }
