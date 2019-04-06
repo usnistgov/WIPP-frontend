@@ -9,7 +9,7 @@ COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
-RUN npm ci
-RUN npm ci -g @angular/cli
+RUN npm install
+RUN npm install -g @angular/cli
 
 CMD ["ng", "serve --prod --host 0.0.0.0"]
