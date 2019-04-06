@@ -25,7 +25,7 @@ pipeline {
         stage('Docker build') {
             steps {
                 script {
-                  docker.withRegistry(${ECRADDRESS}, 'ecr:us-east-1:aws-jenkins-build') {
+                  docker.withRegistry("${ECRADDRESS}", 'ecr:us-east-1:aws-jenkins-build') {
                         docker.build("wipp_frontend", "--build-arg SOURCE_FOLDER=. --no-cache ./")
 			      docker.image("wipp_frontend").push("${BUILD_ID}")
                     }
