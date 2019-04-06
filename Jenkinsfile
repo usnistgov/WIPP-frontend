@@ -10,7 +10,7 @@ pipeline {
 		    //sh 'echo "Installing pre-requisites "'
 		    //sh 'sudo apt-get update'
 		    //sh 'sudo apt-get install docker.io -y'
-		    sh 'sudo apt-get install nodejs npm -y'
+		    //sh 'sudo apt-get install nodejs npm -y'
               //sh 'npm install -g @angular/cli'
 		
             }
