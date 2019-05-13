@@ -3,8 +3,8 @@ import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {MatTableModule, MatTableDataSource, MatPaginator, MatSort} from '@angular/material';
 import {MatTable} from '@angular/material';
-import {merge, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ImagesCollectionNewComponent} from '../images-collection-new/images-collection-new.component';
 import {Router} from '@angular/router';
@@ -19,52 +19,62 @@ import {Router} from '@angular/router';
 })
 export class ImagesCollectionListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'creationDate', 'imagesTotalSize'];
-  imagesCollections: ImagesCollection[] = [];
-
+  imagesCollections: Observable<ImagesCollection[]>;
   resultsLength = 0;
-  pageSize = 20;
+  pageSize = 10;
   isLoadingResults = true;
+  pageSizeOptions: number[] = [10, 25, 50, 100];
+  pageChange: BehaviorSubject<{ index: number, size: number}>;
+  sortChange: BehaviorSubject<string>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
   constructor(
     private imagesCollectionService: ImagesCollectionService,
     private modalService: NgbModal,
     private router: Router
-  ) { }
-
-  ngOnInit() {
-   // this.getImagesCollections();
-    console.log(this.paginator);
-    // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          const params = {
-            pageIndex: this.paginator.pageIndex,
-            size: this.pageSize
-          };
-          return this.imagesCollectionService.getImagesCollections(params);
-        }),
-        map(data => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.resultsLength = data.page.totalElements;
-          console.log(data);
-          return data.imagesCollections;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          return observableOf([]);
-        })
-      ).subscribe(data => this.imagesCollections = data);
+  ) {
+    this.pageChange = new BehaviorSubject({
+      index: 0,
+      size: this.pageSize,
+    });
+    this.sortChange = new BehaviorSubject('');
   }
 
+  sortChanged(sort) {
+    this.sortChange.next(sort.active + ',' + sort.direction);
+  }
+
+  pageChanged(page) {
+    this.pageChange.next({index: page.pageIndex, size: page.pageSize});
+  }
+
+  ngOnInit() {
+    const sortObservable = this.sortChange.asObservable();
+    const pageObservable = this.pageChange.asObservable();
+    this.imagesCollections = combineLatest(sortObservable, pageObservable).pipe(
+      switchMap(([sort, page]) => {
+        this.isLoadingResults = true;
+        const params = {
+          pageIndex: page.index,
+          size: page.size,
+          sort: sort
+        };
+        return this.imagesCollectionService.getImagesCollections(params).pipe(
+          map((data) => {
+            this.isLoadingResults = false;
+            this.resultsLength = data.page.totalElements;
+            console.log(data);
+            return data.imagesCollections;
+          }),
+          catchError(() => {
+              this.isLoadingResults = false;
+              return observableOf([]);
+            })
+        );
+      })
+    );
+  }
   createNew() {
     const modalRef = this.modalService.open(ImagesCollectionNewComponent, { size: 'lg' });
     modalRef.componentInstance.modalReference = modalRef;
@@ -77,12 +87,4 @@ export class ImagesCollectionListComponent implements OnInit {
       console.log('dismissed');
     });
   }
-
-  // getImagesCollections(): void {
-  //   this.imagesCollectionService.getImagesCollections()
-  //     .subscribe(result => this.dataSource = result);
-  // }
-
 }
-
-
