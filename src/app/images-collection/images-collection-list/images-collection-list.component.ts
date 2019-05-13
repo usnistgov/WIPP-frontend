@@ -24,8 +24,7 @@ export class ImagesCollectionListComponent implements OnInit {
   pageSize = 10;
   isLoadingResults = true;
   pageSizeOptions: number[] = [10, 25, 50, 100];
-  pageChange: BehaviorSubject<{ index: number, size: number}>;
-  sortChange: BehaviorSubject<string>;
+  paramsChange: BehaviorSubject<{index: number, size: number, sort: string}>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -34,31 +33,31 @@ export class ImagesCollectionListComponent implements OnInit {
     private modalService: NgbModal,
     private router: Router
   ) {
-    this.pageChange = new BehaviorSubject({
+    this.paramsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
+      sort: ''
     });
-    this.sortChange = new BehaviorSubject('');
   }
 
   sortChanged(sort) {
-    this.sortChange.next(sort.active + ',' + sort.direction);
+    // If the user changes the sort order, reset back to the first page.
+    this.paramsChange.next({index: 0, size: this.paramsChange.value.size, sort: sort.active + ',' + sort.direction});
   }
 
   pageChanged(page) {
-    this.pageChange.next({index: page.pageIndex, size: page.pageSize});
+    this.paramsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.paramsChange.value.sort});
   }
 
   ngOnInit() {
-    const sortObservable = this.sortChange.asObservable();
-    const pageObservable = this.pageChange.asObservable();
-    this.imagesCollections = combineLatest(sortObservable, pageObservable).pipe(
-      switchMap(([sort, page]) => {
+    const paramsObservable = this.paramsChange.asObservable();
+    this.imagesCollections = paramsObservable.pipe(
+      switchMap((page) => {
         this.isLoadingResults = true;
         const params = {
           pageIndex: page.index,
           size: page.size,
-          sort: sort
+          sort: page.sort
         };
         return this.imagesCollectionService.getImagesCollections(params).pipe(
           map((data) => {
