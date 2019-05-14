@@ -36,7 +36,7 @@ export class ImagesCollectionListComponent implements OnInit {
     this.paramsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
-      sort: ''
+      sort: 'creationDate,desc'
     });
   }
 
@@ -63,7 +63,6 @@ export class ImagesCollectionListComponent implements OnInit {
           map((data) => {
             this.isLoadingResults = false;
             this.resultsLength = data.page.totalElements;
-            console.log(data);
             return data.imagesCollections;
           }),
           catchError(() => {
