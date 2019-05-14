@@ -42,7 +42,8 @@ export class StitchingVectorService {
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size);
+      const sort = params.sort ? params.sort : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
     return this.http.get<any>(this.stitchingVectorsUrl, httpOptions).pipe(
