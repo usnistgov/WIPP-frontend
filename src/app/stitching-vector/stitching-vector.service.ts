@@ -54,6 +54,20 @@ export class StitchingVectorService {
       }));
   }
 
+  getStitchingVectorsByNameContainingIgnoreCase(params, name): Observable<PaginatedStitchingVector> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+    const httpParams = new HttpParams().set('name', name);
+    httpOptions.params = httpParams;
+    return this.http.get<any>(this.stitchingVectorsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
+      map((result: any) => {
+        result.stitchingVectors = result._embedded.stitchingVectors;
+        return result;
+      }));
+  }
+
   getTimeSlices(id: string, params): Observable<PaginatedTimeSlices> {
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
