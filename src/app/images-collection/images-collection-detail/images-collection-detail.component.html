@@ -196,7 +196,8 @@
     </div>
   </div>
 
-  <table mat-table [dataSource]="images">
+  <table mat-table [dataSource]="images" (matSortChange)="imagesSortChanged($event)"
+         matSort  matSortActive="name" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
@@ -208,7 +209,7 @@
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
       <td mat-cell *matCellDef="let row">
         {{ row.fileName }}
         <span [hidden]="!row.importError"><br>{{row.importError}}</span>
@@ -217,7 +218,7 @@
 
     <!-- FileSize Column -->
     <ng-container matColumnDef="size">
-      <th mat-header-cell *matHeaderCellDef>Size</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
       <td mat-cell *matCellDef="let row">{{ row.fileSize | bytes }}</td>
     </ng-container>
 
@@ -256,7 +257,7 @@
   </table>
 
 
-  <mat-paginator [length]="resultsLengthImages" [pageSize]="pageSize" #imagesPaginator></mat-paginator>
+  <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSize" #imagesPaginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
 
   <h4>Metadata files</h4>
   <div class='row'>
@@ -280,7 +281,8 @@
     </div>
   </div>
 
-  <table mat-table [dataSource]="metadataFiles" #metadataFilesSort>
+  <table mat-table [dataSource]="metadataFiles" (matSortChange)="metadataSortChanged($event)" #metadataFilesSort
+         matSort  matSortActive="name" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
@@ -292,7 +294,7 @@
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
       <td mat-cell *matCellDef="let row">
         {{ row.fileName }}
         <span [hidden]="!row.importError"><br>{{row.importError}}</span>
@@ -301,7 +303,7 @@
 
     <!-- FileSize Column -->
     <ng-container matColumnDef="size">
-      <th mat-header-cell *matHeaderCellDef>Size</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
       <td mat-cell *matCellDef="let row">{{ row.fileSize | bytes }}</td>
     </ng-container>
 
@@ -331,5 +333,5 @@
   </table>
 
 
-  <mat-paginator [length]="resultsLengthMetadataFiles" [pageSize]="pageSize" #metadataFilesPaginator></mat-paginator>
+  <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
 </div>
