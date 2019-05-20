@@ -82,7 +82,7 @@ export class WorkflowDetailComponent implements OnInit {
         }
       }
       // push job
-      this.workflowService.createJob(task).subscribe( job => {
+      this.workflowService.createJob(task).subscribe(job => {
         this.selectedSchema.outputs.forEach(output => {
           if (output.type === 'collection') {
             const outputCollection = {
@@ -119,7 +119,7 @@ export class WorkflowDetailComponent implements OnInit {
     pluginList.forEach(plugin => {
       plugin.properties = {
         // task name field
-        'taskName':  {
+        'taskName': {
           'type': 'string',
           'description': 'Task name',
           'format': 'string',
@@ -215,9 +215,11 @@ export class WorkflowDetailComponent implements OnInit {
         catchError(() => {
           return observableOf([]);
         })
-      ).subscribe(data => {this.jobs = data;
-      this.setPluginName();
-      } ) ;
+      ).subscribe(data => {
+        this.jobs = data;
+        this.setPluginName();
+      }
+    );
   }
 
   setPluginName() {
@@ -228,7 +230,7 @@ export class WorkflowDetailComponent implements OnInit {
   }
 
   displayJobModal(jobId: string) {
-   const modalRef = this.modalService.open(JobDetailComponent);
+    const modalRef = this.modalService.open(JobDetailComponent);
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {}
