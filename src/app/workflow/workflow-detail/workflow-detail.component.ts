@@ -215,7 +215,16 @@ export class WorkflowDetailComponent implements OnInit {
         catchError(() => {
           return observableOf([]);
         })
-      ).subscribe(data => this.jobs = data);
+      ).subscribe(data => {this.jobs = data;
+      this.setPluginName();
+      } ) ;
+  }
+
+  setPluginName() {
+    for (const job of this.jobs) {
+      this.pluginService.getPlugin(job.wippExecutable).subscribe(
+        plugin => job.pluginName = plugin.name);
+    }
   }
 
   displayJobModal(jobId: string) {

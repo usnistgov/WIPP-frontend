@@ -13,6 +13,7 @@ export class Job {
   wippWorkflow: string;
   wippVersion: string;
   type: string;
+  pluginName: string; // this field is only used to be displayed on the workflow-detail page
   _links: any;
 }
 

@@ -39,8 +39,7 @@
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef>Type</th>
       <td mat-cell *matCellDef="let row">
-        <span>{{row.parameters.thresholdtype}} </span>
-        <span *ngIf="row.parameters.thresholdvalue !=null"> : {{row.parameters.thresholdvalue }} </span>
+        <span>{{row.pluginName}} </span>
       </td>
     </ng-container>
 
