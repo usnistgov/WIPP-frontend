@@ -26,14 +26,14 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   flowHolder: Flow.IFlow;
   imagesCollection: ImagesCollection = new ImagesCollection();
   images: Observable<Image[]>;
-  metadataFiles: MetadataFile[] = [];
+  metadataFiles: Observable<MetadataFile[]>;
 
   displayedColumnsImages: string[] = ['index', 'name', 'size', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
 
   pageSizeOptions: number[] = [10, 25, 50, 100];
   imagesParamsChange: BehaviorSubject<{index: number, size: number, sort: string}>;
-  metadataParamsChange: BehaviourSubject<{index: number, size: number, sort: string}>;
+  metadataParamsChange: BehaviorSubject<{index: number, size: number, sort: string}>;
 
   uploadOption = 'regular';
   resultsLengthImages = 0;
