@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from './timeSlice';
 import {Job} from '../job/job';
+import {PaginatedImagesCollections} from '../images-collection/images-collection';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
@@ -47,6 +48,25 @@ export class StitchingVectorService {
       httpOptions.params = httpParams;
     }
     return this.http.get<any>(this.stitchingVectorsUrl, httpOptions).pipe(
+      map((result: any) => {
+        result.stitchingVectors = result._embedded.stitchingVectors;
+        result.job = result._embedded.job;
+        return result;
+      }));
+  }
+
+  getStitchingVectorsByNameContainingIgnoreCase(params, name): Observable<PaginatedStitchingVector> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+    const page = params.pageIndex ? params.pageIndex : null;
+    const size = params.size ? params.size : null;
+    const sort = params.sort ? params.sort : null;
+    const httpParams = new HttpParams().set('name', name).set('page', page).set('size', size).set('sort', sort);
+    httpOptions.params = httpParams;
+    console.log(httpOptions.params);
+    return this.http.get<any>(this.stitchingVectorsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
         result.stitchingVectors = result._embedded.stitchingVectors;
         result.job = result._embedded.job;
