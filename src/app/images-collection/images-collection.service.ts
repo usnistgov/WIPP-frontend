@@ -58,6 +58,21 @@ export class ImagesCollectionService {
       }));
   }
 
+  getImagesCollectionsByNameContainingIgnoreCaseAndNumberOfImages(params, name, nbOfImgs): Observable<PaginatedImagesCollections> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+    const httpParams = new HttpParams().set('name', name).set('numberOfImages', nbOfImgs);
+    httpOptions.params = httpParams;
+    console.log(httpOptions.params);
+    return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCaseAndNumberOfImages', httpOptions).pipe(
+      map((result: any) => {
+        result.imagesCollections = result._embedded.imagesCollections;
+        return result;
+      }));
+  }
+
   getImagesCollection(id: string): Observable<ImagesCollection> {
     return this.http.get<ImagesCollection>(`${this.imagesCollectionsUrl}/${id}`);
   }
