@@ -2,7 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {NgMathPipesModule} from 'angular-pipes';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableDataSource, MatTableModule, MatCheckboxModule} from '@angular/material';
+import {
+  MatPaginatorModule,
+  MatProgressSpinnerModule,
+  MatSortModule,
+  MatTableModule,
+  MatCheckboxModule,
+  MatFormFieldModule, MatInputModule
+} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {StitchingVectorNewComponent} from './stitching-vector-new/stitching-vector-new.component';
@@ -21,6 +28,8 @@ import {StitchingVectorRoutingModule} from './stitching-vector-routing.module';
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
     FormsModule,
     InlineEditorModule,
     MatCheckboxModule
