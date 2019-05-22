@@ -6,7 +6,6 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from './timeSlice';
 import {Job} from '../job/job';
-import {PaginatedImagesCollections} from '../images-collection/images-collection';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
