@@ -24,9 +24,7 @@ export class ImagesCollectionListComponent implements OnInit {
   pageSize = 10;
   isLoadingResults = true;
   pageSizeOptions: number[] = [10, 25, 50, 100];
-  paramsChange: BehaviorSubject<{index: number, size: number, sort: string}>;
-  filterNameChange: BehaviorSubject<string>;
-  filterNbOfImagesChange: BehaviorSubject<string>;
+  paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filterName: string, filterNbOfImgs: string}>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -38,43 +36,67 @@ export class ImagesCollectionListComponent implements OnInit {
     this.paramsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
-      sort: 'creationDate,desc'
+      sort: 'creationDate,desc',
+      filterName: '',
+      filterNbOfImgs: ''
     });
-    this.filterNameChange = new BehaviorSubject('');
-    this.filterNbOfImagesChange = new BehaviorSubject('');
   }
 
   sortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
-    this.paramsChange.next({index: 0, size: this.paramsChange.value.size, sort: sort.active + ',' + sort.direction});
+    this.paramsChange.next({
+      index: 0,
+      size: this.paramsChange.value.size,
+      sort: sort.active + ',' + sort.direction,
+      filterName: this.paramsChange.value.filterName,
+      filterNbOfImgs: this.paramsChange.value.filterNbOfImgs
+    });
   }
 
   pageChanged(page) {
-    this.paramsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.paramsChange.value.sort});
+    this.paramsChange.next({
+      index: page.pageIndex,
+      size: page.pageSize,
+      sort: this.paramsChange.value.sort,
+      filterName: this.paramsChange.value.filterName,
+      filterNbOfImgs: this.paramsChange.value.filterNbOfImgs
+    });
   }
 
   applyFilterByName(filterValue: string) {
-    this.filterNameChange.next(filterValue);
+    // if the user filters by name, reset back to the first page
+    this.paramsChange.next({
+      index: 0,
+      size: this.paramsChange.value.size,
+      sort: this.paramsChange.value.sort,
+      filterName: filterValue,
+      filterNbOfImgs: ''
+    });
   }
 
   applyFilterByNbOfImages(filterValue: string) {
-    this.filterNbOfImagesChange.next(filterValue);
+    // if the user filters by the number of images, reset back to the first page
+    this.paramsChange.next({
+      index: 0,
+      size: this.paramsChange.value.size,
+      sort: this.paramsChange.value.sort,
+      filterName: '',
+      filterNbOfImgs: filterValue
+    });
   }
 
   ngOnInit() {
     const paramsObservable = this.paramsChange.asObservable();
-    const filterNameObservable = this.filterNameChange.asObservable();
-    const filterNbOfImagesObservable = this.filterNbOfImagesChange.asObservable();
-    this.imagesCollections = combineLatest(paramsObservable, filterNameObservable, filterNbOfImagesObservable).pipe(
-      switchMap(([page, filterByName, filterByNbOfImages]) => {
+    this.imagesCollections = paramsObservable.pipe(
+      switchMap((page) => {
         this.isLoadingResults = true;
         const params = {
           pageIndex: page.index,
           size: page.size,
           sort: page.sort
         };
-        if (filterByName) {
-          return this.imagesCollectionService.getImagesCollectionsByNameContainingIgnoreCase(params, filterByName).pipe(
+        if (page.filterName) {
+          return this.imagesCollectionService.getImagesCollectionsByNameContainingIgnoreCase(params, page.filterName).pipe(
             map((data) => {
               this.isLoadingResults = false;
               this.resultsLength = data.page.totalElements;
@@ -86,9 +108,9 @@ export class ImagesCollectionListComponent implements OnInit {
             })
           );
         }
-        if (filterByNbOfImages) {
+        if (page.filterNbOfImgs) {
           return this.imagesCollectionService
-            .getImagesCollectionsByNameContainingIgnoreCaseAndNumberOfImages(params, '', filterByNbOfImages)
+            .getImagesCollectionsByNameContainingIgnoreCaseAndNumberOfImages(params, '', page.filterNbOfImgs)
             .pipe(
               map((data) => {
                 this.isLoadingResults = false;

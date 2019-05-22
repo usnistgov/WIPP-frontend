@@ -48,7 +48,10 @@ export class ImagesCollectionService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
-    const httpParams = new HttpParams().set('name', name);
+    const page = params.pageIndex ? params.pageIndex : null;
+    const size = params.size ? params.size : null;
+    const sort = params.sort ? params.sort : null;
+    const httpParams = new HttpParams().set('name', name).set('page', page).set('size', size).set('sort', sort);
     httpOptions.params = httpParams;
     console.log(httpOptions.params);
     return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
@@ -60,10 +63,14 @@ export class ImagesCollectionService {
 
   getImagesCollectionsByNameContainingIgnoreCaseAndNumberOfImages(params, name, nbOfImgs): Observable<PaginatedImagesCollections> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    const httpParams = new HttpParams().set('name', name).set('numberOfImages', nbOfImgs);
+    const page = params.pageIndex ? params.pageIndex : null;
+    const size = params.size ? params.size : null;
+    const sort = params.sort ? params.sort : null;
+    const httpParams = new HttpParams().set('name', name).set('numberOfImages', nbOfImgs)
+      .set('page', page).set('size', size).set('sort', sort);
     httpOptions.params = httpParams;
     console.log(httpOptions.params);
     return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCaseAndNumberOfImages', httpOptions).pipe(
