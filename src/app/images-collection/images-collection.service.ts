@@ -72,7 +72,6 @@ export class ImagesCollectionService {
     const httpParams = new HttpParams().set('name', name).set('numberOfImages', nbOfImgs)
       .set('page', page).set('size', size).set('sort', sort);
     httpOptions.params = httpParams;
-    console.log(httpOptions.params);
     return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCaseAndNumberOfImages', httpOptions).pipe(
       map((result: any) => {
         result.imagesCollections = result._embedded.imagesCollections;
