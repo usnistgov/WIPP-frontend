@@ -64,7 +64,6 @@ export class StitchingVectorService {
     const sort = params.sort ? params.sort : null;
     const httpParams = new HttpParams().set('name', name).set('page', page).set('size', size).set('sort', sort);
     httpOptions.params = httpParams;
-    console.log(httpOptions.params);
     return this.http.get<any>(this.stitchingVectorsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
         result.stitchingVectors = result._embedded.stitchingVectors;
