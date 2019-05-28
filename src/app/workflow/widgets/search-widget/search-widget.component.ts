@@ -3,7 +3,7 @@ import {StringWidget} from 'ngx-schema-form';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../../workflow.service';
 import {Observable} from 'rxjs';
-import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, switchMap, tap} from 'rxjs/operators';
 import {ImagesCollectionService} from '../../../images-collection/images-collection.service';
 import {StitchingVectorService} from '../../../stitching-vector/stitching-vector.service';
 
@@ -31,13 +31,14 @@ export class SearchWidgetComponent extends StringWidget {
     switch (this.schema.format) {
       case 'collection':
         return this.imagesCollectionService.getImagesCollectionsByNameContainingIgnoreCase(null, term).pipe(map(result => {
-          let collections = this.schema.getOutputCollections();
-          collections = collections.concat(result.imagesCollections);
-          return collections;
+          let collections = this.schema.getOutput('collection');
+            collections = collections.concat(result.imagesCollections);
+            // console.log(collections);
+            return collections;
         }));
       case 'stitchingVector':
         return this.stitchingVectorService.getStitchingVectorsByNameContainingIgnoreCase(null, term).pipe(map(result => {
-          let stitchingVectors = this.schema.getOutputStitchingVectors();
+          let stitchingVectors = this.schema.getOutput('stitchingVector');
           stitchingVectors = stitchingVectors.concat(result.stitchingVectors);
           return stitchingVectors;
         }));

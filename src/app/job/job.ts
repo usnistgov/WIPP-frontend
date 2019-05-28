@@ -9,6 +9,7 @@ export class Job {
   error: string;
   wippExecutable: string;
   dependencies: any[];
+  outputs: any[];
   parameters: JSON;
   wippWorkflow: string;
   wippVersion: string;
