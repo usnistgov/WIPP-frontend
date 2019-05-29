@@ -33,7 +33,6 @@ export class SearchWidgetComponent extends StringWidget {
         return this.imagesCollectionService.getImagesCollectionsByNameContainingIgnoreCase(null, term).pipe(map(result => {
           let collections = this.schema.getOutput('collection');
             collections = collections.concat(result.imagesCollections);
-            // console.log(collections);
             return collections;
         }));
       case 'stitchingVector':

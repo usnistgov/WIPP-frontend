@@ -69,6 +69,10 @@ export class WorkflowService {
     return this.http.post<Job>(this.jobsUrl, job);
   }
 
+  modifyJob(job): Observable<Job> {
+    return this.http.patch<Job>(`${this.jobsUrl}/${job.id}`, job);
+  }
+
   submitWorkflow(workflow): Observable<Workflow> {
     return this.http.post<Workflow>(
       `${this.workflowsUrl}/${workflow.id}/submit`,
