@@ -7,8 +7,8 @@ import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
-import {MatPaginator} from '@angular/material';
-import {merge, of as observableOf, Subject} from 'rxjs';
+import {MatPaginator, MatSort} from '@angular/material';
+import {BehaviorSubject, merge, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 
@@ -25,26 +25,29 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   flowHolder: Flow.IFlow;
   imagesCollection: ImagesCollection = new ImagesCollection();
-  images: Image[] = [];
-  metadataFiles: MetadataFile[] = [];
+  images: Observable<Image[]>;
+  metadataFiles: Observable<MetadataFile[]>;
 
   displayedColumnsImages: string[] = ['index', 'name', 'size', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
 
+  pageSizeOptions: number[] = [10, 25, 50, 100];
+  imagesParamsChange: BehaviorSubject<{index: number, size: number, sort: string}>;
+  metadataParamsChange: BehaviorSubject<{index: number, size: number, sort: string}>;
+
   uploadOption = 'regular';
   resultsLengthImages = 0;
   resultsLengthMetadataFiles = 0;
-  pageSize = 20;
+  pageSize = 10;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('browseDirBtn') browseDirBtn: ElementRef;
   @ViewChild('dropArea') dropArea: ElementRef;
   @ViewChild('imagesPaginator') imagesPaginator: MatPaginator;
-  // @ViewChild('imagesSort') sort: MatSort;
+  @ViewChild('imagesSort') sort: MatSort;
   @ViewChild('metadataFilesPaginator') metadataFilesPaginator: MatPaginator;
-
-  // @ViewChild('metadataFilesSort') metadataFilesSort: MatSort;
+  @ViewChild('metadataFilesSort') metadataFilesSort: MatSort;
 
   $throttleRefresh: Subject<void> = new Subject<void>();
 
@@ -52,7 +55,36 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private elem: ElementRef,
-    private imagesCollectionService: ImagesCollectionService) { }
+    private imagesCollectionService: ImagesCollectionService) {
+    this.imagesParamsChange = new BehaviorSubject({
+      index: 0,
+      size: this.pageSize,
+      sort: ''
+    });
+    this.metadataParamsChange = new BehaviorSubject({
+      index: 0,
+      size: this.pageSize,
+      sort: ''
+    });
+  }
+
+  imagesSortChanged(sort) {
+    // If the user changes the sort order, reset back to the first page.
+    this.imagesParamsChange.next({index: 0, size: this.imagesParamsChange.value.size, sort: sort.active + ',' + sort.direction});
+  }
+
+  imagesPageChanged(page) {
+    this.imagesParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.imagesParamsChange.value.sort});
+  }
+
+  metadataSortChanged(sort) {
+    // If the user changes the sort order, reset back to the first page.
+    this.metadataParamsChange.next({index: 0, size: this.metadataParamsChange.value.size, sort: sort.active + ',' + sort.direction});
+  }
+
+  metadataPageChanged(page) {
+    this.metadataParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.metadataParamsChange.value.sort});
+  }
 
   ngOnInit() {
 
@@ -99,45 +131,48 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   getImages(): void {
-    merge(this.imagesPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          const params = {
-            pageIndex: this.imagesPaginator.pageIndex,
-            size: this.pageSize
-          };
-          return this.imagesCollectionService.getImages(this.imagesCollection, params);
-        }),
-        map(data => {
-          this.resultsLengthImages = data.page.totalElements;
-          return data.images;
-        }),
-        catchError(() => {
-          return observableOf([]);
-        })
-      ).subscribe(data => this.images = data);
+    const paramsObservable = this.imagesParamsChange.asObservable();
+    this.images = paramsObservable.pipe(
+      switchMap((page) => {
+        const params = {
+          pageIndex: page.index,
+          size: page.size,
+          sort: page.sort
+        };
+        return this.imagesCollectionService.getImages(this.imagesCollection, params).pipe(
+          map((data) => {
+            this.resultsLengthImages = data.page.totalElements;
+            return data.images;
+          }),
+          catchError(() => {
+            return observableOf([]);
+          })
+        );
+      })
+    );
   }
 
   getMetadataFiles(): void {
-    merge(this.metadataFilesPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          const params = {
-            pageIndex: this.metadataFilesPaginator.pageIndex,
-            size: this.pageSize
-          };
-          return this.imagesCollectionService.getMetadataFiles(this.imagesCollection, params);
-        }),
-        map(data => {
-          this.resultsLengthMetadataFiles = data.page.totalElements;
-          return data.metadataFiles;
-        }),
-        catchError(() => {
-          return observableOf([]);
-        })
-      ).subscribe(data => this.metadataFiles = data);
+    const metadataParamsObservable = this.metadataParamsChange.asObservable();
+    this.metadataFiles = metadataParamsObservable.pipe(
+      switchMap((page) => {
+        console.log(page);
+        const metadataParams = {
+          pageIndex: page.index,
+          size: page.size,
+          sort: page.sort
+        };
+        return this.imagesCollectionService.getMetadataFiles(this.imagesCollection, metadataParams).pipe(
+          map((data) => {
+            this.resultsLengthMetadataFiles = data.page.totalElements;
+            return data.metadataFiles;
+          }),
+          catchError(() => {
+            return observableOf([]);
+          })
+        );
+      })
+    );
   }
 
   getNbFiles(): number {
