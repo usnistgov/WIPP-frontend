@@ -112,13 +112,14 @@ export class WorkflowDetailComponent implements OnInit {
           output.id = '{{ ' + job.id + '.' + output.id + ' }}';
         }
         // set dependencies
-        for ( const input of job.parameters['input']) {
+        // for (const input of job.parameters['input']) {
+        const input = job.parameters['input'];
           if (String(input).startsWith('{{')) {
             const first = 3;
             const last = String(input).indexOf('.');
             job.dependencies.push(String(input).substr(first, last - first));
           }
-        }
+        // }
         this.workflowService.modifyJob(job).subscribe();
         this.resetForm();
         this.getJobs();
