@@ -4,7 +4,7 @@ import {StitchingVector} from '../stitching-vector';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVectorNewComponent} from '../stitching-vector-new/stitching-vector-new.component';
 import {StitchingVectorService} from '../stitching-vector.service';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 
 @Component({
@@ -22,11 +22,10 @@ export class StitchingVectorListComponent implements OnInit {
   resultsLength = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [10, 25, 50, 100];
-  paramsChange: BehaviorSubject<{index: number, size: number, sort: string}>;
+  paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string}>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
   constructor(
     private stitchingVectorService: StitchingVectorService,
     private modalService: NgbModal
@@ -34,17 +33,31 @@ export class StitchingVectorListComponent implements OnInit {
     this.paramsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
-      sort: 'creationDate,desc'
+      sort: 'creationDate,desc',
+      filter: ''
     });
   }
 
   sortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
-    this.paramsChange.next({index: 0, size: this.paramsChange.value.size, sort: sort.active + ',' + sort.direction});
+    this.paramsChange.next({
+      index: 0, size: this.paramsChange.value.size,
+      sort: sort.active + ',' + sort.direction, filter: this.paramsChange.value.filter
+    });
   }
 
   pageChanged(page) {
-    this.paramsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.paramsChange.value.sort});
+    this.paramsChange.next({
+      index: page.pageIndex, size: page.pageSize,
+      sort: this.paramsChange.value.sort, filter: this.paramsChange.value.filter
+    });
+  }
+
+  applyFilterByName(filterValue: string) {
+    // if the user filters by name, reset back to the first page
+    this.paramsChange.next({
+      index: 0, size: this.paramsChange.value.size, sort: this.paramsChange.value.sort, filter: filterValue
+    });
   }
 
   ngOnInit() {
@@ -60,6 +73,17 @@ export class StitchingVectorListComponent implements OnInit {
           size: page.size,
           sort: page.sort
         };
+        if (page.filter) {
+          return this.stitchingVectorService.getStitchingVectorsByNameContainingIgnoreCase(params, page.filter).pipe(
+            map((data) => {
+              this.resultsLength = data.page.totalElements;
+              return data.stitchingVectors;
+            }),
+            catchError(() => {
+              return observableOf([]);
+            })
+          );
+        }
         return this.stitchingVectorService.getStitchingVectors(params).pipe(
           map((data) => {
             this.resultsLength = data.page.totalElements;
