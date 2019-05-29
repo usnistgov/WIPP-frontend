@@ -22,7 +22,8 @@ export class WorkflowDetailComponent implements OnInit {
   selectedSchema = null;
   pluginList = [];
   jobOutputs = {
-    collections: []
+    collections: [],
+    stitchingVectors: []
   };
   jobs: Job[] = [];
   displayedColumnsJobs: string[] = ['index', 'type', 'name'];
@@ -71,7 +72,7 @@ export class WorkflowDetailComponent implements OnInit {
         if (result.inputs.hasOwnProperty(inputEntry)) {
           const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
           let value = result.inputs[inputEntry];
-          if (type === 'collection') {
+          if (type === 'collection' || type === 'stitchingVector') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
               task['dependencies'].push(value.sourceJob);
             }
@@ -91,6 +92,14 @@ export class WorkflowDetailComponent implements OnInit {
               virtual: true
             };
             this.jobOutputs.collections.push(outputCollection);
+          } else if (output.type === 'stitchingVector') {
+            const outputStitchingVector = {
+              id: '{{ ' + job.id + '.' + output.name + ' }}',
+              name: '{{ ' + job.name + '.' + output.name + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.stitchingVectors.push(outputStitchingVector);
           }
         });
         this.resetForm();
@@ -140,8 +149,14 @@ export class WorkflowDetailComponent implements OnInit {
             inputSchema['widget'] = 'search';
             inputSchema['format'] = 'collection';
             inputSchema['format_type'] = input.options.format;
-            const self = this;
             inputSchema['getOutputCollections'] = () => this.jobOutputs.collections;
+            break;
+          case 'stitchingVector':
+            inputSchema['type'] = 'string';
+            inputSchema['widget'] = 'search';
+            inputSchema['format'] = 'stitchingVector';
+            inputSchema['format_type'] = input.options.format;
+            inputSchema['getOutputStitchingVectors'] = () => this.jobOutputs.stitchingVectors;
             break;
           case 'enum':
             inputSchema['type'] = 'string';
