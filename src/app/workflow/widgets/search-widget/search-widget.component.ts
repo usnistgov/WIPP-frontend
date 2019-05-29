@@ -5,6 +5,7 @@ import {WorkflowService} from '../../workflow.service';
 import {Observable} from 'rxjs';
 import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {ImagesCollectionService} from '../../../images-collection/images-collection.service';
+import {StitchingVectorService} from '../../../stitching-vector/stitching-vector.service';
 
 @Component({
   selector: 'app-search-widget',
@@ -16,7 +17,8 @@ export class SearchWidgetComponent extends StringWidget {
 
   constructor(
     private workflowService: WorkflowService,
-    private imagesCollectionService: ImagesCollectionService
+    private imagesCollectionService: ImagesCollectionService,
+    private stitchingVectorService: StitchingVectorService
   ) {
     super();
   }
@@ -32,6 +34,12 @@ export class SearchWidgetComponent extends StringWidget {
           let collections = this.schema.getOutputCollections();
           collections = collections.concat(result.imagesCollections);
           return collections;
+        }));
+      case 'stitchingVector':
+        return this.stitchingVectorService.getStitchingVectorsByNameContainingIgnoreCase(null, term).pipe(map(result => {
+          let stitchingVectors = this.schema.getOutputStitchingVectors();
+          stitchingVectors = stitchingVectors.concat(result.stitchingVectors);
+          return stitchingVectors;
         }));
       default:
         return [];

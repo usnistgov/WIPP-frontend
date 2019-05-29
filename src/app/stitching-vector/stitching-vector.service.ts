@@ -67,7 +67,6 @@ export class StitchingVectorService {
     return this.http.get<any>(this.stitchingVectorsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
         result.stitchingVectors = result._embedded.stitchingVectors;
-        result.job = result._embedded.job;
         return result;
       }));
   }
