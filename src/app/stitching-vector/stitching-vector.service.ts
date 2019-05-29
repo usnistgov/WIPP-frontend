@@ -7,11 +7,6 @@ import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from './timeSlice';
 import {Job} from '../job/job';
 
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'}),
-  params: {}
-};
-
 @Injectable({
   providedIn: 'root'
 })
@@ -39,6 +34,10 @@ export class StitchingVectorService {
   }
 
   getStitchingVectors(params): Observable<PaginatedStitchingVector> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
@@ -49,7 +48,6 @@ export class StitchingVectorService {
     return this.http.get<any>(this.stitchingVectorsUrl, httpOptions).pipe(
       map((result: any) => {
         result.stitchingVectors = result._embedded.stitchingVectors;
-        result.job = result._embedded.job;
         return result;
       }));
   }
@@ -59,10 +57,13 @@ export class StitchingVectorService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
-    const page = params.pageIndex ? params.pageIndex : null;
-    const size = params.size ? params.size : null;
-    const sort = params.sort ? params.sort : null;
-    const httpParams = new HttpParams().set('name', name).set('page', page).set('size', size).set('sort', sort);
+    const httpParams = new HttpParams().set('name', name);
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams.set('page', page).set('size', size).set('sort', sort);
+    }
     httpOptions.params = httpParams;
     return this.http.get<any>(this.stitchingVectorsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
@@ -72,6 +73,10 @@ export class StitchingVectorService {
   }
 
   getTimeSlices(id: string, params): Observable<PaginatedTimeSlices> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
