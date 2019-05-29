@@ -148,14 +148,12 @@ export class WorkflowDetailComponent implements OnInit {
             inputSchema['type'] = 'string';
             inputSchema['widget'] = 'search';
             inputSchema['format'] = 'collection';
-            inputSchema['format_type'] = input.options.format;
             inputSchema['getOutputCollections'] = () => this.jobOutputs.collections;
             break;
           case 'stitchingVector':
             inputSchema['type'] = 'string';
             inputSchema['widget'] = 'search';
             inputSchema['format'] = 'stitchingVector';
-            inputSchema['format_type'] = input.options.format;
             inputSchema['getOutputStitchingVectors'] = () => this.jobOutputs.stitchingVectors;
             break;
           case 'enum':
