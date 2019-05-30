@@ -26,6 +26,10 @@ export class PyramidService {
   }
 
   getPyramids(params): Observable<PaginatedPyramid> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
@@ -34,6 +38,28 @@ export class PyramidService {
       httpOptions.params = httpParams;
     }
     return this.http.get<any>(this.pyramidsUrl, httpOptions).pipe(
+      map((result: any) => {
+        result.pyramids = result._embedded.pyramids;
+        return result;
+      }));
+  }
+
+  getPyramidsByNameContainingIgnoreCase(params, name): Observable<PaginatedPyramid> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+
+    let httpParams = new HttpParams().set('name', name);
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams = httpParams.set('name', name).set('page', page).set('size', size).set('sort', sort);
+      httpOptions.params = httpParams;
+    }
+    console.log('httpOptions');
+    return this.http.get<any>(this.pyramidsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
         result.pyramids = result._embedded.pyramids;
         return result;
