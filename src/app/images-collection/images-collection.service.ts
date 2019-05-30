@@ -42,12 +42,12 @@ export class ImagesCollectionService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
-    const httpParams = new HttpParams().set('name', name);
+    let httpParams = new HttpParams().set('name', name);
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
       const sort = params.sort ? params.sort : null;
-      httpParams.set('page', page).set('size', size).set('sort', sort);
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
     }
     httpOptions.params = httpParams;
     return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
@@ -62,12 +62,12 @@ export class ImagesCollectionService {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    const httpParams = new HttpParams().set('name', name).set('numberOfImages', nbOfImgs);
+    let httpParams = new HttpParams().set('name', name).set('numberOfImages', nbOfImgs);
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
       const sort = params.sort ? params.sort : null;
-      httpParams.set('page', page).set('size', size).set('sort', sort);
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
     }
     httpOptions.params = httpParams;
     return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCaseAndNumberOfImages', httpOptions).pipe(
