@@ -7,12 +7,6 @@ import {Image, PaginatedImages} from './image';
 import {MetadataFile, PaginatedMetadataFiles} from './metadata-file';
 import {environment} from '../../environments/environment';
 
-// const httpOptions = {
-//   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-//   params: new HttpParams()
-// };
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -49,9 +43,34 @@ export class ImagesCollectionService {
       params: {}
     };
     const httpParams = new HttpParams().set('name', name);
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams.set('page', page).set('size', size).set('sort', sort);
+    }
     httpOptions.params = httpParams;
-    console.log(httpOptions.params);
     return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
+      map((result: any) => {
+        result.imagesCollections = result._embedded.imagesCollections;
+        return result;
+      }));
+  }
+
+  getImagesCollectionsByNameContainingIgnoreCaseAndNumberOfImages(params, name, nbOfImgs): Observable<PaginatedImagesCollections> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    const httpParams = new HttpParams().set('name', name).set('numberOfImages', nbOfImgs);
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams.set('page', page).set('size', size).set('sort', sort);
+    }
+    httpOptions.params = httpParams;
+    return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCaseAndNumberOfImages', httpOptions).pipe(
       map((result: any) => {
         result.imagesCollections = result._embedded.imagesCollections;
         return result;
@@ -78,10 +97,10 @@ export class ImagesCollectionService {
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size);
+      const sort = params.sort ? params.sort : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
-    console.log(httpOptions);
     return this.http.get<any>(`${this.imagesCollectionsUrl}/${imagesCollection.id}/images`, httpOptions).pipe(
       map((result: any) => {
         console.log(result); // <--it's an object
@@ -98,10 +117,10 @@ export class ImagesCollectionService {
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size);
+      const sort = params.sort ? params.sort : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
-    console.log(httpOptions);
     return this.http.get<any>(`${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`, httpOptions).pipe(
       map((result: any) => {
         console.log(result); // <--it's an object
