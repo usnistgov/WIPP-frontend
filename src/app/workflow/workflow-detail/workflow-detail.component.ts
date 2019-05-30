@@ -5,7 +5,7 @@ import {WorkflowService} from '../workflow.service';
 import {ActivatedRoute} from '@angular/router';
 import {Workflow} from '../workflow';
 import {MatPaginator} from '@angular/material';
-import {merge, Observable, of, of as observableOf} from 'rxjs';
+import {merge, Observable, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
@@ -71,25 +71,25 @@ export class WorkflowDetailComponent implements OnInit {
       task['stitchingVectorsOutputs'] = [];
       // add job outputs
       this.selectedSchema.outputs.forEach(output => {
-          if (output.type === 'collection') {
-            const outputCollection = {
-              name: '{{ ' + this.workflow.name + '-' + result.taskName + '.' + output.name + ' }}',
-              type: output.type,
-              id: output.name,
-              sourceJob: this.workflow.id,
-              virtual: true
-            };
-            task['outputs'].push(outputCollection);
-          } else if (output.type === 'stitchingVector') {
-            const outputStitchingVector = {
-              name: '{{ ' + this.workflow.name + '-' + result.taskName + '.' + output.name + ' }}',
-              type: output.type,
-              id: output.name,
-              sourceJob: this.workflow.id,
-              virtual: true
-            };
-            task['outputs'].push(outputStitchingVector);
-          }
+        if (output.type === 'collection') {
+          const outputCollection = {
+            name: '{{ ' + this.workflow.name + '-' + result.taskName + '.' + output.name + ' }}',
+            type: output.type,
+            id: output.name,
+            sourceJob: this.workflow.id,
+            virtual: true
+          };
+          task['outputs'].push(outputCollection);
+        } else if (output.type === 'stitchingVector') {
+          const outputStitchingVector = {
+            name: '{{ ' + this.workflow.name + '-' + result.taskName + '.' + output.name + ' }}',
+            type: output.type,
+            id: output.name,
+            sourceJob: this.workflow.id,
+            virtual: true
+          };
+          task['outputs'].push(outputStitchingVector);
+        }
       });
       // add job parameters
       for (const inputEntry in result.inputs) {
@@ -106,7 +106,7 @@ export class WorkflowDetailComponent implements OnInit {
         }
       }
       // push job
-      this.workflowService.createJob(task).subscribe( job => {
+      this.workflowService.createJob(task).subscribe(job => {
         // set outputs ids
         for (const output of job.outputs) {
           output.id = '{{ ' + job.id + '.' + output.id + ' }}';
@@ -114,11 +114,11 @@ export class WorkflowDetailComponent implements OnInit {
         // set dependencies
         // for (const input of job.parameters['input']) {
         const input = job.parameters['input'];
-          if (String(input).startsWith('{{')) {
-            const first = 3;
-            const last = String(input).indexOf('.');
-            job.dependencies.push(String(input).substr(first, last - first));
-          }
+        if (String(input).startsWith('{{')) {
+          const first = 3;
+          const last = String(input).indexOf('.');
+          job.dependencies.push(String(input).substr(first, last - first));
+        }
         // }
         this.workflowService.modifyJob(job).subscribe();
         this.resetForm();
@@ -138,7 +138,7 @@ export class WorkflowDetailComponent implements OnInit {
     pluginList.forEach(plugin => {
       plugin.properties = {
         // task name field
-        'taskName':  {
+        'taskName': {
           'type': 'string',
           'description': 'Task name',
           'format': 'string',
@@ -169,14 +169,14 @@ export class WorkflowDetailComponent implements OnInit {
             inputSchema['widget'] = 'search';
             inputSchema['format'] = 'collection';
             inputSchema['format_type'] = input.options.format;
-            inputSchema['getOutput'] = (type) => this.getOutput(type);
+            inputSchema['getOutput'] = () => this.getOutput();
             break;
           case 'stitchingVector':
             inputSchema['type'] = 'string';
             inputSchema['widget'] = 'search';
             inputSchema['format'] = 'stitchingVector';
             inputSchema['format_type'] = input.options.format;
-            inputSchema['getOutput'] = (type) => this.getOutput(type);
+            inputSchema['getOutput'] = () => this.getOutput();
             break;
           case 'enum':
             inputSchema['type'] = 'string';
@@ -239,37 +239,38 @@ export class WorkflowDetailComponent implements OnInit {
   }
 
   displayJobModal(jobId: string) {
-   const modalRef = this.modalService.open(JobDetailComponent);
+    const modalRef = this.modalService.open(JobDetailComponent);
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
-    modalRef.result.then((result) => {}
-    , (reason) => {
-      console.log('dismissed');
-    });
+    modalRef.result.then((result) => {
+      }
+      , (reason) => {
+        console.log('dismissed');
+      });
   }
 
-  getOutput(type: string): Observable<Object> {
-    const availableOutputsObs = of(this.availableOutputs);
-     this.workflowService.getJobs(this.workflow, null).pipe(
-      map (result => result.jobs),
-    ).subscribe(res => {
-    for (const job of res) {
-      for (const output of job.outputs) {
-       if (output.type === 'collection'  &&
-         !this.availableOutputs.collections.some(x => x.name === output.name)) {
-          this.availableOutputs.collections.push(output);
-        } else if (output.type === 'stitchingVector' &&
-         !this.availableOutputs.stitchingVectors.some(x => x.name === output.name)) {
-          this.availableOutputs.stitchingVectors.push(output);
+  getOutput(): Observable<{}> {
+    return this.workflowService.getJobs(this.workflow, null).pipe(
+      map(result => {
+          const availableOutputs = {
+            collection: [],
+            stitchingVector: []
+          };
+          for (const job of result.jobs) {
+            for (const output of job.outputs) {
+              if (output.type === 'collection' &&
+                !availableOutputs.collection.some(x => x.name === output.name)) {
+                availableOutputs.collection.push(output);
+              } else if (output.type === 'stitchingVector' &&
+                !availableOutputs.stitchingVector.some(x => x.name === output.name)) {
+                availableOutputs.stitchingVector.push(output);
+              }
+            }
+          }
+          result._links = availableOutputs;
+          return availableOutputs;
         }
-      }
-    }
-     });
-      if (type === 'collection') {
-        return availableOutputsObs['value']['collections'];
-      } else if (type === 'stitchingVector') {
-         return availableOutputsObs['value']['stitchingVector'];
-      }
+      ));
   }
 
 }

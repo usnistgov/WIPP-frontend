@@ -1,9 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {StringWidget} from 'ngx-schema-form';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../../workflow.service';
-import {Observable} from 'rxjs';
-import {debounceTime, distinctUntilChanged, map, switchMap, tap} from 'rxjs/operators';
+import {forkJoin, Observable} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {ImagesCollectionService} from '../../../images-collection/images-collection.service';
 import {StitchingVectorService} from '../../../stitching-vector/stitching-vector.service';
 
@@ -30,16 +30,16 @@ export class SearchWidgetComponent extends StringWidget {
 
     switch (this.schema.format) {
       case 'collection':
-        return this.imagesCollectionService.getImagesCollectionsByNameContainingIgnoreCase(null, term).pipe(map(result => {
-          let collections = this.schema.getOutput('collection');
-            collections = collections.concat(result.imagesCollections);
-            return collections;
+        return forkJoin(this.imagesCollectionService.getImagesCollectionsByNameContainingIgnoreCase(null, term),
+          this.schema.getOutput()).pipe(map(([res1, res2]) => {
+          const collections = res1.imagesCollections.concat(res2['collection']);
+          return collections;
         }));
       case 'stitchingVector':
-        return this.stitchingVectorService.getStitchingVectorsByNameContainingIgnoreCase(null, term).pipe(map(result => {
-          let stitchingVectors = this.schema.getOutput('stitchingVector');
-          stitchingVectors = stitchingVectors.concat(result.stitchingVectors);
-          return stitchingVectors;
+        return forkJoin(this.stitchingVectorService.getStitchingVectorsByNameContainingIgnoreCase(null, term),
+          this.schema.getOutput()).pipe(map(([res1, res2]) => {
+          const collections = res1.stitchingVectors.concat(res2['stitchingVector']);
+          return collections;
         }));
       default:
         return [];
@@ -52,5 +52,5 @@ export class SearchWidgetComponent extends StringWidget {
     switchMap(term => this.filter(term))
   )
 
-  formatter = (x: {name: string}) => x.name;
+  formatter = (x: { name: string }) => x.name;
 }
