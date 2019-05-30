@@ -1,0 +1,25 @@
+<h3>Pyramid Detail</h3>
+
+<div style="margin-top: 20px">
+  <div class="row">
+    <div class="col-md-12"><b>Name: </b> {{pyramid.name}}</div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12"><b>Creation Date: </b> {{pyramid.creationDate | date}}</div>
+  </div>
+
+
+  <div class="row" *ngIf="job">
+    <div class="col-md-5">
+      <b> Pyramid job: </b>
+      <a (click)="displayJobModal(job.id)"
+         class="underline-on-hover"
+         style="color:blue"
+         ngbTooltip="Show Job"
+         placement="left">
+        {{job.name}}
+      </a>
+    </div>
+  </div>
+</div>
