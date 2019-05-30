@@ -55,10 +55,9 @@ export class PyramidService {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
       const sort = params.sort ? params.sort : null;
-      httpParams = httpParams.set('name', name).set('page', page).set('size', size).set('sort', sort);
-      httpOptions.params = httpParams;
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
     }
-    console.log('httpOptions');
+    httpOptions.params = httpParams;
     return this.http.get<any>(this.pyramidsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
         result.pyramids = result._embedded.pyramids;
