@@ -57,12 +57,12 @@ export class StitchingVectorService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
-    const httpParams = new HttpParams().set('name', name);
+    let httpParams = new HttpParams().set('name', name);
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
       const sort = params.sort ? params.sort : null;
-      httpParams.set('page', page).set('size', size).set('sort', sort);
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
     }
     httpOptions.params = httpParams;
     return this.http.get<any>(this.stitchingVectorsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(

@@ -24,7 +24,6 @@ export class PyramidListComponent implements OnInit {
 
   constructor(
     private pyramidService: PyramidService
-    //private modalService: NgbModal
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -65,9 +64,19 @@ export class PyramidListComponent implements OnInit {
           size: page.size,
           sort: page.sort
         };
+        if (page.filter) {
+          return this.pyramidService.getPyramidsByNameContainingIgnoreCase(params, page.filter).pipe(
+            map((data) => {
+              this.resultsLength = data.page.totalElements;
+              return data.pyramids;
+            }),
+            catchError(() => {
+              return observableOf([]);
+            })
+          );
+        }
         return this.pyramidService.getPyramids(params).pipe(
           map((data) => {
-            console.log(data);
             this.resultsLength = data.page.totalElements;
             return data.pyramids;
           }),
@@ -77,7 +86,5 @@ export class PyramidListComponent implements OnInit {
         );
       })
     );
-    console.log('hi');
-    console.log(this.pyramids);
   }
 }
