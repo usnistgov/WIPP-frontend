@@ -14,6 +14,7 @@ import {PyramidService} from '../pyramid.service';
 export class PyramidDetailComponent implements OnInit {
   pyramid: Pyramid = new Pyramid();
   job: Job = null;
+  manifest: any = null;
   pyramidId = this.route.snapshot.paramMap.get('id');
 
   constructor(
@@ -27,6 +28,7 @@ export class PyramidDetailComponent implements OnInit {
       .subscribe(pyramid => {
         this.pyramid = pyramid;
         this.getJob();
+        this.getManifest(pyramid);
       });
   }
 
@@ -34,6 +36,10 @@ export class PyramidDetailComponent implements OnInit {
     if (this.pyramid._links['job']) {
       this.pyramidService.getJob(this.pyramid._links['job']['href']).subscribe(job => this.job = job);
     }
+  }
+
+  getManifest(pyramid: Pyramid) {
+    this.pyramidService.getPyramidManifest(pyramid).subscribe(manifest => this.manifest = manifest);
   }
 
   displayJobModal(jobId: string) {
