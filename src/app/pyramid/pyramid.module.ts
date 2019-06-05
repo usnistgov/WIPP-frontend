@@ -8,6 +8,7 @@ import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {PyramidRoutingModule} from './pyramid-routing.module';
 import {PyramidListComponent} from './pyramid-list/pyramid-list.component';
 import {PyramidDetailComponent} from './pyramid-detail/pyramid-detail.component';
+import {WdztModule} from '../wdzt/wdzt.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import {PyramidDetailComponent} from './pyramid-detail/pyramid-detail.component'
     MatSortModule,
     FormsModule,
     InlineEditorModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    WdztModule
   ],
   declarations: [
     PyramidDetailComponent,
