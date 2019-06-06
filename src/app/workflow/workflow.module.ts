@@ -11,6 +11,7 @@ import {SearchWidgetComponent} from './widgets/search-widget/search-widget.compo
 import {WidgetsRegistry} from './widgets/widgets-registry';
 import { WorkflowNewComponent } from './workflow-new/workflow-new.component';
 import {JobDetailComponent} from '../job/job-detail/job-detail.component';
+import {NgxGraphModule} from '@swimlane/ngx-graph';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import {JobDetailComponent} from '../job/job-detail/job-detail.component';
     ReactiveFormsModule,
     NgbModule.forRoot(),
     SchemaFormModule.forRoot(),
+   NgxGraphModule
   ],
   entryComponents: [SearchWidgetComponent, WorkflowNewComponent, JobDetailComponent],
   declarations: [
