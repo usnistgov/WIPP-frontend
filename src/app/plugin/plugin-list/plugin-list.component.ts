@@ -88,7 +88,6 @@ export class PluginListComponent implements OnInit {
         }
         return this.pluginService.getPlugins(params).pipe(
           map((data) => {
-            console.log(data);
             this.resultsLength = data.page.totalElements;
             return data.plugins;
           }),
