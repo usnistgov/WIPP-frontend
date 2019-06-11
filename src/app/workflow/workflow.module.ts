@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkflowListComponent } from './workflow-list/workflow-list.component';
-import {MatPaginatorModule, MatTableModule} from '@angular/material';
+import {MatInputModule, MatPaginatorModule, MatSortModule, MatTableModule} from '@angular/material';
 import {WorkflowRoutingModule} from './workflow-routing.module';
 import { WorkflowDetailComponent } from './workflow-detail/workflow-detail.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -17,7 +17,9 @@ import {JobDetailComponent} from '../job/job-detail/job-detail.component';
     CommonModule,
     WorkflowRoutingModule,
     MatPaginatorModule,
+    MatSortModule,
     MatTableModule,
+    MatInputModule,
     FormsModule,
     ReactiveFormsModule,
     NgbModule.forRoot(),

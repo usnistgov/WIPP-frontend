@@ -4,6 +4,7 @@ import {PaginatedPlugins, Plugin} from './plugin';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
+import {PaginatedStitchingVector} from '../stitching-vector/stitching-vector';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
@@ -23,10 +24,27 @@ export class PluginService {
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size);
+      const sort = params.sort ? params.sort : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
     return this.http.get<any>(this.pluginsUrl, httpOptions).pipe(
+      map((result: any) => {
+        result.plugins = result._embedded.plugins;
+        return result;
+      }));
+  }
+
+  getPluginsByNameContainingIgnoreCase(params, name): Observable<PaginatedPlugins> {
+    let httpParams = new HttpParams().set('name', name);
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
+    }
+    httpOptions.params = httpParams;
+    return this.http.get<any>(this.pluginsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
         result.plugins = result._embedded.plugins;
         return result;
