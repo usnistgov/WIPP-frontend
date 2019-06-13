@@ -5,10 +5,11 @@ import {WorkflowService} from '../workflow.service';
 import {ActivatedRoute} from '@angular/router';
 import {Workflow} from '../workflow';
 import {MatPaginator} from '@angular/material';
-import {merge, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {of as observableOf, Subject} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
+
 
 @Component({
   selector: 'app-workflow-detail',
@@ -26,12 +27,13 @@ export class WorkflowDetailComponent implements OnInit {
     stitchingVectors: []
   };
   jobs: Job[] = [];
-  displayedColumnsJobs: string[] = ['index', 'type', 'name'];
-  resultsLength = 0;
-  pageSize = 20;
   workflowId = this.route.snapshot.paramMap.get('id');
 
-  @ViewChild('jobsPaginator') jobsPaginator: MatPaginator;
+  update$: Subject<any> = new Subject();
+  nodes = [];
+  links = [];
+  depthWidth;
+  depthHeight;
 
   constructor(
     private route: ActivatedRoute,
@@ -82,7 +84,7 @@ export class WorkflowDetailComponent implements OnInit {
         }
       }
       // push job
-      this.workflowService.createJob(task).subscribe( job => {
+      this.workflowService.createJob(task).subscribe(job => {
         this.selectedSchema.outputs.forEach(output => {
           if (output.type === 'collection') {
             const outputCollection = {
@@ -119,7 +121,7 @@ export class WorkflowDetailComponent implements OnInit {
     pluginList.forEach(plugin => {
       plugin.properties = {
         // task name field
-        'taskName':  {
+        'taskName': {
           'type': 'string',
           'description': 'Task name',
           'format': 'string',
@@ -196,34 +198,88 @@ export class WorkflowDetailComponent implements OnInit {
   }
 
   getJobs(): void {
-    merge(this.jobsPaginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          const params = {
-            pageIndex: this.jobsPaginator.pageIndex,
-            size: this.pageSize
-          };
-          return this.workflowService.getJobs(this.workflow, params);
-        }),
-        map(data => {
-          this.resultsLength = data.page.totalElements;
-          return data.jobs;
-        }),
-        catchError(() => {
-          return observableOf([]);
-        })
-      ).subscribe(data => this.jobs = data);
+    this.workflowService.getAllJobs(this.workflow).pipe(
+      map(data => {
+        return data.jobs;
+      }),
+      catchError(() => {
+        return observableOf([]);
+      })
+    ).subscribe(data => {
+       this.jobs = data;
+      this.populateGraph(data);
+      this.updateGraph(); } );
   }
 
   displayJobModal(jobId: string) {
-   const modalRef = this.modalService.open(JobDetailComponent);
+    const modalRef = this.modalService.open(JobDetailComponent);
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
-    modalRef.result.then((result) => {}
-    , (reason) => {
-      console.log('dismissed');
-    });
+    modalRef.result.then((result) => {
+      }
+      , (reason) => {
+        console.log('dismissed');
+      });
+  }
+
+  populateGraph(data: Job[]) {
+    this.nodes = [];
+    this.links = [];
+    for (const job of data) {
+      const node = {id : job.id, label: job.name};
+      this.nodes.push(node);
+      if ( job.dependencies.length > 0 ) {
+        const link = {id: 'link', source: job.dependencies[0], target: job.id};
+        this.links.push(link);
+      }
+    }
+    this.getGraphWidth();
+    this.getGraphHeight();
+  }
+
+  getGraphWidth() {
+    let depth = 1;
+    let tempDepth;
+    for ( const link of this.links ) {
+      tempDepth = 1;
+      let target = link.target;
+      let flag = true;
+      while (flag) {
+        if (this.links.some(x => x.source === target)) {
+          tempDepth = tempDepth + 1;
+          target = this.links.find(x => x.source === target).target;
+        } else {flag = false; }
+      }
+      depth = Math.max(depth, tempDepth);
+    }
+    this.depthWidth = depth;
+  }
+
+  getGraphHeight() {
+    let depthHeight = 0;
+    for ( const node of this.nodes ) {
+      if (!this.links.some(x => x.target === node.id)) {
+        depthHeight ++;
+      }
+      let nbOfChild = 0 ;
+      if (this.links.some(x => x.source === node.id) ) {
+        for (const node2 of this.nodes) {
+          if (this.links.some(x => x.source === node.id && x.target === node2.id) ) {
+            nbOfChild ++;
+            if (nbOfChild === 2) {
+            }
+          }
+
+        }
+      }
+      if (nbOfChild > 1) {depthHeight += nbOfChild - 1; }
+    }
+    this.depthHeight = depthHeight;
+  }
+
+// Update function
+  updateGraph() {
+    this.update$.next(true);
   }
 
 }
