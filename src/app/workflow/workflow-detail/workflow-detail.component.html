@@ -11,52 +11,56 @@
     <div class="col-md-12"><b>Creation Date:</b> {{workflow.creationDate | date}}</div>
   </div>
 
-  <div [hidden]="workflow.status!='CREATED'" style="margin-top: 50px; margin-bottom: 20px">
+  <div [hidden]="workflow.status!='CREATED'" style="margin-top: 30px; margin-bottom: 40px">
     <h4 style="margin-bottom: 20px">Workflow tasks</h4>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-2">
         <button class="btn btn-outline-dark" (click)="open(addStepModal)"
-                [disabled]="!workflow.name">Add task
+                [disabled]="!workflow.name">
+          <i class="fas fa-plus-circle" style="margin-right: 10px">
+            <p style="margin-left: 10px; display: inline">Add task</p>
+          </i>
+
         </button>
       </div>
-      <div class="col-md-6" style="right: -300px">
-        <button class="btn btn-outline-dark" (click)="submitWorkflow()">Submit workflow</button>
+      <div class="col-md-2">
+        <button class="btn btn-outline-dark" (click)="submitWorkflow()">
+          <i class="fas fa-arrow-alt-circle-right" style="margin-right: 10px">
+            <p style="margin-left: 10px; display: inline">Submit workflow</p>
+          </i>
+        </button>
       </div>
     </div>
   </div>
 
-  <table mat-table class="table-hover" [dataSource]="jobs" #jobsSort>
+  <ngx-graph
+    *ngIf="jobs.length > 0"
+    class="chart-container"
+    [links]=links
+    [nodes]=nodes
+    [update$]="update$"
 
-    <!-- # Column -->
-    <ng-container matColumnDef="index">
-      <th mat-header-cell *matHeaderCellDef>#</th>
-      <td mat-cell *matCellDef="let id=index">
-        {{ (pageSize * jobsPaginator.pageIndex) + id + 1 }}
-      </td>
-    </ng-container>
+    [enableZoom]="false"
+    [draggingEnabled]="false"
+    [panningEnabled]="false"
+    [view]="[depthWidth*380, depthHeight*100]"
 
-    <!-- Step / Type Column -->
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef>Type</th>
-      <td mat-cell *matCellDef="let row">
-        <span>{{row.parameters.thresholdtype}} </span>
-        <span *ngIf="row.parameters.thresholdvalue !=null"> : {{row.parameters.thresholdvalue }} </span>
-      </td>
-    </ng-container>
+  >
+    <ng-template #nodeTemplate let-node>
+      <svg:g class="node" (click)="displayJobModal(node.id)">
+        <svg:rect
+          [attr.width]="node.dimension.width"
+          [attr.height]="node.dimension.height"
+          [attr.fill]="node.data.color"
+        />
+        <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
+          {{node.label}}
+        </svg:text>
+      </svg:g>
+    </ng-template>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let row">
-        <span> {{ row.name }} </span>
-      </td>
-    </ng-container>
+  </ngx-graph>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumnsJobs"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumnsJobs;" (click)="displayJobModal(row.id)"></tr>
-  </table>
-
-  <mat-paginator [length]="resultsLength" [pageSize]="pageSize" #jobsPaginator></mat-paginator>
 
   <ng-template #addStepModal let-c="close" let-d="dismiss">
     <div class="modal-header">
