@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {HttpParams} from '../../../node_modules/@angular/common/http';
 import {map} from 'rxjs/operators';
 import {PaginatedWorkflows, Workflow} from './workflow';
 import {Job, PaginatedJobs} from '../job/job';
@@ -104,6 +103,18 @@ export class WorkflowService {
       httpOptions.params = httpParams;
     }
     return this.http.get<any>(`${this.jobsUrl}/search/findByWippWorkflow`, httpOptions).pipe(
+      map((result: any) => {
+        result.jobs = result._embedded.jobs;
+        return result;
+      }));
+  }
+  getAllJobs(workflow: Workflow): Observable<PaginatedJobs> {
+    if (workflow) {
+      const wippWorkflow = workflow.id ? workflow.id : null;
+      const httpParams = new HttpParams().set('wippWorkflow', wippWorkflow);
+      httpOptions.params = httpParams;
+    }
+    return this.http.get<any>(`${this.jobsUrl}/search/findByWippWorkflowOrderByCreationDateAsc`, httpOptions).pipe(
       map((result: any) => {
         result.jobs = result._embedded.jobs;
         return result;
