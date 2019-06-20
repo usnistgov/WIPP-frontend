@@ -36,23 +36,6 @@ export class WorkflowDetailComponent implements OnInit {
   depthWidth;
   depthHeight;
 
-  // fieldBindings = {
-  //   '/inputs/gridWidth': [
-  //     {
-  //       'input': (event, formProperty: FormProperty) => {
-  //         const parent: PropertyGroup = formProperty.findRoot();
-  //         console.log(parent);
-  //         /**
-  //          * Set the input value for the children
-  //          */
-  //         const extentWidth: FormProperty = parent.getProperty('inputs/extentWidth');
-  //
-  //         extentWidth.setValue(formProperty.value, false);
-  //       }
-  //     }
-  //   ]
-  // };
-
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
