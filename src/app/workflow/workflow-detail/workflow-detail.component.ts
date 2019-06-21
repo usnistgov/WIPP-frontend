@@ -9,6 +9,7 @@ import {of as observableOf, Subject} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
+import {FormProperty, PropertyGroup} from '../../../../node_modules/ngx-schema-form/lib/model/formproperty';
 
 
 @Component({
@@ -135,12 +136,14 @@ export class WorkflowDetailComponent implements OnInit {
           'properties': {}
         }
       };
+      // default field bindings - none
+      plugin.fieldBindings = {};
       // TODO: validation of plugin ui description
       plugin.inputs.forEach(input => {
         const inputSchema = {};
         // common properties
         inputSchema['key'] = 'inputs.' + input.name;
-        inputSchema['description'] = input.description;
+        // inputSchema['description'] = input.description;
         if (input.required) {
           plugin.properties.inputs.required.push(input.name);
         }
@@ -192,8 +195,35 @@ export class WorkflowDetailComponent implements OnInit {
             }
           }
         }
+        // hidden fields
+        if (ui.hasOwnProperty('hidden') && ui.hidden === true) {
+          inputSchema['widget'] = 'hidden';
+        }
+        // custom bindings - update value of target input from value of source input
+        if (ui.hasOwnProperty('bind')) {
+          const sourceField = '/inputs/' + ui.bind;
+          const targetField = ui['key'].split('.').join('/');
+          plugin.fieldBindings[sourceField] = [
+            {
+              'input': (event, formProperty: FormProperty) => {
+                const parent: PropertyGroup = formProperty.findRoot();
+                const target: FormProperty = parent.getProperty(targetField);
+
+                target.setValue(formProperty.value, false);
+              }
+            }
+          ];
+        }
+        if (ui.hasOwnProperty('default')) {
+          inputSchema['default'] = input.default;
+        }
         plugin.properties.inputs.properties[input.name] = inputSchema;
       });
+      // field sets - arrange fields by groups
+      const fieldsetsList = plugin.ui.find(v => v.key === 'fieldsets');
+      if (fieldsetsList) {
+        plugin.properties.inputs.fieldsets = fieldsetsList.fieldsets;
+      }
     });
   }
 
