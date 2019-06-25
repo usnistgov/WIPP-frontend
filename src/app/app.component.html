@@ -3,12 +3,26 @@
     <img src="assets/img/logo-wipp.png">
   </div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">WIPP</a>
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-home " style="margin-right: 10px">
+        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">WIPP</p>
+      </i>
+    </a>
+<!--rajoutr bouton-->
+    <button class="navbar-toggler navbar-toggler-right" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item dropdown" routerLinkActive="active" ngbDropdown>
-          <a class="nav-link dropdown-toggle" id="dataDropdown" routerLinkActive="active" ngbDropdownToggle>Data</a>
+          <a class="nav-link dropdown-toggle" id="dataDropdown" routerLinkActive="active" ngbDropdownToggle>
+            <i class="fas fa-database " style="margin-right: 10px">
+              <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
+                Data</p>
+            </i>
+          </a>
           <div class="dropdown-menu" aria-labelledby="dataDropdown" ngbDropdownMenu>
             <a class="dropdown-item" routerLink="/images-collections" ngbDropdownItem>Images collections</a>
             <a class="dropdown-item" routerLink="/stitching-vectors" ngbDropdownItem>Stitching vectors</a>
@@ -16,10 +30,20 @@
           </div>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/plugins">Plugins</a>
+          <a class="nav-link" routerLink="/plugins">
+            <i class="fas fa-cube" style="margin-right: 10px">
+              <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
+                Plugins</p>
+            </i>
+          </a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/workflows">Workflows</a>
+          <a class="nav-link" routerLink="/workflows">
+            <i class="fas fa-share-alt " style="margin-right: 10px">
+              <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
+                Workflows</p>
+            </i>
+          </a>
         </li>
       </ul>
     </div>
@@ -29,4 +53,3 @@
 <div class="container-fluid">
   <router-outlet></router-outlet>
 </div>
-

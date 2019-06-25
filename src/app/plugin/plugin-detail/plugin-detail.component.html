@@ -1,4 +1,4 @@
-<h3>Plugin detail</h3>
+<h3 style="margin-top: 2%; margin-bottom: 2%">Plugin detail</h3>
 
 <div style="height: 30px"></div>
 
@@ -66,82 +66,82 @@
             <p style="color:dimgrey;" class="font-weight-bold  col-md-8">  Input {{i+1}}  / {{c}} </p>
             <dd class="col-md-12">
               <div class="row">
-                <dt class="col-md-12" *ngFor="let key of inputKeys[i];">
-                  <p style="display: inline" class="font-weight-bold" *ngIf="plugin.inputs[i][key] != null"> {{key}} : </p>
-                  <p style="display: inline" class="font-weight-normal" *ngIf="key.toString() != 'options'">{{plugin.inputs[i][key]}} </p>
-                  <div class="row" style="word-break: break-word" *ngIf="key.toString() == 'options' && plugin.inputs[i][key] != null">
-                    <dd class="col-md-12" *ngFor="let optKey of inputOptionsKeys">
-                      <h6 style="display: inline; margin-left: 15px" class="font-weight-bold"
-                          *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null">
-                        {{optKey}} : </h6>
-                      <h6 style="display: inline;" class="font-weight-normal"
-                          *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null">
-                        {{plugin.inputs[i]['options'][optKey]}} </h6>
-                    </dd>
-                  </div>
-                </dt>
-              </div>
+            <dt class="col-md-12" *ngFor="let key of inputKeys[i];">
+              <p style="display: inline" class="font-weight-bold" *ngIf="plugin.inputs[i][key] != null"> {{key}} : </p>
+              <p style="display: inline" class="font-weight-normal" *ngIf="key.toString() != 'options'">{{plugin.inputs[i][key]}} </p>
+              <div class="row" style="word-break: break-word" *ngIf="key.toString() == 'options' && plugin.inputs[i][key] != null">
+            <dd class="col-md-12" *ngFor="let optKey of inputOptionsKeys">
+              <h6 style="display: inline; margin-left: 15px" class="font-weight-bold"
+                  *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null">
+                {{optKey}} : </h6>
+              <h6 style="display: inline;" class="font-weight-normal"
+                  *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null">
+                {{plugin.inputs[i]['options'][optKey]}} </h6>
             </dd>
-          </tr>
-        </table>
       </div>
-    </td>
+      </dt>
+      </div>
+      </dd>
   </tr>
+</table>
+</div>
+</td>
+</tr>
 
-  <!--  Output List Line  -->
-  <tr class="pointer" (click)="showContent('output')">
-    <th class="th1"><dt ngbTooltip="Click to show Outputs">List of Outputs:</dt></th>
-    <td>
-      <div class="col-md-8 h" [hidden]="viewOutputs">Click to expand</div>
-      <div [hidden]="!viewOutputs">
-        <table>
-          <tr class="b2" *ngFor="let ui of plugin.outputs; let i = index; let c = count">
-            <p style="color:dimgrey;" class="font-weight-bold col-md-8">  Output {{i+1}}  / {{c}} </p>
-            <dd class="col-md-12">
-              <div class="row">
-                <dt class="col-md-12" *ngFor="let key of outputKeys[i];">
-                  <p style="display: inline" class="font-weight-bold" *ngIf="plugin.outputs[i][key] != null"> {{key}} : </p>
-                  <p style="display: inline" class="font-weight-normal" *ngIf="key.toString() != 'options'">{{plugin.outputs[i][key]}} </p>
-                  <div class="row" style="word-break: break-word" *ngIf="key.toString() == 'options' && plugin.outputs[i][key] != null">
-                    <dd class="col-md-12" *ngFor="let optKey of outputOptionsKeys">
-                      <h6 style="display: inline; margin-left: 15px" class="font-weight-bold"
-                          *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null">
-                        {{optKey}} : </h6>
-                      <h6 style="display: inline" class="font-weight-normal"
-                          *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null">
-                        {{plugin.outputs[i]['options'][optKey]}} </h6>
-                    </dd>
-                  </div>
-                </dt>
-              </div>
-            </dd>
-          </tr>
-        </table>
-      </div>
-    </td>
-  </tr>
+<!--  Output List Line  -->
+<tr class="pointer" (click)="showContent('output')">
+  <th class="th1"><dt ngbTooltip="Click to show Outputs">List of Outputs:</dt></th>
+  <td>
+    <div class="col-md-8 h" [hidden]="viewOutputs">Click to expand</div>
+    <div [hidden]="!viewOutputs">
+      <table>
+        <tr class="b2" *ngFor="let ui of plugin.outputs; let i = index; let c = count">
+          <p style="color:dimgrey;" class="font-weight-bold col-md-8">  Output {{i+1}}  / {{c}} </p>
+          <dd class="col-md-12">
+            <div class="row">
+          <dt class="col-md-12" *ngFor="let key of outputKeys[i];">
+            <p style="display: inline" class="font-weight-bold" *ngIf="plugin.outputs[i][key] != null"> {{key}} : </p>
+            <p style="display: inline" class="font-weight-normal" *ngIf="key.toString() != 'options'">{{plugin.outputs[i][key]}} </p>
+            <div class="row" style="word-break: break-word" *ngIf="key.toString() == 'options' && plugin.outputs[i][key] != null">
+          <dd class="col-md-12" *ngFor="let optKey of outputOptionsKeys">
+            <h6 style="display: inline; margin-left: 15px" class="font-weight-bold"
+                *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null">
+              {{optKey}} : </h6>
+            <h6 style="display: inline" class="font-weight-normal"
+                *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null">
+              {{plugin.outputs[i]['options'][optKey]}} </h6>
+          </dd>
+    </div>
+    </dt>
+    </div>
+    </dd>
+</tr>
+</table>
+</div>
+</td>
+</tr>
 
-  <!--  UI  Line  -->
-  <tr class="pointer" (click)="showContent('ui')">
-    <th class="th1"><dt  ngbTooltip=" Click to show UIs">UI Description:</dt></th>
-    <td>
-      <div class="col-md-8 h" [hidden]="viewUI">Click to expand</div>
-      <div [hidden]="!viewUI">
-        <table>
-          <tr  class="b" *ngFor="let ui of plugin.ui; let i = index; let c = count">
-            <p style="color:dimgrey;" class="font-weight-bold col-md-8">  UI {{i+1}}  / {{c}} </p>
-            <dd class="col-md-12">
-              <div class="row" style="word-break: break-word">
-                <dt  class="col-md-12" *ngFor="let key of uiKeys[i];">
-                  <h6 style="display: inline" class="font-weight-bold">{{key}} : </h6>
-                  <h6 style="display: inline"> {{plugin.ui[i][key]}}</h6>
-                </dt>
-              </div>
-            </dd>
-          </tr>
-        </table>
-      </div>
-    </td>
-  </tr>
+<!--  UI  Line  -->
+<tr class="pointer" (click)="showContent('ui')">
+  <th class="th1"><dt  ngbTooltip=" Click to show UIs">UI Description:</dt></th>
+  <td>
+    <div class="col-md-8 h" [hidden]="viewUI">Click to expand</div>
+    <div [hidden]="!viewUI">
+      <table>
+        <tr  class="b" *ngFor="let ui of plugin.ui; let i = index; let c = count">
+          <p style="color:dimgrey;" class="font-weight-bold col-md-8">  UI {{i+1}}  / {{c}} </p>
+          <dd class="col-md-12">
+            <div class="row" style="word-break: break-word">
+          <dt  class="col-md-12" *ngFor="let key of uiKeys[i];">
+            <h6 style="display: inline" class="font-weight-bold">{{key}} : </h6>
+            <h6 style="display: inline"> {{plugin.ui[i][key]}}</h6>
+          </dt>
+    </div>
+    </dd>
+</tr>
+</table>
+</div>
+</td>
+</tr>
 
 </table>
