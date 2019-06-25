@@ -17,9 +17,15 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="cancel()">Cancel</button>
-  <button type="button" class="btn btn-outline-dark" (click)="save()"
+  <button type="button" class="btn btn-danger" (click)="cancel()">
+    <i class="fas fa-times-circle" style="margin-right: 10px">
+      <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Cancel</p>
+    </i>
+  </button>
+  <button type="button" class="btn btn-success" (click)="save()"
           [disabled]="">
-    Save
+    <i class="fas fa-save" style="margin-right: 10px">
+      <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Save</p>
+    </i>
   </button>
 </div>
