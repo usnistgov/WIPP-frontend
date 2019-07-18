@@ -28,7 +28,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   images: Observable<Image[]>;
   metadataFiles: Observable<MetadataFile[]>;
 
-  displayedColumnsImages: string[] = ['index', 'name', 'size', 'actions'];
+  displayedColumnsImages: string[] = ['index', 'fileName', 'size', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
 
   pageSizeOptions: number[] = [10, 25, 50, 100];
