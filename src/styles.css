@@ -2,6 +2,10 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~@qontu/ngx-inline-editor/themes/bootstrap.css';
 
 html, body { height: 100%; }
 body { margin: 0; font-family: 'Roboto', sans-serif; }
+table {
+  width: 100%;
+}
