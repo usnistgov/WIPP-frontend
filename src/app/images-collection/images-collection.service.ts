@@ -7,12 +7,6 @@ import {Image, PaginatedImages} from './image';
 import {MetadataFile, PaginatedMetadataFiles} from './metadata-file';
 import {environment} from '../../environments/environment';
 
-// const httpOptions = {
-//   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-//   params: new HttpParams()
-// };
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -30,14 +24,53 @@ export class ImagesCollectionService {
       params: {}
     };
     if (params) {
-      console.log('here');
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size);
+      const sort = params.sort ? params.sort : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
-    console.log(httpOptions);
     return this.http.get<any>(this.imagesCollectionsUrl, httpOptions).pipe(
+      map((result: any) => {
+        result.imagesCollections = result._embedded.imagesCollections;
+        return result;
+      }));
+  }
+
+  getImagesCollectionsByNameContainingIgnoreCase(params, name): Observable<PaginatedImagesCollections> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+    let httpParams = new HttpParams().set('name', name);
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
+    }
+    httpOptions.params = httpParams;
+    return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
+      map((result: any) => {
+        result.imagesCollections = result._embedded.imagesCollections;
+        return result;
+      }));
+  }
+
+  getImagesCollectionsByNameContainingIgnoreCaseAndNumberOfImages(params, name, nbOfImgs): Observable<PaginatedImagesCollections> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    let httpParams = new HttpParams().set('name', name).set('numberOfImages', nbOfImgs);
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
+    }
+    httpOptions.params = httpParams;
+    return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCaseAndNumberOfImages', httpOptions).pipe(
       map((result: any) => {
         result.imagesCollections = result._embedded.imagesCollections;
         return result;
@@ -48,12 +81,12 @@ export class ImagesCollectionService {
     return this.http.get<ImagesCollection>(`${this.imagesCollectionsUrl}/${id}`);
   }
 
-  setImagesCollectionName(imagesCollection: ImagesCollection, name: string) {
+  setImagesCollectionName(imagesCollection: ImagesCollection, name: string): Observable<ImagesCollection> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
-    return this.http.patch(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
   }
 
   getImages(imagesCollection: ImagesCollection, params): Observable<PaginatedImages> {
@@ -64,10 +97,10 @@ export class ImagesCollectionService {
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size);
+      const sort = params.sort ? params.sort : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
-    console.log(httpOptions);
     return this.http.get<any>(`${this.imagesCollectionsUrl}/${imagesCollection.id}/images`, httpOptions).pipe(
       map((result: any) => {
         console.log(result); // <--it's an object
@@ -84,10 +117,10 @@ export class ImagesCollectionService {
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size);
+      const sort = params.sort ? params.sort : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
-    console.log(httpOptions);
     return this.http.get<any>(`${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`, httpOptions).pipe(
       map((result: any) => {
         console.log(result); // <--it's an object
@@ -108,8 +141,20 @@ export class ImagesCollectionService {
     return this.http.delete<Image>(image._links.self.href);
   }
 
+  deleteAllImages(imagesCollection: ImagesCollection) {
+    if (imagesCollection.numberOfImages > 0) {
+      return this.http.delete(`${this.imagesCollectionsUrl}/${imagesCollection.id}/images`);
+    }
+  }
+
   deleteMetadataFile(metadata: MetadataFile) {
     return this.http.delete<Image>(metadata._links.self.href);
+  }
+
+  deleteAllMetadataFiles(imagesCollection: ImagesCollection) {
+    if (imagesCollection.numberOfMetadataFiles > 0) {
+      return this.http.delete(`${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`);
+    }
   }
 
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {

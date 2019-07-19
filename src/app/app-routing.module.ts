@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from './not-found/not-found.component';
 
 const appRoutes: Routes = [
-  { path: '',   redirectTo: '/images-collection', pathMatch: 'full' },
+  { path: '',   redirectTo: '/images-collections', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 

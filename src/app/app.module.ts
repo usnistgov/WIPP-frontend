@@ -6,12 +6,17 @@ import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './not-found/not-found.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ImagesCollectionModule } from './images-collection/images-collection.module';
+import { PluginModule } from './plugin/plugin.module';
 import {HttpClientModule} from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatTableModule} from '@angular/material/table';
 import {MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule} from '@angular/material';
-import {ImagesCollectionNewComponent} from './images-collection/images-collection-new/images-collection-new.component';
 import {FormsModule} from '@angular/forms';
+import {WorkflowModule} from './workflow/workflow.module';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {StitchingVectorModule} from './stitching-vector/stitching-vector.module';
+import {PyramidModule} from './pyramid/pyramid.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +27,10 @@ import {FormsModule} from '@angular/forms';
     BrowserModule,
     HttpClientModule,
     ImagesCollectionModule,
+    StitchingVectorModule,
+    PyramidModule,
+    PluginModule,
+    WorkflowModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
@@ -29,7 +38,9 @@ import {FormsModule} from '@angular/forms';
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    FormsModule
+    FormsModule,
+    MatCheckboxModule,
+    NgbModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

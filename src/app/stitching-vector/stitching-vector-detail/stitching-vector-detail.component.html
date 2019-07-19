@@ -1,0 +1,75 @@
+<h3 style="margin-top: 2%; margin-bottom: 2%">Stitching Vector Detail</h3>
+
+<div style="margin-top: 20px">
+  <div class="row">
+    <div class="col-md-12"><b>Name: </b> {{stitchingVector.name}}</div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12"><b>Creation Date: </b> {{stitchingVector.creationDate | date}}</div>
+  </div>
+
+  <div class="row" *ngIf="stitchingVector._links && stitchingVector._links.statistics">
+    <div class="col-md-12">
+      <b>Statistics file: </b>
+      <a [href]="stitchingVector._links.statistics.href"
+         ngbTooltip="Download"
+         style="color: blue"
+         placement="left">
+        Download
+      </a>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="job">
+    <div class="col-md-5">
+      <b> Stitching job: </b>
+      <a (click)="displayJobModal(job.id)"
+         class="underline-on-hover"
+         style="color:blue"
+         ngbTooltip="Show Job"
+         placement="left">
+        {{job.name}}
+      </a>
+    </div>
+  </div>
+</div>
+
+<table mat-table [dataSource]="timeSlices">
+
+  # Column
+  <ng-container matColumnDef="sliceNumber">
+    <th mat-header-cell *matHeaderCellDef> Slice Number</th>
+    <td mat-cell *matCellDef="let row">
+      {{row.sliceNumber}}
+    </td>
+  </ng-container>
+
+  # Column
+  <ng-container matColumnDef="errorMessage">
+    <th mat-header-cell *matHeaderCellDef> Error Message</th>
+    <td mat-cell *matCellDef="let row">
+      {{row.errorMessage}}
+    </td>
+  </ng-container>
+
+  # Column
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions</th>
+    <td mat-cell *matCellDef="let row">
+      <a [href]="row._links.globalPositions.href"
+         ngbTooltip="Download"
+         placement="left"
+         class="btn btn-light">
+        <span
+          aria-hidden="true"><i class="fa fa-download"></i>
+        </span>
+      </a>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumnsTimeSlices"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumnsTimeSlices;"></tr>
+</table>
+
+<mat-paginator [length]="resultsLength" [pageSize]="pageSize" #timeSlicesPaginator></mat-paginator>

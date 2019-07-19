@@ -1,16 +1,15 @@
-<h3>Collection detail</h3>
+<h3 style="margin-top: 2%; margin-bottom: 2%">Collection detail</h3>
 <div>
   <div class="row">
     <div class="col-md-9">
       <dl class="row">
         <dt class="col-md-4">Name:</dt>
         <dd class="col-md-8">
-          <!-- TODO: add inline edit for name -->
-          <!--<span data-editable-text="imagesCollection.name"-->
-                <!--data-onbeforesave="updateCollectionName($data)">-->
-              <!--{{imagesCollection.name}}-->
-          <!--</span>-->
-          {{imagesCollection.name}}
+          <inline-editor type="text" [(ngModel)]="imagesCollection.name"
+                         (onSave)="updateCollectionName($event)" size="20"
+                         name="editableImageCollectionName">
+            {{imagesCollection.name}}
+          </inline-editor>
         </dd>
 
         <dt class="col-md-4">Creation date:</dt>
@@ -28,11 +27,12 @@
           }}
         </dd>
 
+
         <dt class="col-md-4">Source job:</dt>
         <dd class="col-md-8">
           <!-- FIXME: add link to source job if any -->
           <a data-ng-if="sourceJob">
-             <!--data-ui-sref="imageProcessing.jobs.detail({jobId: sourceJob.id})">-->
+            <!--data-ui-sref="imageProcessing.jobs.detail({jobId: sourceJob.id})">-->
             <!--{{sourceJob.name}}-->
           </a>
           <span data-ng-if="!sourceJob">Uploaded</span>
@@ -46,14 +46,14 @@
          placement="left"
          class="btn btn-light">
                   <span
-                        aria-hidden="true"><i class="fa fa-download"></i></span>
+                    aria-hidden="true"><i class="fa fa-download"></i></span>
       </a>
       <!-- TODO: add copy collection -->
       <!--<button type="button" class="btn btn-default"-->
-              <!--ng-click="vm.copyCollection();"-->
-              <!--data-uib-tooltip="Copy collection"-->
-              <!--data-tooltip-placement="left">-->
-        <!--<span class="glyphicon glyphicon-copy"></span>-->
+      <!--ng-click="vm.copyCollection();"-->
+      <!--data-uib-tooltip="Copy collection"-->
+      <!--data-tooltip-placement="left">-->
+      <!--<span class="glyphicon glyphicon-copy"></span>-->
       <!--</button>-->
       <button *ngIf="!imagesCollection.locked" type="button"
               ngbTooltip="Delete collection"
@@ -79,30 +79,62 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="!imagesCollection.locked">
-    <div class="col-md-4">
-      <button class="btn btn-light btn-block" #browseBtn>
-        Add files to collection
-      </button>
-      <button class="btn btn-light btn-block"  #browseDirBtn
-              [hidden]="!flowHolder.supportDirectory">
-        Add folder to collection
-      </button>
+  <div *ngIf="!imagesCollection.locked">
+    <h4>Upload Options</h4>
+    <div class="row">
+      <div class="col-md-9">
+        <dl class="row">
+          <dt class="col-md-4">Filename filtering pattern:</dt>
+          <dd class="col-md-8">{{getPattern()}}</dd>
+        </dl>
+      </div>
     </div>
-    <div class="col-md-1 text-center">
-      OR
+
+    <h5>Folder upload:</h5>
+    <div [hidden]="!flowHolder.supportDirectory">
+      <div class="col-md-11 ml-md-1">
+        <input type="radio" id="regular" name="upload" value="regular"
+               [(ngModel)]="uploadOption">
+        Upload images from folder and sub-folders (do not prefix images names with folders relative path)
+        <br/>
+        <input type="radio" id="includeSubsInPath"
+               name="upload" value="includeSubsInPath"
+               [(ngModel)]="uploadOption">
+        Upload images from folder and sub-folders (prefix images names with folders relative path)
+        <br/>
+        <input type="radio" id="ignoreSubFolders"
+               name="upload" value="ignoreSubs"
+               [(ngModel)]="uploadOption">
+        Ignore sub-folders
+        <br/>
+      </div>
     </div>
-    <div class="col-md-7">
-      <div class="upload-drop-zone" #dropArea>
-        Drag And Drop the files <span [hidden]="!flowHolder.supportDirectory">
+    <br/>
+
+    <div class="row">
+      <div class="col-md-4">
+        <button class="btn btn-light btn-block" #browseBtn>
+          Add files to collection
+        </button>
+        <button class="btn btn-light btn-block" #browseDirBtn
+                [hidden]="!flowHolder.supportDirectory">
+          Add folder to collection
+        </button>
+      </div>
+      <div class="col-md-1 text-center">
+        OR
+      </div>
+      <div class="col-md-7">
+        <div class="upload-drop-zone" #dropArea>
+          Drag And Drop the files <span [hidden]="!flowHolder.supportDirectory">
                       &nbsp;or a folder&nbsp;
                   </span>
-        here.
+          here.
+        </div>
       </div>
     </div>
   </div>
-
-  <div  [hidden]="!hasFilesNotComplete(flowHolder.files)">
+  <div [hidden]="!hasFilesNotComplete(flowHolder.files)">
     <h4 class="top10">Transfers</h4>
     <div class="row">
       <div class="col-sm-3">
@@ -120,12 +152,12 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let file of flowHolder.files; let index=index">
+      <tr *ngFor="let file of flowHolder.files | slice:0:10; let index=index">
         <td class="vert-align">{{index + 1}}</td>
         <td class="vert-align">{{file.name}}</td>
         <td class="vert-align">{{file.size | bytes}}</td>
         <td *ngIf='!file.error'>
-          <ngb-progressbar max="1" value="file.progress()">
+          <ngb-progressbar max="1" value="{{file.progress()}}">
           </ngb-progressbar>
         </td>
         <td *ngIf='file.error'>
@@ -150,29 +182,34 @@
     <div class="col-sm-3">
       Import errors: {{imagesCollection.numberOfImportErrors}}
     </div>
+
+
     <div class='col-sm-2 text-right'>
-      <button [hidden]="!imagesCollection.locked" type="button"
-              data-uib-tooltip="Delete all tiles"
-              data-tooltip-placement="left"
-              class="btn btn-default" ng-click="vm.deleteAllTiles();">
-                <span class="glyphicon glyphicon-remove"
+      <button *ngIf="!imagesCollection.locked" type="button"
+              ngbTooltip="Delete all images"
+              placement="left"
+              class="btn btn-light"
+              (click)="deleteAllImages()">
+                <span class="fa fa-times"
                       aria-hidden="true"></span>
       </button>
     </div>
   </div>
-  <table mat-table [dataSource]="images">
+
+  <table mat-table [dataSource]="images" (matSortChange)="imagesSortChanged($event)"
+         matSort  matSortActive="fileName" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
       <th mat-header-cell *matHeaderCellDef>#</th>
       <td mat-cell *matCellDef="let id=index">
-        {{ (resultsLength * imagesPaginator.pageIndex) + id + 1 }}
+        {{ (pageSize * imagesPaginator.pageIndex) + id + 1 }}
       </td>
     </ng-container>
 
     <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
+    <ng-container matColumnDef="fileName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
       <td mat-cell *matCellDef="let row">
         {{ row.fileName }}
         <span [hidden]="!row.importError"><br>{{row.importError}}</span>
@@ -181,7 +218,7 @@
 
     <!-- FileSize Column -->
     <ng-container matColumnDef="size">
-      <th mat-header-cell *matHeaderCellDef>Size</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
       <td mat-cell *matCellDef="let row">{{ row.fileSize | bytes }}</td>
     </ng-container>
 
@@ -220,7 +257,7 @@
   </table>
 
 
-  <mat-paginator [length]="resultsLength" [pageSize]="pageSize" #imagesPaginator></mat-paginator>
+  <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSize" #imagesPaginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
 
   <h4>Metadata files</h4>
   <div class='row'>
@@ -230,20 +267,34 @@
     <div class='col-sm-2'>
       Total size: {{imagesCollection.metadataFilesTotalSize| bytes}}
     </div>
+    <div class='col-sm-3 text-right'></div>
+    <div class='col-sm-3 text-right'></div>
+    <div class='col-sm-2 text-right'>
+      <button *ngIf="!imagesCollection.locked" type="button"
+              ngbTooltip="Delete all metadata files"
+              placement="left"
+              class="btn btn-light"
+              (click)="deleteAllMetadataFiles()">
+                <span class="fa fa-times"
+                      aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
-  <table mat-table [dataSource]="metadataFiles" #metadataFilesSort>
+
+  <table mat-table [dataSource]="metadataFiles" (matSortChange)="metadataSortChanged($event)" #metadataFilesSort
+         matSort  matSortActive="name" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
       <th mat-header-cell *matHeaderCellDef>#</th>
       <td mat-cell *matCellDef="let id=index">
-        {{ (resultsLength * imagesPaginator.pageIndex) + id + 1 }}
+        {{ (pageSize * metadataFilesPaginator.pageIndex) + id + 1 }}
       </td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
       <td mat-cell *matCellDef="let row">
         {{ row.fileName }}
         <span [hidden]="!row.importError"><br>{{row.importError}}</span>
@@ -252,7 +303,7 @@
 
     <!-- FileSize Column -->
     <ng-container matColumnDef="size">
-      <th mat-header-cell *matHeaderCellDef>Size</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
       <td mat-cell *matCellDef="let row">{{ row.fileSize | bytes }}</td>
     </ng-container>
 
@@ -282,5 +333,5 @@
   </table>
 
 
-  <mat-paginator [length]="resultsLength" [pageSize]="pageSize" #metadataFilesPaginator></mat-paginator>
+  <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
 </div>
