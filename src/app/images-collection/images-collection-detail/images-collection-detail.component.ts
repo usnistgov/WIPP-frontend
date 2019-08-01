@@ -38,7 +38,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   uploadOption = 'regular';
   resultsLengthImages = 0;
   resultsLengthMetadataFiles = 0;
-  pageSize = 10;
+  pageSizeImages = 10;
+  pageSizeMetadataFiles = 10;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
@@ -58,12 +59,12 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private imagesCollectionService: ImagesCollectionService) {
     this.imagesParamsChange = new BehaviorSubject({
       index: 0,
-      size: this.pageSize,
+      size: this.pageSizeImages,
       sort: ''
     });
     this.metadataParamsChange = new BehaviorSubject({
       index: 0,
-      size: this.pageSize,
+      size: this.pageSizeMetadataFiles,
       sort: ''
     });
   }
@@ -75,6 +76,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   imagesPageChanged(page) {
     this.imagesParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.imagesParamsChange.value.sort});
+    this.pageSizeImages = page.pageSize;
   }
 
   metadataSortChanged(sort) {
@@ -84,6 +86,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   metadataPageChanged(page) {
     this.metadataParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.metadataParamsChange.value.sort});
+    this.pageSizeMetadataFiles = page.pageSize;
   }
 
   ngOnInit() {
