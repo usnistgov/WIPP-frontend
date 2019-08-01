@@ -203,7 +203,7 @@
     <ng-container matColumnDef="index">
       <th mat-header-cell *matHeaderCellDef>#</th>
       <td mat-cell *matCellDef="let id=index">
-        {{ (pageSize * imagesPaginator.pageIndex) + id + 1 }}
+        {{ (pageSizeImages * imagesPaginator.pageIndex) + id + 1 }}
       </td>
     </ng-container>
 
@@ -256,8 +256,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumnsImages;"></tr>
   </table>
 
-
-  <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSize" #imagesPaginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+  <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSizeImages" #imagesPaginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
 
   <h4>Metadata files</h4>
   <div class='row'>
@@ -288,7 +287,7 @@
     <ng-container matColumnDef="index">
       <th mat-header-cell *matHeaderCellDef>#</th>
       <td mat-cell *matCellDef="let id=index">
-        {{ (pageSize * metadataFilesPaginator.pageIndex) + id + 1 }}
+        {{ (pageSizeMetadataFiles * metadataFilesPaginator.pageIndex) + id + 1 }}
       </td>
     </ng-container>
 
@@ -333,5 +332,6 @@
   </table>
 
 
-  <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
+  <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
+
 </div>
