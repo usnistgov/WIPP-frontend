@@ -256,17 +256,19 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumnsImages;"></tr>
   </table>
 
-  <div class="container" style="margin-top: 20px">
+  <div class="container-fluid" style="margin-top: 20px">
     <div class="row" style="border-color: #ee3322">
-      <div class="col-md-4">
-      <span class="goToSpan">Go to page:
-        <input type="number"
+      <div class="col-md-5">
+      </div>
+      <div class="col-md-3 text-right" style="margin-top: 15px">
+        <span class="goToSpan">Go to page:
+          <input type="number"
                [(ngModel)]="goToPageImages"
                id="goToPageImages"
                class="form-control inputPage"
                name="gotoPageImages"
                required>
-        <button class="btn-xs goToButton"
+          <button class="btn-xs goToButton"
                 (click)="goToPage('images')"
                 [disabled]="goToPageImages<1 ||
                  goToPageImages>= imagesCollection.numberOfImages/pageSizeImages+1 ||
@@ -274,9 +276,9 @@
           <span style="display: inline; font-size: 12px">Go</span>
           <i class="fas fa-angle-right arrowIcon"></i>
         </button>
-      </span>
+        </span>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-4" >
         <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSizeImages" [pageSizeOptions]="pageSizeOptions" #imagesPaginator></mat-paginator>
       </div>
     </div>
@@ -357,29 +359,30 @@
   </table>
 
 
-  <div class="container" style=" margin-top: 20px">
+  <div class="container-fluid" style=" margin-top: 20px">
     <div class="row">
-
-      <div class="col-md-4">
-      <span class="goToSpan">Go to page:
-        <input type="number"
+      <div class="col-md-5">
+      </div>
+      <div class="col-md-3 text-right" style="margin-top: 15px">
+        <span class="goToSpan">Go to page:
+          <input type="number"
                [(ngModel)]="goToPageMetadataFiles"
                id="goToPageMetadata"
                class="form-control inputPage"
                name="gotoPageMetadata"
                required>
-        <button class="btn-xs goToButton"
+          <button class="btn-xs goToButton"
                 (click)="goToPage('metadata')"
                 [disabled]="goToPageMetadataFiles<1 ||
                  goToPageMetadataFiles> imagesCollection.numberOfMetadataFiles/pageSizeMetadataFiles+1 ||
                   !goToPageMetadataFiles">
           <span style="display: inline; font-size: 12px">Go</span>
           <i class="fas fa-angle-right arrowIcon"></i>
-        </button>
-      </span>
+          </button>
+        </span>
       </div>
 
-      <div class="col-md-8">
+      <div class="col-md-4">
         <mat-paginator style="display: inline" (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
       </div>
 
