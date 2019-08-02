@@ -40,6 +40,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   resultsLengthMetadataFiles = 0;
   pageSizeImages = 10;
   pageSizeMetadataFiles = 10;
+  goToPageImages;
+  goToPageMetadataFiles;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
@@ -317,4 +319,16 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     return !flowFile.isComplete() || flowFile.error;
   }
 
+  goToPage(val) {
+    if (val === 'images' &&  this.imagesPaginator.pageIndex !== this.goToPageImages - 1) {
+      this.imagesPaginator.pageIndex = this.goToPageImages - 1;
+      this.imagesParamsChange.next({index: this.goToPageImages - 1, size: this.pageSizeImages, sort: this.imagesParamsChange.value.sort});
+      this.goToPageImages = '';
+    } else if ( val === 'metadata' && this.metadataFilesPaginator.pageIndex !== this.goToPageMetadataFiles - 1) {
+      this.metadataFilesPaginator.pageIndex = this.goToPageMetadataFiles - 1;
+      this.metadataParamsChange.next({index: this.goToPageMetadataFiles - 1, size: this.pageSizeMetadataFiles, sort: this.metadataParamsChange.value.sort});
+      this.goToPageMetadataFiles = '';
+    }
+  }
+  
 }
