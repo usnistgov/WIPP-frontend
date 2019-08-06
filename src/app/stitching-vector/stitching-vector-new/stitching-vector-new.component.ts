@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVector} from '../stitching-vector';
 import {StitchingVectorService} from '../stitching-vector.service';
@@ -10,21 +10,15 @@ import {StitchingVectorService} from '../stitching-vector.service';
 })
 export class StitchingVectorNewComponent implements OnInit {
 
-  @Input() modalReference: any;
-
   stitchingVector: StitchingVector = new StitchingVector();
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
 
-  constructor(private activeModal: NgbActiveModal,
+  constructor(public activeModal: NgbActiveModal,
               private stitchingVectorService: StitchingVectorService) {
   }
 
   ngOnInit() {
-  }
-
-  cancel() {
-    this.modalReference.dismiss();
   }
 
   onFileSelected(event) {
@@ -32,8 +26,9 @@ export class StitchingVectorNewComponent implements OnInit {
   }
 
   upload() {
-    this.stitchingVectorService.uploadFile(this.stitchingVector);
-    this.modalReference.close(this.stitchingVector);
+    this.stitchingVectorService.uploadFile(this.stitchingVector).subscribe(stitchingVector => {
+      this.activeModal.close(stitchingVector);
+    });
   }
 
 }
