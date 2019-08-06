@@ -2,7 +2,7 @@
   <h4 class="modal-title" id="modal-basic-title">
     <span class="glyphicon glyphicon-star"></span> Image collection name
   </h4>
-  <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -34,7 +34,7 @@
 
 <div class="modal-footer">
   <!--<button type="button" class="btn btn-outline-dark" (click)="cancel()">-->
-  <button type="button" class="btn btn-danger" (click)="cancel()" >
+  <button type="button" class="btn btn-danger" (click)="activeModal.dismiss('Cross click')" >
      <i class="fas fa-times-circle" style="margin-right: 10px">
       <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Cancel</p>
     </i>
