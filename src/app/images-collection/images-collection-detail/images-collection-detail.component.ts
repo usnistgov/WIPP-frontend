@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, NgModule } from '@angular/core';
 import { Router, ActivatedRoute} from '@angular/router';
-import {catchError, map, startWith, switchMap, throttleTime} from 'rxjs/operators';
+import {catchError, map, startWith, switchMap, auditTime} from 'rxjs/operators';
 import * as Flow from '@flowjs/flow.js';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
@@ -96,7 +96,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       method: 'octet'
     });
     this.$throttleRefresh.pipe(
-      throttleTime(1000),
+      auditTime(1000),
       switchMap(() => this.refresh()))
     .subscribe();
   }

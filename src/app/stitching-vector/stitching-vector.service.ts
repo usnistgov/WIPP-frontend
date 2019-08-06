@@ -17,16 +17,13 @@ export class StitchingVectorService {
     private http: HttpClient) {
   }
 
-  uploadFile(stitchingVector: StitchingVector) {
+  uploadFile(stitchingVector): Observable<StitchingVector> {
     const formData = new FormData();
     formData.append('file', stitchingVector.file, stitchingVector.file.name);
     formData.append('name', stitchingVector.name);
     stitchingVector.note ? formData.append('message', stitchingVector.note) : formData.append('message', '');
 
-    this.http.post<StitchingVector>(this.stitchingVectorsUrl + '/upload', formData)
-      .subscribe(res => {
-        console.log(res);
-      });
+    return this.http.post<StitchingVector>(this.stitchingVectorsUrl + '/upload', formData);
   }
 
   getStitchingVector(id: string): Observable<StitchingVector> {
