@@ -2,9 +2,11 @@
 <!--<h3 style=" margin-top: 7%; margin-bottom: 3%; font-family: fantasy; font-size: 3em; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px;">Plugins</h3>-->
 <div class="row">
   <div class="col-md-3">
-    <button class="btn btn-primary" style="background-color: #f8f9fa; border-color: #bfbfbf; color: black" (click)="open(addPluginModal)">
+    <button class="btn btn-primary" style="background-color: #f8f9fa; border-color: #bfbfbf; color: black"
+            (click)="open(addPluginModal)">
       <i class="fas fa-plus-circle" style="margin-right: 10px">
-        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">New plugin</p>
+        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
+          New plugin</p>
       </i>
     </button>
   </div>
@@ -26,7 +28,7 @@
   </ng-container>
 
   <!-- Description Column -->
-  <ng-container matColumnDef="description" >
+  <ng-container matColumnDef="description">
     <th mat-header-cell *matHeaderCellDef>Description</th>
     <td mat-cell *matCellDef="let row">{{row.description}}</td>
     <td mat-cell *matCellDef="let row">{{row.description}}</td>
@@ -55,27 +57,46 @@
 
 </table>
 
-<mat-paginator (page)="pageChanged($event)" [length]="resultsLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+<mat-paginator (page)="pageChanged($event)" [length]="resultsLength" [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"></mat-paginator>
 
 <ng-template #addPluginModal let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h4 class="modal-title">New plugin</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d()">
+    <button type="button" class="close" aria-label="Close" (click)="onClose()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <div class="form-group">
-      <label for="pluginDescriptor">Enter the plugin descriptor in the area below:</label>
-      <textarea id="pluginDescriptor" class="form-control" rows="10" #pluginDescriptor></textarea>
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <input #browsePlugin type="file" (change)="onFileSelected($event)" name="file" class="col-md-12" id="file"
+                 accept=".json, text/plain">
+          <div>
+            <button id="getJsonBtn" (click)="getByUrl(linkPlugin.value); linkPlugin.value=''"
+                    [disabled]="linkPlugin.value.length<4 || !linkPlugin.checkValidity()">Get Json
+            </button>
+            <input #linkPlugin (change)="browsePlugin.value=null;" type="url" id="pluginLink" name="pluginLink"
+                   placeholder="Enter the URL of the JSON plugin manifest" style="width: 80%; margin-top: 5%">
+          </div>
+          <textarea #pluginDescriptorText (change)="browsePlugin.value=null;" [(ngModel)]="pluginJSON"
+                    id="pluginDescriptorText"
+                    class="form-control" rows="10" placeholder="Or copy your JSON file content here"
+                    style="margin-top: 5%">  </textarea>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-danger" (click)="clearAll()"><a>clear form</a></button>
+      </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" style="background-color: #f8f9fa; border-color: #bfbfbf; color: black" (click)="c(pluginDescriptor.value)">
+    <button type="button" class="btn btn-primary" id="registerBtn"
+            (click)="c(pluginDescriptorText.value); clearAll()" [disabled]="pluginDescriptorText.value.length<2">
       <i class="fas fa-save" style="margin-right: 10px">
-        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Register plugin</p>
+        <p id="registerText">Register plugin</p>
       </i></button>
   </div>
+
 </ng-template>
-
-

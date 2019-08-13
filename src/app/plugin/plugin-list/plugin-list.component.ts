@@ -11,11 +11,13 @@ import {ActivatedRoute, Route, Router} from '@angular/router';
 
 @Component({
   selector: 'app-plugin-list',
-  templateUrl: './plugin-list.template.html'
+  templateUrl: './plugin-list.template.html',
+    styleUrls: ['./plugin-list.component.css']
 })
 export class PluginListComponent implements OnInit {
   displayedColumns: string[] = [ 'name', 'version', 'description'];
   plugins: Observable<Plugin[]>;
+  pluginJSON;
   selection = new SelectionModel<Plugin>(false, []);
 
   resultsLength = 0;
@@ -101,15 +103,61 @@ export class PluginListComponent implements OnInit {
 
   public open(content) {
     this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
-      this.pluginService.postPlugin(result).subscribe(
-        plugin => this.getPlugins()
-      );
+      const jsonState = this.isJsonValid(result);
+      if (jsonState[0] ) {
+        this.pluginService.postPlugin(result).subscribe(
+          plugin => this.getPlugins()
+        );
+        this.pluginJSON = null;
+      } else {
+        alert('invalid JSON - ' + jsonState[1] ); }
     }, (result) => {
     });
   }
 
+  public onClose() {
+    this.modalService.dismissAll();
+    this.pluginJSON = null;
+    const inputValue = (<HTMLInputElement>document.getElementById('pluginDescriptorText'));
+    if (inputValue) {inputValue.value = null; }
+  }
 
-public onClick(row) {
-  this.router.navigate(['/plugins/' + row.id ], { skipLocationChange: false } );
-}
+  onFileSelected(event) {
+    const reader = new FileReader();
+    reader.readAsText(event.target.files[0]);
+    const me = this;
+    reader.onload = function () {
+      me.pluginJSON = reader.result;
+    };
+  }
+
+  getByUrl(url) {
+    this.pluginService.getJsonFromURL(url).subscribe(data => {
+      this.pluginJSON = JSON.stringify(data, undefined, 7);
+    });
+  }
+
+  public clearAll() {
+    this.pluginJSON = null;
+    const browseInput = (<HTMLInputElement>document.getElementById('file'));
+    const urlInput = (<HTMLInputElement>document.getElementById('pluginLink'));
+    if (browseInput) {browseInput.value = null; }
+    if (urlInput) {urlInput.value = null; }
+  }
+
+  public isJsonValid(textToTest) {
+    try {
+      // parse it to json
+      const data = JSON.parse(textToTest);
+      return [true];
+    } catch (ex) {
+      // set parse error if it fails
+      return  [false, ex];
+    }
+  }
+
+  public onClick(row) {
+    this.router.navigate(['/plugins/' + row.id ], { skipLocationChange: false } );
+  }
+
 }
