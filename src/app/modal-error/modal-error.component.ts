@@ -7,7 +7,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./modal-error.component.css']
 })
 export class ModalErrorComponent {
-  @Input() name;
+  @Input() message;
   @Input() title;
 
   constructor(public activeModal: NgbActiveModal) {}

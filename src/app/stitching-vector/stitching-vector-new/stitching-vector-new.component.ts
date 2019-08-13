@@ -36,7 +36,7 @@ export class StitchingVectorNewComponent implements OnInit {
           this.activeModal.close(err);
           const modalRef = this.modalService.open(ModalErrorComponent);
           modalRef.componentInstance.title = 'Cannot upload stitching vector.';
-          modalRef.componentInstance.name = err.error.message;
+          modalRef.componentInstance.message = err.error.message;
           return throwError(err);
         })
       )
