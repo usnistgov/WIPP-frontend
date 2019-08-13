@@ -269,7 +269,7 @@
                name="gotoPageImages"
                required>
           <button class="btn-xs goToButton"
-                (click)="goToPage('images')"
+                (click)="goToPageImage()"
                 [disabled]="goToPageImages<1 ||
                  goToPageImages>= imagesCollection.numberOfImages/pageSizeImages+1 ||
                  !goToPageImages">
@@ -372,7 +372,7 @@
                name="gotoPageMetadata"
                required>
           <button class="btn-xs goToButton"
-                (click)="goToPage('metadata')"
+                (click)="goToPageMetadata()"
                 [disabled]="goToPageMetadataFiles<1 ||
                  goToPageMetadataFiles> imagesCollection.numberOfMetadataFiles/pageSizeMetadataFiles+1 ||
                   !goToPageMetadataFiles">
