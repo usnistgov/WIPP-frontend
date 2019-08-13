@@ -86,4 +86,8 @@ export class PluginService {
     return (outputKeys);
   }
 
+  getJsonFromURL(url: string): Observable<JSON> {
+    return this.http.get<JSON>(url);
+  }
+
 }

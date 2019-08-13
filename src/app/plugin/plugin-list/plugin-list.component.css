@@ -1,0 +1,27 @@
+#pluginLink {
+  border: none;
+  border-bottom: solid 2px #007bff;
+}
+#pluginLink:invalid {
+  border: 1px dotted red;
+}
+
+#getJsonBtn {
+  width: 15%;
+  margin-left: 2.5%;
+  margin-right: 2%;
+  font-size: 16px;
+}
+
+#registerBtn {
+  background-color: #f8f9fa;
+  border-color: #bfbfbf;
+  color: black;
+}
+
+#registerText {
+  margin-left: 10px;
+  display: inline;
+  font-family: 'Roboto', sans-serif ;
+  font-weight: normal;
+}
