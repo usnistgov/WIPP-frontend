@@ -256,24 +256,21 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumnsImages;"></tr>
   </table>
 
-  <div class="container-fluid" style="margin-top: 20px">
-    <div class="row" style="border-color: #ee3322">
+  <div class="container-fluid topMarge20">
+    <div class="row">
       <div class="col-md-5">
       </div>
-      <div class="col-md-3 text-right" style="margin-top: 15px">
-        <span class="goToSpan">Go to page:
-          <input type="number"
-               [(ngModel)]="goToPageImages"
-               id="goToPageImages"
-               class="form-control inputPage"
-               name="gotoPageImages"
-               required>
+      <div class="col-md-3 text-right topMarge15">
+        <span class="goToSpan">
+           <mat-form-field class="inputPage">
+              <input matInput [(ngModel)]="goToPageImages" placeholder="Go to page">
+            </mat-form-field>
           <button class="btn-xs goToButton"
                 (click)="goToPageImage()"
                 [disabled]="goToPageImages<1 ||
                  goToPageImages>= imagesCollection.numberOfImages/pageSizeImages+1 ||
                  !goToPageImages">
-          <span style="display: inline; font-size: 12px">Go</span>
+          <span class="goToTxt">Go</span>
           <i class="fas fa-angle-right arrowIcon"></i>
         </button>
         </span>
@@ -359,24 +356,21 @@
   </table>
 
 
-  <div class="container-fluid" style=" margin-top: 20px">
+  <div class="container-fluid topMarge20">
     <div class="row">
       <div class="col-md-5">
       </div>
-      <div class="col-md-3 text-right" style="margin-top: 15px">
-        <span class="goToSpan">Go to page:
-          <input type="number"
-               [(ngModel)]="goToPageMetadataFiles"
-               id="goToPageMetadata"
-               class="form-control inputPage"
-               name="gotoPageMetadata"
-               required>
+      <div class="col-md-3 text-right topMarge15">
+        <span class="goToSpan">
+           <mat-form-field class="inputPage">
+              <input matInput [(ngModel)]="goToPageMetadataFiles" placeholder="Go to page">
+            </mat-form-field>
           <button class="btn-xs goToButton"
                 (click)="goToPageMetadata()"
                 [disabled]="goToPageMetadataFiles<1 ||
                  goToPageMetadataFiles> imagesCollection.numberOfMetadataFiles/pageSizeMetadataFiles+1 ||
                   !goToPageMetadataFiles">
-          <span style="display: inline; font-size: 12px">Go</span>
+          <span class="goToTxt">Go</span>
           <i class="fas fa-angle-right arrowIcon"></i>
           </button>
         </span>

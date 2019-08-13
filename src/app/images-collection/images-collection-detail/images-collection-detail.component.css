@@ -30,6 +30,16 @@
   font-size: 12px;
 }
 
+.goToTxt {
+  display: inline;
+  font-size: 12px;
+}
+
+.btnTxt {
+  display: inline;
+  font-size: 12px;
+}
+
 .arrowIcon {
   font-size: 2.00em;
   color: #999999;
@@ -38,10 +48,14 @@
 }
 
 .inputPage {
-  display: inline-block;
-  height: 20px;
   width: 70px;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.87);
-  vertical-align: middle;
+}
+
+.topMarge20 {
+  margin-top: 20px;
+}
+
+.topMarge15 {
+  margin-top: 20px;
 }
