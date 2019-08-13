@@ -16,6 +16,7 @@ import {StitchingVectorNewComponent} from './stitching-vector-new/stitching-vect
 import {StitchingVectorListComponent} from './stitching-vector-list/stitching-vector-list.component';
 import {StitchingVectorDetailComponent} from './stitching-vector-detail/stitching-vector-detail.component';
 import {StitchingVectorRoutingModule} from './stitching-vector-routing.module';
+import {ModalErrorComponent} from '../modal-error/modal-error.component';
 
 
 @NgModule({
@@ -34,11 +35,12 @@ import {StitchingVectorRoutingModule} from './stitching-vector-routing.module';
     InlineEditorModule,
     MatCheckboxModule
   ],
-  entryComponents: [StitchingVectorNewComponent],
+  entryComponents: [StitchingVectorNewComponent, ModalErrorComponent],
   declarations: [
     StitchingVectorDetailComponent,
     StitchingVectorListComponent,
-    StitchingVectorNewComponent
+    StitchingVectorNewComponent,
+    ModalErrorComponent
   ]
 })
 export class StitchingVectorModule { }

@@ -17,7 +17,7 @@ export class StitchingVectorService {
     private http: HttpClient) {
   }
 
-  uploadFile(stitchingVector): Observable<StitchingVector> {
+  uploadFile(stitchingVector: StitchingVector): Observable<StitchingVector> {
     const formData = new FormData();
     formData.append('file', stitchingVector.file, stitchingVector.file.name);
     formData.append('name', stitchingVector.name);
