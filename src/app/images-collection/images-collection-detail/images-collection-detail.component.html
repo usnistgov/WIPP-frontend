@@ -3,13 +3,20 @@
   <div class="row">
     <div class="col-md-9">
       <dl class="row">
-        <dt class="col-md-4">Name:</dt>
+        <dt class="col-md-4 topMarge1">Name:</dt>
         <dd class="col-md-8">
-          <inline-editor type="text" [(ngModel)]="imagesCollection.name"
-                         (onSave)="updateCollectionName($event)" size="20"
-                         name="editableImageCollectionName">
-            {{imagesCollection.name}}
-          </inline-editor>
+          <mat-form-field  ngbTooltip="Click to modify name">
+            <input matInput #editedImageCollectionName
+                   value={{imagesCollection.name}}
+                   type="text"
+                   size="20"
+                   name="editableImageCollectionName">
+          </mat-form-field>
+          <button class="btn btn-outline-secondary btn-sm leftMargin"
+                  (click)="updateCollectionName(editedImageCollectionName.value)"
+                  [disabled]="editedImageCollectionName.value === imagesCollection.name"
+                  > Modify collection name
+          </button>
         </dd>
 
         <dt class="col-md-4">Creation date:</dt>

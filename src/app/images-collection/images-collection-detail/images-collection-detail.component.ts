@@ -7,10 +7,9 @@ import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
-import {MatPaginator, MatSort} from '@angular/material';
+import {MatFormFieldModule, MatPaginator, MatSort, MatInputModule} from '@angular/material';
 import {BehaviorSubject, merge, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
-import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -19,7 +18,7 @@ import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 })
 
 @NgModule({
-  imports: [ NgbModule, NgMathPipesModule, BytesPipe, InlineEditorModule ]
+  imports: [ NgbModule, NgMathPipesModule, BytesPipe, MatFormFieldModule, MatInputModule ]
 })
 export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
@@ -80,7 +79,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.imagesParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.imagesParamsChange.value.sort});
     this.pageSizeImages = page.pageSize;
   }
-  
+
   goToPageImage() {
     if (this.imagesPaginator.pageIndex !== this.goToPageImages - 1) {
        this.imagesPaginator.pageIndex = this.goToPageImages - 1;
@@ -98,7 +97,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.metadataParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.metadataParamsChange.value.sort});
     this.pageSizeMetadataFiles = page.pageSize;
   }
-  
+
   goToPageMetadata() {
     if (this.metadataFilesPaginator.pageIndex !== this.goToPageMetadataFiles - 1) {
       this.metadataFilesPaginator.pageIndex = this.goToPageMetadataFiles - 1;
@@ -120,11 +119,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // fixme: temporary fix while waiting for 1.0.0 release of ngx-inline-editor
-    const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
-    faRemoveElt.classList.remove('fa-remove');
-    faRemoveElt.classList.add('fa-times');
-
     this.refresh().subscribe(imagesCollection => {
       if (!imagesCollection.locked) {
         this.initFlow();
@@ -334,5 +328,5 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   transferNotCompleteFilter(flowFile) {
     return !flowFile.isComplete() || flowFile.error;
   }
-  
+
 }

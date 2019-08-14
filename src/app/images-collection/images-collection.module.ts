@@ -15,7 +15,6 @@ import {
 } from '@angular/material';
 import { ImagesCollectionNewComponent } from './images-collection-new/images-collection-new.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 
 @NgModule({
   imports: [
@@ -31,7 +30,6 @@ import {InlineEditorModule} from '@qontu/ngx-inline-editor';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    InlineEditorModule,
     MatCheckboxModule
   ],
   entryComponents: [ImagesCollectionNewComponent],
