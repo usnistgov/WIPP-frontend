@@ -1,0 +1,24 @@
+<h3 style="margin-top: 2%; margin-bottom: 2%">Tensorflow Model Detail</h3>
+
+<div style="margin-top: 20px">
+  <div class="row">
+    <div class="col-md-12"><b>Name: </b> {{tensorflowModel.name}}</div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12"><b>Creation Date: </b> {{tensorflowModel.creationDate | date}}</div>
+  </div>
+
+  <div class="row" *ngIf="job">
+    <div class="col-md-5">
+      <b> Unet training job: </b>
+      <a (click)="displayJobModal(job.id)"
+         class="underline-on-hover"
+         style="color:blue"
+         ngbTooltip="Show Job"
+         placement="left">
+        {{job.name}}
+      </a>
+    </div>
+  </div>
+</div>
