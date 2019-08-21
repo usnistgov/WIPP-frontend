@@ -1,0 +1,8 @@
+.breakLine {
+  display: block;
+  word-break: break-all;
+}
+
+th {
+  width: 25%;
+}

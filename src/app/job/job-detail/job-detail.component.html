@@ -8,159 +8,155 @@
 </div>
 
 <!-- Job details Table -->
-<div class="modal-body" *ngIf="job">
-  <div style="margin-top: 20px">
-    <table class="table table-bordered">
+<div class="modal-body" *ngIf="job" style="margin-top: 20px">
+  <table class="table table-bordered">
 
-      <!--  name line  -->
-      <tr *ngIf="job.name">
-        <th>
-          <dt>Name:</dt>
-        </th>
-        <td>
-          <dd class="col-md-8">{{job.name}}</dd>
-        </td>
-      </tr>
+    <!--  name line  -->
+    <tr *ngIf="job.name">
+      <th>
+        <dt>Name:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.name}}</dd>
+      </td>
+    </tr>
 
-      <!--  creationDate line  -->
-      <tr *ngIf=" job.creationDate">
-        <th>
-          <dt>Creation date:</dt>
-        </th>
-        <td>
-          <dd class="col-md-8">{{job.creationDate | date}}</dd>
-        </td>
-      </tr>
+    <!--  creationDate line  -->
+    <tr *ngIf=" job.creationDate">
+      <th>
+        <dt>Creation date:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.creationDate | date}}</dd>
+      </td>
+    </tr>
 
-      <!--  status line  -->
-      <tr *ngIf="job.status">
-        <th>
-          <dt>Status:</dt>
-        </th>
-        <td>
-          <dd class="col-md-8">{{job.status}}</dd>
-        </td>
-      </tr>
+    <!--  status line  -->
+    <tr *ngIf="job.status">
+      <th>
+        <dt>Status:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.status}}</dd>
+      </td>
+    </tr>
 
-      <!--  startTime line  -->
-      <tr *ngIf="job.startTime">
-        <th>
-          <dt>Start time:</dt>
-        </th>
-        <td>
-          <dd class="col-md-8">{{job.startTime}}</dd>
-        </td>
-      </tr>
+    <!--  startTime line  -->
+    <tr *ngIf="job.startTime">
+      <th>
+        <dt>Start time:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.startTime}}</dd>
+      </td>
+    </tr>
 
-      <!--  endTime line  -->
-      <tr *ngIf="job.endTime">
-        <th>
-          <dt>End time:</dt>
-        </th>
-        <td>
-          <dd class="col-md-8">{{job.endTime}}</dd>
-        </td>
-      </tr>
+    <!--  endTime line  -->
+    <tr *ngIf="job.endTime">
+      <th>
+        <dt>End time:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.endTime}}</dd>
+      </td>
+    </tr>
 
-      <!--  runningTime line  -->
-      <tr *ngIf="job.runningTime">
-        <th>
-          <dt>Running time:</dt>
-        </th>
-        <td>
-          <dd class="col-md-8">{{job.runningTime}}</dd>
-        </td>
-      </tr>
+    <!--  runningTime line  -->
+    <tr *ngIf="job.runningTime">
+      <th>
+        <dt>Running time:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.runningTime}}</dd>
+      </td>
+    </tr>
 
-      <!--  wippVersion line  -->
-      <tr *ngIf="job.wippVersion">
-        <th>
-          <dt>Computed in version:</dt>
-        </th>
-        <td>
-          <dd class="col-md-8">{{job.wippVersion}}</dd>
-        </td>
-      </tr>
+    <!--  wippVersion line  -->
+    <tr *ngIf="job.wippVersion">
+      <th>
+        <dt>Computed in version:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.wippVersion}}</dd>
+      </td>
+    </tr>
 
-    </table>
-  </div>
+  </table>
 </div>
 
 <!--Input Table -->
-<div class="modal-header">
+<div class="modal-header" (click)="showInputs = !showInputs">
   <h4 class="modal-title" id="modal-basic-title2">
-    <span class="glyphicon glyphicon-star"></span> Inputs
+    <span class="glyphicon glyphicon-star"></span>
+    Inputs
+    <i class="fas fa-caret-down"></i>
   </h4>
 </div>
-<div class="modal-body" *ngIf="job">
-  <div style="margin-top: 20px">
-    <table class="table table-bordered">
+<div class="modal-body" *ngIf="job && showInputs" style="margin-top: 20px">
+  <table class="table table-bordered">
 
-      <!--  input id or name line -->
-      <tr *ngIf="inputKeys">
-        <th>
-          <dt>
-            {{inputKeys[0]}}
-          </dt>
-        </th>
-        <td>
-          <dd class="col-md-8" (click)="modalReference.dismiss('Cross click')">
-            <span *ngIf="!isOutput(job.parameters[inputNamePlugin]);then normalInput else chainedInput"></span>
 
-            <ng-template #normalInput>
-              <a *ngIf="inputType == 'collection'" routerLink="/images-collection/{{job.parameters[inputNamePlugin]}}">{{inputName}}</a>
-              <a *ngIf="inputType == 'stitchingVector'"
-                 routerLink="/stitching-vectors/{{job.parameters[inputNamePlugin]}}">{{inputName}}</a>
+    <!--  input id or name line -->
+    <tr *ngFor="let input of plugin.inputs; let i = index">
+      <th *ngIf="job.parameters[input['name']]">
+        <dt>
+          {{input['name']}}
+        </dt>
+      </th>
+      <td *ngIf="job.parameters[input['name']]">
+        <dd class="col-md-8 breakLine" (click)="modalReference.dismiss('Cross click')">
+          <span *ngIf="!job.parameters[input['name']].includes('{');then normalInput else chainedInput"></span>
+          <ng-template #normalInput>
+            <a *ngIf="input['type'] == 'collection'" routerLink="/images-collection/{{job.parameters[input['name']]}}">{{input['name']}}</a>
+            <a *ngIf="input['type'] == 'stitchingVector'"
+               routerLink="/stitching-vectors/{{job.parameters[input['name']]}}">{{input['name']}}</a>
+            <a *ngIf="input['type'] == 'pyramid'" routerLink="/pyramids/{{job.parameters[input['name']]}}">{{input['name']}}</a>
+            <a *ngIf="input['type']!='pyramid' && input['type']!='stitchingVector' && input['type']!='collection' ">{{job.parameters[input['name']]}}</a>
+          </ng-template>
+          <ng-template #chainedInput>
+            <span *ngIf="workflowStatus === 'SUCCEEDED'; then linkedInput else flatInput"> </span>
+            <!--{{ '{' }}{{-->
+            <!--'{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}-->
+
+          <ng-template #linkedInput>
+            <a *ngIf="input['type'] == 'collection'"
+               routerLink="/images-collection/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}</a>
+            <a *ngIf="input['type'] == 'stitchingVector'"
+               routerLink="/stitching-vectors/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}</a>
+            <a *ngIf="input['type'] == 'pyramid'"
+               routerLink="/pyramids/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}</a>
+          </ng-template>
+          <ng-template #flatInput>
+            <a>{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}
+            </a>
+          </ng-template>
             </ng-template>
-            <ng-template #chainedInput> {{ '{' }}{{ '{' }} {{tempInputName}} {{ '}' }}{{ '}' }}</ng-template>
-          </dd>
-        </td>
-      </tr>
-
-      <!--  input type line  -->
-      <tr>
-        <th>
-          <dt>Input Type</dt>
-        </th>
-        <td>
-          <dd class="col-md-8">{{inputType}}</dd>
-        </td>
-      </tr>
-
-      <!--  other input parameters lines  -->
-      <tr *ngFor="let inputKey of inputKeys">
-        <th *ngIf=" job.parameters[inputKey] && (!(inputKey == inputNamePlugin)) ">
-          <dt>{{inputKey}}</dt>
-        </th>
-        <td *ngIf="job.parameters[inputKey] && (!(inputKey == inputNamePlugin)) ">
-          <dd class="col-md-8">{{job.parameters[inputKey]}}</dd>
-        </td>
-      </tr>
-
-    </table>
-  </div>
+        </dd>
+      </td>
+    </tr>
+  </table>
 </div>
 
 <!--Output Table -->
-<div class="modal-header">
+<div class="modal-header" (click)="showOutputs = !showOutputs">
   <h4 class="modal-title" id="modal-basic-title3">
-    <span class="glyphicon glyphicon-star"></span> Outputs
+    <span class="glyphicon glyphicon-star"></span>
+    Outputs
+    <i class="fas fa-caret-down"></i>
   </h4>
 </div>
-<div class="modal-body" *ngIf="job">
-  <div style="margin-top: 20px">
-    <table class="table table-bordered">
+<div class="modal-body" *ngIf="job && showOutputs" style="margin-top: 20px">
+  <table class="table table-bordered">
 
-      <!--  output name line  -->
-      <tr *ngFor="let outputKey of outputKeys">
-        <th>
-          <dt>Output Name</dt>
-        </th>
-        <td>
-          <dd class="col-md-8">{{job.name}}-{{outputKey}}</dd>
-        </td>
-      </tr>
+    <!--  output name line  -->
+    <tr *ngFor="let output of plugin.outputs">
+      <th>
+        <dt>Output Name</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.name}}.{{output['name']}}</dd>
+      </td>
+    </tr>
 
-    </table>
-  </div>
+  </table>
 </div>
