@@ -66,10 +66,10 @@ export class JobDetailComponent implements OnInit {
 
   getIdFromInputName(inputName: string) {
     const idToOutputDelimiter = inputName.indexOf('.');
-        const idFirstLetter = inputName.indexOf(' ') + 1;
-        const outputName = inputName.substr(idToOutputDelimiter, inputName.length - idToOutputDelimiter - idFirstLetter);
-        const id = inputName.substr(idFirstLetter, idToOutputDelimiter - idFirstLetter);
-        return [id, outputName];
+    const idFirstLetter = inputName.indexOf(' ') + 1;
+    const outputName = inputName.substr(idToOutputDelimiter, inputName.length - idToOutputDelimiter - idFirstLetter);
+    const id = inputName.substr(idFirstLetter, idToOutputDelimiter - idFirstLetter);
+    return [id, outputName];
   }
 
 }
