@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, NgModule } from '@angular/core';
 import { Router, ActivatedRoute} from '@angular/router';
-import {catchError, map, startWith, switchMap, throttleTime} from 'rxjs/operators';
+import {catchError, map, startWith, switchMap, auditTime} from 'rxjs/operators';
 import * as Flow from '@flowjs/flow.js';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
@@ -40,6 +40,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   resultsLengthMetadataFiles = 0;
   pageSizeImages = 10;
   pageSizeMetadataFiles = 10;
+  goToPageImages;
+  goToPageMetadataFiles;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
@@ -78,6 +80,14 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.imagesParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.imagesParamsChange.value.sort});
     this.pageSizeImages = page.pageSize;
   }
+  
+  goToPageImage() {
+    if (this.imagesPaginator.pageIndex !== this.goToPageImages - 1) {
+       this.imagesPaginator.pageIndex = this.goToPageImages - 1;
+      this.imagesParamsChange.next({index: this.goToPageImages - 1, size: this.pageSizeImages, sort: this.imagesParamsChange.value.sort});
+      this.goToPageImages = '';
+    }
+  }
 
   metadataSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
@@ -88,6 +98,14 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.metadataParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.metadataParamsChange.value.sort});
     this.pageSizeMetadataFiles = page.pageSize;
   }
+  
+  goToPageMetadata() {
+    if (this.metadataFilesPaginator.pageIndex !== this.goToPageMetadataFiles - 1) {
+      this.metadataFilesPaginator.pageIndex = this.goToPageMetadataFiles - 1;
+      this.metadataParamsChange.next({index: this.goToPageMetadataFiles - 1, size: this.pageSizeMetadataFiles, sort: this.metadataParamsChange.value.sort});
+      this.goToPageMetadataFiles = '';
+    }
+  }
 
   ngOnInit() {
 
@@ -96,7 +114,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       method: 'octet'
     });
     this.$throttleRefresh.pipe(
-      throttleTime(1000),
+      auditTime(1000),
       switchMap(() => this.refresh()))
     .subscribe();
   }
@@ -316,5 +334,5 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   transferNotCompleteFilter(flowFile) {
     return !flowFile.isComplete() || flowFile.error;
   }
-
+  
 }
