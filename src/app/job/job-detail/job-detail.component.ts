@@ -20,7 +20,6 @@ export class JobDetailComponent implements OnInit {
   showInputs = false;
   showOutputs = false;
   plugin: Plugin;
-  workflowStatus;
   inputOrigins = [];
 
   constructor(private activeModal: NgbActiveModal,
