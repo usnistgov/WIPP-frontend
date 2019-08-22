@@ -99,10 +99,11 @@ export class StitchingVectorListComponent implements OnInit {
 
   createNew() {
     const modalRef = this.modalService.open(StitchingVectorNewComponent, {size: 'lg'});
-    modalRef.componentInstance.modalReference = modalRef;
     modalRef.result.then((result) => {
+      if (result) {
         this.getStitchingVectors();
-      },
+      }
+    },
       (reason) => {
         console.log('dismissed');
       });
