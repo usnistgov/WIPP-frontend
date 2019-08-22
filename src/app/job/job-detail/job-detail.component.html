@@ -114,7 +114,7 @@
             <a *ngIf="input['type']!='pyramid' && input['type']!='stitchingVector' && input['type']!='collection' ">{{job.parameters[input['name']]}}</a>
           </ng-template>
           <ng-template #chainedInput>
-            <span *ngIf="workflowStatus === 'SUCCEEDED'; then linkedInput else flatInput"> </span>
+            <span *ngIf="job.status === 'SUCCEEDED'; then linkedInput else flatInput"> </span>
             <!--{{ '{' }}{{-->
             <!--'{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}-->
 
