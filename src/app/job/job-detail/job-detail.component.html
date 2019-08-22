@@ -115,9 +115,6 @@
           </ng-template>
           <ng-template #chainedInput>
             <span *ngIf="job.status === 'SUCCEEDED'; then linkedInput else flatInput"> </span>
-            <!--{{ '{' }}{{-->
-            <!--'{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}-->
-
           <ng-template #linkedInput>
             <a *ngIf="input['type'] == 'collection'"
                routerLink="/images-collection/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}</a>
@@ -151,7 +148,7 @@
     <!--  output name line  -->
     <tr *ngFor="let output of plugin.outputs">
       <th>
-        <dt>Output Name</dt>
+        <dt>{{output['type']}}</dt>
       </th>
       <td>
         <dd class="col-md-8 breakLine">{{job.name}}.{{output['name']}}</dd>
