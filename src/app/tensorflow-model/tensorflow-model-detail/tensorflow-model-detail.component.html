@@ -1,0 +1,38 @@
+<h3 style="margin-top: 2%; margin-bottom: 2%">Tensorflow Model Detail</h3>
+
+<!--<div style="margin-top: 20px">-->
+<div>
+  <div class="row">
+    <div class="col-md-9">
+      <dl class="row">
+        <dt class="col-md-4">Name: </dt>
+        <dd class="col-md-8">{{tensorflowModel.name}}</dd>
+
+        <dt class="col-md-4">Creation Date: </dt>
+        <dd class="col-md-8">{{tensorflowModel.creationDate | date}}</dd>
+
+        <dt *ngIf="job" class="col-md-4">Unet training job: </dt>
+        <dd class="col-md-8">
+          <a (click)="displayJobModal(job.id)"
+             class="underline-on-hover"
+             style="color:blue"
+             ngbTooltip="Show Job"
+             placement="left">
+            {{job.name}}
+          </a>
+        </dd>
+      </dl>
+    </div>
+
+    <div class="col-md-3 text-right">
+      <a
+        [href]="tensorflowModel._links.download.href"
+        ngbTooltip="Download as zip"
+        placement="left"
+        class="btn btn-light">
+                  <span
+                    aria-hidden="true"><i class="fa fa-download"></i></span>
+      </a>
+    </div>
+  </div>
+</div>
