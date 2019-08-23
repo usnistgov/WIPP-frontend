@@ -27,6 +27,7 @@ export class TensorflowModelDetailComponent implements OnInit {
     this.tensorflowModelService.getTensorflowModel(this.tensorflowModelId)
       .subscribe(tensorflowModel => {
         this.tensorflowModel = tensorflowModel;
+        console.log(this.tensorflowModel);
         this.getJob();
       });
   }
