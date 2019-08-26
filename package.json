@@ -24,7 +24,7 @@
     "@angular/router": "^7.2.15",
     "@flowjs/flow.js": "^2.13.0",
     "@fortawesome/fontawesome-free": "^5.3.1",
-    "@ng-bootstrap/ng-bootstrap": "^3.1.0",
+    "@ng-bootstrap/ng-bootstrap": "^4.2.1",
     "@qontu/ngx-inline-editor": "^0.2.0-alpha.12",
     "@swimlane/ngx-graph": "^6.0.1",
     "@types/flowjs": "0.0.31",
