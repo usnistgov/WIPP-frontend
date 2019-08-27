@@ -25,7 +25,9 @@ export class WorkflowDetailComponent implements OnInit {
   pluginList = [];
   jobOutputs = {
     collections: [],
-    stitchingVectors: []
+    stitchingVectors: [],
+    tensorflowModels: [],
+    tensorboardLogsList: []
   };
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
@@ -75,7 +77,7 @@ export class WorkflowDetailComponent implements OnInit {
         if (result.inputs.hasOwnProperty(inputEntry)) {
           const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
           let value = result.inputs[inputEntry];
-          if (type === 'collection' || type === 'stitchingVector') {
+          if (type === 'collection' || type === 'stitchingVector' || type === 'tensorflowModel' || type === 'tensorboardLogs') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
               task['dependencies'].push(value.sourceJob);
             }
@@ -103,6 +105,24 @@ export class WorkflowDetailComponent implements OnInit {
               virtual: true
             };
             this.jobOutputs.stitchingVectors.push(outputStitchingVector);
+          }
+          if (output.type === 'tensorflowModel') {
+            const outputTensorflowModel = {
+              id: '{{ ' + job.id + '.' + output.name + ' }}',
+              name: '{{ ' + job.name + '.' + output.name + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.collections.push(outputTensorflowModel);
+          }
+          if (output.type === 'tensorboardLogs') {
+            const outputTensorboardLogs = {
+              id: '{{ ' + job.id + '.' + output.name + ' }}',
+              name: '{{ ' + job.name + '.' + output.name + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.collections.push(outputTensorboardLogs);
           }
         });
         this.resetForm();
@@ -160,6 +180,18 @@ export class WorkflowDetailComponent implements OnInit {
             inputSchema['widget'] = 'search';
             inputSchema['format'] = 'stitchingVector';
             inputSchema['getOutputStitchingVectors'] = () => this.jobOutputs.stitchingVectors;
+            break;
+          case 'tensorflowModel':
+            inputSchema['type'] = 'string';
+            inputSchema['widget'] = 'search';
+            inputSchema['format'] = 'tensorflowModel';
+            inputSchema['getOutputTensorflowModels'] = () => this.jobOutputs.tensorflowModels;
+            break;
+          case 'tensorboardLogs':
+            inputSchema['type'] = 'string';
+            inputSchema['widget'] = 'search';
+            inputSchema['format'] = 'tensorboardLogs';
+            inputSchema['getOutputTensorboardLogs'] = () => this.jobOutputs.tensorboardLogsList;
             break;
           case 'enum':
             inputSchema['type'] = 'string';
