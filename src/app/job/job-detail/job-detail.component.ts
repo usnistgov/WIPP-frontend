@@ -53,10 +53,11 @@ export class JobDetailComponent implements OnInit {
     this.inputOrigins.length = this.plugin.inputs.length;
     for (let i = 0; i < this.plugin.inputs.length; i++) {
       const input = this.plugin.inputs[i];
-      const inputVal = this.job.parameters[(<string>input['name'])];
-      if (inputVal && inputVal.search('{') !== -1) {
-        const id = this.getIdFromInputName(inputVal)[0];
-        const outputName = this.getIdFromInputName(inputVal)[1];
+      const inputValue = this.job.parameters[(<string>input['name'])];
+      if (inputValue && inputValue.search('{{') !== -1) {
+        const data = this.getIdFromInputName(inputValue);
+        const id = data[0];
+        const outputName = data[1];
         this.jobService.getJob(id).subscribe(job => {
           this.inputOrigins[i] = job.name + outputName;
         });

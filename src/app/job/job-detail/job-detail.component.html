@@ -97,7 +97,7 @@
 
 
     <!--  input id or name line -->
-    <tr *ngFor="let input of plugin.inputs; let i = index">
+    <tr *ngFor="let input of plugin.inputs; let i = index" [ngSwitch]="input['type']">
       <th *ngIf="job.parameters[input['name']]">
         <dt>
           {{input['name']}}
@@ -105,24 +105,29 @@
       </th>
       <td *ngIf="job.parameters[input['name']]">
         <dd class="col-md-8 breakLine" (click)="modalReference.dismiss('Cross click')">
-          <span *ngIf="!job.parameters[input['name']].includes('{');then normalInput else chainedInput"></span>
+          <span *ngIf="!job.parameters[input['name']].includes('{{');then normalInput else chainedInput"></span>
           <ng-template #normalInput>
-            <a *ngIf="input['type'] == 'collection'" routerLink="/images-collection/{{job.parameters[input['name']]}}">{{input['name']}}</a>
-            <a *ngIf="input['type'] == 'stitchingVector'"
-               routerLink="/stitching-vectors/{{job.parameters[input['name']]}}">{{input['name']}}</a>
-            <a *ngIf="input['type'] == 'pyramid'" routerLink="/pyramids/{{job.parameters[input['name']]}}">{{input['name']}}</a>
-            <a *ngIf="input['type']!='pyramid' && input['type']!='stitchingVector' && input['type']!='collection' ">{{job.parameters[input['name']]}}</a>
+            <a *ngSwitchCase="'collection'" routerLink="/images-collection/{{job.parameters[input['name']]}}">{{input['name']}}
+            </a>
+            <a *ngSwitchCase="'stitchingVector'" routerLink="/stitching-vectors/{{job.parameters[input['name']]}}">{{input['name']}}
+            </a>
+            <a *ngSwitchCase="'pyramid'" routerLink="/pyramids/{{job.parameters[input['name']]}}">{{input['name']}}
+            </a>
+            <a *ngSwitchDefault>{{job.parameters[input['name']]}}
+            </a>
           </ng-template>
           <ng-template #chainedInput>
             <span *ngIf="job.status === 'SUCCEEDED'; then linkedInput else flatInput"> </span>
           <ng-template #linkedInput>
-            <a *ngIf="input['type'] == 'collection'"
-               routerLink="/images-collection/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}</a>
-            <a *ngIf="input['type'] == 'stitchingVector'"
-               routerLink="/stitching-vectors/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}</a>
-            <a *ngIf="input['type'] == 'pyramid'"
-               routerLink="/pyramids/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}</a>
-          </ng-template>
+            <a *ngSwitchCase="'collection'" routerLink="/images-collection/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}
+            </a>
+            <a *ngSwitchCase="'stitchingVector'" routerLink="/stitching-vectors/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}
+            </a>
+            <a *ngSwitchCase="'pyramid'" routerLink="/pyramids/{{getIdFromInputName(job.parameters[input['name']])[0]}}">{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}
+            </a>
+            <a *ngSwitchDefault>
+              {{job.parameters[input['name']]}}
+            </a></ng-template>
           <ng-template #flatInput>
             <a>{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}
             </a>
