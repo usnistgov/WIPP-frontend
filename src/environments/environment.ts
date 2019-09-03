@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiRootUrl: 'http://localhost:8080/api'
+  apiRootUrl: 'http://localhost:8080/api',
+  tensorboardUrl: 'http://localhost:6006/'
 };
 
 /*

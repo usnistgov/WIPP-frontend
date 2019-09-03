@@ -15,7 +15,7 @@ import {environment} from '../../../environments/environment';
 export class TensorflowModelDetailComponent implements OnInit {
 
   tensorflowModel: TensorflowModel = new TensorflowModel();
-  tensorboardLogs: TensorboardLogs = new TensorboardLogs();
+  tensorboardLogs: TensorboardLogs = null;
   tensorboardLink = environment.tensorboardUrl + '#scalars&regexInput=';
   job: Job = null;
   tensorflowModelId = this.route.snapshot.paramMap.get('id');

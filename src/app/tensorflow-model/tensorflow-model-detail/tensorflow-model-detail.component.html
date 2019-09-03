@@ -22,7 +22,7 @@
           </a>
         </dd>
 
-        <dt class="col-md-4">Tensorboard Logs: </dt>
+        <dt *ngIf="tensorboardLogs" class="col-md-4">Tensorboard Logs: </dt>
         <dd class="col-md-8">
           <a (click)="openTensorboardTab()"
              class="underline-on-hover"
