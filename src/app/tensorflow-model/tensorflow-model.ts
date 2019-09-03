@@ -11,3 +11,11 @@ export interface PaginatedTensorflowModels {
   tensorflowModels: TensorflowModel[];
   _links: any;
 }
+
+export class TensorboardLogs {
+  id: string;
+  name: string;
+  creationDate: Date;
+  sourceJob: string;
+  _links: any;
+}

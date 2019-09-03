@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {PaginatedTensorflowModels, TensorflowModel} from './tensorflow-model';
+import {PaginatedTensorflowModels, TensorboardLogs, TensorflowModel} from './tensorflow-model';
 import {Job} from '../job/job';
 
 @Injectable({
@@ -12,6 +12,7 @@ import {Job} from '../job/job';
 export class TensorflowModelService {
 
   private tensorflowModelUrl = environment.apiRootUrl + '/tensorflowModels';
+  private tensorboardLogsUrl = environment.apiRootUrl + '/tensorboardLogs';
 
   constructor(private http: HttpClient) { }
 
@@ -60,5 +61,18 @@ export class TensorflowModelService {
 
   getJob(jobUrl: string): Observable<Job> {
     return this.http.get<Job>(jobUrl);
+  }
+
+  getTensorboardLogsByJob(jobId: string): Observable<TensorboardLogs> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+    const httpParams = new HttpParams().set('sourceJob', jobId);
+    httpOptions.params = httpParams;
+    return this.http.get<any>(this.tensorboardLogsUrl + '/search/findOneBySourceJob', httpOptions).pipe(
+      map((result: any) => {
+        return result;
+      }));
   }
 }

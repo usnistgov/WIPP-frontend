@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Job} from '../../job/job';
 import {ActivatedRoute} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {TensorflowModelService} from '../tensorflow-model.service';
-import {TensorflowModel} from '../tensorflow-model';
+import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-tensorflow-model-detail',
@@ -14,6 +15,8 @@ import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 export class TensorflowModelDetailComponent implements OnInit {
 
   tensorflowModel: TensorflowModel = new TensorflowModel();
+  tensorboardLogs: TensorboardLogs = new TensorboardLogs();
+  tensorboardLink = environment.tensorboardUrl + '#scalars&regexInput=';
   job: Job = null;
   tensorflowModelId = this.route.snapshot.paramMap.get('id');
 
@@ -27,15 +30,25 @@ export class TensorflowModelDetailComponent implements OnInit {
     this.tensorflowModelService.getTensorflowModel(this.tensorflowModelId)
       .subscribe(tensorflowModel => {
         this.tensorflowModel = tensorflowModel;
-        console.log(this.tensorflowModel);
-        this.getJob();
+        this.getTensorboardLogsAndJob();
       });
   }
 
-  getJob() {
+  getTensorboardLogsAndJob() {
     if (this.tensorflowModel._links['sourceJob']) {
-      this.tensorflowModelService.getJob(this.tensorflowModel._links['sourceJob']['href']).subscribe(job => this.job = job);
+      this.tensorflowModelService.getJob(this.tensorflowModel._links['sourceJob']['href']).subscribe(job => {
+        this.job = job;
+        this.tensorflowModelService.getTensorboardLogsByJob(this.job.id).subscribe(res => {
+          this.tensorboardLogs = res;
+          console.log(this.tensorboardLogs);
+          this.tensorboardLink = this.tensorboardLink + this.tensorboardLogs.name;
+        });
+      });
     }
+  }
+
+  openTensorboardTab() {
+    window.open(this.tensorboardLink);
   }
 
   displayJobModal(jobId: string) {
