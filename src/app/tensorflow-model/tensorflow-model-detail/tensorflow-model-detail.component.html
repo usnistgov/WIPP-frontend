@@ -11,7 +11,7 @@
         <dt class="col-md-4">Creation Date: </dt>
         <dd class="col-md-8">{{tensorflowModel.creationDate | date}}</dd>
 
-        <dt *ngIf="job" class="col-md-4">Unet training job: </dt>
+        <dt *ngIf="job" class="col-md-4">Training job:</dt>
         <dd class="col-md-8">
           <a (click)="displayJobModal(job.id)"
              class="underline-on-hover"
@@ -19,6 +19,17 @@
              ngbTooltip="Show Job"
              placement="left">
             {{job.name}}
+          </a>
+        </dd>
+
+        <dt class="col-md-4">Tensorboard Logs: </dt>
+        <dd class="col-md-8">
+          <a (click)="openTensorboardTab()"
+             class="underline-on-hover"
+             style="color:blue"
+             ngbTooltip="Show Job"
+             placement="left">
+            {{tensorboardLogs.name}}
           </a>
         </dd>
       </dl>
