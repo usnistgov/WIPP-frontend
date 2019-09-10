@@ -12,6 +12,8 @@ import {WidgetsRegistry} from './widgets/widgets-registry';
 import { WorkflowNewComponent } from './workflow-new/workflow-new.component';
 import {JobDetailComponent} from '../job/job-detail/job-detail.component';
 import {NgxGraphModule} from '@swimlane/ngx-graph';
+import {DynamicComponent} from '../dynamic-content/dynamic.component';
+import {DynamicContentComponent} from '../dynamic-content/dynamic-content.component';
 
 @NgModule({
   imports: [
@@ -33,6 +35,7 @@ import {NgxGraphModule} from '@swimlane/ngx-graph';
     WorkflowDetailComponent,
     SearchWidgetComponent,
     JobDetailComponent,
+    // DynamicContentComponent,
     WorkflowNewComponent],
 
 

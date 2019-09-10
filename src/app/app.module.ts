@@ -17,11 +17,16 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVectorModule} from './stitching-vector/stitching-vector.module';
 import {PyramidModule} from './pyramid/pyramid.module';
+// import { DynamicContentComponent } from './dynamic-content/dynamic-content.component';
+import { UnknownDynamicComponent } from './unknown-dynamic/unknown-dynamic.component';
+import {JobModule} from './job/job.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    // DynamicContentComponent,
+    UnknownDynamicComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +36,7 @@ import {PyramidModule} from './pyramid/pyramid.module';
     PyramidModule,
     PluginModule,
     WorkflowModule,
+    JobModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
@@ -42,6 +48,7 @@ import {PyramidModule} from './pyramid/pyramid.module';
     MatCheckboxModule,
     NgbModule.forRoot()
   ],
+  // exports: [DynamicContentComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

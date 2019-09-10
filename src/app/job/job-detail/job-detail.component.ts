@@ -4,12 +4,18 @@ import {Job} from '../job';
 import {JobService} from '../job.service';
 import {Plugin} from '../../plugin/plugin';
 import 'rxjs-compat/add/operator/map';
+import {DynamicContentComponent} from '../../dynamic-content/dynamic-content.component';
+
+export interface IdHash {
+  [nameId: string]: string;
+}
 
 @Component({
   selector: 'app-job-detail',
   templateUrl: './job-detail.component.html',
   styleUrls: ['./job-detail.component.css']
 })
+
 
 export class JobDetailComponent implements OnInit {
 
@@ -21,6 +27,12 @@ export class JobDetailComponent implements OnInit {
   showOutputs = false;
   plugin: Plugin;
   inputOrigins = [];
+  outputHash: IdHash = {};
+  fkff: DynamicContentComponent;
+
+  context: any = {
+    text: 'test',
+  };
 
   constructor(private activeModal: NgbActiveModal,
               private jobService: JobService) {
@@ -60,6 +72,7 @@ export class JobDetailComponent implements OnInit {
         const outputName = data[1];
         this.jobService.getJob(id).subscribe(job => {
           this.inputOrigins[i] = job.name + outputName;
+          this.outputHash[job.name + outputName] = job.outputParameters[outputName.substr(1)];
         });
       }
     }

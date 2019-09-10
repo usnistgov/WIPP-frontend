@@ -70,7 +70,14 @@ export class WorkflowDetailComponent implements OnInit {
       task['type'] = this.selectedSchema.name;
       task['dependencies'] = [];
       task['parameters'] = {};
+      task['outputParameters'] = {};
       // add job parameters
+
+       this.selectedSchema.outputs.forEach(output => {
+         console.log(output)
+         task['outputParameters'][output.name] = 'NAN';
+       })
+
       for (const inputEntry in result.inputs) {
         if (result.inputs.hasOwnProperty(inputEntry)) {
           const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
