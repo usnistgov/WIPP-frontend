@@ -47,10 +47,6 @@ export class TensorflowModelDetailComponent implements OnInit {
     }
   }
 
-  openTensorboardTab() {
-    window.open(this.tensorboardLink);
-  }
-
   displayJobModal(jobId: string) {
     const modalRef = this.modalService.open(JobDetailComponent);
     modalRef.componentInstance.modalReference = modalRef;
