@@ -4,7 +4,6 @@ import {Job} from '../job';
 import {JobService} from '../job.service';
 import {Plugin} from '../../plugin/plugin';
 import 'rxjs-compat/add/operator/map';
-import {DynamicContentComponent} from '../../dynamic-content/dynamic-content.component';
 
 export interface IdHash {
   [nameId: string]: string;
@@ -15,7 +14,6 @@ export interface IdHash {
   templateUrl: './job-detail.component.html',
   styleUrls: ['./job-detail.component.css']
 })
-
 
 export class JobDetailComponent implements OnInit {
 
@@ -28,11 +26,6 @@ export class JobDetailComponent implements OnInit {
   plugin: Plugin;
   inputOrigins = [];
   outputHash: IdHash = {};
-  fkff: DynamicContentComponent;
-
-  context: any = {
-    text: 'test',
-  };
 
   constructor(private activeModal: NgbActiveModal,
               private jobService: JobService) {

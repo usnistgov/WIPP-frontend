@@ -12,6 +12,7 @@ import {PyramidRoutingModule} from './pyramid-routing.module';
 import {PyramidListComponent} from './pyramid-list/pyramid-list.component';
 import {PyramidDetailComponent} from './pyramid-detail/pyramid-detail.component';
 import {WdztModule} from '../wdzt/wdzt.module';
+import {PyramidTemplateComponent} from './pyramid-template/pyramid-template.component';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import {WdztModule} from '../wdzt/wdzt.module';
   ],
   declarations: [
     PyramidDetailComponent,
-    PyramidListComponent
+    PyramidListComponent,
+    PyramidTemplateComponent
   ]
 })
 export class PyramidModule {

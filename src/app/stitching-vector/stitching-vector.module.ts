@@ -16,7 +16,9 @@ import {StitchingVectorNewComponent} from './stitching-vector-new/stitching-vect
 import {StitchingVectorListComponent} from './stitching-vector-list/stitching-vector-list.component';
 import {StitchingVectorDetailComponent} from './stitching-vector-detail/stitching-vector-detail.component';
 import {StitchingVectorRoutingModule} from './stitching-vector-routing.module';
-import { StitchingVectorTemplateComponent } from './stitching-vector-template/stitching-vector-template.component';
+import {
+  StitchingVectorTemplateComponent
+} from './stitching-vector-template/stitching-vector-template.component';
 
 
 @NgModule({

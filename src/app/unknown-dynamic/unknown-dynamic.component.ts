@@ -1,15 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
+import {DynamicComponent} from '../dynamic-content/dynamic.component';
 
 @Component({
   selector: 'app-unknown-dynamic',
-  templateUrl: './unknown-dynamic.component.html',
-  styleUrls: ['./unknown-dynamic.component.css']
+   template: '<a>{{defaultText}}</a>'
 })
-export class UnknownDynamicComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class UnknownDynamicComponent extends DynamicComponent {
 }

@@ -96,7 +96,7 @@
   <table class="table table-bordered">
 
     <!--  input id or name line -->
-    <tr *ngFor="let input of plugin.inputs; let i = index" [ngSwitch]="input['type']">
+    <tr *ngFor="let input of plugin.inputs; let i = index">
       <th *ngIf="job.parameters[input['name']]">
         <dt>
           {{input['name']}}
@@ -104,58 +104,25 @@
       </th>
       <td *ngIf="job.parameters[input['name']]">
         <dd class="col-md-8 breakLine" (click)="modalReference.dismiss('Cross click')">
-          <span *ngIf="!job.parameters[input['name']].includes('{{');then normalInput else chainedInput"></span>
+          <span *ngIf="!job.parameters[input['name']].includes('{{');then flatInput else linkedInput"></span>
         </dd>
       </td>
-      <ng-template #normalInput>
-        <a *ngSwitchCase="'collection'" routerLink="/images-collection/{{job.parameters[input['name']]}}">{{input['name']}}
-        </a>
-        <a *ngSwitchCase="'stitchingVector'" routerLink="/stitching-vectors/{{job.parameters[input['name']]}}">{{input['name']}}
-        </a>
-        <a *ngSwitchCase="'pyramid'" routerLink="/pyramids/{{job.parameters[input['name']]}}">{{input['name']}}
-        </a>
-        <a *ngSwitchDefault>{{job.parameters[input['name']]}}
-        </a>
-      </ng-template>
-      <ng-template #chainedInput>
-        <span *ngIf="job.status === 'SUCCEEDED'; then linkedInput else flatInput"></span>
+      <ng-template #flatInput>
+        <app-dynamic-content type="{{input['type']}}"
+                             text="{{input['name']}}"
+                             idData="{{job.parameters[input['name']]}}"
+                             defaultText="{{job.parameters[input['name']]}}">
+        </app-dynamic-content>
       </ng-template>
       <ng-template #linkedInput>
-        <a *ngSwitchCase="'collection'" routerLink="/images-collection/{{outputHash[inputOrigins[i]]}}">{{ '{' }}{{ '{'
-          }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}
-        </a>
-        <a *ngSwitchCase="'stitchingVector'" routerLink="/stitching-vectors/{{outputHash[inputOrigins[i]]}}">{{ '{' }}{{
-          '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}
-        </a>
-        <a *ngSwitchCase="'pyramid'" routerLink="/pyramids/{{outputHash[inputOrigins[i]]}}">{{ '{' }}{{ '{' }}
-          {{inputOrigins[i]}} {{ '}' }}{{ '}' }}
-        </a>
-        <a *ngSwitchDefault>
-          {{job.parameters[input['name']]}}
-        </a></ng-template>
-      <ng-template #flatInput>
-        <a>{{ '{' }}{{ '{' }} {{inputOrigins[i]}} {{ '}' }}{{ '}' }}
-        </a>
+        <app-dynamic-content type="{{input['type']}}"
+                             text = "{{inputOrigins[i]}}"
+                             linked = true
+                             idData = "{{outputHash[inputOrigins[i]]}}"
+                             defaultText="{{job.parameters[input['name']]}}">
+        </app-dynamic-content>
       </ng-template>
     </tr>
-
-    <div>
-      <h2>Dynamic content
-      </h2>
-      <h3>Context: <input type="text" [(ngModel)]="context.text" />
-      </h3>
-      <app-dynamic-content></app-dynamic-content>
-      <app-not-found></app-not-found>
-
-      <!--<app-dynamic-content type="sample1" [context]="context">-->
-      <!--</app-dynamic-content>-->
-      <!--<app-dynamic-content type="sample2" [context]="context">-->
-      <!--</app-dynamic-content>-->
-      <!--<app-dynamic-content-->
-        <!--type="some-other-type"-->
-        <!--[context]="context" >-->
-      <!--</app-dynamic-content>-->
-    </div>
 
   </table>
 </div>
@@ -172,27 +139,20 @@
   <table class="table table-bordered">
 
     <!--  output name line  -->
-    <tr *ngFor="let output of plugin.outputs" [ngSwitch]="output['type']">
+    <tr *ngFor="let output of plugin.outputs">
       <th>
         <dt>{{output['type']}}
         </dt>
       </th>
       <td>
         <dd class="col-md-8 breakLine" (click)="modalReference.dismiss('Cross click')">
-          <span *ngIf="job.status === 'SUCCEEDED';then linkedOutput else flatOutput"></span>
+          <app-dynamic-content type="{{output['type']}}"
+                               text="{{job.name}}-{{output['name']}}"
+                               idData="{{job.outputParameters[output['name']]}}"
+                               defaultText="{{job.name}}-{{output['name']}}">
+          </app-dynamic-content>
         </dd>
       </td>
-      <ng-template #linkedOutput>
-        <a *ngSwitchCase="'collection'" routerLink="/images-collection/{{job.outputParameters[output['name']]}}">{{job.name}}.{{output['name']}}
-        </a>
-        <a *ngSwitchCase="'stitchingVector'" routerLink="/stitching-vectors/{{job.outputParameters[output['name']]}}">{{job.name}}.{{output['name']}}
-        </a>
-        <a *ngSwitchCase="'pyramid'" routerLink="/pyramids/{{job.outputParameters[output['name']]}}">{{job.name}}.{{output['name']}}
-        </a>
-      </ng-template>
-      <ng-template #flatOutput>
-        <a>{{job.name}}.{{output['name']}}</a>
-      </ng-template>
     </tr>
 
   </table>

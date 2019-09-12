@@ -1,33 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DynamicComponent} from '../../dynamic-content/dynamic.component';
+import {ImagesCollectionService} from '../images-collection.service';
+
 
 @Component({
   selector: 'app-images-collection-template',
-  templateUrl: './images-collection-template.component.html',
-  styleUrls: ['./images-collection-template.component.css']
+  template:
+    '<a *ngIf="!(idData===\'NAN\')" routerLink="/images-collection/{{idData}}">{{text}}</a>' +
+    '<a [hidden]="!(idData===\'NAN\')">{{text}}</a>'
 })
-export class ImagesCollectionTemplateComponent extends DynamicComponent {
-}
 
-@Component({
-  selector: 'app-images-collection-linked-template',
-  template: 'ImagesCollectionTemplateLinkedComponent  dodo '
-})
-export class ImagesCollectionTemplateLinkedComponent extends DynamicComponent {
-}
+export class ImagesCollectionTemplateComponent extends DynamicComponent implements OnInit {
 
-@Component({
-  selector: 'app-images-collection--flat-template',
-  template: 'ImagesCollectionFlatTemplateComponent dodo4 ',
-  styleUrls: ['./images-collection-template.component.css']
-})
-export class ImagesCollectionFlatTemplateComponent extends DynamicComponent {
-}
+  constructor(
+    private imagesCollectionService: ImagesCollectionService) {
+    super();
+  }
+  static key = 'collectiontemplatecomponent';
 
-@Component({
-  selector: 'app-images-collection--output-template',
-  template: 'ImagesCollectionTemplateOutputComponent dododo 99',
-  styleUrls: ['./images-collection-template.component.css']
-})
-export class ImagesCollectionTemplateOutputComponent extends DynamicComponent {
+  ngOnInit() {
+    if (this.idData !== 'NAN') {
+      this.imagesCollectionService.getImagesCollection(this.idData).subscribe(result => {
+        this.text = result.name;
+      });
+    }
+  }
 }
