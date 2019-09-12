@@ -14,6 +14,7 @@ import {JobDetailComponent} from '../job/job-detail/job-detail.component';
 import {NgxGraphModule} from '@swimlane/ngx-graph';
 import {DynamicComponent} from '../dynamic-content/dynamic.component';
 import {DynamicContentComponent} from '../dynamic-content/dynamic-content.component';
+import {DynamicContentModule} from '../dynamic-content/dynamic-content.module';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import {DynamicContentComponent} from '../dynamic-content/dynamic-content.compon
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
+    DynamicContentModule,
     NgbModule.forRoot(),
     SchemaFormModule.forRoot(),
    NgxGraphModule
@@ -35,7 +37,6 @@ import {DynamicContentComponent} from '../dynamic-content/dynamic-content.compon
     WorkflowDetailComponent,
     SearchWidgetComponent,
     JobDetailComponent,
-    // DynamicContentComponent,
     WorkflowNewComponent],
 
 

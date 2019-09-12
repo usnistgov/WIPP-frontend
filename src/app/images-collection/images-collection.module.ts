@@ -17,9 +17,7 @@ import { ImagesCollectionNewComponent } from './images-collection-new/images-col
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {
-  ImagesCollectionFlatTemplateComponent,
-  ImagesCollectionTemplateComponent,
-  ImagesCollectionTemplateLinkedComponent, ImagesCollectionTemplateOutputComponent
+  ImagesCollectionTemplateComponent
 } from './images-collection-template/images-collection-template.component';
 
 @NgModule({
@@ -44,10 +42,7 @@ import {
     ImagesCollectionDetailComponent,
     ImagesCollectionListComponent,
     ImagesCollectionNewComponent,
-    ImagesCollectionTemplateComponent,
-    ImagesCollectionTemplateLinkedComponent,
-    ImagesCollectionFlatTemplateComponent,
-    ImagesCollectionTemplateOutputComponent
+    ImagesCollectionTemplateComponent
   ]
 })
 export class ImagesCollectionModule { }

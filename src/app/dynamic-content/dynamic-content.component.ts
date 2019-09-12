@@ -1,11 +1,16 @@
-import {Component, ComponentFactoryResolver, ComponentRef, Input, OnDestroy, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {
-  ImagesCollectionFlatTemplateComponent,
-  ImagesCollectionTemplateLinkedComponent,
-  ImagesCollectionTemplateOutputComponent
-} from '../images-collection/images-collection-template/images-collection-template.component';
-import {StitchingVectorTemplateComponent} from '../stitching-vector/stitching-vector-template/stitching-vector-template.component';
+  Component,
+  ComponentFactoryResolver,
+  ComponentRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  Type,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import {UnknownDynamicComponent} from '../unknown-dynamic/unknown-dynamic.component';
+import {DynamicComponent} from './dynamic.component';
 
 @Component({
   selector: 'app-dynamic-content',
@@ -22,32 +27,34 @@ export class DynamicContentComponent implements OnInit, OnDestroy {
   type: string
 
   @Input()
-  context: any;
+  idData: string;
+
+  @Input()
+  text: string;
+
+  @Input()
+  linked: boolean;
+
+  @Input()
+  defaultText: string;
 
   private componentRef: ComponentRef<{}>;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
-  private mappings = {
-    'linkedcollection': ImagesCollectionTemplateLinkedComponent,
-    'flatcollection': ImagesCollectionFlatTemplateComponent,
-    'outputcollection': ImagesCollectionTemplateOutputComponent,
-    'sample2': StitchingVectorTemplateComponent,
-    // 'imagesColelctionLinked': DynamicSample2Component,
-    // 'imagesCollectionsSimple': DynamicSample2Component,
-    // 'StitchingVectorLinked': DynamicSample2Component,
-    // 'StitchingVectorSimple': DynamicSample2Component,
-    // 'PyramidLinked': DynamicSample2Component
-    // 'PyramidSimple': DynamicSample2Component
-  };
   ngOnInit() {
-    if (this.type) {
-      const componentType = this.getComponentType(this.type);
-      const factory = this.componentFactoryResolver.resolveComponentFactory(
-        componentType
-      );
-      this.componentRef = this.container.createComponent(factory);
-    }
+
+    const factories = Array.from(this.componentFactoryResolver['_factories'].keys());
+    let factoryClass = <Type<any>>factories.find(
+      (x: any) => x.key === (this.type.toLocaleLowerCase() + 'templatecomponent'));
+    if (!factoryClass) {factoryClass = UnknownDynamicComponent; }
+
+    const factory = this.componentFactoryResolver.resolveComponentFactory(factoryClass);
+    this.componentRef = this.container.createComponent(factory);
+    const instance = <DynamicComponent> this.componentRef.instance;
+    if (this.linked) { instance.text = this.text; }
+    instance.defaultText = this.defaultText;
+    instance.idData = this.idData;
   }
 
   ngOnDestroy() {
@@ -57,8 +64,4 @@ export class DynamicContentComponent implements OnInit, OnDestroy {
     }
   }
 
-  getComponentType(typeName: string) {
-    const type = this.mappings[typeName];
-    return type || UnknownDynamicComponent;
-  }
 }
