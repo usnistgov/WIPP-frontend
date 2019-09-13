@@ -1,6 +1,5 @@
 export abstract class DynamicComponent {
   idData: string;
-  text: string;
-  linked: boolean;
+  text = '';
   defaultText: string;
 }

@@ -109,17 +109,14 @@
       </td>
       <ng-template #flatInput>
         <app-dynamic-content type="{{input['type']}}"
-                             text="{{input['name']}}"
                              idData="{{job.parameters[input['name']]}}"
                              defaultText="{{job.parameters[input['name']]}}">
         </app-dynamic-content>
       </ng-template>
       <ng-template #linkedInput>
         <app-dynamic-content type="{{input['type']}}"
-                             text = "{{inputOrigins[i]}}"
-                             linked = true
                              idData = "{{outputHash[inputOrigins[i]]}}"
-                             defaultText="{{job.parameters[input['name']]}}">
+                             defaultText="{{inputOrigins[i]}}">
         </app-dynamic-content>
       </ng-template>
     </tr>
@@ -147,7 +144,6 @@
       <td>
         <dd class="col-md-8 breakLine" (click)="modalReference.dismiss('Cross click')">
           <app-dynamic-content type="{{output['type']}}"
-                               text="{{job.name}}-{{output['name']}}"
                                idData="{{job.outputParameters[output['name']]}}"
                                defaultText="{{job.name}}-{{output['name']}}">
           </app-dynamic-content>

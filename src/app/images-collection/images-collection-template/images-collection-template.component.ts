@@ -6,8 +6,7 @@ import {ImagesCollectionService} from '../images-collection.service';
 @Component({
   selector: 'app-images-collection-template',
   template:
-    '<a *ngIf="!(idData===\'NAN\')" routerLink="/images-collection/{{idData}}">{{text}}</a>' +
-    '<a [hidden]="!(idData===\'NAN\')">{{text}}</a>'
+    '<a routerLink="/images-collection/{{idData}}">{{text}}</a>'
 })
 
 export class ImagesCollectionTemplateComponent extends DynamicComponent implements OnInit {
@@ -19,10 +18,8 @@ export class ImagesCollectionTemplateComponent extends DynamicComponent implemen
   static key = 'collectiontemplatecomponent';
 
   ngOnInit() {
-    if (this.idData !== 'NAN') {
       this.imagesCollectionService.getImagesCollection(this.idData).subscribe(result => {
         this.text = result.name;
       });
-    }
   }
 }

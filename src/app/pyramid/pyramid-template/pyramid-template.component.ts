@@ -5,8 +5,7 @@ import {PyramidService} from '../pyramid.service';
 @Component({
   selector: 'app-pyramid-template',
   template:
-  ' <a *ngIf="!(idData===\'NAN\')" routerLink="/pyramids/{{idData}}">{{text}}</a>' +
-    '<a [hidden]="!(idData===\'NAN\')">{{text}}</a>'
+  ' <a routerLink="/pyramids/{{idData}}">{{text}}</a>'
 })
 export class PyramidTemplateComponent extends DynamicComponent implements OnInit {
 
@@ -18,10 +17,8 @@ export class PyramidTemplateComponent extends DynamicComponent implements OnInit
 static key = 'pyramidtemplatecomponent';
 
   ngOnInit() {
-    if (this.idData !== 'NAN') {
       this.pyramidService.getPyramid(this.idData).subscribe(result => {
         this.text = result.name;
       });
-    }
   }
 }
