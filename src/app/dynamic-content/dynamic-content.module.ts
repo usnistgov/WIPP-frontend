@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import {DynamicContentComponent} from './dynamic-content.component';
 import {CommonModule} from '@angular/common';
-import {UnknownDynamicComponent} from '../unknown-dynamic/unknown-dynamic.component';
+import {UnknownDynamicComponent} from './unknown-dynamic.component';
 import {
   StitchingVectorTemplateComponent
 } from '../stitching-vector/stitching-vector-template/stitching-vector-template.component';

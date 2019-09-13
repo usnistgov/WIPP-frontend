@@ -18,8 +18,7 @@ static key = 'tensorboardlogstemplatecomponent';
     tensorboardLink = '';
 
   ngOnInit() {
-    console.log('odod logs');
-      this.tensorflowModelService.getTensorboardLogsByJob(this.idData).subscribe(result => {
+      this.tensorflowModelService.getTensorboardLogsByJob(this.jobId).subscribe(result => {
         this.text = result.name;
         this.tensorboardLink = environment.tensorboardUrl + '#scalars&regexInput=' + result.name;
       });

@@ -115,7 +115,7 @@
       </ng-template>
       <ng-template #linkedInput>
         <app-dynamic-content type="{{input['type']}}"
-                             idData = "{{outputHash[inputOrigins[i]]}}"
+                             idData="{{outputHash[inputOrigins[i]]}}"
                              defaultText="{{inputOrigins[i]}}">
         </app-dynamic-content>
       </ng-template>
@@ -144,6 +144,7 @@
       <td>
         <dd class="col-md-8 breakLine" (click)="modalReference.dismiss('Cross click')">
           <app-dynamic-content type="{{output['type']}}"
+                               jobId="{{job.id}}"
                                idData="{{job.outputParameters[output['name']]}}"
                                defaultText="{{job.name}}-{{output['name']}}">
           </app-dynamic-content>
