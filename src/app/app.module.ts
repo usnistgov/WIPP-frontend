@@ -18,7 +18,6 @@ import {StitchingVectorModule} from './stitching-vector/stitching-vector.module'
 import {PyramidModule} from './pyramid/pyramid.module';
 import {TensorflowModelModule} from './tensorflow-model/tensorflow-model.module';
 import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.component';
-import {JobModule} from './job/job.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +34,6 @@ import {JobModule} from './job/job.module';
     TensorflowModelModule,
     PluginModule,
     WorkflowModule,
-    JobModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
