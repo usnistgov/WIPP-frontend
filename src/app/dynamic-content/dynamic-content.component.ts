@@ -33,9 +33,6 @@ export class DynamicContentComponent implements OnInit, OnDestroy {
   text: string;
 
   @Input()
-  linked: boolean;
-
-  @Input()
   defaultText: string;
 
   private componentRef: ComponentRef<{}>;
@@ -47,12 +44,12 @@ export class DynamicContentComponent implements OnInit, OnDestroy {
     const factories = Array.from(this.componentFactoryResolver['_factories'].keys());
     let factoryClass = <Type<any>>factories.find(
       (x: any) => x.key === (this.type.toLocaleLowerCase() + 'templatecomponent'));
-    if (!factoryClass) {factoryClass = UnknownDynamicComponent; }
+    if (!factoryClass || this.idData === 'NAN') {
+      factoryClass = UnknownDynamicComponent; }
 
     const factory = this.componentFactoryResolver.resolveComponentFactory(factoryClass);
     this.componentRef = this.container.createComponent(factory);
     const instance = <DynamicComponent> this.componentRef.instance;
-    if (this.linked) { instance.text = this.text; }
     instance.defaultText = this.defaultText;
     instance.idData = this.idData;
   }

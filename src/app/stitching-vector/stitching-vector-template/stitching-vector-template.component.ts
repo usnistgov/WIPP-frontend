@@ -6,8 +6,7 @@ import {StitchingVectorService} from '../stitching-vector.service';
 @Component({
   selector: 'app-stitching-vector-template',
   template:
-    '<a *ngIf="!(idData===\'NAN\')" routerLink="/stitching-vectors/{{idData}}">{{text}}</a>' +
-    '<a [hidden]="!(idData===\'NAN\')">{{text}}</a>'
+    '<a routerLink="/stitching-vectors/{{idData}}">{{text}}</a>'
 })
 export class StitchingVectorTemplateComponent extends DynamicComponent implements OnInit {
 
@@ -19,10 +18,8 @@ export class StitchingVectorTemplateComponent extends DynamicComponent implement
 static key = 'stitchingvectortemplatecomponent';
 
   ngOnInit() {
-      if (this.idData !== 'NAN') {
       this.stitchingVectorService.getStitchingVector(this.idData).subscribe(result => {
         this.text = result.name;
       });
     }
-  }
 }
