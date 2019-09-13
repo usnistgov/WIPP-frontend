@@ -17,7 +17,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVectorModule} from './stitching-vector/stitching-vector.module';
 import {PyramidModule} from './pyramid/pyramid.module';
 import {TensorflowModelModule} from './tensorflow-model/tensorflow-model.module';
-import { UnknownDynamicComponent } from './unknown-dynamic/unknown-dynamic.component';
+import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.component';
 import {JobModule} from './job/job.module';
 
 @NgModule({

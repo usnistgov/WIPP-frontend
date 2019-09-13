@@ -9,7 +9,7 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {UnknownDynamicComponent} from '../unknown-dynamic/unknown-dynamic.component';
+import {UnknownDynamicComponent} from './unknown-dynamic.component';
 import {DynamicComponent} from './dynamic.component';
 
 @Component({
@@ -33,6 +33,9 @@ export class DynamicContentComponent implements OnInit, OnDestroy {
   text: string;
 
   @Input()
+  jobId: string;
+
+  @Input()
   defaultText: string;
 
   private componentRef: ComponentRef<{}>;
@@ -51,6 +54,7 @@ export class DynamicContentComponent implements OnInit, OnDestroy {
     this.componentRef = this.container.createComponent(factory);
     const instance = <DynamicComponent> this.componentRef.instance;
     instance.defaultText = this.defaultText;
+    instance.jobId = this.jobId;
     instance.idData = this.idData;
   }
 
