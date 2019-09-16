@@ -18,7 +18,7 @@ export class TensorflowModelTemplateComponent extends DynamicComponent implement
 static key = 'tensorflowmodeltemplatecomponent';
 
   ngOnInit() {
-      if (this.idData !== 'NAN') {
+      if (this.idData) {
       this.tensorflowModelService.getTensorflowModel(this.idData).subscribe(result => {
         this.text = result.name;
       });

@@ -47,7 +47,7 @@ export class DynamicContentComponent implements OnInit, OnDestroy {
     const factories = Array.from(this.componentFactoryResolver['_factories'].keys());
     let factoryClass = <Type<any>>factories.find(
       (x: any) => x.key === (this.type.toLocaleLowerCase() + 'templatecomponent'));
-    if (!factoryClass || this.idData === 'NAN') {
+    if (!factoryClass || !this.idData) {
       factoryClass = UnknownDynamicComponent; }
 
     const factory = this.componentFactoryResolver.resolveComponentFactory(factoryClass);
