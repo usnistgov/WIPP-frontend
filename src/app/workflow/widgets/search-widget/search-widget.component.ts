@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {ImagesCollectionService} from '../../../images-collection/images-collection.service';
 import {StitchingVectorService} from '../../../stitching-vector/stitching-vector.service';
+import {TensorflowModelService} from '../../../tensorflow-model/tensorflow-model.service';
 
 @Component({
   selector: 'app-search-widget',
@@ -18,7 +19,8 @@ export class SearchWidgetComponent extends StringWidget {
   constructor(
     private workflowService: WorkflowService,
     private imagesCollectionService: ImagesCollectionService,
-    private stitchingVectorService: StitchingVectorService
+    private stitchingVectorService: StitchingVectorService,
+    private tensorflowModelService: TensorflowModelService
   ) {
     super();
   }
@@ -40,6 +42,12 @@ export class SearchWidgetComponent extends StringWidget {
           let stitchingVectors = this.schema.getOutputStitchingVectors();
           stitchingVectors = stitchingVectors.concat(result.stitchingVectors);
           return stitchingVectors;
+        }));
+      case 'tensorflowModel':
+        return this.tensorflowModelService.getTensorflowModelsByNameContainingIgnoreCase(null, term).pipe(map(result => {
+          let tensorflowModels = this.schema.getOutputTensorflowModels();
+          tensorflowModels = tensorflowModels.concat(result.tensorflowModels);
+          return tensorflowModels;
         }));
       default:
         return [];

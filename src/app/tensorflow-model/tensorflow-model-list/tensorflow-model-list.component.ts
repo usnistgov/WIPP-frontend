@@ -1,23 +1,18 @@
-import {Component, NgModule, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTable, MatTableDataSource, MatTableModule} from '@angular/material';
-import {StitchingVector} from '../stitching-vector';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {StitchingVectorNewComponent} from '../stitching-vector-new/stitching-vector-new.component';
-import {StitchingVectorService} from '../stitching-vector.service';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatSort} from '@angular/material';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
+import {TensorflowModel} from '../tensorflow-model';
+import {TensorflowModelService} from '../tensorflow-model.service';
+import {catchError, map, switchMap} from 'rxjs/operators';
 
 @Component({
-  selector: 'app-stitching-vector-list',
-  templateUrl: './stitching-vector-list.component.html',
-  styleUrls: ['./stitching-vector-list.component.css']
+  selector: 'app-tensorflow-model-list',
+  templateUrl: './tensorflow-model-list.component.html',
+  styleUrls: ['./tensorflow-model-list.component.css']
 })
-@NgModule({
-  imports: [MatTableModule, MatTableDataSource, MatTable]
-})
-export class StitchingVectorListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
-  stitchingVectors: Observable<StitchingVector[]>;
+export class TensorflowModelListComponent implements OnInit {
+  displayedColumns: string[] = ['name', 'creationDate'];
+  tensorflowModels: Observable<TensorflowModel[]>;
 
   resultsLength = 0;
   pageSize = 10;
@@ -26,10 +21,9 @@ export class StitchingVectorListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
   constructor(
-    private stitchingVectorService: StitchingVectorService,
-    private modalService: NgbModal
-  ) {
+    private tensorflowModelService: TensorflowModelService) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
@@ -61,12 +55,14 @@ export class StitchingVectorListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getStitchingVectors();
+    console.log('Tensrflow model component!!!');
+    console.log(this.tensorflowModels);
+    this.getTensorflowModels();
   }
 
-  getStitchingVectors(): void {
+  getTensorflowModels(): void {
     const paramsObservable = this.paramsChange.asObservable();
-    this.stitchingVectors = paramsObservable.pipe(
+    this.tensorflowModels = paramsObservable.pipe(
       switchMap((page) => {
         const params = {
           pageIndex: page.index,
@@ -74,20 +70,20 @@ export class StitchingVectorListComponent implements OnInit {
           sort: page.sort
         };
         if (page.filter) {
-          return this.stitchingVectorService.getStitchingVectorsByNameContainingIgnoreCase(params, page.filter).pipe(
+          return this.tensorflowModelService.getTensorflowModelsByNameContainingIgnoreCase(params, page.filter).pipe(
             map((data) => {
               this.resultsLength = data.page.totalElements;
-              return data.stitchingVectors;
+              return data.tensorflowModels;
             }),
             catchError(() => {
               return observableOf([]);
             })
           );
         }
-        return this.stitchingVectorService.getStitchingVectors(params).pipe(
+        return this.tensorflowModelService.getTensorflowModels(params).pipe(
           map((data) => {
             this.resultsLength = data.page.totalElements;
-            return data.stitchingVectors;
+            return data.tensorflowModels;
           }),
           catchError(() => {
             return observableOf([]);
@@ -97,16 +93,5 @@ export class StitchingVectorListComponent implements OnInit {
     );
   }
 
-  createNew() {
-    const modalRef = this.modalService.open(StitchingVectorNewComponent, {size: 'lg'});
-    modalRef.result.then((result) => {
-      if (result) {
-        this.getStitchingVectors();
-      }
-    },
-      (reason) => {
-        console.log('dismissed');
-      });
-  }
-
 }
+
