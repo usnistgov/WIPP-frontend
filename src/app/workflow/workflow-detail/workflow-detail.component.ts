@@ -75,8 +75,7 @@ export class WorkflowDetailComponent implements OnInit {
       // add job parameters
 
        this.selectedSchema.outputs.forEach(output => {
-         console.log(output)
-         task['outputParameters'][output.name] = 'NAN';
+         task['outputParameters'][output.name] = null;
        })
 
       for (const inputEntry in result.inputs) {
