@@ -14,7 +14,7 @@
              required
              pattern = [a-zA-Z0-9][-a-zA-Z0-9]*
              minlength="1"
-             maxlength="126"
+             maxlength="70"
       >
       {{workflow.name}}
       <small class="form-text text-muted">Enter the workflow name.</small>
@@ -26,7 +26,7 @@
           Name must be at least 1 characters long
         </div>
         <div [hidden]="!name.errors.maxlength">
-          Name cannot be more than 50 characters long
+          Name cannot be more than 70 characters long
         </div>
         <div [hidden]="!name.errors.pattern">
           Name must consist of alpha-numeric characters or '-', and must start with an alpha-numeric character
