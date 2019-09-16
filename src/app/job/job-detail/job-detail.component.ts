@@ -4,6 +4,7 @@ import {Job} from '../job';
 import {JobService} from '../job.service';
 import {Plugin} from '../../plugin/plugin';
 import 'rxjs-compat/add/operator/map';
+import {Workflow} from '../../workflow/workflow';
 
 export interface IdHash {
   [nameId: string]: string;
@@ -25,6 +26,7 @@ export class JobDetailComponent implements OnInit {
   showOutputs = false;
   plugin: Plugin;
   inputOrigins = [];
+  workflow: Workflow;
   outputHash: IdHash = {};
 
   constructor(private activeModal: NgbActiveModal,
@@ -41,6 +43,8 @@ export class JobDetailComponent implements OnInit {
         this.getPlugin();
         this.job.runningTime = (this.job.endTime && this.job.startTime) ?
           new Date(this.job.endTime.valueOf() - this.job.startTime.valueOf()) : null;
+        this.jobService.getWorkflow(this.job.wippWorkflow).subscribe(workflow =>
+          this.workflow = workflow);
       }
     );
   }

@@ -41,6 +41,30 @@
       </td>
     </tr>
 
+    <!--  workflow name line  -->
+    <tr *ngIf="workflow">
+      <th>
+        <dt>Workflow Name:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">
+          <a routerLink="/workflows/detail/{{workflow.id}}" (click)="modalReference.dismiss('Cross click')">{{workflow.name}}</a>
+        </dd>
+      </td>
+    </tr>
+
+    <!--  plugin name line  -->
+    <tr *ngIf="plugin.name">
+      <th>
+        <dt>Plugin:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">
+          <a routerLink="/plugins/{{plugin.id}}" (click)="modalReference.dismiss('Cross click')">{{plugin.name}}:{{plugin.version}}</a>
+        </dd>
+      </td>
+    </tr>
+
     <!--  startTime line  -->
     <tr *ngIf="job.startTime">
       <th>
