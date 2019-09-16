@@ -256,7 +256,31 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumnsImages;"></tr>
   </table>
 
-  <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSizeImages" #imagesPaginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+  <div class="container-fluid topMarge20">
+    <div class="row">
+      <div class="col-md-5">
+      </div>
+      <div class="col-md-3 text-right topMarge15">
+        <span class="goToSpan">
+           <mat-form-field class="inputPage">
+              <input matInput [(ngModel)]="goToPageImages" placeholder="Go to page">
+            </mat-form-field>
+          <button class="btn-xs goToButton"
+                (click)="goToPageImage()"
+                [disabled]="goToPageImages<1 ||
+                 goToPageImages>= imagesCollection.numberOfImages/pageSizeImages+1 ||
+                 !goToPageImages">
+          <span class="goToTxt">Go</span>
+          <i class="fas fa-angle-right arrowIcon"></i>
+        </button>
+        </span>
+      </div>
+      <div class="col-md-4" >
+        <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSizeImages" [pageSizeOptions]="pageSizeOptions" #imagesPaginator></mat-paginator>
+      </div>
+    </div>
+  </div>
+
 
   <h4>Metadata files</h4>
   <div class='row'>
@@ -332,6 +356,30 @@
   </table>
 
 
-  <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
+  <div class="container-fluid topMarge20">
+    <div class="row">
+      <div class="col-md-5">
+      </div>
+      <div class="col-md-3 text-right topMarge15">
+        <span class="goToSpan">
+           <mat-form-field class="inputPage">
+              <input matInput [(ngModel)]="goToPageMetadataFiles" placeholder="Go to page">
+            </mat-form-field>
+          <button class="btn-xs goToButton"
+                (click)="goToPageMetadata()"
+                [disabled]="goToPageMetadataFiles<1 ||
+                 goToPageMetadataFiles> imagesCollection.numberOfMetadataFiles/pageSizeMetadataFiles+1 ||
+                  !goToPageMetadataFiles">
+          <span class="goToTxt">Go</span>
+          <i class="fas fa-angle-right arrowIcon"></i>
+          </button>
+        </span>
+      </div>
 
+      <div class="col-md-4">
+        <mat-paginator style="display: inline" (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
+      </div>
+
+    </div>
+  </div>
 </div>
