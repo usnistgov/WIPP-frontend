@@ -6,6 +6,7 @@ import {Job} from './job';
 import {Plugin} from '../plugin/plugin';
 import {ImagesCollection} from '../images-collection/images-collection';
 import {StitchingVector} from '../stitching-vector/stitching-vector';
+import {Workflow} from '../workflow/workflow';
 
 
 const httpOptions = {
@@ -26,6 +27,7 @@ export class JobService {
   private imagesCollection = environment.apiRootUrl + '/imagesCollections';
   private stitchingVector = environment.apiRootUrl + '/stitchingVectors';
   private pluginsUrl = environment.apiRootUrl + '/plugins';
+  private workflowsUrl = environment.apiRootUrl + '/workflows';
 
   getJob(jobId: string): Observable<Job> {
     return this.http.get<Job>(`${this.jobsUrl}/${jobId}`, httpOptions);
@@ -41,6 +43,10 @@ export class JobService {
 
   getStitchingVector(stitchingVectorId): Observable<StitchingVector> {
     return this.http.get<StitchingVector>(`${this.stitchingVector}/${stitchingVectorId}`, httpOptions);
+  }
+
+  getWorkflow(workflowId: string) {
+    return this.http.get<Workflow>(`${this.workflowsUrl}/${workflowId}`, httpOptions);
   }
 
 }
