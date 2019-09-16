@@ -11,13 +11,16 @@ export class WorkflowNewComponent implements OnInit {
 
   @Input() modalReference: any;
   workflow: Workflow = new Workflow();
+
   constructor(private activeModal: NgbActiveModal) { }
 
   ngOnInit() {
   }
+
   cancel() {
     this.modalReference.dismiss();
   }
+
   save() {
     this.modalReference.close(this.workflow);
   }

@@ -25,7 +25,8 @@ export class WorkflowDetailComponent implements OnInit {
   pluginList = [];
   jobOutputs = {
     collections: [],
-    stitchingVectors: []
+    stitchingVectors: [],
+    tensorflowModels: []
   };
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
@@ -75,7 +76,7 @@ export class WorkflowDetailComponent implements OnInit {
         if (result.inputs.hasOwnProperty(inputEntry)) {
           const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
           let value = result.inputs[inputEntry];
-          if (type === 'collection' || type === 'stitchingVector') {
+          if (type === 'collection' || type === 'stitchingVector' || type === 'tensorflowModel') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
               task['dependencies'].push(value.sourceJob);
             }
@@ -103,6 +104,14 @@ export class WorkflowDetailComponent implements OnInit {
               virtual: true
             };
             this.jobOutputs.stitchingVectors.push(outputStitchingVector);
+          } else if (output.type === 'tensorflowModel') {
+            const outputTensorflowModel = {
+              id: '{{ ' + job.id + '.' + output.name + ' }}',
+              name: '{{ ' + job.name + '.' + output.name + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.tensorflowModels.push(outputTensorflowModel);
           }
         });
         this.resetForm();
@@ -127,7 +136,8 @@ export class WorkflowDetailComponent implements OnInit {
           'description': 'Task name',
           'format': 'string',
           'widget': 'string',
-          'placeholder': 'Enter a name for this task'
+          'placeholder': 'Enter a name for this task',
+          'maxLength': 127 - this.workflow.name.length
         },
         // job inputs fields
         'inputs': {
@@ -160,6 +170,12 @@ export class WorkflowDetailComponent implements OnInit {
             inputSchema['widget'] = 'search';
             inputSchema['format'] = 'stitchingVector';
             inputSchema['getOutputStitchingVectors'] = () => this.jobOutputs.stitchingVectors;
+            break;
+          case 'tensorflowModel':
+            inputSchema['type'] = 'string';
+            inputSchema['widget'] = 'search';
+            inputSchema['format'] = 'tensorflowModel';
+            inputSchema['getOutputTensorflowModels'] = () => this.jobOutputs.tensorflowModels;
             break;
           case 'enum':
             inputSchema['type'] = 'string';
@@ -236,9 +252,10 @@ export class WorkflowDetailComponent implements OnInit {
         return observableOf([]);
       })
     ).subscribe(data => {
-       this.jobs = data;
+      this.jobs = data;
       this.populateGraph(data);
-      this.updateGraph(); } );
+      this.updateGraph();
+    });
   }
 
   displayJobModal(jobId: string) {
@@ -256,9 +273,9 @@ export class WorkflowDetailComponent implements OnInit {
     this.nodes = [];
     this.links = [];
     for (const job of data) {
-      const node = {id : job.id, label: job.name};
+      const node = {id: job.id, label: job.name};
       this.nodes.push(node);
-      if ( job.dependencies.length > 0 ) {
+      if (job.dependencies.length > 0) {
         const link = {id: 'link', source: job.dependencies[0], target: job.id};
         this.links.push(link);
       }
@@ -270,7 +287,7 @@ export class WorkflowDetailComponent implements OnInit {
   getGraphWidth() {
     let depth = 1;
     let tempDepth;
-    for ( const link of this.links ) {
+    for (const link of this.links) {
       tempDepth = 1;
       let target = link.target;
       let flag = true;
@@ -278,7 +295,9 @@ export class WorkflowDetailComponent implements OnInit {
         if (this.links.some(x => x.source === target)) {
           tempDepth = tempDepth + 1;
           target = this.links.find(x => x.source === target).target;
-        } else {flag = false; }
+        } else {
+          flag = false;
+        }
       }
       depth = Math.max(depth, tempDepth);
     }
@@ -287,22 +306,24 @@ export class WorkflowDetailComponent implements OnInit {
 
   getGraphHeight() {
     let depthHeight = 0;
-    for ( const node of this.nodes ) {
+    for (const node of this.nodes) {
       if (!this.links.some(x => x.target === node.id)) {
-        depthHeight ++;
+        depthHeight++;
       }
-      let nbOfChild = 0 ;
-      if (this.links.some(x => x.source === node.id) ) {
+      let nbOfChild = 0;
+      if (this.links.some(x => x.source === node.id)) {
         for (const node2 of this.nodes) {
-          if (this.links.some(x => x.source === node.id && x.target === node2.id) ) {
-            nbOfChild ++;
+          if (this.links.some(x => x.source === node.id && x.target === node2.id)) {
+            nbOfChild++;
             if (nbOfChild === 2) {
             }
           }
 
         }
       }
-      if (nbOfChild > 1) {depthHeight += nbOfChild - 1; }
+      if (nbOfChild > 1) {
+        depthHeight += nbOfChild - 1;
+      }
     }
     this.depthHeight = depthHeight;
   }
