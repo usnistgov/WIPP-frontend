@@ -136,7 +136,8 @@ export class WorkflowDetailComponent implements OnInit {
           'description': 'Task name',
           'format': 'string',
           'widget': 'string',
-          'placeholder': 'Enter a name for this task'
+          'placeholder': 'Enter a name for this task',
+          'maxLength': 127 - this.workflow.name.length
         },
         // job inputs fields
         'inputs': {
