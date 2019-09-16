@@ -35,19 +35,15 @@ export class PluginNewComponent implements OnInit {
   }
 
   getByUrl(url) {
-    this.pluginService.getJsonFromURL(url).subscribe(data => {
-      this.pluginJSON = JSON.stringify(data, undefined, 7);
-    });
+      this.pluginService.getJsonFromURL(url).subscribe(data => {
+        this.pluginJSON = JSON.stringify(data, undefined, 7);
+      });
   }
 
   public clearAll() {
     this.pluginJSON = null;
     this.browsePlugin.nativeElement.value = '';
     this.linkPlugin.nativeElement.value = '';
-    // const browseInput = (<HTMLInputElement>document.getElementById('file'));
-    // const urlInput = (<HTMLInputElement>document.getElementById('pluginLink'));
-    // if (browseInput) {browseInput.value = null; }
-    // if (urlInput) {urlInput.value = null; }
   }
 
   public isJsonValid(textToTest) {
@@ -61,11 +57,16 @@ export class PluginNewComponent implements OnInit {
     }
   }
 
-  //   public onClose() {
-  //   this.modalService.dismissAll();
-  //   this.pluginJSON = null;
-  //   const inputValue = (<HTMLInputElement>document.getElementById('pluginDescriptorText'));
-  //   if (inputValue) {inputValue.value = null; }
-  // }
+  public postPlugin(pluginText) {
+    console.log(pluginText)
+      const jsonState = this.isJsonValid(pluginText);
+      if (jsonState[0] ) {
+        this.pluginService.postPlugin(pluginText).subscribe(res => {
+        });
+        this.pluginJSON = null;
+        this.modalReference.close('Cross click');
+      } else {
+        alert('invalid JSON - ' + jsonState[1] ); }
+  }
 
 }
