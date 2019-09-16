@@ -30,7 +30,7 @@
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-primary" id="registerBtn"
-          (click)="c(pluginDescriptorText.value); clearAll()" [disabled]="pluginDescriptorText.value.length<2">
+          (click)="postPlugin(pluginDescriptorText.value)" [disabled]="pluginDescriptorText.value.length<2">
     <i class="fas fa-save" style="margin-right: 10px">
       <p id="registerText">Register plugin</p>
     </i></button>

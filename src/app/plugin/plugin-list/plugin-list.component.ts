@@ -19,7 +19,6 @@ import {PluginNewComponent} from '../plugin-new/plugin-new.component';
 export class PluginListComponent implements OnInit {
   displayedColumns: string[] = [ 'name', 'version', 'description'];
   plugins: Observable<Plugin[]>;
-  pluginJSON;
   selection = new SelectionModel<Plugin>(false, []);
 
   resultsLength = 0;
@@ -103,61 +102,6 @@ export class PluginListComponent implements OnInit {
     );
   }
 
-  public open(content) {
-    this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
-      const jsonState = this.isJsonValid(result);
-      if (jsonState[0] ) {
-        this.pluginService.postPlugin(result).subscribe(
-          plugin => this.getPlugins()
-        );
-        this.pluginJSON = null;
-      } else {
-        alert('invalid JSON - ' + jsonState[1] ); }
-    }, (result) => {
-    });
-  }
-
-  public onClose() {
-    this.modalService.dismissAll();
-    this.pluginJSON = null;
-    const inputValue = (<HTMLInputElement>document.getElementById('pluginDescriptorText'));
-    if (inputValue) {inputValue.value = null; }
-  }
-
-  onFileSelected(event) {
-    const reader = new FileReader();
-    reader.readAsText(event.target.files[0]);
-    const me = this;
-    reader.onload = function () {
-      me.pluginJSON = reader.result;
-    };
-  }
-
-  getByUrl(url) {
-    this.pluginService.getJsonFromURL(url).subscribe(data => {
-      this.pluginJSON = JSON.stringify(data, undefined, 7);
-    });
-  }
-
-  public clearAll() {
-    this.pluginJSON = null;
-    const browseInput = (<HTMLInputElement>document.getElementById('file'));
-    const urlInput = (<HTMLInputElement>document.getElementById('pluginLink'));
-    if (browseInput) {browseInput.value = null; }
-    if (urlInput) {urlInput.value = null; }
-  }
-
-  public isJsonValid(textToTest) {
-    try {
-      // parse it to json
-      const data = JSON.parse(textToTest);
-      return [true];
-    } catch (ex) {
-      // set parse error if it fails
-      return  [false, ex];
-    }
-  }
-
   public onClick(row) {
     this.router.navigate(['/plugins/' + row.id ], { skipLocationChange: false } );
   }
@@ -166,6 +110,7 @@ export class PluginListComponent implements OnInit {
     const modalRef = this.modalService.open(PluginNewComponent, {size: 'lg'});
     modalRef.componentInstance.modalReference = modalRef;
     modalRef.result.then((result) => {
+      this.getPlugins();
       }
       , (reason) => {
         console.log('dismissed');
