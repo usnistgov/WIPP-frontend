@@ -7,6 +7,8 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, from, Observable, of as observableOf} from 'rxjs';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ActivatedRoute, Route, Router} from '@angular/router';
+import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
+import {PluginNewComponent} from '../plugin-new/plugin-new.component';
 
 
 @Component({
@@ -158,6 +160,16 @@ export class PluginListComponent implements OnInit {
 
   public onClick(row) {
     this.router.navigate(['/plugins/' + row.id ], { skipLocationChange: false } );
+  }
+
+    displayNewPluginModal() {
+    const modalRef = this.modalService.open(PluginNewComponent, {size: 'lg'});
+    modalRef.componentInstance.modalReference = modalRef;
+    modalRef.result.then((result) => {
+      }
+      , (reason) => {
+        console.log('dismissed');
+      });
   }
 
 }
