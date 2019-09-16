@@ -6,6 +6,7 @@ import {FormsModule} from '@angular/forms';
 import {PluginRoutingModule} from './plugin-routing.module';
 import {PluginListComponent} from './plugin-list/plugin-list.component';
 import {PluginDetailComponent} from './plugin-detail/plugin-detail.component';
+import { PluginNewComponent } from './plugin-new/plugin-new.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,11 @@ import {PluginDetailComponent} from './plugin-detail/plugin-detail.component';
   ],
   declarations: [
     PluginListComponent,
-    PluginDetailComponent
+    PluginDetailComponent,
+    PluginNewComponent
+  ],
+  entryComponents: [
+    PluginNewComponent
   ]
 })
 export class PluginModule { }
