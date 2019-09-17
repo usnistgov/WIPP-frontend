@@ -3,11 +3,10 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Plugin} from '../plugin';
 import {PluginService} from '../plugin.service';
 import {MatPaginator, MatSort} from '@angular/material';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {BehaviorSubject, from, Observable, of as observableOf} from 'rxjs';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {SelectionModel} from '@angular/cdk/collections';
-import {ActivatedRoute, Route, Router} from '@angular/router';
-import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
+import {ActivatedRoute, Router} from '@angular/router';
 import {PluginNewComponent} from '../plugin-new/plugin-new.component';
 
 
