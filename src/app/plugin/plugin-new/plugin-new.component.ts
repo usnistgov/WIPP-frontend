@@ -1,7 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {PluginService} from '../plugin.service';
-import {MatPaginator, MatSort} from '@angular/material';
 
 @Component({
   selector: 'app-plugin-new',
@@ -35,9 +34,13 @@ export class PluginNewComponent implements OnInit {
   }
 
   getByUrl(url) {
-      this.pluginService.getJsonFromURL(url).subscribe(data => {
+    this.pluginService.getJsonFromURL(url).subscribe(data => {
         this.pluginJSON = JSON.stringify(data, undefined, 7);
-      });
+      },
+      error => {
+        alert('Unknown URL: ' + url);
+      }
+    );
   }
 
   public clearAll() {
@@ -53,20 +56,20 @@ export class PluginNewComponent implements OnInit {
       return [true];
     } catch (ex) {
       // set parse error if it fails
-      return  [false, ex];
+      return [false, ex];
     }
   }
 
   public postPlugin(pluginText) {
-    console.log(pluginText)
-      const jsonState = this.isJsonValid(pluginText);
-      if (jsonState[0] ) {
-        this.pluginService.postPlugin(pluginText).subscribe(res => {
-        });
-        this.pluginJSON = null;
-        this.modalReference.close('Cross click');
-      } else {
-        alert('invalid JSON - ' + jsonState[1] ); }
+    const jsonState = this.isJsonValid(pluginText);
+    if (jsonState[0]) {
+      this.pluginService.postPlugin(pluginText).subscribe(res => {
+      });
+      this.pluginJSON = null;
+      this.modalReference.close('Cross click');
+    } else {
+      alert('invalid JSON - ' + jsonState[1]);
+    }
   }
 
 }
