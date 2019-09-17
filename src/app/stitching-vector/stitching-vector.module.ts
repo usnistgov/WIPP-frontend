@@ -16,6 +16,9 @@ import {StitchingVectorNewComponent} from './stitching-vector-new/stitching-vect
 import {StitchingVectorListComponent} from './stitching-vector-list/stitching-vector-list.component';
 import {StitchingVectorDetailComponent} from './stitching-vector-detail/stitching-vector-detail.component';
 import {StitchingVectorRoutingModule} from './stitching-vector-routing.module';
+import {
+  StitchingVectorTemplateComponent
+} from './stitching-vector-template/stitching-vector-template.component';
 import {ModalErrorComponent} from '../modal-error/modal-error.component';
 
 
@@ -40,7 +43,8 @@ import {ModalErrorComponent} from '../modal-error/modal-error.component';
     StitchingVectorDetailComponent,
     StitchingVectorListComponent,
     StitchingVectorNewComponent,
-    ModalErrorComponent
+    ModalErrorComponent,
+    StitchingVectorTemplateComponent
   ]
 })
 export class StitchingVectorModule { }
