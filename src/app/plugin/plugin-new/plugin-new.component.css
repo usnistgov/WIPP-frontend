@@ -2,6 +2,7 @@
   border: none;
   border-bottom: solid 2px #007bff;
 }
+
 #pluginLink:invalid {
   border: 1px dotted red;
 }
@@ -22,6 +23,18 @@
 #registerText {
   margin-left: 10px;
   display: inline;
-  font-family: 'Roboto', sans-serif ;
+  font-family: 'Roboto', sans-serif;
   font-weight: normal;
+}
+
+.top5 {
+  margin-top: 5%;
+}
+
+.width80 {
+  width: 80%;
+}
+
+.right10 {
+  margin-right: 10px;
 }
