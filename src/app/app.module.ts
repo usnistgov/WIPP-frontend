@@ -18,6 +18,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVectorModule} from './stitching-vector/stitching-vector.module';
 import {PyramidModule} from './pyramid/pyramid.module';
 import {TensorflowModelModule} from './tensorflow-model/tensorflow-model.module';
+import {CsvCollectionModule} from './csv-collection/csv-collection.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {TensorflowModelModule} from './tensorflow-model/tensorflow-model.module'
     StitchingVectorModule,
     PyramidModule,
     TensorflowModelModule,
+    CsvCollectionModule,
     PluginModule,
     WorkflowModule,
     AppRoutingModule,
