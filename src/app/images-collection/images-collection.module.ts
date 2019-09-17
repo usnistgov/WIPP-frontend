@@ -16,6 +16,9 @@ import {
 import { ImagesCollectionNewComponent } from './images-collection-new/images-collection-new.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
+import {
+  ImagesCollectionTemplateComponent
+} from './images-collection-template/images-collection-template.component';
 
 @NgModule({
   imports: [
@@ -38,7 +41,8 @@ import {InlineEditorModule} from '@qontu/ngx-inline-editor';
   declarations: [
     ImagesCollectionDetailComponent,
     ImagesCollectionListComponent,
-    ImagesCollectionNewComponent
+    ImagesCollectionNewComponent,
+    ImagesCollectionTemplateComponent
   ]
 })
 export class ImagesCollectionModule { }
