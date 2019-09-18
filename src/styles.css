@@ -9,3 +9,8 @@ body { margin: 0; font-family: 'Roboto', sans-serif; }
 table {
   width: 100%;
 }
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
