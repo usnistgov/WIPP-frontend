@@ -28,7 +28,3 @@ text {
   pointer-events: all;
   cursor: pointer;
 }
-
-.array-add-button {
- color: #333; background-color: #fff; border-color: #ccc;
-}
