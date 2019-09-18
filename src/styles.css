@@ -13,4 +13,10 @@ table {
   color: #333;
   background-color: #fff;
   border-color: #ccc;
+  margin-bottom: 10px;
 }
+
+.array-remove-button {
+  margin-top: -15px;
+}
+
