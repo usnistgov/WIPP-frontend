@@ -89,6 +89,9 @@ export class WorkflowDetailComponent implements OnInit {
             }
             value = value.hasOwnProperty('id') ? value.id : null;
           }
+          if (type === 'array') {
+            value = value.join(',');
+          }
           task['parameters'][inputEntry] = value;
         }
       }
@@ -209,6 +212,11 @@ export class WorkflowDetailComponent implements OnInit {
               });
             });
             inputSchema['default'] = input.options.values[0];
+            break;
+          case 'array':
+            inputSchema['type'] = 'array';
+            inputSchema['format'] = 'array';
+            inputSchema['items'] = input.options.items;
             break;
           default:
             inputSchema['type'] = input.type;
