@@ -7,6 +7,7 @@ import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators
 import {ImagesCollectionService} from '../../../images-collection/images-collection.service';
 import {StitchingVectorService} from '../../../stitching-vector/stitching-vector.service';
 import {TensorflowModelService} from '../../../tensorflow-model/tensorflow-model.service';
+import {CsvCollectionService} from '../../../csv-collection/csv-collection.service';
 
 @Component({
   selector: 'app-search-widget',
@@ -20,7 +21,8 @@ export class SearchWidgetComponent extends StringWidget {
     private workflowService: WorkflowService,
     private imagesCollectionService: ImagesCollectionService,
     private stitchingVectorService: StitchingVectorService,
-    private tensorflowModelService: TensorflowModelService
+    private tensorflowModelService: TensorflowModelService,
+    private csvCollectionService: CsvCollectionService
   ) {
     super();
   }
@@ -48,6 +50,12 @@ export class SearchWidgetComponent extends StringWidget {
           let tensorflowModels = this.schema.getOutputTensorflowModels();
           tensorflowModels = tensorflowModels.concat(result.tensorflowModels);
           return tensorflowModels;
+        }));
+      case 'csvCollection':
+        return this.csvCollectionService.getCsvCollectionsByNameContainingIgnoreCase(null, term).pipe(map(result => {
+          let csvCollections = this.schema.getOutputCsvCollections();
+          csvCollections = csvCollections.concat(result.csvCollections);
+          return csvCollections;
         }));
       default:
         return [];
