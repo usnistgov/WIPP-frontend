@@ -26,7 +26,8 @@ export class WorkflowDetailComponent implements OnInit {
   jobOutputs = {
     collections: [],
     stitchingVectors: [],
-    tensorflowModels: []
+    tensorflowModels: [],
+    csvCollections: []
   };
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
@@ -82,7 +83,7 @@ export class WorkflowDetailComponent implements OnInit {
         if (result.inputs.hasOwnProperty(inputEntry)) {
           const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
           let value = result.inputs[inputEntry];
-          if (type === 'collection' || type === 'stitchingVector' || type === 'tensorflowModel') {
+          if (type === 'collection' || type === 'stitchingVector' || type === 'tensorflowModel' || type === 'csvCollection') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
               task['dependencies'].push(value.sourceJob);
             }
@@ -118,6 +119,14 @@ export class WorkflowDetailComponent implements OnInit {
               virtual: true
             };
             this.jobOutputs.tensorflowModels.push(outputTensorflowModel);
+          } else if (output.type === 'csvCollection') {
+            const outputCsvCollection = {
+              id: '{{ ' + job.id + '.' + output.name + ' }}',
+              name: '{{ ' + job.name + '.' + output.name + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.csvCollections.push(outputCsvCollection);
           }
         });
         this.resetForm();
@@ -182,6 +191,12 @@ export class WorkflowDetailComponent implements OnInit {
             inputSchema['widget'] = 'search';
             inputSchema['format'] = 'tensorflowModel';
             inputSchema['getOutputTensorflowModels'] = () => this.jobOutputs.tensorflowModels;
+            break;
+          case 'csvCollection':
+            inputSchema['type'] = 'string';
+            inputSchema['widget'] = 'search';
+            inputSchema['format'] = 'csvCollection';
+            inputSchema['getOutputCsvCollections'] = () => this.jobOutputs.csvCollections;
             break;
           case 'enum':
             inputSchema['type'] = 'string';
