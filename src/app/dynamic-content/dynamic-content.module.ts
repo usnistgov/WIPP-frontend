@@ -7,6 +7,7 @@ import {ImagesCollectionTemplateComponent} from '../images-collection/images-col
 import {PyramidTemplateComponent} from '../pyramid/pyramid-template/pyramid-template.component';
 import {TensorflowModelTemplateComponent} from '../tensorflow-model/tensorflow-model-template/tensorflow-model-template.component';
 import {TensorboardLogsTemplateComponent} from '../tensorflow-model/tensorflow-model-template/tensorboard-logs-template.component';
+import {CsvCollectionTemplateComponent} from '../csv-collection/csv-collection-template/csv-collection-template.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {TensorboardLogsTemplateComponent} from '../tensorflow-model/tensorflow-m
     PyramidTemplateComponent,
     StitchingVectorTemplateComponent,
     TensorflowModelTemplateComponent,
-    TensorboardLogsTemplateComponent
+    TensorboardLogsTemplateComponent,
+    CsvCollectionTemplateComponent
   ],
   exports: [
     DynamicContentComponent
