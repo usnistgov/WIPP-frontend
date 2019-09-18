@@ -1,0 +1,38 @@
+<h3 style="margin-top: 2%; margin-bottom: 2%">Csv Collection Detail</h3>
+
+<div>
+  <div class="row">
+    <div class="col-md-9">
+      <dl class="row">
+        <dt class="col-md-4">Name: </dt>
+        <dd class="col-md-8">{{csvCollection.name}}</dd>
+
+        <dt class="col-md-4">Creation Date: </dt>
+        <dd class="col-md-8">{{csvCollection.creationDate | date}}</dd>
+
+        <dt class="col-md-4">Source job: </dt>
+        <dd class="col-md-8" *ngIf="job; else not_applicable">
+          <a (click)="displayJobModal(job.id)"
+             class="underline-on-hover text-primary"
+             ngbTooltip="Show Job"
+             placement="left">
+            {{job.name}}
+          </a>
+        </dd>
+
+        <ng-template #not_applicable>N/A</ng-template>
+      </dl>
+    </div>
+
+    <div class="col-md-3 text-right">
+      <a
+        [href]="csvCollection._links.download.href"
+        ngbTooltip="Download as zip"
+        placement="left"
+        class="btn btn-light">
+                  <span
+                    aria-hidden="true"><i class="fa fa-download"></i></span>
+      </a>
+    </div>
+  </div>
+</div>
