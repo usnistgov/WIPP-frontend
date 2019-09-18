@@ -16,7 +16,6 @@
              minlength="1"
              maxlength="70"
       >
-      {{workflow.name}}
       <small class="form-text text-muted">Enter the workflow name.</small>
       <div *ngIf="name.errors && (name.dirty || name.touched)" class="alert alert-danger">
         <div [hidden]="!name.errors.required">
