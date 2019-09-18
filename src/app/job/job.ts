@@ -10,6 +10,7 @@ export class Job {
   wippExecutable: string;
   dependencies: any[];
   parameters: JSON;
+  outputParameters: JSON;
   wippWorkflow: string;
   wippVersion: string;
   type: string;
