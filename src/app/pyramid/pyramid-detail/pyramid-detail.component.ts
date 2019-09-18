@@ -43,7 +43,7 @@ export class PyramidDetailComponent implements OnInit {
   }
 
   displayJobModal(jobId: string) {
-    const modalRef = this.modalService.open(JobDetailComponent);
+    const modalRef = this.modalService.open(JobDetailComponent, {'size': 'lg'});
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {

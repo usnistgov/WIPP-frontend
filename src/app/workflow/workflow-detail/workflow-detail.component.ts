@@ -71,7 +71,13 @@ export class WorkflowDetailComponent implements OnInit {
       task['type'] = this.selectedSchema.name;
       task['dependencies'] = [];
       task['parameters'] = {};
+      task['outputParameters'] = {};
       // add job parameters
+
+       this.selectedSchema.outputs.forEach(output => {
+         task['outputParameters'][output.name] = null;
+       })
+
       for (const inputEntry in result.inputs) {
         if (result.inputs.hasOwnProperty(inputEntry)) {
           const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
@@ -259,7 +265,7 @@ export class WorkflowDetailComponent implements OnInit {
   }
 
   displayJobModal(jobId: string) {
-    const modalRef = this.modalService.open(JobDetailComponent);
+    const modalRef = this.modalService.open(JobDetailComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {
