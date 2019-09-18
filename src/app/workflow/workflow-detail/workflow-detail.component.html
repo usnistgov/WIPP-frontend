@@ -78,20 +78,30 @@
   </div>
 </div>
 
+  <ng-template #addStepModal let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">New Task</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="pluginName">Plugin:</label>
+        <select id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
+          <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}</option>
+        </select>
+      </div>
+      <sf-form [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm></sf-form>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">
+        <i class="fas fa-plus-circle" style="margin-right: 10px">
+          <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Add
+            task</p>
+        </i>
+      </button>
 
-<ng-template #addStepModal let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">New Step</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class="form-group">
-      <label for="pluginName">Plugin:</label>
-      <select id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
-        <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}</option>
-      </select>
     </div>
     <sf-form [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm></sf-form>
   </div>
