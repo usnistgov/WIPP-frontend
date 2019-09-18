@@ -17,6 +17,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVectorModule} from './stitching-vector/stitching-vector.module';
 import {PyramidModule} from './pyramid/pyramid.module';
 import {TensorflowModelModule} from './tensorflow-model/tensorflow-model.module';
+import {CsvCollectionModule} from './csv-collection/csv-collection.module';
 import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.component';
 
 @NgModule({
@@ -32,6 +33,7 @@ import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.compon
     StitchingVectorModule,
     PyramidModule,
     TensorflowModelModule,
+    CsvCollectionModule,
     PluginModule,
     WorkflowModule,
     AppRoutingModule,
