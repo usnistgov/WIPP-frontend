@@ -25,8 +25,8 @@ export class CsvCollectionDetailComponent implements OnInit {
 
   ngOnInit() {
     this.csvCollectionService.getCsvCollection(this.csvCollectionId)
-      .subscribe(csvCollectionId => {
-        this.csvCollectionId = csvCollectionId;
+      .subscribe(csvCollection => {
+        this.csvCollection = csvCollection;
         this.getJob();
       });
   }
