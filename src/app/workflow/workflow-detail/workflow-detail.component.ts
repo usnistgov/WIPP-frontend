@@ -52,7 +52,7 @@ export class WorkflowDetailComponent implements OnInit {
   ngOnInit() {
     this.workflowService.getWorkflow(this.workflowId).subscribe(workflow =>
       this.workflow = workflow);
-    this.pluginService.getPlugins(null)
+    this.pluginService.getPlugins({ size: Number.MAX_SAFE_INTEGER, sort: 'name' })
       .subscribe(plugins => {
         this.pluginList = plugins.plugins;
         this.generateSchema(this.pluginList);
