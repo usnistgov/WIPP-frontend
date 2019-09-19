@@ -1,7 +1,8 @@
 <div class="row" style="margin-top: 2%; margin-bottom: 2%">
   <div class="col-md-6">
     <h3 style="display: inline">Workflow detail</h3>
-    <button *ngIf="workflow.status === 'CREATED'" class="btn btn-outline-dark" style="margin-left: 2%; margin-top: -1%" [disabled]="jobs.length < 1" (click)="submitWorkflow()">
+    <button *ngIf="workflow.status === 'CREATED'" class="btn btn-outline-dark" style="margin-left: 2%; margin-top: -1%"
+            [disabled]="jobs.length < 1" (click)="submitWorkflow()">
       <i class="fas fa-arrow-alt-circle-right" style="margin-right: 10px">
         <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Submit
           workflow</p>
@@ -35,37 +36,49 @@
       </div>
     </div>
   </div>
-
-  <ngx-graph
-    *ngIf="jobs.length > 0"
-    class="chart-container"
-    [links]=links
-    [nodes]=nodes
-    [update$]="update$"
-
-    [enableZoom]="false"
-    [draggingEnabled]="false"
-    [panningEnabled]="false"
-    [view]="[depthWidth*380, depthHeight*100]"
-
-  >
-    <ng-template #nodeTemplate let-node>
-      <svg:g class="node" (click)="displayJobModal(node.id)">
-        <svg:rect
-          [attr.width]="node.dimension.width"
-          [attr.height]="node.dimension.height"
-          [attr.fill]="node.data.color"
-        />
-        <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
-          {{node.label}}
-        </svg:text>
-      </svg:g>
-    </ng-template>
-
-  </ngx-graph>
+</div>
+<div class="row" style="border: dotted 2px lightgray ; height: 500px" [hidden]="jobs.length<1">
+  <div class="col-md-1">
+    <button style="margin-top: 20px; margin-left: 20px;" class="btn btn-outline-dark" (click)="centerAndFitGraph()">
+      Center Graph
+    </button>
+  </div>
+  <div class="col-md-11" style="margin-top: 20px">
 
 
-  <ng-template #addStepModal let-c="close" let-d="dismiss">
+    <ngx-graph
+      *ngIf="jobs.length > 0"
+      class="chart-container"
+      [links]=links
+      [nodes]=nodes
+      [update$]="update$"
+
+      [enableZoom]="true"
+      [draggingEnabled]="false"
+      [panningEnabled]="true"
+      [zoomToFit$]="zoomToFit$"
+      [center$]="center$"
+    >
+      <ng-template #nodeTemplate let-node>
+        <svg:g class="node" (click)="displayJobModal(node.id)"
+        >
+          <svg:rect
+            [attr.width]="node.dimension.width"
+            [attr.height]="node.dimension.height"
+            [attr.fill]="node.data.color"
+          />
+          <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
+            {{node.label}}
+          </svg:text>
+        </svg:g>
+      </ng-template>
+
+    </ngx-graph>
+
+  </div>
+</div>
+
+<ng-template #addStepModal let-c="close" let-d="dismiss">
     <div class="modal-header">
       <h4 class="modal-title">New Task</h4>
       <button type="button" class="close" aria-label="Close" (click)="d()">
@@ -88,6 +101,5 @@
             task</p>
         </i>
       </button>
-    </div>
-  </ng-template>
-</div>
+  </div>
+</ng-template>
