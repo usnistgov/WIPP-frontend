@@ -78,7 +78,7 @@
   </div>
 </div>
 
-  <ng-template #addStepModal let-c="close" let-d="dismiss">
+<ng-template #addStepModal let-c="close" let-d="dismiss">
     <div class="modal-header">
       <h4 class="modal-title">New Task</h4>
       <button type="button" class="close" aria-label="Close" (click)="d()">
@@ -101,16 +101,5 @@
             task</p>
         </i>
       </button>
-
-    </div>
-    <sf-form [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm></sf-form>
-  </div>
-  <div class="modal-footer">
-    <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">
-      <i class="fas fa-plus-circle" style="margin-right: 10px">
-        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Add
-          task</p>
-      </i>
-    </button>
   </div>
 </ng-template>
