@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment} from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'WIPP';
   isNavbarCollapsed = true;
+  jyperterNotebooksLink = environment.jupyterNotebooksUrl;
+  plotsUiLink = environment.plotsUiRrl;
 }
 
