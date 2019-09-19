@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PluginService} from '../../plugin/plugin.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
@@ -6,10 +6,11 @@ import {ActivatedRoute} from '@angular/router';
 import {Workflow} from '../workflow';
 import {MatPaginator} from '@angular/material';
 import {of as observableOf, Subject} from 'rxjs';
+import { interval } from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
-import {FormProperty, PropertyGroup} from '../../../../node_modules/ngx-schema-form/lib/model/formproperty';
+import {FormProperty, PropertyGroup} from 'ngx-schema-form/lib/model/formproperty';
 
 
 @Component({
@@ -21,6 +22,8 @@ import {FormProperty, PropertyGroup} from '../../../../node_modules/ngx-schema-f
 export class WorkflowDetailComponent implements OnInit {
 
   workflow: Workflow = new Workflow();
+  zoomToFit$: Subject<boolean> = new Subject();
+  center$: Subject<boolean> = new Subject();
   selectedSchema = null;
   pluginList = [];
   jobOutputs = {
@@ -31,6 +34,7 @@ export class WorkflowDetailComponent implements OnInit {
   };
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
+  firstCenterOfGraph;
 
   update$: Subject<any> = new Subject();
   nodes = [];
@@ -55,7 +59,11 @@ export class WorkflowDetailComponent implements OnInit {
         this.resetForm();
         this.getJobs();
       });
-  }
+    this.firstCenterOfGraph = interval(1).subscribe((x: number) => {
+      this.centerAndFitGraph();
+      if (x > 100) {this.firstCenterOfGraph.unsubscribe(); }
+    });
+      }
 
   resetForm() {
     this.selectedSchema = this.pluginList[0];
@@ -77,7 +85,7 @@ export class WorkflowDetailComponent implements OnInit {
 
        this.selectedSchema.outputs.forEach(output => {
          task['outputParameters'][output.name] = null;
-       })
+       });
 
       for (const inputEntry in result.inputs) {
         if (result.inputs.hasOwnProperty(inputEntry)) {
@@ -275,6 +283,7 @@ export class WorkflowDetailComponent implements OnInit {
   getJobs(): void {
     this.workflowService.getAllJobs(this.workflow).pipe(
       map(data => {
+        this.centerAndFitGraph();
         return data.jobs;
       }),
       catchError(() => {
@@ -309,8 +318,8 @@ export class WorkflowDetailComponent implements OnInit {
         this.links.push(link);
       }
     }
-    this.getGraphWidth();
-    this.getGraphHeight();
+    // this.getGraphWidth();
+    // this.getGraphHeight();
   }
 
   getGraphWidth() {
@@ -360,6 +369,20 @@ export class WorkflowDetailComponent implements OnInit {
 // Update function
   updateGraph() {
     this.update$.next(true);
+    this.centerAndFitGraph();
   }
+
+   centerGraph() {
+        this.center$.next(true);
+    }
+
+  fitGraph() {
+        this.zoomToFit$.next(true);
+    }
+
+  centerAndFitGraph() {
+    this.fitGraph();
+    this.centerGraph();
+    }
 
 }

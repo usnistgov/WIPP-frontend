@@ -22,7 +22,7 @@ text {
 }
 
 .chart-container {
-  pointer-events: none;
+  /*pointer-events: none;*/
 }
 .node {
   pointer-events: all;
