@@ -5,6 +5,7 @@ export class Workflow {
   startTime: Date;
   endTime: Date;
   status: string;
+  errorMessage: string;
   _links: any;
 }
 
