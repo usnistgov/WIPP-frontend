@@ -11,12 +11,21 @@
   </div>
 </div>
 
+<ngx-spinner></ngx-spinner>
+
 <div style="margin-top: 20px">
   <div class="row">
     <div class="col-md-12"><b>Name:</b> {{workflow.name}}</div>
   </div>
   <div class="row">
-    <div class="col-md-12"><b>Status:</b> {{workflow.status}}</div>
+    <div class="col-md-12">
+      <b>Status:</b> {{workflow.status}}
+          <span *ngIf="workflow.status === 'ERROR' && workflow.errorMessage"
+                ngbTooltip={{workflow.errorMessage}}
+                placement="right"
+                aria-hidden="true"><i class="far fa-question-circle"></i>
+          </span>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-12"><b>Creation Date:</b> {{workflow.creationDate | date}}</div>
