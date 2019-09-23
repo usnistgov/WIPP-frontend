@@ -38,6 +38,7 @@
     "dagre": "^0.8.4",
     "dagre-d3": "^0.6.3",
     "ngx-schema-form": "^2.2.0-beta.1",
+    "ngx-spinner": "^7.2.0",
     "react": "^16.8.6",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.3.3",
