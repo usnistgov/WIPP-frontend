@@ -5,6 +5,7 @@ import { CsvCollectionDetailComponent } from './csv-collection-detail/csv-collec
 import {MatFormFieldModule, MatInputModule, MatPaginatorModule, MatSortModule, MatTableModule} from '@angular/material';
 import {CsvCollectionRoutingModule} from './csv-collection-routing.module';
 import { CsvCollectionTemplateComponent } from './csv-collection-template/csv-collection-template.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { CsvCollectionTemplateComponent } from './csv-collection-template/csv-co
     MatSortModule,
     MatTableModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    NgbModule.forRoot()
   ],
   declarations: [CsvCollectionListComponent, CsvCollectionDetailComponent, CsvCollectionTemplateComponent]
 })
