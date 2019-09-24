@@ -1,7 +1,5 @@
 /* WDZT custom type */
 declare var WDZT: any;
 
-/* notebookViewer custom type */
-// declare var nbv: any;
-
+/* notebookjs custom type */
 declare var nb: any;
