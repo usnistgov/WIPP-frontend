@@ -1,0 +1,23 @@
+<h3 class="wippHeader">Notebook Detail</h3>
+
+<div class="container-fluid">
+  <div class="row top20">
+    <div class="col-md-3">
+      <dl class="row">
+        <dt class="col-md-4">Name:</dt>
+        <dd class="col-md-8 break">
+          {{notebook.name}}
+        </dd>
+        <dt class="col-md-4">Creation Date:</dt>
+        <dd class="col-md-8">
+          {{notebook.creationDate | date}}
+        </dd>
+        <dt class="col-md-4">Description:</dt>
+        <dd class="col-md-8">
+          {{notebook.description}}
+        </dd>
+      </dl>
+    </div>
+    <div class="col-md-9 notebook" #notebookDisplay></div>
+  </div>
+</div>
