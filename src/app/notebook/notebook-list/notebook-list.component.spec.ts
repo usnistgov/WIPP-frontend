@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PyramidTemplateComponent } from './pyramid-template.component';
+import { NotebookListComponent } from './notebook-list.component';
 
-describe('NotebookTemplateComponent', () => {
-  let component: PyramidTemplateComponent;
-  let fixture: ComponentFixture<PyramidTemplateComponent>;
+describe('NotebookListComponent', () => {
+  let component: NotebookListComponent;
+  let fixture: ComponentFixture<NotebookListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PyramidTemplateComponent ]
+      declarations: [ NotebookListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PyramidTemplateComponent);
+    fixture = TestBed.createComponent(NotebookListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
