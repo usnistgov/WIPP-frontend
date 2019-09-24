@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {Notebook} from '../notebook';
 import {ActivatedRoute} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -36,7 +36,8 @@ export class NotebookDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private http: HttpClient,
-    private notebookService: NotebookService
+    private notebookService: NotebookService,
+    private renderer: Renderer2
   ) {
   }
 
@@ -57,7 +58,7 @@ export class NotebookDetailComponent implements OnInit {
       nb.markdown = function (text) {
         return Marked(text);
       };
-      document.getElementById('displayNotebook').appendChild(notebook.render());
+      this.renderer.appendChild(this.notebookDisplay.nativeElement, notebook.render());
       Prism.highlightAll();
     }
 
