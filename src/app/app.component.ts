@@ -9,7 +9,7 @@ import { environment} from '../environments/environment';
 export class AppComponent {
   title = 'WIPP';
   isNavbarCollapsed = true;
-  jyperterNotebooksLink = environment.jupyterNotebooksUrl;
-  plotsUiLink = environment.plotsUiRrl;
+  jupyterNotebooksLink = environment.jupyterNotebooksUrl;
+  plotsUiLink = environment.plotsUiUrl;
 }
 

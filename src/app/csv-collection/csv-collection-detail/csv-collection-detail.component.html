@@ -26,6 +26,15 @@
 
     <div class="col-md-3 text-right">
       <a
+        [href]="plotsUiLink"
+        target="_blank"
+        [ngbTooltip]="plotTipContent"
+        placement="left"
+        class="btn btn-light">
+                  <span
+                    aria-hidden="true"><i class="fa fa-chart-area"></i></span>
+      </a>
+      <a
         [href]="csvCollection._links.download.href"
         ngbTooltip="Download as zip"
         placement="left"
@@ -33,6 +42,11 @@
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
       </a>
+
+      <ng-template #plotTipContent>Visualize in Plots UI
+        <span
+          aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
+      </ng-template>
     </div>
   </div>
 </div>

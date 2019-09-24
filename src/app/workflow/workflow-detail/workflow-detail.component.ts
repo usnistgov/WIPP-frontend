@@ -11,6 +11,8 @@ import {catchError, map} from 'rxjs/operators';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
 import {FormProperty, PropertyGroup} from 'ngx-schema-form/lib/model/formproperty';
+import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 
 @Component({
@@ -41,10 +43,11 @@ export class WorkflowDetailComponent implements OnInit {
   links = [];
   depthWidth;
   depthHeight;
-
+  
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
+    private spinner: NgxSpinnerService,
     private pluginService: PluginService,
     private workflowService: WorkflowService) {
   }
@@ -63,7 +66,7 @@ export class WorkflowDetailComponent implements OnInit {
       this.centerAndFitGraph();
       if (x > 100) {this.firstCenterOfGraph.unsubscribe(); }
     });
-      }
+  }
 
   resetForm() {
     this.selectedSchema = this.pluginList[0];
@@ -149,8 +152,22 @@ export class WorkflowDetailComponent implements OnInit {
   }
 
   submitWorkflow() {
+    this.spinner.show();
     this.workflowService.submitWorkflow(this.workflow)
-      .subscribe(result => location.reload());
+      .subscribe(
+        result => {},
+        error => {
+          this.spinner.hide();
+          const modalRef = this.modalService.open(ModalErrorComponent);
+          modalRef.componentInstance.title = 'Workflow submission failed';
+          modalRef.componentInstance.message = error.error;
+        }
+      ).add(() => {
+        this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
+          this.workflow = workflow;
+          this.spinner.hide(); // if submission was successful, spinner is still spinning
+        });
+      });
   }
 
   generateSchema(pluginList) {
