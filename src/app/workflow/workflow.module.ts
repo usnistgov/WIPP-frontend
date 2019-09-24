@@ -15,6 +15,7 @@ import {NgxGraphModule} from '@swimlane/ngx-graph';
 import {DynamicComponent} from '../dynamic-content/dynamic.component';
 import {DynamicContentComponent} from '../dynamic-content/dynamic-content.component';
 import {DynamicContentModule} from '../dynamic-content/dynamic-content.module';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import {DynamicContentModule} from '../dynamic-content/dynamic-content.module';
     DynamicContentModule,
     NgbModule.forRoot(),
     SchemaFormModule.forRoot(),
-   NgxGraphModule
+    NgxGraphModule,
+    NgxSpinnerModule
   ],
   entryComponents: [SearchWidgetComponent, WorkflowNewComponent, JobDetailComponent],
   declarations: [

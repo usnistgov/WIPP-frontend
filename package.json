@@ -45,6 +45,7 @@
     "ngx-schema-form": "^2.2.0-beta.1",
     "notebookjs": "^0.4.2",
     "prismjs": "^1.17.1",
+    "ngx-spinner": "^7.2.0",
     "react": "^16.8.6",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.3.3",
