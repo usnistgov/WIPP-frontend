@@ -3,6 +3,21 @@ import {Notebook} from '../notebook';
 import {ActivatedRoute} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotebookService} from '../notebook.service';
+import 'prismjs';
+import * as Prism from 'prismjs';
+import * as Marked from 'marked';
+import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-julia';
+import 'prismjs/components/prism-matlab';
+import 'prismjs/components/prism-r';
+import 'prismjs/components/prism-java';
+import 'prismjs/components/prism-c';
+import 'prismjs/components/prism-cpp';
+import 'prismjs/components/prism-scala';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-bash';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-notebook-detail',
@@ -13,34 +28,37 @@ import {NotebookService} from '../notebook.service';
 export class NotebookDetailComponent implements OnInit {
   notebook: Notebook = new Notebook();
   notebookId = this.route.snapshot.paramMap.get('id');
+  notebookJson: string;
 
   @ViewChild('notebookDisplay') notebookDisplay: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
+    private http: HttpClient,
     private notebookService: NotebookService
   ) {
   }
 
   ngOnInit() {
-    this.notebookService.getNotebook(this.notebookId)
-      .subscribe(notebook => {
-        this.notebook = notebook;
-      });
-    this.displayNotebook();
+    this.notebookService.getNotebook(this.notebookId).subscribe(notebook => {
+      this.notebook = notebook;
+    });
+    this.notebookService.getNotebookFile(this.notebookId)
+      .subscribe(notebookJson => {
+          this.notebookJson = notebookJson;
+          this.displayNotebook();
+        }
+      );
   }
 
   displayNotebook() {
-    // const fs;
-    // // const nb = require('notebookjs');
-    // const ipynb = JSON.parse(fs.readFileSync('/Users/snb24/Documents/project/wipp/github/' +
-    //   'sample-notebooks-for-wipp-plugin/python-opencv-io.ipynb'));
-    // const notebook = NotebookJS.parse(ipynb);
-    // console.log(notebook.render().outerHTML);
+      const notebook = nb.parse(this.notebookJson);
+      nb.markdown = function (text) {
+        return Marked(text);
+      };
+      document.getElementById('displayNotebook').appendChild(notebook.render());
+      Prism.highlightAll();
+    }
 
-//     const notebook = nb.parse(JSON.parse('raw_ipynb_json_string'));
-// const rendered = notebook.render();
-// document.body.appendChild(rendered);
-  }
 }
