@@ -19,6 +19,7 @@ import {PyramidModule} from './pyramid/pyramid.module';
 import {TensorflowModelModule} from './tensorflow-model/tensorflow-model.module';
 import {CsvCollectionModule} from './csv-collection/csv-collection.module';
 import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.component';
+import {NotebookModule} from './notebook/notebook.module';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.compon
     PyramidModule,
     TensorflowModelModule,
     CsvCollectionModule,
+    NotebookModule,
     PluginModule,
     WorkflowModule,
     AppRoutingModule,

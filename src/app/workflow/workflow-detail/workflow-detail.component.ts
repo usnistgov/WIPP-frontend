@@ -4,9 +4,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
 import {ActivatedRoute} from '@angular/router';
 import {Workflow} from '../workflow';
-import {MatPaginator} from '@angular/material';
-import {of as observableOf, Subject} from 'rxjs';
-import { interval } from 'rxjs';
+import {interval, of as observableOf, Subject} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
@@ -32,7 +30,8 @@ export class WorkflowDetailComponent implements OnInit {
     collections: [],
     stitchingVectors: [],
     tensorflowModels: [],
-    csvCollections: []
+    csvCollections: [],
+    notebooks: []
   };
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
@@ -43,7 +42,7 @@ export class WorkflowDetailComponent implements OnInit {
   links = [];
   depthWidth;
   depthHeight;
-  
+
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
@@ -55,7 +54,7 @@ export class WorkflowDetailComponent implements OnInit {
   ngOnInit() {
     this.workflowService.getWorkflow(this.workflowId).subscribe(workflow =>
       this.workflow = workflow);
-    this.pluginService.getPlugins({ size: Number.MAX_SAFE_INTEGER, sort: 'name' })
+    this.pluginService.getPlugins({size: Number.MAX_SAFE_INTEGER, sort: 'name'})
       .subscribe(plugins => {
         this.pluginList = plugins.plugins;
         this.generateSchema(this.pluginList);
@@ -64,7 +63,9 @@ export class WorkflowDetailComponent implements OnInit {
       });
     this.firstCenterOfGraph = interval(1).subscribe((x: number) => {
       this.centerAndFitGraph();
-      if (x > 100) {this.firstCenterOfGraph.unsubscribe(); }
+      if (x > 100) {
+        this.firstCenterOfGraph.unsubscribe();
+      }
     });
   }
 
@@ -86,15 +87,19 @@ export class WorkflowDetailComponent implements OnInit {
       task['outputParameters'] = {};
       // add job parameters
 
-       this.selectedSchema.outputs.forEach(output => {
-         task['outputParameters'][output.name] = null;
-       });
+      this.selectedSchema.outputs.forEach(output => {
+        task['outputParameters'][output.name] = null;
+      });
 
       for (const inputEntry in result.inputs) {
         if (result.inputs.hasOwnProperty(inputEntry)) {
           const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
           let value = result.inputs[inputEntry];
-          if (type === 'collection' || type === 'stitchingVector' || type === 'tensorflowModel' || type === 'csvCollection') {
+          if (type === 'collection' ||
+            type === 'stitchingVector' ||
+            type === 'tensorflowModel' ||
+            type === 'csvCollection' ||
+            type === 'notebook') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
               task['dependencies'].push(value.sourceJob);
             }
@@ -141,6 +146,14 @@ export class WorkflowDetailComponent implements OnInit {
               virtual: true
             };
             this.jobOutputs.csvCollections.push(outputCsvCollection);
+          } else if (output.type === 'notebook') {
+            const outputNotebook = {
+              id: '{{ ' + job.id + '.' + output.name + ' }}',
+              name: '{{ ' + job.name + '.' + output.name + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.notebooks.push(outputNotebook);
           }
         });
         this.resetForm();
@@ -155,7 +168,8 @@ export class WorkflowDetailComponent implements OnInit {
     this.spinner.show();
     this.workflowService.submitWorkflow(this.workflow)
       .subscribe(
-        result => {},
+        result => {
+        },
         error => {
           this.spinner.hide();
           const modalRef = this.modalService.open(ModalErrorComponent);
@@ -163,11 +177,11 @@ export class WorkflowDetailComponent implements OnInit {
           modalRef.componentInstance.message = error.error;
         }
       ).add(() => {
-        this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
-          this.workflow = workflow;
-          this.spinner.hide(); // if submission was successful, spinner is still spinning
-        });
+      this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
+        this.workflow = workflow;
+        this.spinner.hide(); // if submission was successful, spinner is still spinning
       });
+    });
   }
 
   generateSchema(pluginList) {
@@ -225,6 +239,12 @@ export class WorkflowDetailComponent implements OnInit {
             inputSchema['widget'] = 'search';
             inputSchema['format'] = 'csvCollection';
             inputSchema['getOutputCsvCollections'] = () => this.jobOutputs.csvCollections;
+            break;
+          case 'notebook':
+            inputSchema['type'] = 'string';
+            inputSchema['widget'] = 'search';
+            inputSchema['format'] = 'notebook';
+            inputSchema['getOutputNotebooks'] = () => this.jobOutputs.notebooks;
             break;
           case 'enum':
             inputSchema['type'] = 'string';
@@ -314,7 +334,7 @@ export class WorkflowDetailComponent implements OnInit {
   }
 
   displayJobModal(jobId: string) {
-    const modalRef = this.modalService.open(JobDetailComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(JobDetailComponent, {size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {
@@ -389,17 +409,17 @@ export class WorkflowDetailComponent implements OnInit {
     this.centerAndFitGraph();
   }
 
-   centerGraph() {
-        this.center$.next(true);
-    }
+  centerGraph() {
+    this.center$.next(true);
+  }
 
   fitGraph() {
-        this.zoomToFit$.next(true);
-    }
+    this.zoomToFit$.next(true);
+  }
 
   centerAndFitGraph() {
     this.fitGraph();
     this.centerGraph();
-    }
+  }
 
 }

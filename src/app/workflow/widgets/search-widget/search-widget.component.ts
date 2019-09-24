@@ -8,6 +8,7 @@ import {ImagesCollectionService} from '../../../images-collection/images-collect
 import {StitchingVectorService} from '../../../stitching-vector/stitching-vector.service';
 import {TensorflowModelService} from '../../../tensorflow-model/tensorflow-model.service';
 import {CsvCollectionService} from '../../../csv-collection/csv-collection.service';
+import {NotebookService} from '../../../notebook/notebook.service';
 
 @Component({
   selector: 'app-search-widget',
@@ -22,7 +23,8 @@ export class SearchWidgetComponent extends StringWidget {
     private imagesCollectionService: ImagesCollectionService,
     private stitchingVectorService: StitchingVectorService,
     private tensorflowModelService: TensorflowModelService,
-    private csvCollectionService: CsvCollectionService
+    private csvCollectionService: CsvCollectionService,
+    private notebookService: NotebookService
   ) {
     super();
   }
@@ -56,6 +58,12 @@ export class SearchWidgetComponent extends StringWidget {
           let csvCollections = this.schema.getOutputCsvCollections();
           csvCollections = csvCollections.concat(result.csvCollections);
           return csvCollections;
+        }));
+      case 'notebook':
+        return this.notebookService.getNotebooksByNameContainingIgnoreCase(null, term).pipe(map(result => {
+          let notebooks = this.schema.getOutputNotebooks();
+          notebooks = notebooks.concat(result.notebooks);
+          return notebooks;
         }));
       default:
         return [];
