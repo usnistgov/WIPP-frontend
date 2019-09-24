@@ -5,6 +5,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {CsvCollectionService} from '../csv-collection.service';
 import {CsvCollection} from '../csv-collection';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-csv-collection-detail',
@@ -16,6 +17,7 @@ export class CsvCollectionDetailComponent implements OnInit {
   csvCollection: CsvCollection = new CsvCollection();
   job: Job = null;
   csvCollectionId = this.route.snapshot.paramMap.get('id');
+  plotsUiLink = environment.plotsUiUrl + '/plots/' + this.csvCollectionId;
 
   constructor(
     private route: ActivatedRoute,
