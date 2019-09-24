@@ -1,18 +1,23 @@
-<!--<h3 style="margin-top: 2%; margin-bottom: 2%">Notebook Detail</h3>-->
+<h3 class="wippHeader">Notebook Detail</h3>
 
-<!--<div style="margin-top: 20px">-->
-  <!--<div class="row">-->
-    <!--<div class="col-md-12"><b>Name: </b> {{notebook.name}}</div>-->
-  <!--</div>-->
-
-  <!--<div class="row">-->
-    <!--<div class="col-md-12"><b>Creation Date: </b> {{notebook.creationDate | date}}</div>-->
-  <!--</div>-->
-<!--</div>-->
-<!--<div #notebookDisplay class="container-fluid" ></div>-->
-
-<!--<script src="../../../../node_modules/notebookjs/notebook.js">-->
-  <!--var notebook = nb.parse(JSON.parse('raw_ipynb_json_string'));-->
-<!--var rendered = notebook.render();-->
-<!--document.body.appendChild(rendered);-->
-<!--</script>-->
+<div class="container-fluid">
+  <div class="row top20">
+    <div class="col-md-3">
+      <dl class="row">
+        <dt class="col-md-4">Name:</dt>
+        <dd class="col-md-8 break">
+        notebooknotebooknotebooknotebooknotebooknotebooknotebooknotebooknotebooknotebooknotebooknotebook
+        </dd>
+        <dt class="col-md-4">Creation Date:</dt>
+        <dd class="col-md-8">
+          {{notebook.creationDate | date}}
+        </dd>
+        <dt class="col-md-4">Description:</dt>
+        <dd class="col-md-8">
+          {{notebook.description}}
+        </dd>
+      </dl>
+    </div>
+    <div class="col-md-9 notebook" id="displayNotebook"></div>
+  </div>
+</div>

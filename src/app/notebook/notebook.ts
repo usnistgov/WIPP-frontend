@@ -2,6 +2,7 @@ export class Notebook {
   id: string;
   name: string;
   creationDate: Date;
+  description: string;
   job: string;
   _links: any;
 }

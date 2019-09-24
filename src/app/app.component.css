@@ -14,6 +14,10 @@
   width: 16px;
 }
 
-a:not([href]).dropdown-toggle:hover { 
+a:not([href]).dropdown-toggle:hover {
     cursor: pointer;
+}
+
+.width98 {
+   width: 98%;
 }

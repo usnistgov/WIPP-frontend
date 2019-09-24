@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
@@ -17,9 +17,12 @@ export class NotebookService {
     private http: HttpClient) {
   }
 
-
-    getNotebook(id: string): Observable<Notebook> {
+  getNotebook(id: string): Observable<Notebook> {
     return this.http.get<Notebook>(`${this.notebooksUrl}/${id}`);
+  }
+
+  getNotebookFile(id: string): Observable<string> {
+    return this.http.get<string>(`${this.notebooksUrl}/${id}/getFile`);
   }
 
   getNotebooks(params): Observable<PaginatedNotebooks> {
@@ -43,7 +46,7 @@ export class NotebookService {
 
   getNotebooksByNameContainingIgnoreCase(params, name): Observable<PaginatedNotebooks> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
 
