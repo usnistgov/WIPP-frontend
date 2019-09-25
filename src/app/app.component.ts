@@ -8,6 +8,7 @@ import { environment} from '../environments/environment';
 })
 export class AppComponent {
   title = 'WIPP';
+  version = environment.version;
   isNavbarCollapsed = true;
   jupyterNotebooksLink = environment.jupyterNotebooksUrl;
   plotsUiLink = environment.plotsUiUrl;
