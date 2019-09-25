@@ -18,6 +18,27 @@ a:not([href]).dropdown-toggle:hover {
     cursor: pointer;
 }
 
-.width98 {
-   width: 98%;
+.main-container {
+  width: 98%;
+  min-height: 100vh;
 }
+
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
+}
+
+footer {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0.5rem 1rem;
+  text-align: right;
+  z-index: 10;
+  margin-top: 10px;
+  color: #555;
+  border-top: 1px solid #e7e7e7;
+}
+
