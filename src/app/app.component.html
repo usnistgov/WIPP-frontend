@@ -69,6 +69,30 @@
   </nav>
 </header>
 
-<div class="container-fluid width98">
+<div class="container-fluid main-container">
   <router-outlet></router-outlet>
 </div>
+
+<footer class="bg-light">
+  <p><small>
+    WIPP v{{version}} - <a href="https://www.nist.gov/disclaimer">Disclaimer</a>
+    - Logo
+          <span
+            [ngbTooltip]="wippLogoCredits"
+            triggers="click:blur"
+            placement="auto"
+            aria-hidden="true"><i class="far fa-question-circle"></i>
+          </span>
+  </small></p>
+
+</footer>
+
+<ng-template #wippLogoCredits>
+  WIPP logo made with <a href="http://logomakr.com"
+                         title="Logo Maker">Logo Maker</a> using Science graphic by
+  <a href="http://www.flaticon.com/authors/freepik">Freepik</a> from
+  <a href="http://www.flaticon.com/">Flaticon</a>, licensed under
+  <a href="http://creativecommons.org/licenses/by/3.0/"
+     title="Creative Commons BY 3.0">CC BY 3.0</a>.
+</ng-template>
+
