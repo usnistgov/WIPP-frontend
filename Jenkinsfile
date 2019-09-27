@@ -46,8 +46,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh "sed -i 's/JUPYTERHUB_URL/${JUPYTERHUB_URL}/g' src/environments/environment.prod.ts"
-                    sh "sed -i 's/VISIONUI_URL/${VISIONUI_URL}/g' src/environments/environment.prod.ts"
+                    sh "sed -i 's|JUPYTERHUB_URL|${JUPYTERHUB_URL}|g' src/environments/environment.prod.ts"
+                    sh "sed -i 's|VISIONUI_URL|${VISIONUI_URL}|g' src/environments/environment.prod.ts"
                     sh 'npm ci'
                     sh 'npm run ng build -- --prod'
                     sh 'tar -czf ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz -C dist .'
