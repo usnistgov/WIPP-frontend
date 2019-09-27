@@ -7,6 +7,7 @@ import {NotebookRoutingModule} from './notebook-routing.module';
 import { NotebookListComponent } from './notebook-list/notebook-list.component';
 import { NotebookDetailComponent } from './notebook-detail/notebook-detail.component';
 import {NotebookTemplateComponent} from './notebook-template/notebook-template.component';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import {NotebookTemplateComponent} from './notebook-template/notebook-template.c
     MatSortModule,
     MatInputModule,
     FormsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    NgxSpinnerModule
   ],
   declarations: [
     NotebookListComponent,
