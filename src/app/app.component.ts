@@ -10,7 +10,7 @@ export class AppComponent {
   title = 'WIPP';
   version = environment.version;
   isNavbarCollapsed = true;
-  jupyterNotebooksLink = environment.jupyterNotebooksUrl;
-  plotsUiLink = environment.plotsUiUrl;
+  jupyterNotebooksLink = environment.jupyterNotebooksUrl + '/';
+  plotsUiLink = environment.plotsUiUrl + '/';
 }
 
