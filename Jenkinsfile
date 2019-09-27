@@ -12,6 +12,8 @@ pipeline {
         ARTIFACTORY_URL = "https://builds.aws.labshare.org/artifactory/labshare"
         ARTIFACT_PATH = "deploy/docker"
         DOCKER_VERSION = readFile(file: 'deploy/docker/VERSION').trim()
+        JUPYTERHUB_URL = "http://j.ci.aws.labshare.org"
+        VISIONUI_URL = "http://vision-ui.ci.aws.labshare.org"
     }
     triggers {
         pollSCM('H/2 * * * *')
@@ -44,6 +46,8 @@ pipeline {
             }
             steps {
                 script {
+                    sh "sed -i 's/JUPYTERHUB_URL/${JUPYTERHUB_URL}/g' src/environments/environment.prod.ts"
+                    sh "sed -i 's/VISIONUI_URL/${VISIONUI_URL}/g' src/environments/environment.prod.ts"
                     sh 'npm ci'
                     sh 'npm run ng build -- --prod'
                     sh 'tar -czf ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz -C dist .'

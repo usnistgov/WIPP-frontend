@@ -5,6 +5,6 @@ export const environment = {
   version: version,
   apiRootUrl: '/api',
   tensorboardUrl: '/tensorboard',
-  jupyterNotebooksUrl: 'http://j.ci.aws.labshare.org',
-  plotsUiUrl: 'http://vision-ui.ci.aws.labshare.org'
+  jupyterNotebooksUrl: 'JUPYTERHUB_URL',
+  plotsUiUrl: 'VISIONUI_URL'
 };
