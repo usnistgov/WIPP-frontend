@@ -17,8 +17,15 @@
           {{notebook.description}}
         </dd>
       </dl>
-      <ngx-spinner></ngx-spinner>
     </div>
-    <div class="col-md-9 notebook" #notebookDisplay></div>
+    <div class="col-md-9 notebook" #notebookDisplay>
+      <ngx-spinner
+        [fullScreen]="false"
+        bdColor="rgba(248,249,250,0.8)"
+        size="medium"
+        color="#212529"
+      >
+      </ngx-spinner>
+    </div>
   </div>
 </div>
