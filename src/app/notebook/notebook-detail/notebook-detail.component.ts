@@ -20,6 +20,7 @@ import 'prismjs/components/prism-bash';
 import {HttpClient} from '@angular/common/http';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import {PlatformLocation} from '@angular/common';
 
 @Component({
   selector: 'app-notebook-detail',
@@ -31,43 +32,55 @@ export class NotebookDetailComponent implements OnInit {
   notebookId = this.route.snapshot.paramMap.get('id');
   notebookJson: string;
   @ViewChild('notebookDisplay') notebookDisplay: ElementRef;
+
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private http: HttpClient,
     private notebookService: NotebookService,
     private renderer: Renderer2,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private location: PlatformLocation
   ) {
+    // closes modal when back button is clicked
+    location.onPopState(() => this.modalService.dismissAll());
   }
+
   ngOnInit() {
     this.spinner.show();
     this.notebookService.getNotebook(this.notebookId).subscribe(notebook => {
-      this.notebook = notebook;
-    },
-        error1 => {this.spinner.hide();
-     const modalRef = this.modalService.open(ModalErrorComponent);
-          modalRef.componentInstance.title = 'Error while loading the notebook';
-          modalRef.componentInstance.message = error1.error.message; }
-        );
+        this.notebook = notebook;
+      },
+      error => {
+        this.openErrorModal(error);
+      }
+    );
     this.notebookService.getNotebookFile(this.notebookId)
       .subscribe(notebookJson => {
           this.notebookJson = notebookJson;
           this.displayNotebook();
         },
-          error1 => {this.spinner.hide();
-       const modalRef = this.modalService.open(ModalErrorComponent);
-          modalRef.componentInstance.title = 'Error while loading the notebook file';
-          modalRef.componentInstance.message = error1.error.message; }
+        error => {
+          this.openErrorModal(error);
+        }
       );
   }
+
   displayNotebook() {
-      const notebook = nb.parse(this.notebookJson);
-      nb.markdown = function (text) {
-        return Marked(text);
-      };
-      this.renderer.appendChild(this.notebookDisplay.nativeElement, notebook.render());
-      Prism.highlightAll();
-      this.spinner.hide();
-    }
+    const notebook = nb.parse(this.notebookJson);
+    nb.markdown = function (text) {
+      return Marked(text);
+    };
+    this.renderer.appendChild(this.notebookDisplay.nativeElement, notebook.render());
+    Prism.highlightAll();
+    this.spinner.hide();
+  }
+
+  openErrorModal(error: any) {
+    this.spinner.hide();
+    const modalRef = this.modalService.open(ModalErrorComponent);
+    modalRef.componentInstance.title = 'Error while loading the notebook file';
+    modalRef.componentInstance.message = error['error']['message'];
+  }
+
 }
