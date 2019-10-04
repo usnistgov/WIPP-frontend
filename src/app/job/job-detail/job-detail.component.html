@@ -8,7 +8,7 @@
 </div>
 
 <!-- Job details Table -->
-<div class="modal-body" *ngIf="job" style="margin-top: 20px">
+<div class="modal-body top20" *ngIf="job">
   <table class="table table-bordered">
 
     <!--  name line  -->
@@ -116,7 +116,7 @@
     <i class="fas fa-caret-down"></i>
   </h4>
 </div>
-<div class="modal-body" *ngIf="job && showInputs" style="margin-top: 20px">
+<div class="modal-body top20" *ngIf="job && showInputs">
   <table class="table table-bordered">
 
     <!--  input id or name line -->
@@ -156,7 +156,7 @@
     <i class="fas fa-caret-down"></i>
   </h4>
 </div>
-<div class="modal-body" *ngIf="job && showOutputs" style="margin-top: 20px">
+<div class="modal-body top20" *ngIf="job && showOutputs">
   <table class="table table-bordered">
 
     <!--  output name line  -->

@@ -13,7 +13,7 @@
         <dt class="col-md-4">Source job: </dt>
         <dd class="col-md-8" *ngIf="job; else not_applicable">
           <a (click)="displayJobModal(job.id)"
-             class="underline-on-hover text-primary"
+             class="wipp-link"
              ngbTooltip="Show Job"
              placement="left">
             {{job.name}}
@@ -35,7 +35,7 @@
                     aria-hidden="true"><i class="fa fa-chart-area"></i></span>
       </a>
       <a
-        [href]="csvCollection._links.download.href"
+        [href]="csvCollection?._links?.download?.href"
         ngbTooltip="Download as zip"
         placement="left"
         class="btn btn-light">
