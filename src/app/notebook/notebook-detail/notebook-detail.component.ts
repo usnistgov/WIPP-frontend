@@ -18,18 +18,19 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-bash';
 import {HttpClient} from '@angular/common/http';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import {PlatformLocation} from '@angular/common';
 
 @Component({
   selector: 'app-notebook-detail',
   templateUrl: './notebook-detail.component.html',
   styleUrls: ['./notebook-detail.component.css']
 })
-
 export class NotebookDetailComponent implements OnInit {
   notebook: Notebook = new Notebook();
   notebookId = this.route.snapshot.paramMap.get('id');
   notebookJson: string;
-
   @ViewChild('notebookDisplay') notebookDisplay: ElementRef;
 
   constructor(
@@ -37,29 +38,49 @@ export class NotebookDetailComponent implements OnInit {
     private modalService: NgbModal,
     private http: HttpClient,
     private notebookService: NotebookService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private spinner: NgxSpinnerService,
+    private location: PlatformLocation
   ) {
+    // closes modal when back button is clicked
+    location.onPopState(() => this.modalService.dismissAll());
   }
 
   ngOnInit() {
+    this.spinner.show();
     this.notebookService.getNotebook(this.notebookId).subscribe(notebook => {
-      this.notebook = notebook;
-    });
+        this.notebook = notebook;
+      },
+      error => {
+        this.openErrorModal(error);
+      }
+    );
     this.notebookService.getNotebookFile(this.notebookId)
       .subscribe(notebookJson => {
           this.notebookJson = notebookJson;
           this.displayNotebook();
+        },
+        error => {
+          this.openErrorModal(error);
         }
       );
   }
 
   displayNotebook() {
-      const notebook = nb.parse(this.notebookJson);
-      nb.markdown = function (text) {
-        return Marked(text);
-      };
-      this.renderer.appendChild(this.notebookDisplay.nativeElement, notebook.render());
-      Prism.highlightAll();
-    }
+    const notebook = nb.parse(this.notebookJson);
+    nb.markdown = function (text) {
+      return Marked(text);
+    };
+    this.renderer.appendChild(this.notebookDisplay.nativeElement, notebook.render());
+    Prism.highlightAll();
+    this.spinner.hide();
+  }
+
+  openErrorModal(error: any) {
+    this.spinner.hide();
+    const modalRef = this.modalService.open(ModalErrorComponent);
+    modalRef.componentInstance.title = 'Error while loading the notebook file';
+    modalRef.componentInstance.message = error['error']['message'];
+  }
 
 }
