@@ -364,8 +364,10 @@ export class WorkflowDetailComponent implements OnInit {
       const node = {id: job.id, label: job.name};
       this.nodes.push(node);
       if (job.dependencies.length > 0) {
-        const link = {id: 'link', source: job.dependencies[0], target: job.id};
-        this.links.push(link);
+        for (let i = 0; i < job.dependencies.length; i ++) {
+          const link = {id: 'link', source: job.dependencies[i], target: job.id};
+          this.links.push(link);
+        }
       }
     }
   }
