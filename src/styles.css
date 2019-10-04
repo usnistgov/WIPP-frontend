@@ -36,11 +36,11 @@ wippwdzt {
   color: black
 }
 
-.wipp-btn-new > i {
+.wipp-btn > i {
   margin-right: 10px;
 }
 
-.wipp-btn-new > i > p {
+.wipp-btn > i > p {
   margin-left: 10px;
   display: inline;
   font-family: 'Roboto', sans-serif ;
