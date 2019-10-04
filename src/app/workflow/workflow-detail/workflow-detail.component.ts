@@ -11,6 +11,7 @@ import {Job} from '../../job/job';
 import {FormProperty, PropertyGroup} from 'ngx-schema-form/lib/model/formproperty';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 import {NgxSpinnerService} from 'ngx-spinner';
+import { environment} from '../../../environments/environment';
 
 
 @Component({
@@ -43,6 +44,8 @@ export class WorkflowDetailComponent implements OnInit {
   depthWidth;
   depthHeight;
 
+  argoUiLink;
+
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
@@ -52,8 +55,10 @@ export class WorkflowDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.workflowService.getWorkflow(this.workflowId).subscribe(workflow =>
-      this.workflow = workflow);
+    this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
+      this.workflow = workflow;
+      this.argoUiLink = environment.argoUiBaseUrl + '/' + workflow.generatedName;
+    });
     this.pluginService.getPlugins({size: Number.MAX_SAFE_INTEGER, sort: 'name'})
       .subscribe(plugins => {
         this.pluginList = plugins.plugins;
