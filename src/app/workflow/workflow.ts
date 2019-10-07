@@ -7,6 +7,7 @@ export class Workflow {
   status: string;
   errorMessage: string;
   _links: any;
+  generatedName: string;
 }
 
 export interface PaginatedWorkflows {

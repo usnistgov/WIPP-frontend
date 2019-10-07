@@ -8,6 +8,21 @@
         <p>Submit workflow</p>
       </i>
     </button>
+    <button
+      *ngIf="workflow.generatedName"
+      class="btn btn-outline-dark wipp-btn wf-btn-submit">
+      <i class="fas fa-sitemap"> </i>
+      <a class="nav-link"
+         href={{argoUiLink}}
+         target="_blank"
+         style="color:inherit; text-decoration: none; display: inline"
+         [ngbTooltip]="argoUiTipContent"
+      >
+        <p style=" display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
+          Monitor in Argo
+        </p>
+      </a>
+    </button>
   </div>
 </div>
 
@@ -20,10 +35,10 @@
   <div class="row">
     <div class="col-md-12">
       <b>Status:</b> {{workflow.status}}
-          <span *ngIf="workflow.status === 'ERROR' && workflow.errorMessage"
-                ngbTooltip={{workflow.errorMessage}}
-                placement="right"
-                aria-hidden="true"><i class="far fa-question-circle"></i>
+      <span *ngIf="workflow.status === 'ERROR' && workflow.errorMessage"
+            ngbTooltip={{workflow.errorMessage}}
+            placement="right"
+            aria-hidden="true"><i class="far fa-question-circle"></i>
           </span>
     </div>
   </div>
@@ -93,27 +108,32 @@
 </div>
 
 <ng-template #addStepModal let-c="close" let-d="dismiss">
-    <div class="modal-header">
-      <h4 class="modal-title">New Task</h4>
-      <button type="button" class="close" aria-label="Close" (click)="d()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="pluginName">Plugin:</label>
-        <select id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
-          <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}</option>
-        </select>
-      </div>
-      <sf-form [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm></sf-form>
-    </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">
-        <i class="fas fa-plus-circle" style="margin-right: 10px">
-          <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Add
-            task</p>
-        </i>
-      </button>
+  <div class="modal-header">
+    <h4 class="modal-title">New Task</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d()">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="pluginName">Plugin:</label>
+      <select id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
+        <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}</option>
+      </select>
+    </div>
+    <sf-form [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm></sf-form>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">
+      <i class="fas fa-plus-circle" style="margin-right: 10px">
+        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Add
+          task</p>
+      </i>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #argoUiTipContent> See in Argo dashboard
+  <span
+    aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
 </ng-template>
