@@ -22,9 +22,31 @@ text {
 }
 
 .chart-container {
-  /*pointer-events: none;*/
+  overflow: hidden;
 }
+
 .node {
   pointer-events: all;
   cursor: pointer;
+}
+
+.wf-btn-submit {
+  margin-left: 2%;
+  margin-top: -1%
+}
+
+.wf-btn-graph {
+  margin-bottom: 10px;
+}
+
+.wf-dag {
+  border: dotted 2px lightgray ;
+  min-height: 500px;
+  height: 90%;
+  overflow: hidden;
+}
+
+.wf-tasks {
+  margin-top: 30px;
+  margin-bottom: 40px;
 }

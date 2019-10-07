@@ -1,11 +1,11 @@
-<div class="row" style="margin-top: 2%; margin-bottom: 2%">
+<div class="row wipp-title">
   <div class="col-md-6">
-    <h3 style="display: inline">Workflow detail</h3>
-    <button *ngIf="workflow.status === 'CREATED'" class="btn btn-outline-dark" style="margin-left: 2%; margin-top: -1%"
+    <h3 class="d-inline">Workflow detail</h3>
+    <button *ngIf="workflow.status === 'CREATED'"
+            class="btn btn-outline-dark wipp-btn wf-btn-submit"
             [disabled]="jobs.length < 1" (click)="submitWorkflow()">
-      <i class="fas fa-arrow-alt-circle-right" style="margin-right: 10px">
-        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Submit
-          workflow</p>
+      <i class="fas fa-arrow-alt-circle-right">
+        <p>Submit workflow</p>
       </i>
     </button>
   </div>
@@ -13,7 +13,7 @@
 
 <ngx-spinner></ngx-spinner>
 
-<div style="margin-top: 20px">
+<div class="top20">
   <div class="row">
     <div class="col-md-12"><b>Name:</b> {{workflow.name}}</div>
   </div>
@@ -31,59 +31,64 @@
     <div class="col-md-12"><b>Creation Date:</b> {{workflow.creationDate | date}}</div>
   </div>
 
-  <div [hidden]="workflow.status!='CREATED'" style="margin-top: 30px; margin-bottom: 40px">
-    <h4 style="margin-bottom: 20px">Workflow tasks</h4>
+  <div class="wf-tasks">
+    <h4>Workflow tasks</h4>
     <div class="row">
       <div class="col-md-2">
-        <button class="btn btn-outline-dark" (click)="open(addStepModal)"
-                [disabled]="!workflow.name">
-          <i class="fas fa-plus-circle" style="margin-right: 10px">
-            <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Add
-              task</p>
+        <button class="btn btn-outline-dark wipp-btn wf-btn-graph" (click)="open(addStepModal)"
+                [disabled]="! workflow.name || workflow.status!='CREATED'">
+          <i class="fas fa-plus-circle">
+            <p>Add task</p>
           </i>
         </button>
+        <h5 class="top20">Graph options</h5>
+        <div class="form-group">
+          <label>Orientation:</label>
+          <select class="form-control" [(ngModel)]="layoutSettings.orientation" (change)="updateGraph();">
+            <option *ngFor="let orient of orientationOptions" [ngValue]="orient.value">{{ orient.label }}</option>
+          </select>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" [(ngModel)]="enableZoom">
+          <label class="form-check-label">Enable zoom</label>
+        </div>
+      </div>
+      <div class="col-md-9 wf-dag">
+        <ngx-graph
+          *ngIf="jobs.length > 0"
+          class="chart-container"
+          [ngStyle]="{'pointer-events':enableZoom === true ? 'all' : 'none' }"
+          [links]=links
+          [nodes]=nodes
+          [update$]="update$"
+
+          [layoutSettings]="layoutSettings"
+          [enableZoom]="enableZoom"
+          [draggingEnabled]="false"
+          [panningEnabled]="enableZoom"
+          [autoCenter]="!enableZoom"
+          [autoZoom]="!enableZoom"
+          [panOnZoom]="true"
+          [animate]="true"
+        >
+          <ng-template #nodeTemplate let-node>
+            <svg:g class="node" (click)="displayJobModal(node.id)"
+            >
+              <svg:rect
+                [attr.width]="node.dimension.width"
+                [attr.height]="node.dimension.height"
+                [attr.fill]="node.data.color"
+              />
+              <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
+                {{node.label}}
+              </svg:text>
+            </svg:g>
+          </ng-template>
+
+        </ngx-graph>
+
       </div>
     </div>
-  </div>
-</div>
-<div class="row" style="border: dotted 2px lightgray ; height: 500px" [hidden]="jobs.length<1">
-  <div class="col-md-1">
-    <button style="margin-top: 20px; margin-left: 20px;" class="btn btn-outline-dark" (click)="centerAndFitGraph()">
-      Center Graph
-    </button>
-  </div>
-  <div class="col-md-11" style="margin-top: 20px">
-
-
-    <ngx-graph
-      *ngIf="jobs.length > 0"
-      class="chart-container"
-      [links]=links
-      [nodes]=nodes
-      [update$]="update$"
-
-      [enableZoom]="true"
-      [draggingEnabled]="false"
-      [panningEnabled]="true"
-      [zoomToFit$]="zoomToFit$"
-      [center$]="center$"
-    >
-      <ng-template #nodeTemplate let-node>
-        <svg:g class="node" (click)="displayJobModal(node.id)"
-        >
-          <svg:rect
-            [attr.width]="node.dimension.width"
-            [attr.height]="node.dimension.height"
-            [attr.fill]="node.data.color"
-          />
-          <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
-            {{node.label}}
-          </svg:text>
-        </svg:g>
-      </ng-template>
-
-    </ngx-graph>
-
   </div>
 </div>
 

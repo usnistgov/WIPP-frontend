@@ -4,6 +4,7 @@
 
 #logo img {
   max-height:90%;
+  max-width: 90%;
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -16,6 +17,28 @@
 
 a:not([href]).dropdown-toggle:hover {
     cursor: pointer;
+}
+
+.navbar > a > i {
+  margin-right: 10px
+}
+
+.navbar > a > i > p {
+  margin-left: 10px;
+  display: inline;
+  font-family: 'Roboto', sans-serif ;
+  font-weight: normal;
+}
+
+.navbar > div > ul > li > a > i {
+  margin-right: 10px;
+}
+
+.navbar > div > ul > li > a > i > p {
+  margin-left: 10px;
+  display: inline;
+  font-family: 'Roboto', sans-serif ;
+  font-weight: normal
 }
 
 .main-container {

@@ -4,11 +4,11 @@
   </div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">
-      <i class="fas fa-home " style="margin-right: 10px">
-        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">WIPP</p>
+      <i class="fas fa-home">
+        <p>WIPP</p>
       </i>
     </a>
-<!--rajoutr bouton-->
+
     <button class="navbar-toggler navbar-toggler-right" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -18,9 +18,8 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item dropdown" routerLinkActive="active" ngbDropdown>
           <a class="nav-link dropdown-toggle" id="dataDropdown" routerLinkActive="active" ngbDropdownToggle>
-            <i class="fas fa-database " style="margin-right: 10px">
-              <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
-                Data</p>
+            <i class="fas fa-database">
+              <p>Data</p>
             </i>
           </a>
           <div class="dropdown-menu" aria-labelledby="dataDropdown" ngbDropdownMenu>
@@ -34,33 +33,29 @@
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/plugins">
-            <i class="fas fa-cube" style="margin-right: 10px">
-              <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
-                Plugins</p>
+            <i class="fas fa-cube">
+              <p>Plugins</p>
             </i>
           </a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/workflows">
-            <i class="fas fa-share-alt " style="margin-right: 10px">
-              <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
-                Workflows</p>
+            <i class="fas fa-share-alt ">
+              <p>Workflows</p>
             </i>
           </a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" href={{jupyterNotebooksLink}} target="_blank">
-            <i class="fab fa-python " style="margin-right: 10px">
-              <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
-                Notebooks</p>
+            <i class="fab fa-python">
+              <p>Notebooks</p>
             </i>
           </a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" href={{plotsUiLink}} target="_blank">
-            <i class="fas fa-chart-area " style="margin-right: 10px">
-              <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
-                Plots</p>
+            <i class="fas fa-chart-area">
+              <p>Plots</p>
             </i>
           </a>
         </li>
@@ -84,7 +79,6 @@
             aria-hidden="true"><i class="far fa-question-circle"></i>
           </span>
   </small></p>
-
 </footer>
 
 <ng-template #wippLogoCredits>
