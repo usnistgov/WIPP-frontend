@@ -8,6 +8,8 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ImagesCollectionNewComponent} from '../images-collection-new/images-collection-new.component';
 import {Router} from '@angular/router';
+import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import {PlatformLocation} from '@angular/common';
 
 @Component({
   selector: 'app-images-collection-list',
@@ -31,7 +33,8 @@ export class ImagesCollectionListComponent implements OnInit {
   constructor(
     private imagesCollectionService: ImagesCollectionService,
     private modalService: NgbModal,
-    private router: Router
+    private router: Router,
+    private location: PlatformLocation
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -40,6 +43,7 @@ export class ImagesCollectionListComponent implements OnInit {
       filterName: '',
       filterNbOfImgs: ''
     });
+    location.onPopState(() => this.modalService.dismissAll());
   }
 
   sortChanged(sort) {
@@ -145,6 +149,10 @@ export class ImagesCollectionListComponent implements OnInit {
       this.imagesCollectionService.createImagesCollection(result).subscribe(imagesCollection => {
         const imageCollId = imagesCollection ? imagesCollection.id : null;
         this.router.navigate(['images-collection', imageCollId]);
+      }, error => {
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Error while creating new Images Collection';
+        modalRefErr.componentInstance.message = error['error'];
       });
     }, (reason) => {
       console.log('dismissed');
