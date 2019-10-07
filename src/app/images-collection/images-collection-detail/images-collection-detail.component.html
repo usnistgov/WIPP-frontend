@@ -1,4 +1,4 @@
-<h3 style="margin-top: 2%; margin-bottom: 2%">Collection detail</h3>
+<h3 class="wipp-title">Collection detail</h3>
 <div>
   <div class="row">
     <div class="col-md-9">
@@ -377,7 +377,7 @@
       </div>
 
       <div class="col-md-4">
-        <mat-paginator style="display: inline" (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
+        <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
       </div>
 
     </div>

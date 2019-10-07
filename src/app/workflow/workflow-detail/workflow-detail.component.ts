@@ -23,8 +23,7 @@ import { environment} from '../../../environments/environment';
 export class WorkflowDetailComponent implements OnInit {
 
   workflow: Workflow = new Workflow();
-  zoomToFit$: Subject<boolean> = new Subject();
-  center$: Subject<boolean> = new Subject();
+
   selectedSchema = null;
   pluginList = [];
   jobOutputs = {
@@ -36,13 +35,33 @@ export class WorkflowDetailComponent implements OnInit {
   };
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
-  firstCenterOfGraph;
 
+  // ngx-graph settings and properties
   update$: Subject<any> = new Subject();
   nodes = [];
   links = [];
-  depthWidth;
-  depthHeight;
+  enableZoom = false;
+  layoutSettings = {
+    orientation: 'LR'
+  };
+  orientationOptions = [
+    {
+      value: 'LR',
+      label: 'Left to right'
+    },
+    {
+      value: 'RL',
+      label: 'Right to left'
+    },
+    {
+      value: 'TB',
+      label: 'Top to bottom'
+    },
+    {
+      value: 'BT',
+      label: 'Bottom to top'
+    }
+  ];
 
   argoUiLink;
 
@@ -66,12 +85,6 @@ export class WorkflowDetailComponent implements OnInit {
         this.resetForm();
         this.getJobs();
       });
-    this.firstCenterOfGraph = interval(1).subscribe((x: number) => {
-      this.centerAndFitGraph();
-      if (x > 100) {
-        this.firstCenterOfGraph.unsubscribe();
-      }
-    });
   }
 
   resetForm() {
@@ -325,7 +338,6 @@ export class WorkflowDetailComponent implements OnInit {
   getJobs(): void {
     this.workflowService.getAllJobs(this.workflow).pipe(
       map(data => {
-        this.centerAndFitGraph();
         return data.jobs;
       }),
       catchError(() => {
@@ -349,6 +361,7 @@ export class WorkflowDetailComponent implements OnInit {
       });
   }
 
+  // Create workflow DAG
   populateGraph(data: Job[]) {
     this.nodes = [];
     this.links = [];
@@ -356,75 +369,17 @@ export class WorkflowDetailComponent implements OnInit {
       const node = {id: job.id, label: job.name};
       this.nodes.push(node);
       if (job.dependencies.length > 0) {
-        const link = {id: 'link', source: job.dependencies[0], target: job.id};
-        this.links.push(link);
-      }
-    }
-    // this.getGraphWidth();
-    // this.getGraphHeight();
-  }
-
-  getGraphWidth() {
-    let depth = 1;
-    let tempDepth;
-    for (const link of this.links) {
-      tempDepth = 1;
-      let target = link.target;
-      let flag = true;
-      while (flag) {
-        if (this.links.some(x => x.source === target)) {
-          tempDepth = tempDepth + 1;
-          target = this.links.find(x => x.source === target).target;
-        } else {
-          flag = false;
+        for (let i = 0; i < job.dependencies.length; i ++) {
+          const link = {id: 'link', source: job.dependencies[i], target: job.id};
+          this.links.push(link);
         }
       }
-      depth = Math.max(depth, tempDepth);
     }
-    this.depthWidth = depth;
   }
 
-  getGraphHeight() {
-    let depthHeight = 0;
-    for (const node of this.nodes) {
-      if (!this.links.some(x => x.target === node.id)) {
-        depthHeight++;
-      }
-      let nbOfChild = 0;
-      if (this.links.some(x => x.source === node.id)) {
-        for (const node2 of this.nodes) {
-          if (this.links.some(x => x.source === node.id && x.target === node2.id)) {
-            nbOfChild++;
-            if (nbOfChild === 2) {
-            }
-          }
 
-        }
-      }
-      if (nbOfChild > 1) {
-        depthHeight += nbOfChild - 1;
-      }
-    }
-    this.depthHeight = depthHeight;
-  }
-
-// Update function
+  // Update workflow DAG
   updateGraph() {
     this.update$.next(true);
-    this.centerAndFitGraph();
   }
-
-  centerGraph() {
-    this.center$.next(true);
-  }
-
-  fitGraph() {
-    this.zoomToFit$.next(true);
-  }
-
-  centerAndFitGraph() {
-    this.fitGraph();
-    this.centerGraph();
-  }
-
 }
