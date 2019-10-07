@@ -1,6 +1,6 @@
-<h3 style="margin-top: 2%; margin-bottom: 2%">Stitching Vector Detail</h3>
+<h3 class="wipp-title">Stitching Vector Detail</h3>
 
-<div style="margin-top: 20px">
+<div>
   <div class="row">
     <div class="col-md-12"><b>Name: </b> {{stitchingVector.name}}</div>
   </div>
@@ -14,7 +14,6 @@
       <b>Statistics file: </b>
       <a [href]="stitchingVector._links.statistics.href"
          ngbTooltip="Download"
-         style="color: blue"
          placement="left">
         Download
       </a>
@@ -25,8 +24,7 @@
     <div class="col-md-5">
       <b> Stitching job: </b>
       <a (click)="displayJobModal(job.id)"
-         class="underline-on-hover"
-         style="color:blue"
+         class="wipp-link"
          ngbTooltip="Show Job"
          placement="left">
         {{job.name}}
