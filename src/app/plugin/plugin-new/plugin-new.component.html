@@ -5,14 +5,15 @@
   </button>
 </div>
 <div class="modal-body">
+  <ngb-alert *ngIf="displayAlert" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>
   <div class="row">
     <div class="col-md-10">
       <div class="form-group">
         <input #browsePlugin type="file" (change)="onFileSelected($event)" name="browsePlugin" class="col-md-12" id="browsePlugin"
-               accept=".json, text/plain">
+               accept=".json, .txt">
         <div>
           <button id="getJsonBtn" (click)="getByUrl(linkPlugin.value); linkPlugin.value=''"
-                  [disabled]="!linkPlugin.checkValidity()">Get Json
+                  [disabled]="!linkPlugin.checkValidity()">Get JSON
           </button>
           <input #linkPlugin (change)="browsePlugin.value=null;" type="url" required id="linkPlugin" name="linkPlugin"
                  placeholder="Enter the URL of the JSON plugin manifest" class="top5 width80">
