@@ -113,54 +113,62 @@ export class WorkflowDetailComponent implements OnInit {
       }
       // push job
       this.workflowService.createJob(task).subscribe(job => {
-        this.selectedSchema.outputs.forEach(output => {
-          if (output.type === 'collection') {
-            const outputCollection = {
-              id: '{{ ' + job.id + '.' + output.name + ' }}',
-              name: '{{ ' + job.name + '.' + output.name + ' }}',
-              sourceJob: job['id'],
-              virtual: true
-            };
-            this.jobOutputs.collections.push(outputCollection);
-          } else if (output.type === 'stitchingVector') {
-            const outputStitchingVector = {
-              id: '{{ ' + job.id + '.' + output.name + ' }}',
-              name: '{{ ' + job.name + '.' + output.name + ' }}',
-              sourceJob: job['id'],
-              virtual: true
-            };
-            this.jobOutputs.stitchingVectors.push(outputStitchingVector);
-          } else if (output.type === 'tensorflowModel') {
-            const outputTensorflowModel = {
-              id: '{{ ' + job.id + '.' + output.name + ' }}',
-              name: '{{ ' + job.name + '.' + output.name + ' }}',
-              sourceJob: job['id'],
-              virtual: true
-            };
-            this.jobOutputs.tensorflowModels.push(outputTensorflowModel);
-          } else if (output.type === 'csvCollection') {
-            const outputCsvCollection = {
-              id: '{{ ' + job.id + '.' + output.name + ' }}',
-              name: '{{ ' + job.name + '.' + output.name + ' }}',
-              sourceJob: job['id'],
-              virtual: true
-            };
-            this.jobOutputs.csvCollections.push(outputCsvCollection);
-          } else if (output.type === 'notebook') {
-            const outputNotebook = {
-              id: '{{ ' + job.id + '.' + output.name + ' }}',
-              name: '{{ ' + job.name + '.' + output.name + ' }}',
-              sourceJob: job['id'],
-              virtual: true
-            };
-            this.jobOutputs.notebooks.push(outputNotebook);
-          }
-        });
         this.resetForm();
         this.getJobs();
       });
     }, (result) => {
       this.resetForm();
+    });
+  }
+
+  populateJobOutputs(job) {
+    const pluginId = job.wippExecutable;
+    const matchingPlugin = this.pluginList.find(x => x.id == pluginId);
+    const pluginIndex = this.pluginList.indexOf(matchingPlugin);
+    const currentPlugin = this.pluginList[pluginIndex];
+
+    currentPlugin.outputs.forEach(output => {
+      if (output.type === 'collection') {
+        const outputCollection = {
+          id: '{{ ' + job.id + '.' + output.name + ' }}',
+          name: '{{ ' + job.name + '.' + output.name + ' }}',
+          sourceJob: job['id'],
+          virtual: true
+        };
+        this.jobOutputs.collections.push(outputCollection);
+      } else if (output.type === 'stitchingVector') {
+        const outputStitchingVector = {
+          id: '{{ ' + job.id + '.' + output.name + ' }}',
+          name: '{{ ' + job.name + '.' + output.name + ' }}',
+          sourceJob: job['id'],
+          virtual: true
+        };
+        this.jobOutputs.stitchingVectors.push(outputStitchingVector);
+      } else if (output.type === 'tensorflowModel') {
+        const outputTensorflowModel = {
+          id: '{{ ' + job.id + '.' + output.name + ' }}',
+          name: '{{ ' + job.name + '.' + output.name + ' }}',
+          sourceJob: job['id'],
+          virtual: true
+        };
+        this.jobOutputs.tensorflowModels.push(outputTensorflowModel);
+      } else if (output.type === 'csvCollection') {
+        const outputCsvCollection = {
+          id: '{{ ' + job.id + '.' + output.name + ' }}',
+          name: '{{ ' + job.name + '.' + output.name + ' }}',
+          sourceJob: job['id'],
+          virtual: true
+        };
+        this.jobOutputs.csvCollections.push(outputCsvCollection);
+      } else if (output.type === 'notebook') {
+        const outputNotebook = {
+          id: '{{ ' + job.id + '.' + output.name + ' }}',
+          name: '{{ ' + job.name + '.' + output.name + ' }}',
+          sourceJob: job['id'],
+          virtual: true
+        };
+        this.jobOutputs.notebooks.push(outputNotebook);
+      }
     });
   }
 
@@ -330,6 +338,9 @@ export class WorkflowDetailComponent implements OnInit {
       this.jobs = data;
       this.populateGraph(data);
       this.updateGraph();
+      for (let job of data) {
+        this.populateJobOutputs(job);
+      }
     });
   }
 
