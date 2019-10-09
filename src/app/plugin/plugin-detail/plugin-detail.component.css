@@ -1,63 +1,46 @@
-/*Force scrollbar visible*/
-::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
+table {
+  width: 100%;
+  margin-bottom: 20px;
 }
 
-::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: lightgrey;
-  box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+tr.detail-row {
+  height: 0;
 }
 
-.t1 {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: -moz-fit-content;
-  table-layout: fixed;
-  width: 800px;
-}
-
-td {
-  text-align: left;
-  vertical-align: top;
-  font-weight: normal;
-  width: 50%;
-  border: 1px solid darkgrey;
-}
-
-.th1 {
-  border: 1px solid darkgrey;
-  text-align: left;
-  vertical-align: top;
-  white-space: nowrap;
-  width: 50%
-}
-
-tr:nth-child(odd) {
-  background-color: #eeeeee;
-}
-
-tr.b:nth-child(even) {
-  background-color: #eeeeee;
-}
-
-tr.b:nth-child(odd) {
-  background-color: white;
-}
-
-tr.b2:nth-child(even) {
-  background-color: white;
-}
-
-tr.b2:nth-child(odd) {
-  background-color: #eeeeee;
-}
-
-.pointer:hover {
+tr.input-row:not(.expanded-row):hover {
+  background: #efefef;
   cursor: pointer;
 }
 
-.h {
-  min-height: 30px;
+tr.input-row.expanded-row {
+  background: #efefef;
+}
+
+.input-row td {
+  border-bottom-width: 0;
+}
+
+.input-detail {
+  overflow: scroll;
+  display: flex;
+  max-height: 200px;
+}
+
+.input-description {
+  overflow-x: hidden;
+  padding: 16px;
+}
+
+.input-description-title {
+  padding: 16px;
+  font-weight: bold;
+}
+
+::ng-deep .ngx-json-viewer {
+  pointer-events: none;
+}
+
+::ng-deep .manifest-modal.modal-body {
+  overflow-y: auto;
+  max-height: 500px;
 }
