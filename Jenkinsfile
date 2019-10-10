@@ -47,9 +47,6 @@ pipeline {
             }
             steps {
                 script {
-                    sh "sed -i 's|JUPYTERHUB_URL|${JUPYTERHUB_URL}|g' src/environments/environment.prod.ts"
-                    sh "sed -i 's|VISIONUI_URL|${VISIONUI_URL}|g' src/environments/environment.prod.ts"
-                    sh "sed -i 's|ARGOUIBASE_URL|${ARGOUIBASE_URL}|g' src/environments/environment.prod.ts"
                     sh 'npm ci'
                     sh 'npm run ng build -- --prod'
                     sh 'tar -czf ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz -C dist .'
@@ -88,6 +85,9 @@ pipeline {
                 dir('deploy/kubernetes') {
                     script {
                       sh "sed -i 's/FRONTEND_VERSION_VALUE/${DOCKER_VERSION}/g' frontend-deployment.yaml"
+                      sh "sed -i 's|JUPYTERHUB_URL_VALUE|${JUPYTERHUB_URL}|g' frontend-deployment.yaml"
+                      sh "sed -i 's|VISIONUI_URL_VALUE|${VISIONUI_URL}|g' frontend-deployment.yaml"
+                      sh "sed -i 's|ARGOUIBASE_URL_VALUE|${ARGOUIBASE_URL}|g' frontend-deployment.yaml"
                       sh "sed -i 's/FRONTEND_HOST_NAME_VALUE/${FRONTEND_HOST_NAME}/g' services.yaml"
                     }
                     withAWS(credentials:'aws-jenkins-eks') {

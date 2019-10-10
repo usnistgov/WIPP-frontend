@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { AppComponent } from './app.component';
 
 import { PageNotFoundComponent } from './not-found/not-found.component';
@@ -20,6 +20,8 @@ import {TensorflowModelModule} from './tensorflow-model/tensorflow-model.module'
 import {CsvCollectionModule} from './csv-collection/csv-collection.module';
 import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.component';
 import {NotebookModule} from './notebook/notebook.module';
+import {AppConfigService} from './app-config.service';
+import {appInitializerFactory} from './app-init-factory';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,15 @@ import {NotebookModule} from './notebook/notebook.module';
     MatCheckboxModule,
     NgbModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    AppConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFactory,
+      multi: true,
+      deps: [AppConfigService]
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
