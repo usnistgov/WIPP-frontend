@@ -1,13 +1,10 @@
 <h3 class="wipp-title">Plugins</h3>
-<!--<h3 style=" margin-top: 7%; margin-bottom: 3%; font-family: fantasy; font-size: 3em; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px;">Plugins</h3>-->
 <div class="row">
   <div class="col-md-3">
-    <button class="btn btn-primary" style="background-color: #f8f9fa; border-color: #bfbfbf; color: black"
-            (click)="displayNewPluginModal()"
-    >
-      <i class="fas fa-plus-circle" style="margin-right: 10px">
-        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
-          New plugin</p>
+    <button class="btn btn-primary wipp-btn wipp-btn-new"
+            (click)="displayNewPluginModal()">
+      <i class="fas fa-plus-circle">
+        <p>New plugin</p>
       </i>
     </button>
   </div>
@@ -19,7 +16,7 @@
   <!-- Name Column -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-    <td mat-cell *matCellDef="let row" style="color: #007bff">{{ row.name }}</td>
+    <td mat-cell *matCellDef="let row"><a routerLink="/plugins/{{row.id}}">{{ row.name }}</a></td>
   </ng-container>
 
   <!-- Version Column -->
@@ -54,7 +51,7 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-header-row *matHeaderRowDef="['header-row-filter-name', 'header-row-blank']"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row); onClick(row)"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 </table>
 

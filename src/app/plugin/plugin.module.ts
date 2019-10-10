@@ -7,6 +7,7 @@ import {PluginRoutingModule} from './plugin-routing.module';
 import {PluginListComponent} from './plugin-list/plugin-list.component';
 import {PluginDetailComponent} from './plugin-detail/plugin-detail.component';
 import { PluginNewComponent } from './plugin-new/plugin-new.component';
+import {NgxJsonViewerModule} from 'ngx-json-viewer';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { PluginNewComponent } from './plugin-new/plugin-new.component';
     MatSortModule,
     MatInputModule,
     FormsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    NgxJsonViewerModule
   ],
   declarations: [
     PluginListComponent,
