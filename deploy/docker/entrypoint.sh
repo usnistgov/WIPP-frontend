@@ -21,6 +21,6 @@ sed -i \
   -e 's|JUPYTERHUB_URL|"${JUPYTERHUB_URL}"'/' \
   -e 's|VISIONUI_URL|"${VISIONUI_URL}"'/' \
   -e 's|ARGOUIBASE_URL|"${ARGOUIBASE_URL}"'/' \
-  /var/www/frontend/assets/config.json
+  /var/www/frontend/assets/config/config.json
 
 nginx -g 'daemon off;'
