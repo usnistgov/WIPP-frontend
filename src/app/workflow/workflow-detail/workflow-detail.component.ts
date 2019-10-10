@@ -124,10 +124,8 @@ export class WorkflowDetailComponent implements OnInit {
   populateJobOutputs(job) {
     const pluginId = job.wippExecutable;
     const matchingPlugin = this.pluginList.find(x => x.id == pluginId);
-    const pluginIndex = this.pluginList.indexOf(matchingPlugin);
-    const currentPlugin = this.pluginList[pluginIndex];
 
-    currentPlugin.outputs.forEach(output => {
+    matchingPlugin.outputs.forEach(output => {
       if (output.type === 'collection') {
         const outputCollection = {
           id: '{{ ' + job.id + '.' + output.name + ' }}',
@@ -338,6 +336,7 @@ export class WorkflowDetailComponent implements OnInit {
       this.jobs = data;
       this.populateGraph(data);
       this.updateGraph();
+      this.resetJobOutputs();
       for (let job of data) {
         this.populateJobOutputs(job);
       }
@@ -412,6 +411,16 @@ export class WorkflowDetailComponent implements OnInit {
       }
     }
     this.depthHeight = depthHeight;
+  }
+
+  resetJobOutputs() {
+    this.jobOutputs = {
+      collections: [],
+      stitchingVectors: [],
+      tensorflowModels: [],
+      csvCollections: [],
+      notebooks: []
+    };
   }
 
 // Update function
