@@ -11,7 +11,7 @@ import {Job} from '../../job/job';
 import {FormProperty, PropertyGroup} from 'ngx-schema-form/lib/model/formproperty';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 import {NgxSpinnerService} from 'ngx-spinner';
-import { environment} from '../../../environments/environment';
+import {AppConfigService} from '../../app-config.service';
 
 
 @Component({
@@ -70,13 +70,14 @@ export class WorkflowDetailComponent implements OnInit {
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
     private pluginService: PluginService,
-    private workflowService: WorkflowService) {
+    private workflowService: WorkflowService,
+    private appConfigService: AppConfigService) {
   }
 
   ngOnInit() {
     this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
       this.workflow = workflow;
-      this.argoUiLink = environment.argoUiBaseUrl + '/' + workflow.generatedName;
+      this.argoUiLink = this.appConfigService.getConfig().argoUiBaseUrl + '/' + workflow.generatedName;
     });
     this.pluginService.getPlugins({size: Number.MAX_SAFE_INTEGER, sort: 'name'})
       .subscribe(plugins => {
