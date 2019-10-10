@@ -14,7 +14,7 @@ RUN tar -xvzf ${WIPP_FRONTEND}.tar.gz \
   && mv ${WIPP_FRONTEND} frontend
 
 # Copy WIPP frontend config
-COPY config.json frontend/assets/config.json
+COPY config.json frontend/assets/config/config.json
 
 # Copy nginx configuration and entrypoint script
 COPY default.conf /etc/nginx/conf.d/default.conf
