@@ -1,147 +1,116 @@
 <h3 class="wipp-title">Plugin detail</h3>
 
-<div style="height: 30px"></div>
+<div>
+  <div class="row">
+    <div class="col-md-9">
+      <dl class="row">
+        <dt class="col-md-4">Name:</dt>
+        <dd class="col-md-8">{{plugin.name}}</dd>
 
-<!--TO DISPLAY THE JSON DIRECTLY -->
-<!--<pre>{{plugin |json}}</pre>-->
+        <dt class="col-md-4">Title:</dt>
+        <dd class="col-md-8">{{plugin.title}}</dd>
 
-<table class="t1">
+        <dt class="col-md-4">Version:</dt>
+        <dd class="col-md-8">{{plugin.version}}</dd>
 
-  <!--  Name Line  -->
-  <tr>
-    <th class="th1"><dt>Name:</dt></th>
-    <td><dd class="col-md-8">{{plugin.name}}</dd></td>
-  </tr>
+        <dt class="col-md-4">Creator:</dt>
+        <dd class="col-md-8">{{plugin.creator || "N/A"}}</dd>
 
-  <!--  Version Line  -->
-  <tr>
-    <th class="th1"><dt>Version:</dt></th>
-    <td><dd class="col-md-8">{{plugin.version}}</dd></td>
-  </tr>
+        <dt class="col-md-4">Description:</dt>
+        <dd class="col-md-8">{{plugin.description}}</dd>
 
-  <!--  Title Line  -->
-  <tr>
-    <th class="th1"><dt>Title:</dt></th>
-    <td><dd class="col-md-8">{{plugin.title}}</dd></td>
-  </tr>
+        <dt class="col-md-4">Docker image:</dt>
+        <dd class="col-md-8">{{plugin.containerId}}</dd>
 
-  <!--  Description Line  -->
-  <tr>
-    <th class="th1"><dt>Description:</dt></th>
-    <td><dd class="col-md-8">{{plugin.description}}</dd></td>
-  </tr>
+        <dt class="col-md-4">Creation date:</dt>
+        <dd class="col-md-8">{{plugin.creationDate| date}}</dd>
 
-  <!--  Creator Line  -->
-  <tr>
-    <th class="th1"><dt >Creator:</dt></th>
-    <td><dd class="col-md-8" >{{plugin.creator || "N/A"}}</dd></td>
-  </tr>
-
-  <!--  ContainerId Line  -->
-  <tr>
-    <th class="th1"><dt>Container ID:</dt></th>
-    <td><dd class="col-md-8">{{plugin.containerId}}</dd></td>
-  </tr>
-
-  <!--  Creation Date Line  -->
-  <tr>
-    <th class="th1"><dt>Creation date:</dt></th>
-    <td><dd class="col-md-8">{{plugin.creationDate | date }}</dd></td>
-  </tr>
-
-  <!--  Identifier Line  -->
-  <tr>
-    <th class="th1"><dt>Identifier:</dt></th>
-    <td><dd class="col-md-8">{{plugin.identifier}}</dd></td>
-  </tr>
-
-  <!--  Input List Line  -->
-  <tr class="pointer" (click)="showContent('input')">
-    <th class="th1"><dt  ngbTooltip="Click to show Inputs">List of Inputs:</dt></th>
-    <td>
-      <div class="col-md-8 h" [hidden]="viewInputs">Click to expand</div>
-      <div [hidden]="!viewInputs">
-        <table style="overflow-x: scroll">
-          <tr class="b" *ngFor="let ui of plugin.inputs; let i = index; let c = count">
-            <p style="color:dimgrey;" class="font-weight-bold  col-md-8">  Input {{i+1}}  / {{c}} </p>
-            <dd class="col-md-12">
-              <div class="row">
-            <dt class="col-md-12" *ngFor="let key of inputKeys[i];">
-              <p style="display: inline" class="font-weight-bold" *ngIf="plugin.inputs[i][key] != null"> {{key}} : </p>
-              <p style="display: inline" class="font-weight-normal" *ngIf="key.toString() != 'options'">{{plugin.inputs[i][key]}} </p>
-              <div class="row" style="word-break: break-word" *ngIf="key.toString() == 'options' && plugin.inputs[i][key] != null">
-            <dd class="col-md-12" *ngFor="let optKey of inputOptionsKeys">
-              <h6 style="display: inline; margin-left: 15px" class="font-weight-bold"
-                  *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null">
-                {{optKey}} : </h6>
-              <h6 style="display: inline;" class="font-weight-normal"
-                  *ngIf="plugin.inputs[i]['options'] != null && plugin.inputs[i]['options'][optKey]!=null">
-                {{plugin.inputs[i]['options'][optKey]}} </h6>
-            </dd>
-      </div>
-      </dt>
-      </div>
-      </dd>
-  </tr>
-</table>
-</div>
-</td>
-</tr>
-
-<!--  Output List Line  -->
-<tr class="pointer" (click)="showContent('output')">
-  <th class="th1"><dt ngbTooltip="Click to show Outputs">List of Outputs:</dt></th>
-  <td>
-    <div class="col-md-8 h" [hidden]="viewOutputs">Click to expand</div>
-    <div [hidden]="!viewOutputs">
-      <table>
-        <tr class="b2" *ngFor="let ui of plugin.outputs; let i = index; let c = count">
-          <p style="color:dimgrey;" class="font-weight-bold col-md-8">  Output {{i+1}}  / {{c}} </p>
-          <dd class="col-md-12">
-            <div class="row">
-          <dt class="col-md-12" *ngFor="let key of outputKeys[i];">
-            <p style="display: inline" class="font-weight-bold" *ngIf="plugin.outputs[i][key] != null"> {{key}} : </p>
-            <p style="display: inline" class="font-weight-normal" *ngIf="key.toString() != 'options'">{{plugin.outputs[i][key]}} </p>
-            <div class="row" style="word-break: break-word" *ngIf="key.toString() == 'options' && plugin.outputs[i][key] != null">
-          <dd class="col-md-12" *ngFor="let optKey of outputOptionsKeys">
-            <h6 style="display: inline; margin-left: 15px" class="font-weight-bold"
-                *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null">
-              {{optKey}} : </h6>
-            <h6 style="display: inline" class="font-weight-normal"
-                *ngIf="plugin.outputs[i]['options'] != null && plugin.outputs[i]['options'][optKey]!=null">
-              {{plugin.outputs[i]['options'][optKey]}} </h6>
-          </dd>
+      </dl>
     </div>
-    </dt>
+    <div class="col-md-3 text-right">
+      <button type="button"
+              ngbTooltip="Display JSON Manifest"
+              placement="left"
+              class="btn btn-light wipp-btn"
+              (click)="displayManifest(showManifestModal)">
+        <i class="fas fa-file-code">
+          <p>Raw Manifest</p>
+        </i>
+      </button>
     </div>
-    </dd>
-</tr>
-</table>
-</div>
-</td>
-</tr>
+  </div>
 
-<!--  UI  Line  -->
-<tr class="pointer" (click)="showContent('ui')">
-  <th class="th1"><dt  ngbTooltip=" Click to show UIs">UI Description:</dt></th>
-  <td>
-    <div class="col-md-8 h" [hidden]="viewUI">Click to expand</div>
-    <div [hidden]="!viewUI">
-      <table>
-        <tr  class="b" *ngFor="let ui of plugin.ui; let i = index; let c = count">
-          <p style="color:dimgrey;" class="font-weight-bold col-md-8">  UI {{i+1}}  / {{c}} </p>
-          <dd class="col-md-12">
-            <div class="row" style="word-break: break-word">
-          <dt  class="col-md-12" *ngFor="let key of uiKeys[i];">
-            <h6 style="display: inline" class="font-weight-bold">{{key}} : </h6>
-            <h6 style="display: inline"> {{plugin.ui[i][key]}}</h6>
-          </dt>
+  <h4>Inputs</h4>
+
+  <table mat-table
+         [dataSource]="plugin.inputs" multiTemplateDataRows>
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayInputs">
+      <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+      <td mat-cell *matCellDef="let input"> {{input[column]}} </td>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let input" [attr.colspan]="columnsToDisplayInputs.length">
+        <div class="input-detail row"
+             [@detailExpand]="input == expandedInput ? 'expanded' : 'collapsed'">
+          <div class="input-description-title col-md-1">
+            UI:
+          </div>
+          <div class="input-description col-md-6">
+            <ngx-json-viewer [json]="getInputUi(input.name) || {}"></ngx-json-viewer>
+          </div>
+          <div class="input-description-title col-md-1">
+            Options:
+          </div>
+          <div class="input-description col-md-4">
+            <ngx-json-viewer *ngIf="input.options" [json]="input.options" [expanded]="true"></ngx-json-viewer>
+            <span *ngIf="!input.options">N/A</span>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayInputs"></tr>
+    <tr mat-row *matRowDef="let input; columns: columnsToDisplayInputs;"
+        class="input-row"
+        [class.expanded-row]="expandedInput === input"
+        (click)="expandedInput = expandedInput === input ? null : input">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+  </table>
+
+  <h4>Outputs</h4>
+
+  <table mat-table
+         [dataSource]="plugin.outputs">
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayOutputs">
+      <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+      <td mat-cell *matCellDef="let output"> {{output[column]}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayOutputs"></tr>
+    <tr mat-row *matRowDef="let output; columns: columnsToDisplayOutputs;"></tr>
+  </table>
+
+</div>
+
+<ng-template #showManifestModal let-c="close" let-d="dismiss" class="manifest-modal">
+  <div class="modal-header">
+    <h4 class="modal-title">Plugin Manifest</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body manifest-modal">
+    <div>
+      <pre>{{ manifest | json }}</pre>
     </div>
-    </dd>
-</tr>
-</table>
-</div>
-</td>
-</tr>
-
-</table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark"
+            ngbAutofocus (click)="d()">
+      Close
+    </button>
+  </div>
+</ng-template>
