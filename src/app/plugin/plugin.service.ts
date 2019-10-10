@@ -52,6 +52,8 @@ export class PluginService {
   }
 
   postPlugin(pluginDescriptor): Observable<Plugin> {
+    const httpParams = new HttpParams();
+    httpOptions.params = httpParams;
     return this.http.post<Plugin>(this.pluginsUrl,
       pluginDescriptor,
       httpOptions
@@ -84,6 +86,10 @@ export class PluginService {
       outputKeys.push(pluginInput['name']);
     }
     return (outputKeys);
+  }
+
+  getJsonFromURL(url: string): Observable<JSON> {
+    return this.http.get<JSON>(url);
   }
 
 }

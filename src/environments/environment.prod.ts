@@ -6,5 +6,6 @@ export const environment = {
   apiRootUrl: '/api',
   tensorboardUrl: '/tensorboard',
   jupyterNotebooksUrl: 'JUPYTERHUB_URL',
-  plotsUiUrl: 'VISIONUI_URL'
+  plotsUiUrl: 'VISIONUI_URL',
+  argoUiBaseUrl: 'ARGOUIBASE_URL'
 };

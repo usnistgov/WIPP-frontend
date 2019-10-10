@@ -1,4 +1,4 @@
-import {Component, NgModule, OnInit, ViewChild} from '@angular/core';
+import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {MatTableModule, MatTableDataSource, MatPaginator, MatSort} from '@angular/material';
@@ -8,6 +8,7 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ImagesCollectionNewComponent} from '../images-collection-new/images-collection-new.component';
 import {Router} from '@angular/router';
+import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 
 @Component({
   selector: 'app-images-collection-list',
@@ -17,7 +18,7 @@ import {Router} from '@angular/router';
 @NgModule({
   imports: [MatTableModule, MatTableDataSource, MatTable]
 })
-export class ImagesCollectionListComponent implements OnInit {
+export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'creationDate', 'imagesTotalSize'];
   imagesCollections: Observable<ImagesCollection[]>;
   resultsLength = 0;
@@ -145,9 +146,17 @@ export class ImagesCollectionListComponent implements OnInit {
       this.imagesCollectionService.createImagesCollection(result).subscribe(imagesCollection => {
         const imageCollId = imagesCollection ? imagesCollection.id : null;
         this.router.navigate(['images-collection', imageCollId]);
+      }, error => {
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Error while creating new Images Collection';
+        modalRefErr.componentInstance.message = error.error;
       });
     }, (reason) => {
       console.log('dismissed');
     });
+  }
+
+  ngOnDestroy() {
+    this.modalService.dismissAll();
   }
 }

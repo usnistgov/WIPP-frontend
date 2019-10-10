@@ -1,19 +1,21 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Plugin} from '../plugin';
 import {PluginService} from '../plugin.service';
 import {MatPaginator, MatSort} from '@angular/material';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {BehaviorSubject, from, Observable, of as observableOf} from 'rxjs';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {SelectionModel} from '@angular/cdk/collections';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PluginNewComponent} from '../plugin-new/plugin-new.component';
 
 
 @Component({
   selector: 'app-plugin-list',
-  templateUrl: './plugin-list.template.html'
+  templateUrl: './plugin-list.component.html',
+    styleUrls: ['./plugin-list.component.css']
 })
-export class PluginListComponent implements OnInit {
+export class PluginListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [ 'name', 'version', 'description'];
   plugins: Observable<Plugin[]>;
   selection = new SelectionModel<Plugin>(false, []);
@@ -28,9 +30,7 @@ export class PluginListComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    private pluginService: PluginService,
-    private router: Router,
-    private route: ActivatedRoute
+    private pluginService: PluginService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -99,17 +99,13 @@ export class PluginListComponent implements OnInit {
     );
   }
 
-  public open(content) {
-    this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
-      this.pluginService.postPlugin(result).subscribe(
-        plugin => this.getPlugins()
-      );
-    }, (result) => {
-    });
+  displayNewPluginModal() {
+    const modalRef = this.modalService.open(PluginNewComponent, {size: 'lg'});
+    modalRef.componentInstance.modalReference = modalRef;
   }
 
+  ngOnDestroy() {
+    this.modalService.dismissAll();
+  }
 
-public onClick(row) {
-  this.router.navigate(['/plugins/' + row.id ], { skipLocationChange: false } );
-}
 }

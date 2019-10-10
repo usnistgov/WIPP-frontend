@@ -9,7 +9,8 @@ export const environment = {
   apiRootUrl: 'http://localhost:8080/api',
   tensorboardUrl: 'http://localhost:6006/',
   jupyterNotebooksUrl: 'http://j.ci.aws.labshare.org',
-  plotsUiUrl: 'http://vision-ui.ci.aws.labshare.org'
+  plotsUiUrl: 'http://vision-ui.ci.aws.labshare.org',
+  argoUiBaseUrl: 'http://localhost:30501/workflows/default'
 };
 
 /*

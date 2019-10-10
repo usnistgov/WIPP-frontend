@@ -1,6 +1,5 @@
-<h3 style="margin-top: 2%; margin-bottom: 2%">Tensorflow Model Detail</h3>
+<h3 class="wipp-title">Tensorflow Model Detail</h3>
 
-<!--<div style="margin-top: 20px">-->
 <div>
   <div class="row">
     <div class="col-md-9">
@@ -14,7 +13,7 @@
         <dt class="col-md-4">Training job: </dt>
         <dd class="col-md-8" *ngIf="job; else not_applicable">
           <a (click)="displayJobModal(job.id)"
-             class="underline-on-hover text-primary"
+             class="wipp-link"
              ngbTooltip="Show Job"
              placement="left">
             {{job.name}}

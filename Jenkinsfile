@@ -14,6 +14,7 @@ pipeline {
         DOCKER_VERSION = readFile(file: 'deploy/docker/VERSION').trim()
         JUPYTERHUB_URL = "http://j.ci.aws.labshare.org"
         VISIONUI_URL = "http://vision-ui.ci.aws.labshare.org"
+        ARGOUIBASE_URL = "http://argo-ui.ci.aws.labshare.org/workflows/default"
     }
     triggers {
         pollSCM('H/2 * * * *')
@@ -48,6 +49,7 @@ pipeline {
                 script {
                     sh "sed -i 's|JUPYTERHUB_URL|${JUPYTERHUB_URL}|g' src/environments/environment.prod.ts"
                     sh "sed -i 's|VISIONUI_URL|${VISIONUI_URL}|g' src/environments/environment.prod.ts"
+                    sh "sed -i 's|ARGOUIBASE_URL|${ARGOUIBASE_URL}|g' src/environments/environment.prod.ts"
                     sh 'npm ci'
                     sh 'npm run ng build -- --prod'
                     sh 'tar -czf ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz -C dist .'
