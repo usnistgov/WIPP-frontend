@@ -6,7 +6,6 @@ export class Plugin {
   creator: string;
   creationDate: Date;
   containerId: string;
-  identifier: string;
   title: string;
   inputs: JSON[];
   outputs: JSON[];

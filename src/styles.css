@@ -24,3 +24,50 @@ wippwdzt {
   display: block;
   width: 100%;
 }
+
+.wipp-title {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.wipp-btn-new {
+  background-color: #f8f9fa;
+  border-color: #bfbfbf;
+  color: black
+}
+
+.wipp-btn > i {
+  margin-right: 10px;
+}
+
+.wipp-btn > i > p {
+  margin-left: 10px;
+  display: inline;
+  font-family: 'Roboto', sans-serif ;
+  font-weight: normal;
+}
+
+a.wipp-link:not([href]):not([tabindex]) {
+  cursor: pointer;
+  color: #007bff;
+  text-decoration: none;
+}
+
+a.wipp-link:not([href]):not([tabindex]):hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+dd {
+  margin-bottom: 0;
+}
+
+a.c-inline-editor {
+  line-height: 0;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.top20 {
+  margin-top: 20px;
+}
