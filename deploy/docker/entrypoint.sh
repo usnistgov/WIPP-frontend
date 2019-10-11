@@ -17,10 +17,10 @@ sed -i \
 
 # Update external tools URLs in frontend conf
 sed -i \
-  -e 's|TENSORBOARD_URL|"${TENSORBOARD_URL}"'/' \
-  -e 's|JUPYTERHUB_URL|"${JUPYTERHUB_URL}"'/' \
-  -e 's|VISIONUI_URL|"${VISIONUI_URL}"'/' \
-  -e 's|ARGOUIBASE_URL|"${ARGOUIBASE_URL}"'/' \
+  -e 's|TENSORBOARD_URL|'"${TENSORBOARD_URL}"'|' \
+  -e 's|JUPYTERHUB_URL|'"${JUPYTERHUB_URL}"'|' \
+  -e 's|VISIONUI_URL|'"${VISIONUI_URL}"'|' \
+  -e 's|ARGOUIBASE_URL|'"${ARGOUIBASE_URL}"'|' \
   /var/www/frontend/assets/config/config.json
 
 nginx -g 'daemon off;'
