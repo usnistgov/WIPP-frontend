@@ -6,7 +6,29 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `npm ci` to install dependencies using versions locked in package-lock.json for reproducibility.
 
-## Development server
+## Development setup
+
+#### Configuration
+
+A configuration file defining links between the WIPP-frontend and other tools **must** be placed at 
+`src/assets/config/config.json`.  
+The following properties are expected to be defined in this file:
+- `argoUiBaseUrl`: URL of the Argo Workflows Dashboard, for workflow execution monitoring,
+- `tensorboardUrl`: URL of TensorBoard, for TensorFlow jobs monitoring,
+- `jupyterNotebooksUrl`: URL of JupyterHub, for Jupyter Notebooks,
+- `plotsUiUrl`: URL of Plots app for scatterplots visualization.
+
+We provide a sample configuration file `sample-config.json` at the root of this repository defining
+a default configuration for the Argo Dashboard URL at `localhost:30501` (sample argo-ui service patch 
+to achieve this configuration available 
+[here](https://github.com/usnistgov/WIPP-deploy/blob/develop/deployment/argo-service-patch.yaml)).   
+This sample configuration file assumes that the other tools are not deployed and will redirect to 
+"Page not found" in a development setup.
+
+Please refer to the [main WIPP repository](https://github.com/usnistgov/WIPP-deploy) to learn more about 
+external tools configuration for WIPP.
+
+#### Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
