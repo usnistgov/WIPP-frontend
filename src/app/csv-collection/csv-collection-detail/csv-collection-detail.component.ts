@@ -6,6 +6,7 @@ import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {CsvCollectionService} from '../csv-collection.service';
 import {CsvCollection} from '../csv-collection';
 import {AppConfigService} from '../../app-config.service';
+import * as urljoin from 'url-join';
 
 @Component({
   selector: 'app-csv-collection-detail',
@@ -27,7 +28,7 @@ export class CsvCollectionDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.plotsUiLink = this.appConfigService.getConfig().plotsUiUrl + '/plots/' + this.csvCollectionId;
+    this.plotsUiLink = urljoin(this.appConfigService.getConfig().plotsUiUrl, 'plots', this.csvCollectionId);
     this.csvCollectionService.getCsvCollection(this.csvCollectionId)
       .subscribe(csvCollection => {
         this.csvCollection = csvCollection;

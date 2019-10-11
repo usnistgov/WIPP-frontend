@@ -6,6 +6,7 @@ import {TensorflowModelService} from '../tensorflow-model.service';
 import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {AppConfigService} from '../../app-config.service';
+import * as urljoin from 'url-join';
 
 @Component({
   selector: 'app-tensorflow-model-detail',
@@ -28,7 +29,7 @@ export class TensorflowModelDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.tensorboardLink = this.appConfigService.getConfig().tensorboardUrl + '/#scalars&regexInput=';
+    this.tensorboardLink = urljoin(this.appConfigService.getConfig().tensorboardUrl, '#scalars&regexInput=');
     this.tensorflowModelService.getTensorflowModel(this.tensorflowModelId)
       .subscribe(tensorflowModel => {
         this.tensorflowModel = tensorflowModel;
