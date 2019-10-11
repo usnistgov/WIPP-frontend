@@ -1,0 +1,6 @@
+{
+  "argoUiBaseUrl": "http://localhost:30501/workflows/default",
+  "tensorboardUrl": "/not-found",
+  "jupyterNotebooksUrl": "/not-found",
+  "plotsUiUrl": "/not-found"
+}
