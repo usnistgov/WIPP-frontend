@@ -2,7 +2,7 @@ import {DynamicComponent} from '../../dynamic-content/dynamic.component';
 import {TensorflowModelService} from '../tensorflow-model.service';
 import {Component, OnInit} from '@angular/core';
 import {AppConfigService} from '../../app-config.service';
-import * as urljoin from 'url-join';
+import urljoin from 'url-join';
 
 @Component({
   selector: 'app-stitching-vector-template',
