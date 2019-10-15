@@ -12,7 +12,7 @@ import {FormProperty, PropertyGroup} from 'ngx-schema-form/lib/model/formpropert
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {AppConfigService} from '../../app-config.service';
-import * as urljoin from 'url-join';
+import urljoin from 'url-join';
 
 
 @Component({

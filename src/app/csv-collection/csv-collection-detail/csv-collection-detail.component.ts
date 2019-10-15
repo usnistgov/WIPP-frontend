@@ -6,7 +6,7 @@ import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {CsvCollectionService} from '../csv-collection.service';
 import {CsvCollection} from '../csv-collection';
 import {AppConfigService} from '../../app-config.service';
-import * as urljoin from 'url-join';
+import urljoin from 'url-join';
 
 @Component({
   selector: 'app-csv-collection-detail',

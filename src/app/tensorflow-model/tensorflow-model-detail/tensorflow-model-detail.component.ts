@@ -6,7 +6,7 @@ import {TensorflowModelService} from '../tensorflow-model.service';
 import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {AppConfigService} from '../../app-config.service';
-import * as urljoin from 'url-join';
+import urljoin from 'url-join';
 
 @Component({
   selector: 'app-tensorflow-model-detail',
