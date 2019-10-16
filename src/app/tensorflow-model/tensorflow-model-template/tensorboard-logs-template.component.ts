@@ -1,7 +1,8 @@
 import {DynamicComponent} from '../../dynamic-content/dynamic.component';
 import {TensorflowModelService} from '../tensorflow-model.service';
 import {Component, OnInit} from '@angular/core';
-import {environment} from '../../../environments/environment';
+import {AppConfigService} from '../../app-config.service';
+import urljoin from 'url-join';
 
 @Component({
   selector: 'app-stitching-vector-template',
@@ -10,17 +11,19 @@ import {environment} from '../../../environments/environment';
 })
 export class TensorboardLogsTemplateComponent extends DynamicComponent implements OnInit {
 
-    constructor(
+  constructor(
+    private appConfigService: AppConfigService,
     private tensorflowModelService: TensorflowModelService) {
     super();
-}
-static key = 'tensorboardlogstemplatecomponent';
-    tensorboardLink = '';
+  }
+  static key = 'tensorboardlogstemplatecomponent';
+  tensorboardLink = '';
 
   ngOnInit() {
       this.tensorflowModelService.getTensorboardLogsByJob(this.jobId).subscribe(result => {
         this.text = result.name;
-        this.tensorboardLink = environment.tensorboardUrl + '#scalars&regexInput=' + result.name;
+        this.tensorboardLink = urljoin(this.appConfigService.getConfig().tensorboardUrl,
+          '#scalars&regexInput=' + result.name);
       });
   }
 }

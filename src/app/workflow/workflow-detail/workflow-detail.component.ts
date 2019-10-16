@@ -11,7 +11,8 @@ import {Job} from '../../job/job';
 import {FormProperty, PropertyGroup} from 'ngx-schema-form/lib/model/formproperty';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 import {NgxSpinnerService} from 'ngx-spinner';
-import { environment} from '../../../environments/environment';
+import {AppConfigService} from '../../app-config.service';
+import urljoin from 'url-join';
 
 
 @Component({
@@ -63,6 +64,7 @@ export class WorkflowDetailComponent implements OnInit {
     }
   ];
 
+  argoUiBaseUrl = '';
   argoUiLink;
 
   constructor(
@@ -70,13 +72,15 @@ export class WorkflowDetailComponent implements OnInit {
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
     private pluginService: PluginService,
-    private workflowService: WorkflowService) {
+    private workflowService: WorkflowService,
+    private appConfigService: AppConfigService) {
   }
 
   ngOnInit() {
+    this.argoUiBaseUrl = this.appConfigService.getConfig().argoUiBaseUrl;
     this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
       this.workflow = workflow;
-      this.argoUiLink = environment.argoUiBaseUrl + '/' + workflow.generatedName;
+      this.updateArgoUrl();
     });
     this.pluginService.getPlugins({size: Number.MAX_SAFE_INTEGER, sort: 'name'})
       .subscribe(plugins => {
@@ -203,6 +207,7 @@ export class WorkflowDetailComponent implements OnInit {
       ).add(() => {
       this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
         this.workflow = workflow;
+        this.updateArgoUrl();
         this.spinner.hide(); // if submission was successful, spinner is still spinning
       });
     });
@@ -401,5 +406,10 @@ export class WorkflowDetailComponent implements OnInit {
       notebooks: []
     };
   }
-  
+
+  updateArgoUrl() {
+    if (this.workflow.generatedName) {
+      this.argoUiLink = urljoin(this.argoUiBaseUrl, this.workflow.generatedName);
+    }
+  }
 }
