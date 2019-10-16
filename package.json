@@ -31,6 +31,7 @@
     "@types/flowjs": "0.0.31",
     "@types/marked": "^0.6.5",
     "@types/prismjs": "^1.16.0",
+    "@types/url-join": "^4.0.0",
     "@wipp/wdzt": "^1.0.0",
     "angular-pipes": "^8.0.0",
     "ansi_up": "^4.0.4",
@@ -51,6 +52,7 @@
     "react": "^16.8.6",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.3.3",
+    "url-join": "^4.0.1",
     "z-schema": "^3.24.1",
     "zone.js": "^0.8.26"
   },
