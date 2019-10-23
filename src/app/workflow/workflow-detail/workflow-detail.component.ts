@@ -232,116 +232,124 @@ export class WorkflowDetailComponent implements OnInit {
           'properties': {}
         }
       };
-      // default field bindings - none
-      plugin.fieldBindings = {};
-      // TODO: validation of plugin ui description
-      plugin.inputs.forEach(input => {
-        const inputSchema = {};
-        // common properties
-        inputSchema['key'] = 'inputs.' + input.name;
-        // inputSchema['description'] = input.description;
-        if (input.required) {
-          plugin.properties.inputs.required.push(input.name);
-        }
-        // type-specific properties
-        switch (input.type) {
-          case 'collection':
-            inputSchema['type'] = 'string';
-            inputSchema['widget'] = 'search';
-            inputSchema['format'] = 'collection';
-            inputSchema['getOutputCollections'] = () => this.jobOutputs.collections;
-            break;
-          case 'stitchingVector':
-            inputSchema['type'] = 'string';
-            inputSchema['widget'] = 'search';
-            inputSchema['format'] = 'stitchingVector';
-            inputSchema['getOutputStitchingVectors'] = () => this.jobOutputs.stitchingVectors;
-            break;
-          case 'tensorflowModel':
-            inputSchema['type'] = 'string';
-            inputSchema['widget'] = 'search';
-            inputSchema['format'] = 'tensorflowModel';
-            inputSchema['getOutputTensorflowModels'] = () => this.jobOutputs.tensorflowModels;
-            break;
-          case 'csvCollection':
-            inputSchema['type'] = 'string';
-            inputSchema['widget'] = 'search';
-            inputSchema['format'] = 'csvCollection';
-            inputSchema['getOutputCsvCollections'] = () => this.jobOutputs.csvCollections;
-            break;
-          case 'notebook':
-            inputSchema['type'] = 'string';
-            inputSchema['widget'] = 'search';
-            inputSchema['format'] = 'notebook';
-            inputSchema['getOutputNotebooks'] = () => this.jobOutputs.notebooks;
-            break;
-          case 'enum':
-            inputSchema['type'] = 'string';
-            inputSchema['widget'] = 'select';
-            inputSchema['oneOf'] = [];
-            input.options.values.forEach(value => {
-              inputSchema['oneOf'].push({
-                'enum': [value],
-                'description': value
-              });
-            });
-            inputSchema['default'] = input.options.values[0];
-            break;
-          case 'array':
-            inputSchema['type'] = 'array';
-            inputSchema['format'] = 'array';
-            inputSchema['items'] = input.options.items;
-            break;
-          default:
-            inputSchema['type'] = input.type;
-        }
-        // ui properties
-        const ui = plugin.ui.find(v => v.key === inputSchema['key']);
-        if (ui.hasOwnProperty('title')) {
-          inputSchema['title'] = ui.title;
-        }
-        if (ui.hasOwnProperty('description')) {
-          inputSchema['placeholder'] = ui.description;
-        }
-        if (ui.hasOwnProperty('condition')) {
-          inputSchema['condition'] = ui.condition;
-          const conditionElements = ui.condition.split('==');
-          if (conditionElements.length === 2) {
-            const inputName = conditionElements[0].split('.');
-            if (inputName.length > 0) {
-              inputSchema['visibleIf'] = {};
-              inputSchema['visibleIf'][inputName[inputName.length - 1]] = conditionElements[1];
-            }
-          }
-        }
-        // hidden fields
-        if (ui.hasOwnProperty('hidden') && ui.hidden === true) {
-          inputSchema['widget'] = 'hidden';
-        }
-        // custom bindings - update value of target input from value of source input
-        if (ui.hasOwnProperty('bind')) {
-          const sourceField = '/inputs/' + ui.bind;
-          const targetField = ui['key'].split('.').join('/');
-          plugin.fieldBindings[sourceField] = [
-            {
-              'input': (event, formProperty: FormProperty) => {
-                const parent: PropertyGroup = formProperty.findRoot();
-                const target: FormProperty = parent.getProperty(targetField);
 
-                target.setValue(formProperty.value, false);
+      try {
+        // default field bindings - none
+        plugin.fieldBindings = {};
+        // TODO: validation of plugin ui description
+        plugin.inputs.forEach(input => {
+          const inputSchema = {};
+          // common properties
+          inputSchema['key'] = 'inputs.' + input.name;
+          // inputSchema['description'] = input.description;
+          if (input.required) {
+            plugin.properties.inputs.required.push(input.name);
+          }
+          // type-specific properties
+          switch (input.type) {
+            case 'collection':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'search';
+              inputSchema['format'] = 'collection';
+              inputSchema['getOutputCollections'] = () => this.jobOutputs.collections;
+              break;
+            case 'stitchingVector':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'search';
+              inputSchema['format'] = 'stitchingVector';
+              inputSchema['getOutputStitchingVectors'] = () => this.jobOutputs.stitchingVectors;
+              break;
+            case 'tensorflowModel':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'search';
+              inputSchema['format'] = 'tensorflowModel';
+              inputSchema['getOutputTensorflowModels'] = () => this.jobOutputs.tensorflowModels;
+              break;
+            case 'csvCollection':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'search';
+              inputSchema['format'] = 'csvCollection';
+              inputSchema['getOutputCsvCollections'] = () => this.jobOutputs.csvCollections;
+              break;
+            case 'notebook':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'search';
+              inputSchema['format'] = 'notebook';
+              inputSchema['getOutputNotebooks'] = () => this.jobOutputs.notebooks;
+              break;
+            case 'enum':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'select';
+              inputSchema['oneOf'] = [];
+              input.options.values.forEach(value => {
+                inputSchema['oneOf'].push({
+                  'enum': [value],
+                  'description': value
+                });
+              });
+              inputSchema['default'] = input.options.values[0];
+              break;
+            case 'array':
+              inputSchema['type'] = 'array';
+              inputSchema['format'] = 'array';
+              inputSchema['items'] = input.options.items;
+              break;
+            default:
+              inputSchema['type'] = input.type;
+          }
+          // ui properties
+          const ui = plugin.ui.find(v => v.key === inputSchema['key']);
+          if (ui.hasOwnProperty('title')) {
+            inputSchema['title'] = ui.title;
+          }
+          if (ui.hasOwnProperty('description')) {
+            inputSchema['placeholder'] = ui.description;
+          }
+          if (ui.hasOwnProperty('condition')) {
+            inputSchema['condition'] = ui.condition;
+            const conditionElements = ui.condition.split('==');
+            if (conditionElements.length === 2) {
+              const inputName = conditionElements[0].split('.');
+              if (inputName.length > 0) {
+                inputSchema['visibleIf'] = {};
+                inputSchema['visibleIf'][inputName[inputName.length - 1]] = conditionElements[1];
               }
             }
-          ];
+          }
+          // hidden fields
+          if (ui.hasOwnProperty('hidden') && ui.hidden === true) {
+            inputSchema['widget'] = 'hidden';
+          }
+          // custom bindings - update value of target input from value of source input
+          if (ui.hasOwnProperty('bind')) {
+            const sourceField = '/inputs/' + ui.bind;
+            const targetField = ui['key'].split('.').join('/');
+            plugin.fieldBindings[sourceField] = [
+              {
+                'input': (event, formProperty: FormProperty) => {
+                  const parent: PropertyGroup = formProperty.findRoot();
+                  const target: FormProperty = parent.getProperty(targetField);
+
+                  target.setValue(formProperty.value, false);
+                }
+              }
+            ];
+          }
+          if (ui.hasOwnProperty('default')) {
+            inputSchema['default'] = input.default;
+          }
+          plugin.properties.inputs.properties[input.name] = inputSchema;
+        });
+        // field sets - arrange fields by groups
+        const fieldsetsList = plugin.ui.find(v => v.key === 'fieldsets');
+        if (fieldsetsList) {
+          plugin.properties.inputs.fieldsets = fieldsetsList.fieldsets;
         }
-        if (ui.hasOwnProperty('default')) {
-          inputSchema['default'] = input.default;
-        }
-        plugin.properties.inputs.properties[input.name] = inputSchema;
-      });
-      // field sets - arrange fields by groups
-      const fieldsetsList = plugin.ui.find(v => v.key === 'fieldsets');
-      if (fieldsetsList) {
-        plugin.properties.inputs.fieldsets = fieldsetsList.fieldsets;
+        plugin.isSchemaValid = true;
+      } catch (error) {
+        console.log(error);
+        plugin.properties = {};
+        plugin.isSchemaValid = false;
       }
     });
   }

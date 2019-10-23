@@ -51,7 +51,7 @@
     <div class="row">
       <div class="col-md-2">
         <button class="btn btn-outline-dark wipp-btn wf-btn-graph" (click)="open(addStepModal)"
-                [disabled]="! workflow.name || workflow.status!='CREATED'">
+                [disabled]="! workflow.name || workflow.status!='CREATED' || ! selectedSchema">
           <i class="fas fa-plus-circle">
             <p>Add task</p>
           </i>
@@ -121,7 +121,12 @@
         <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}</option>
       </select>
     </div>
-    <sf-form [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm></sf-form>
+    <sf-form [hidden]="!selectedSchema.isSchemaValid"
+             [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm>
+    </sf-form>
+    <div [hidden]="selectedSchema.isSchemaValid" class="alert alert-danger">
+      Unable to generate form for {{ selectedSchema.name }} {{ selectedSchema.version }}, plugin manifest is invalid.
+    </div>
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">
