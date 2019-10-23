@@ -121,7 +121,12 @@
         <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}</option>
       </select>
     </div>
-    <sf-form [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm></sf-form>
+    <sf-form [hidden]="!selectedSchema.isSchemaValid"
+             [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm>
+    </sf-form>
+    <div [hidden]="selectedSchema.isSchemaValid" class="alert alert-danger">
+      Unable to generate form for {{ selectedSchema.name }} {{ selectedSchema.version }}, plugin manifest is invalid.
+    </div>
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">
