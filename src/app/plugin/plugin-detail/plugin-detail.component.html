@@ -21,16 +21,20 @@
 
         <dt class="col-md-4">Repository:</dt>
         <dd class="col-md-8">
-          <a href={{plugin.repository}}>
-          {{plugin.repository || "N/A"}}
-          </a>
+          <div *ngIf="plugin.repository; else notApplicable">
+            <a href={{plugin.repository}}>
+              {{plugin.repository}}
+            </a>
+          </div>
         </dd>
 
         <dt class="col-md-4">Website:</dt>
         <dd class="col-md-8">
-          <a href={{plugin.website}}>
-            {{plugin.website || "N/A"}}
-          </a>
+          <div *ngIf="plugin.website; else notApplicable">
+            <a href={{plugin.website}}>
+              {{plugin.website}}
+            </a>
+          </div>
         </dd>
 
         <dt class="col-md-4">Citation:</dt>
@@ -134,3 +138,5 @@
     </button>
   </div>
 </ng-template>
+
+<ng-template #notApplicable>N/A</ng-template>
