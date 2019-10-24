@@ -13,8 +13,32 @@
         <dt class="col-md-4">Version:</dt>
         <dd class="col-md-8">{{plugin.version}}</dd>
 
-        <dt class="col-md-4">Creator:</dt>
-        <dd class="col-md-8">{{plugin.creator || "N/A"}}</dd>
+        <dt class="col-md-4">Author:</dt>
+        <dd class="col-md-8">{{plugin.author || "N/A"}}</dd>
+
+        <dt class="col-md-4">Institution:</dt>
+        <dd class="col-md-8">{{plugin.institution || "N/A"}}</dd>
+
+        <dt class="col-md-4">Repository:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="plugin.repository; else notApplicable">
+            <a href={{plugin.repository}}>
+              {{plugin.repository}}
+            </a>
+          </div>
+        </dd>
+
+        <dt class="col-md-4">Website:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="plugin.website; else notApplicable">
+            <a href={{plugin.website}}>
+              {{plugin.website}}
+            </a>
+          </div>
+        </dd>
+
+        <dt class="col-md-4">Citation:</dt>
+        <dd class="col-md-8">{{plugin.citation || "N/A"}}</dd>
 
         <dt class="col-md-4">Description:</dt>
         <dd class="col-md-8">{{plugin.description}}</dd>
@@ -114,3 +138,5 @@
     </button>
   </div>
 </ng-template>
+
+<ng-template #notApplicable>N/A</ng-template>
