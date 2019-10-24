@@ -3,7 +3,11 @@ export class Plugin {
   name: string;
   version: string;
   description: string;
-  creator: string;
+  author: string;
+  institution: string;
+  repository: string;
+  website: string;
+  citation: string;
   creationDate: Date;
   containerId: string;
   title: string;
