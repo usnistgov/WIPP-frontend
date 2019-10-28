@@ -14,7 +14,8 @@ import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
   styleUrls: ['./workflow-list.component.css']
 })
 export class WorkflowListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'status', 'creationDate', 'startTime', 'endTime'];
+  displayedColumns: string[] = ['name', 'status', 'creationDate', 'endTime'];
+  // displayedColumns: string[] = ['name', 'status', 'creationDate', 'startTime', 'endTime'];
   workflows: Observable<Workflow[]>;
   resultsLength = 0;
   pageSize = 10;
