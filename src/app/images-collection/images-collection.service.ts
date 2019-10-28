@@ -6,6 +6,7 @@ import {map} from 'rxjs/operators';
 import {Image, PaginatedImages} from './image';
 import {MetadataFile, PaginatedMetadataFiles} from './metadata-file';
 import {environment} from '../../environments/environment';
+import {Job} from '../job/job';
 
 @Injectable({
   providedIn: 'root'
@@ -171,5 +172,9 @@ export class ImagesCollectionService {
 
   getMetadataFilesUrl(imagesCollection: ImagesCollection): string {
     return `${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`;
+  }
+
+  getJob(jobUrl: string): Observable<Job> {
+    return this.http.get<Job>(jobUrl);
   }
 }
