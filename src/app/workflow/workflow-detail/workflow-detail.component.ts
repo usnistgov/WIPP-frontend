@@ -137,6 +137,11 @@ export class WorkflowDetailComponent implements OnInit {
       this.workflowService.createJob(task).subscribe(job => {
         this.resetForm();
         this.getJobs();
+      }, error => {
+        this.resetForm();
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Error while creating new task';
+        modalRefErr.componentInstance.message = error.error;
       });
     }, (result) => {
       this.resetForm();
