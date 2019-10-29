@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PluginService} from '../../plugin/plugin.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
@@ -21,7 +21,7 @@ import urljoin from 'url-join';
   styleUrls: ['./workflow-detail.component.css']
 })
 
-export class WorkflowDetailComponent implements OnInit {
+export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   workflow: Workflow = new Workflow();
 
@@ -424,5 +424,9 @@ export class WorkflowDetailComponent implements OnInit {
     if (this.workflow.generatedName) {
       this.argoUiLink = urljoin(this.argoUiBaseUrl, this.workflow.generatedName);
     }
+  }
+
+  ngOnDestroy() {
+    this.modalService.dismissAll();
   }
 }
