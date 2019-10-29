@@ -27,16 +27,22 @@
           }}
         </dd>
 
-
         <dt class="col-md-4">Source job:</dt>
         <dd class="col-md-8">
-          <!-- FIXME: add link to source job if any -->
-          <a data-ng-if="sourceJob">
-            <!--data-ui-sref="imageProcessing.jobs.detail({jobId: sourceJob.id})">-->
-            <!--{{sourceJob.name}}-->
-          </a>
-          <span data-ng-if="!sourceJob">Uploaded</span>
+          <span *ngIf="sourceJob; then jobTemplate; else uploadedTemplate"></span>
+          <ng-template #jobTemplate>
+            <a (click)="displayJobModal(imagesCollection.sourceJob)"
+               class="wipp-link"
+               ngbTooltip="Show Job"
+               placement="left">
+              {{sourceJob.name}}
+            </a>
+          </ng-template>
+          <ng-template #uploadedTemplate>
+            Uploaded
+          </ng-template>
         </dd>
+
       </dl>
     </div>
     <div class="col-md-3 text-right">
@@ -197,7 +203,7 @@
   </div>
 
   <table mat-table [dataSource]="images" (matSortChange)="imagesSortChanged($event)"
-         matSort  matSortActive="fileName" matSortDisableClear matSortDirection="asc">
+         matSort matSortActive="fileName" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
@@ -266,8 +272,8 @@
               <input matInput [(ngModel)]="goToPageImages" placeholder="Go to page">
             </mat-form-field>
           <button class="btn-xs goToButton"
-                (click)="goToPageImage()"
-                [disabled]="goToPageImages<1 ||
+                  (click)="goToPageImage()"
+                  [disabled]="goToPageImages<1 ||
                  goToPageImages>= imagesCollection.numberOfImages/pageSizeImages+1 ||
                  !goToPageImages">
           <span class="goToTxt">Go</span>
@@ -275,8 +281,9 @@
         </button>
         </span>
       </div>
-      <div class="col-md-4" >
-        <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSizeImages" [pageSizeOptions]="pageSizeOptions" #imagesPaginator></mat-paginator>
+      <div class="col-md-4">
+        <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSizeImages"
+                       [pageSizeOptions]="pageSizeOptions" #imagesPaginator></mat-paginator>
       </div>
     </div>
   </div>
@@ -305,7 +312,7 @@
   </div>
 
   <table mat-table [dataSource]="metadataFiles" (matSortChange)="metadataSortChanged($event)" #metadataFilesSort
-         matSort  matSortActive="name" matSortDisableClear matSortDirection="asc">
+         matSort matSortActive="name" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
@@ -366,8 +373,8 @@
               <input matInput [(ngModel)]="goToPageMetadataFiles" placeholder="Go to page">
             </mat-form-field>
           <button class="btn-xs goToButton"
-                (click)="goToPageMetadata()"
-                [disabled]="goToPageMetadataFiles<1 ||
+                  (click)="goToPageMetadata()"
+                  [disabled]="goToPageMetadataFiles<1 ||
                  goToPageMetadataFiles> imagesCollection.numberOfMetadataFiles/pageSizeMetadataFiles+1 ||
                   !goToPageMetadataFiles">
           <span class="goToTxt">Go</span>
@@ -377,7 +384,9 @@
       </div>
 
       <div class="col-md-4">
-        <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
+        <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles"
+                       [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions"
+                       #metadataFilesPaginator></mat-paginator>
       </div>
 
     </div>
