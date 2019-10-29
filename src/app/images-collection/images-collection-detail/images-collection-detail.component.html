@@ -27,15 +27,23 @@
           }}
         </dd>
 
-          <dt *ngIf="sourceJob" class="col-md-4">Source job:</dt>
-          <dd *ngIf="sourceJob" class="col-md-8">
-              <a (click)="displayJobModal(imagesCollection.sourceJob)"
-                 class="wipp-link"
-                 ngbTooltip="Show Job"
-                 placement="left">
-                {{sourceJob.name}}
-              </a>
-          </dd>
+        <dt class="col-md-4">Source job:</dt>
+        <dd class="col-md-8">
+          <span *ngIf="sourceJob; then jobTemplate; else uploadedTemplate"></span>
+          <ng-template #jobTemplate>
+            <a (click)="displayJobModal(imagesCollection.sourceJob)"
+               class="wipp-link"
+               ngbTooltip="Show Job"
+               placement="left">
+              {{sourceJob.name}}
+            </a>
+          </ng-template>
+          <ng-template #uploadedTemplate>
+            <a>
+              Uploaded
+            </a>
+          </ng-template>
+        </dd>
 
       </dl>
     </div>
@@ -197,7 +205,7 @@
   </div>
 
   <table mat-table [dataSource]="images" (matSortChange)="imagesSortChanged($event)"
-         matSort  matSortActive="fileName" matSortDisableClear matSortDirection="asc">
+         matSort matSortActive="fileName" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
@@ -276,7 +284,8 @@
         </span>
       </div>
       <div class="col-md-4">
-        <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSizeImages" [pageSizeOptions]="pageSizeOptions" #imagesPaginator></mat-paginator>
+        <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSizeImages"
+                       [pageSizeOptions]="pageSizeOptions" #imagesPaginator></mat-paginator>
       </div>
     </div>
   </div>
@@ -305,7 +314,7 @@
   </div>
 
   <table mat-table [dataSource]="metadataFiles" (matSortChange)="metadataSortChanged($event)" #metadataFilesSort
-         matSort  matSortActive="name" matSortDisableClear matSortDirection="asc">
+         matSort matSortActive="name" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
@@ -377,7 +386,9 @@
       </div>
 
       <div class="col-md-4">
-        <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles" [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator></mat-paginator>
+        <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles"
+                       [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions"
+                       #metadataFilesPaginator></mat-paginator>
       </div>
 
     </div>
