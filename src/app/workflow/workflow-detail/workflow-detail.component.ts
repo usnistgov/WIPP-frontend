@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PluginService} from '../../plugin/plugin.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
@@ -21,7 +21,7 @@ import urljoin from 'url-join';
   styleUrls: ['./workflow-detail.component.css']
 })
 
-export class WorkflowDetailComponent implements OnInit {
+export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   workflow: Workflow = new Workflow();
 
@@ -82,7 +82,7 @@ export class WorkflowDetailComponent implements OnInit {
       this.workflow = workflow;
       this.updateArgoUrl();
     });
-    this.pluginService.getPlugins({size: Number.MAX_SAFE_INTEGER, sort: 'name'})
+    this.pluginService.getAllPluginsOrderedByName()
       .subscribe(plugins => {
         this.pluginList = plugins.plugins;
         this.generateSchema(this.pluginList);
@@ -137,6 +137,11 @@ export class WorkflowDetailComponent implements OnInit {
       this.workflowService.createJob(task).subscribe(job => {
         this.resetForm();
         this.getJobs();
+      }, error => {
+        this.resetForm();
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Error while creating new task';
+        modalRefErr.componentInstance.message = error.error;
       });
     }, (result) => {
       this.resetForm();
@@ -419,5 +424,9 @@ export class WorkflowDetailComponent implements OnInit {
     if (this.workflow.generatedName) {
       this.argoUiLink = urljoin(this.argoUiBaseUrl, this.workflow.generatedName);
     }
+  }
+
+  ngOnDestroy() {
+    this.modalService.dismissAll();
   }
 }
