@@ -99,7 +99,7 @@ pipeline {
                                 kubectl apply -f services.yaml
                             '''
                         }
-                    )
+                    }
                 }
             }
         }
