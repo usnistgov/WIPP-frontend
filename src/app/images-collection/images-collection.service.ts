@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, of as observableOf} from 'rxjs';
 import {ImagesCollection, PaginatedImagesCollections} from './images-collection';
 import {map} from 'rxjs/operators';
 import {Image, PaginatedImages} from './image';
@@ -17,11 +17,12 @@ export class ImagesCollectionService {
 
   constructor(
     private http: HttpClient
-  ) {}
+  ) {
+  }
 
   getImagesCollections(params): Observable<PaginatedImagesCollections> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
     if (params) {
@@ -40,7 +41,7 @@ export class ImagesCollectionService {
 
   getImagesCollectionsByNameContainingIgnoreCase(params, name): Observable<PaginatedImagesCollections> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
     let httpParams = new HttpParams().set('name', name);
@@ -84,7 +85,7 @@ export class ImagesCollectionService {
 
   setImagesCollectionName(imagesCollection: ImagesCollection, name: string): Observable<ImagesCollection> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
     return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
@@ -92,7 +93,7 @@ export class ImagesCollectionService {
 
   getImages(imagesCollection: ImagesCollection, params): Observable<PaginatedImages> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
     if (params) {
@@ -112,7 +113,7 @@ export class ImagesCollectionService {
 
   getMetadataFiles(imagesCollection: ImagesCollection, params): Observable<PaginatedMetadataFiles> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
     if (params) {
@@ -160,7 +161,7 @@ export class ImagesCollectionService {
 
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
     return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {locked: true}, httpOptions);
@@ -174,7 +175,14 @@ export class ImagesCollectionService {
     return `${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`;
   }
 
-  getJob(jobUrl: string): Observable<Job> {
+  getJob(jobUrl: String): Observable<Job> {
     return this.http.get<Job>(jobUrl);
+  }
+
+  getSourceJob(imagesCollection: ImagesCollection): Observable<Job> {
+    if (imagesCollection._links['sourceJob']) {
+      return this.getJob(imagesCollection._links['sourceJob']['href']);
+    }
+    return observableOf(null);
   }
 }
