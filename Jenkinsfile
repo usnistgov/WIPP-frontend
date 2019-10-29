@@ -9,12 +9,8 @@ pipeline {
     }
     environment {
         PROJECT_NAME = "WIPP-frontend"
-        ARTIFACTORY_URL = "https://builds.aws.labshare.org/artifactory/labshare"
         ARTIFACT_PATH = "deploy/docker"
         DOCKER_VERSION = readFile(file: 'deploy/docker/VERSION').trim()
-        JUPYTERHUB_URL = "http://j.ci.aws.labshare.org"
-        VISIONUI_URL = "http://vision-ui.ci.aws.labshare.org"
-        ARGOUIBASE_URL = "http://argo-ui.ci.aws.labshare.org/workflows/default"
     }
     triggers {
         pollSCM('H/2 * * * *')
@@ -46,14 +42,19 @@ pipeline {
                 environment name: 'SKIP_BUILD', value: 'false'
             }
             steps {
-                script {
-                    sh 'npm ci'
-                    sh 'npm run ng build -- --prod'
-                    sh 'tar -czf ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz -C dist .'
-                }
-                withCredentials([string(credentialsId: 'ARTIFACTORY_USER', variable: 'ARTIFACTORY_USER'),
-                                    string(credentialsId: 'ARTIFACTORY_TOKEN', variable: 'ARTIFACTORY_TOKEN')]) {
-                    sh "curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN} -T ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz ${ARTIFACTORY_URL}/${PROJECT_NAME}/${ARTIFACT_VERSION}.tar.gz"
+                // Config JSON file is stored in Jenkins and should contain sensitive environment values.
+                configFileProvider([configFile(fileId: 'env-ci', targetLocation: 'env-ci.json')]) {
+                    script {
+                        sh 'npm ci'
+                        sh 'npm run ng build -- --prod'
+                        sh 'tar -czf ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz -C dist .'
+
+                        def urls = readJSON file: 'env-ci.json'
+                    }
+                    withCredentials([string(credentialsId: 'ARTIFACTORY_USER', variable: 'ARTIFACTORY_USER'),
+                                        string(credentialsId: 'ARTIFACTORY_TOKEN', variable: 'ARTIFACTORY_TOKEN')]) {
+                        sh "curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN} -T ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz ${urls.ARTIFACTORY_URL}/${PROJECT_NAME}/${ARTIFACT_VERSION}.tar.gz"
+                    }
                 }
             }
         }
@@ -78,24 +79,26 @@ pipeline {
             }
         }
         stage('Deploy WIPP to Kubernetes') {
-            environment {
-                FRONTEND_HOST_NAME = "wipp-ui.ci.aws.labshare.org"
-            }
             steps {
                 dir('deploy/kubernetes') {
-                    script {
-                      sh "sed -i 's/FRONTEND_VERSION_VALUE/${DOCKER_VERSION}/g' frontend-deployment.yaml"
-                      sh "sed -i 's|JUPYTERHUB_URL_VALUE|${JUPYTERHUB_URL}|g' frontend-deployment.yaml"
-                      sh "sed -i 's|VISIONUI_URL_VALUE|${VISIONUI_URL}|g' frontend-deployment.yaml"
-                      sh "sed -i 's|ARGOUIBASE_URL_VALUE|${ARGOUIBASE_URL}|g' frontend-deployment.yaml"
-                      sh "sed -i 's/FRONTEND_HOST_NAME_VALUE/${FRONTEND_HOST_NAME}/g' services.yaml"
-                    }
-                    withAWS(credentials:'aws-jenkins-eks') {
-                        sh "aws --region ${AWS_REGION} eks update-kubeconfig --name ${KUBERNETES_CLUSTER_NAME}"
-                        sh '''
-                            kubectl apply -f frontend-deployment.yaml
-                            kubectl apply -f services.yaml
-                        '''
+                    // Config JSON file is stored in Jenkins and should contain sensitive environment values.
+                    configFileProvider([configFile(fileId: 'env-ci', targetLocation: 'env-ci.json')]) {
+                        script {
+                            def urls = readJSON file: 'env-ci.json'
+
+                            sh "sed -i 's/FRONTEND_VERSION_VALUE/${DOCKER_VERSION}/g' frontend-deployment.yaml"
+                            sh "sed -i 's|JUPYTERHUB_URL_VALUE|${urls.JUPYTERHUB_URL}|g' frontend-deployment.yaml"
+                            sh "sed -i 's|VISIONUI_URL_VALUE|${urls.VISIONUI_URL}|g' frontend-deployment.yaml"
+                            sh "sed -i 's|ARGOUIBASE_URL_VALUE|${urls.ARGOUIBASE_URL}|g' frontend-deployment.yaml"
+                            sh "sed -i 's/FRONTEND_HOST_NAME_VALUE/${urls.FRONTEND_HOST_NAME}/g' services.yaml"
+                        }
+                        withAWS(credentials:'aws-jenkins-eks') {
+                            sh "aws --region ${AWS_REGION} eks update-kubeconfig --name ${KUBERNETES_CLUSTER_NAME}"
+                            sh '''
+                                kubectl apply -f frontend-deployment.yaml
+                                kubectl apply -f services.yaml
+                            '''
+                        }
                     }
                 }
             }
