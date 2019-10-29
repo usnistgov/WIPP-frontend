@@ -14,8 +14,10 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 export class StitchingVectorNewComponent implements OnInit {
 
   stitchingVector: StitchingVector = new StitchingVector();
+  fileMaxSizeBytes = 5000000;
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
+  @ViewChild('file') file: ElementRef;
 
   constructor(public activeModal: NgbActiveModal, private modalService: NgbModal,
               private stitchingVectorService: StitchingVectorService) {
@@ -25,7 +27,16 @@ export class StitchingVectorNewComponent implements OnInit {
   }
 
   onFileSelected(event) {
-    this.stitchingVector.file = event.target.files[0];
+    const fileSize = event.target.files[0].size;
+    if (fileSize < this.fileMaxSizeBytes) {
+      this.stitchingVector.file = event.target.files[0];
+    } else {
+      const modalRef = this.modalService.open(ModalErrorComponent);
+      modalRef.componentInstance.title = 'Cannot upload stitching vector.';
+      modalRef.componentInstance.message = 'The size of the chose file is ' + fileSize +
+        ' B . The maximum size allowed is 5MB ( 5 000 000 B)';
+      this.file.nativeElement.value = '';
+    }
   }
 
   upload() {
