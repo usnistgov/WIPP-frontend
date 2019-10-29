@@ -51,6 +51,16 @@ export class PluginService {
       }));
   }
 
+  getAllPluginsOrderedByName(): Observable<PaginatedPlugins> {
+    const httpParams = new HttpParams();
+    httpOptions.params = httpParams;
+    return this.http.get<any>(this.pluginsUrl + '/search/findByOrderByNameAsc', httpOptions).pipe(
+      map((result: any) => {
+        result.plugins = result._embedded.plugins;
+        return result;
+      }));
+  }
+
   postPlugin(pluginDescriptor): Observable<Plugin> {
     const httpParams = new HttpParams();
     httpOptions.params = httpParams;

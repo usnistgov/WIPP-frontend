@@ -82,7 +82,7 @@ export class WorkflowDetailComponent implements OnInit {
       this.workflow = workflow;
       this.updateArgoUrl();
     });
-    this.pluginService.getPlugins({size: Number.MAX_SAFE_INTEGER, sort: 'name'})
+    this.pluginService.getAllPluginsOrderedByName()
       .subscribe(plugins => {
         this.pluginList = plugins.plugins;
         this.generateSchema(this.pluginList);
