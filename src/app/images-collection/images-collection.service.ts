@@ -175,13 +175,9 @@ export class ImagesCollectionService {
     return `${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`;
   }
 
-  getJob(jobUrl: String): Observable<Job> {
-    return this.http.get<Job>(jobUrl);
-  }
-
   getSourceJob(imagesCollection: ImagesCollection): Observable<Job> {
     if (imagesCollection._links['sourceJob']) {
-      return this.getJob(imagesCollection._links['sourceJob']['href']);
+      return this.http.get<Job>(imagesCollection._links['sourceJob']['href']);
     }
     return observableOf(null);
   }
