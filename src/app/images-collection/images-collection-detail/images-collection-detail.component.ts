@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, NgModule } from '@angular/core';
-import { Router, ActivatedRoute} from '@angular/router';
-import {catchError, map, startWith, switchMap, auditTime} from 'rxjs/operators';
+import {AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
 import * as Flow from '@flowjs/flow.js';
 import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
@@ -8,7 +8,7 @@ import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
 import {MatPaginator, MatSort} from '@angular/material';
-import {BehaviorSubject, merge, Observable, of as observableOf, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
@@ -21,7 +21,7 @@ import {Job} from '../../job/job';
 })
 
 @NgModule({
-  imports: [ NgbModule, NgMathPipesModule, BytesPipe, InlineEditorModule ]
+  imports: [NgbModule, NgMathPipesModule, BytesPipe, InlineEditorModule]
 })
 export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
@@ -35,8 +35,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
 
   pageSizeOptions: number[] = [10, 25, 50, 100];
-  imagesParamsChange: BehaviorSubject<{index: number, size: number, sort: string}>;
-  metadataParamsChange: BehaviorSubject<{index: number, size: number, sort: string}>;
+  imagesParamsChange: BehaviorSubject<{ index: number, size: number, sort: string }>;
+  metadataParamsChange: BehaviorSubject<{ index: number, size: number, sort: string }>;
 
   uploadOption = 'regular';
   resultsLengthImages = 0;
@@ -87,7 +87,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   goToPageImage() {
     if (this.imagesPaginator.pageIndex !== this.goToPageImages - 1) {
-       this.imagesPaginator.pageIndex = this.goToPageImages - 1;
+      this.imagesPaginator.pageIndex = this.goToPageImages - 1;
       this.imagesParamsChange.next({index: this.goToPageImages - 1, size: this.pageSizeImages, sort: this.imagesParamsChange.value.sort});
       this.goToPageImages = '';
     }
@@ -106,7 +106,11 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   goToPageMetadata() {
     if (this.metadataFilesPaginator.pageIndex !== this.goToPageMetadataFiles - 1) {
       this.metadataFilesPaginator.pageIndex = this.goToPageMetadataFiles - 1;
-      this.metadataParamsChange.next({index: this.goToPageMetadataFiles - 1, size: this.pageSizeMetadataFiles, sort: this.metadataParamsChange.value.sort});
+      this.metadataParamsChange.next({
+        index: this.goToPageMetadataFiles - 1,
+        size: this.pageSizeMetadataFiles,
+        sort: this.metadataParamsChange.value.sort
+      });
       this.goToPageMetadataFiles = '';
     }
   }
@@ -119,7 +123,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.$throttleRefresh.pipe(
       auditTime(1000),
       switchMap(() => this.refresh()))
-    .subscribe();
+      .subscribe();
   }
 
   ngAfterViewInit() {
@@ -140,15 +144,15 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   refresh() {
     return this.getImagesCollection().pipe(
       map(imagesCollection => {
-      this.imagesCollection = imagesCollection;
-      this.getImages();
-      this.getMetadataFiles();
-      if (this.imagesCollection.numberImportingImages !== 0) {
-        this.$throttleRefresh.next();
-      }
-      this.getSourceJob();
-      return imagesCollection;
-    }));
+        this.imagesCollection = imagesCollection;
+        this.getImages();
+        this.getMetadataFiles();
+        if (this.imagesCollection.numberImportingImages !== 0) {
+          this.$throttleRefresh.next();
+        }
+        this.getSourceJob();
+        return imagesCollection;
+      }));
   }
 
   getImagesCollection() {
@@ -209,12 +213,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       imagesCollection.numberOfMetadataFiles;
   }
 
-    getSourceJob() {
-    if (this.imagesCollection._links['sourceJob']) {
-      this.imagesCollectionService.getJob(this.imagesCollection._links['sourceJob']['href']).subscribe(job => this.sourceJob = job);
-    }
-  }
-
   updateCollectionName(name: string): void {
     this.imagesCollectionService.setImagesCollectionName(
       this.imagesCollection, name).subscribe(imagesCollection => {
@@ -239,7 +237,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   deleteImage(image: Image): void {
     this.imagesCollectionService.deleteImage(image).subscribe(result => {
-       this.$throttleRefresh.next();
+      this.$throttleRefresh.next();
     });
   }
 
@@ -279,7 +277,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     const imagesUploadUrl = this.imagesCollectionService.getImagesUrl(this.imagesCollection);
     const metadataFilesUploadUrl = this.imagesCollectionService.getMetadataFilesUrl(this.imagesCollection);
 
-    this.flowHolder.opts.target = function(file) {
+    this.flowHolder.opts.target = function (file) {
       const imagesExtensions = ['tif', 'tiff', 'jpg', 'jpeg', 'png'];
       const isImage = imagesExtensions.indexOf(
         file.getExtension()) >= 0;
@@ -287,7 +285,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     };
 
     const self = this;
-    this.flowHolder.on('fileAdded', function(file, event) {
+    this.flowHolder.on('fileAdded', function (file, event) {
       console.log('Added');
       console.log(file, event);
 
@@ -323,16 +321,16 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       }
 
     });
-    this.flowHolder.on('fileSuccess', function(file, message) {
+    this.flowHolder.on('fileSuccess', function (file, message) {
       this.removeFile(file);
-       self.$throttleRefresh.next();
+      self.$throttleRefresh.next();
     });
-    this.flowHolder.on('fileError', function(file, message) {
+    this.flowHolder.on('fileError', function (file, message) {
       console.log('Error');
       console.log(file, message);
       file.errorMessage = message;
     });
-    this.flowHolder.on('filesSubmitted', function(files, event) {
+    this.flowHolder.on('filesSubmitted', function (files, event) {
       this.upload();
     });
   }
@@ -345,8 +343,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     return !flowFile.isComplete() || flowFile.error;
   }
 
-    displayJobModal(jobId: string) {
-    const modalRef = this.modalService.open(JobDetailComponent, { size: 'lg', backdrop: 'static' });
+  displayJobModal(jobId: string) {
+    const modalRef = this.modalService.open(JobDetailComponent, {size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {
@@ -354,6 +352,12 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       , (reason) => {
         console.log('dismissed');
       });
+  }
+
+  getSourceJob() {
+    this.imagesCollectionService.getSourceJob(this.imagesCollection).subscribe(job => {
+      this.sourceJob = job;
+    });
   }
 
 }
