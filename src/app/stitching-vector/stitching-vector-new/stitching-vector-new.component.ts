@@ -33,6 +33,7 @@ export class StitchingVectorNewComponent implements OnInit {
   onFileSelected(event) {
     const fileSize = event.target.files[0].size;
     if (fileSize <= this.fileMaxSizeBytes) {
+      this.displayAlert = false;
       this.stitchingVector.file = event.target.files[0];
     } else {
       this.displayAlertMessage('danger', 'Cannot upload stitching vector. ' + 'The size of the chosen file is ' + fileSize +
