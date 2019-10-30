@@ -38,6 +38,7 @@ export class StitchingVectorNewComponent implements OnInit {
       this.displayAlertMessage('danger', 'Cannot upload stitching vector. ' + 'The size of the chosen file is ' + fileSize +
         ' B . The maximum size allowed is 5MB ( 5 000 000 B)');
       this.file.nativeElement.value = '';
+      this.stitchingVector.file = null;
     }
   }
 
