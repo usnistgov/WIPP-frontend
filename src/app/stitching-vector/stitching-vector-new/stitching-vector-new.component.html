@@ -8,6 +8,7 @@
 </div>
 
 <div class="modal-body">
+  <ngb-alert *ngIf="displayAlert" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>
   <form name="stitchingVectorDialog">
     <div class="form-group">
 
@@ -23,9 +24,9 @@
       <small class="form-text text-muted">Enter the stitching vector message.</small>
       <div style="height: 30px"></div>
 
-      <label for="name">Stitching Vector File:</label>
+      <label for="name">Stitching Vector File (5 MB max):</label>
       <span style="color: #e32"> * </span>
-      <input type="file" (change)="onFileSelected($event)" name="file" class="col-md-12" id="file" accept="text/plain" autofocus
+      <input #file type="file" (change)="onFileSelected($event)" name="file" class="col-md-12" id="file" accept="text/plain" autofocus
              required>
       <span class="asterisk_input"></span>
     </div>
@@ -35,7 +36,7 @@
 <div class="modal-footer">
   <!--<button type="button" class="btn btn-outline-dark" (click)="cancel()">-->
   <button type="button" class="btn btn-danger" (click)="activeModal.dismiss('Cross click')" >
-     <i class="fas fa-times-circle" style="margin-right: 10px">
+    <i class="fas fa-times-circle" style="margin-right: 10px">
       <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Cancel</p>
     </i>
   </button>
