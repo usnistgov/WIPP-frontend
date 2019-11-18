@@ -30,6 +30,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   images: Observable<Image[]>;
   metadataFiles: Observable<MetadataFile[]>;
   sourceJob: Job = null;
+  showNotes = false;
+  editNotes = false;
+  imageCollectionNotes;
 
   displayedColumnsImages: string[] = ['index', 'fileName', 'size', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
@@ -220,6 +223,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  updateCollectionNotes(notes: string): void {
+    this.imagesCollectionService.setImagesCollectionNotes(
+      this.imagesCollection, notes).subscribe(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+    });
+  }
+
   lockCollection(): void {
     this.imagesCollectionService.lockImagesCollection(
       this.imagesCollection).subscribe(imagesCollection => {
@@ -358,6 +368,26 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.imagesCollectionService.getSourceJob(this.imagesCollection).subscribe(job => {
       this.sourceJob = job;
     });
+  }
+
+  changeShowNotes() {
+    this.showNotes = !this.showNotes;
+    this.editNotes = false;
+    this.imageCollectionNotes = this.imagesCollection.notes;
+  }
+
+  changeEditNotes() {
+    this.editNotes = !this.editNotes;
+  }
+
+  saveNotes() {
+    this.updateCollectionNotes(this.imageCollectionNotes);
+    this. editNotes = false;
+  }
+
+  clearNotes() {
+    this.imageCollectionNotes = this.imagesCollection.notes;
+    this.editNotes = false;
   }
 
 }

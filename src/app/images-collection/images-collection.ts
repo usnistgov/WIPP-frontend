@@ -10,6 +10,7 @@ export class ImagesCollection {
   numberOfImportErrors: number;
   numberOfMetadataFiles: number;
   metadataFilesTotalSize: number;
+  notes: string;
   pattern: string;
   _links: any;
 }
