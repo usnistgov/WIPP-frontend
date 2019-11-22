@@ -1,6 +1,6 @@
 {
   "name": "wipp-frontend",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-devel",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
