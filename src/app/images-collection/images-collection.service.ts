@@ -91,6 +91,14 @@ export class ImagesCollectionService {
     return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
   }
 
+  setImagesCollectionNotes(imagesCollection: ImagesCollection, notes: string): Observable<ImagesCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {notes: notes}, httpOptions);
+  }
+
   getImages(imagesCollection: ImagesCollection, params): Observable<PaginatedImages> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),

@@ -59,3 +59,8 @@
 .topMarge20 {
   margin-top: 20px;
 }
+
+.wideTxtArea {
+  width: 100%;
+  height: 150px;
+}
