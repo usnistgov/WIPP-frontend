@@ -6,7 +6,12 @@ import { version } from '../../package.json';
 export const environment = {
   production: false,
   version: version,
-  apiRootUrl: 'http://localhost:8080/api'
+  apiRootUrl: 'http://193.50.40.104:8080/api',
+  keycloak: {
+    "url": 'http://193.50.40.104:8180/auth',
+    "realm": 'WIPPKeycloak',
+    "clientId": 'wipp-frontend'
+  }
 };
 
 /*
