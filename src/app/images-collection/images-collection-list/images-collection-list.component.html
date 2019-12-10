@@ -45,6 +45,14 @@
     <td mat-cell *matCellDef="let row">{{row.creationDate | date}}</td>
   </ng-container>
 
+  <!-- Creation date Column -->
+  <ng-container matColumnDef="owner">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      Owner
+    </th>
+    <td mat-cell *matCellDef="let row">{{row.owner}}</td>
+  </ng-container>
+
   <!-- Images total size Column -->
   <ng-container matColumnDef="imagesTotalSize">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
