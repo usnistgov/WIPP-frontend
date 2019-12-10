@@ -94,4 +94,7 @@ export class KeycloakService {
     /*getUser(): User {
         return KeycloakService.user;
     }*/
+    isLoggedIn(): boolean {
+      return KeycloakService.auth.authz.authenticated;
+    }
 }
