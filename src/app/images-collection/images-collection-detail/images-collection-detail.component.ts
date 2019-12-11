@@ -1,18 +1,22 @@
 import {AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
+import {auditTime, catchError, map, startWith, switchMap} from 'rxjs/operators';
 import * as Flow from '@flowjs/flow.js';
 import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
-import {MatPaginator, MatSort} from '@angular/material';
+import {MatAutocomplete, MatAutocompleteSelectedEvent, MatPaginator, MatSort, MatChipInputEvent, MatChipInput} from '@angular/material';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
+import {FormControl} from '@angular/forms';
+import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
+import {MatChipsModule} from '@angular/material/chips';
+import {Tag} from '../tag';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -29,6 +33,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   imagesCollection: ImagesCollection = new ImagesCollection();
   images: Observable<Image[]>;
   metadataFiles: Observable<MetadataFile[]>;
+  tags: Observable<Tag[]>;
+  fruits: Observable <Tag[]>;
   sourceJob: Job = null;
 
   displayedColumnsImages: string[] = ['index', 'fileName', 'size', 'actions'];
@@ -37,15 +43,26 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   pageSizeOptions: number[] = [10, 25, 50, 100];
   imagesParamsChange: BehaviorSubject<{ index: number, size: number, sort: string }>;
   metadataParamsChange: BehaviorSubject<{ index: number, size: number, sort: string }>;
+  tagsParamsChange: BehaviorSubject<{ index: number, size: number, sort: string }>;
 
   uploadOption = 'regular';
   resultsLengthImages = 0;
   resultsLengthMetadataFiles = 0;
+  resultsLengthTags = 0;
   pageSizeImages = 10;
   pageSizeMetadataFiles = 10;
   goToPageImages;
   goToPageMetadataFiles;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
+  visible = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
+  fruitCtrl = new FormControl();
+  filteredFruits: Observable<string[]>;
+  allFruits: Tag[];
+
+  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('browseDirBtn') browseDirBtn: ElementRef;
@@ -69,6 +86,11 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       sort: ''
     });
     this.metadataParamsChange = new BehaviorSubject({
+      index: 0,
+      size: this.pageSizeMetadataFiles,
+      sort: ''
+    });
+    this.tagsParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSizeMetadataFiles,
       sort: ''
@@ -133,6 +155,18 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     faRemoveElt.classList.add('fa-times');
 
     this.refresh().subscribe(imagesCollection => {
+      console.log(imagesCollection);
+      // this.fruits = this.imagesCollectionService.getTags(imagesCollection, null);
+      //
+      // this.allFruits = this.imagesCollectionService.getAllTags(imagesCollection, null);
+      console.log('allFruits');
+      console.log(this.allFruits);
+      // this.allFruits = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+      // this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
+      //   startWith(null),
+      //   map((fruit: any | null) => fruit ? this._filter(fruit) : imagesCollection.tags.slice()));
+
+
       if (!imagesCollection.locked) {
         this.initFlow();
       }
@@ -147,10 +181,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
         this.imagesCollection = imagesCollection;
         this.getImages();
         this.getMetadataFiles();
+        this.getTags();
+
         if (this.imagesCollection.numberImportingImages !== 0) {
           this.$throttleRefresh.next();
         }
         this.getSourceJob();
+
         return imagesCollection;
       }));
   }
@@ -195,6 +232,29 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
           map((data) => {
             this.resultsLengthMetadataFiles = data.page.totalElements;
             return data.metadataFiles;
+          }),
+          catchError(() => {
+            return observableOf([]);
+          })
+        );
+      })
+    );
+  }
+
+  getTags(): void {
+    const tagsParamsObservable = this.tagsParamsChange.asObservable();
+    this.tags = tagsParamsObservable.pipe(
+      switchMap((page) => {
+        console.log(page);
+        const tagsParams = {
+          pageIndex: page.index,
+          size: page.size,
+          sort: page.sort
+        };
+        return this.imagesCollectionService.getTags(this.imagesCollection).pipe(
+          map((data) => {
+            this.resultsLengthTags = data.page.totalElements;
+            return data.tags;
           }),
           catchError(() => {
             return observableOf([]);
@@ -259,6 +319,12 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  deleteAllTags(): void {
+    this.imagesCollectionService.deleteAllTags(this.imagesCollection).subscribe(result => {
+      this.$throttleRefresh.next();
+    });
+  }
+
   getPattern(): string {
     const imagesCollection = this.imagesCollection;
     if (!imagesCollection.pattern) {
@@ -276,6 +342,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     const id = this.route.snapshot.paramMap.get('id');
     const imagesUploadUrl = this.imagesCollectionService.getImagesUrl(this.imagesCollection);
     const metadataFilesUploadUrl = this.imagesCollectionService.getMetadataFilesUrl(this.imagesCollection);
+    const tagsUploadUrl = this.imagesCollectionService.getTagsUrl(this.imagesCollection);
 
     this.flowHolder.opts.target = function (file) {
       const imagesExtensions = ['tif', 'tiff', 'jpg', 'jpeg', 'png'];
@@ -358,6 +425,88 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.imagesCollectionService.getSourceJob(this.imagesCollection).subscribe(job => {
       this.sourceJob = job;
     });
+  }
+
+  add(event: MatChipInputEvent): void {
+    // TODO post objet to db and tagList
+    // console.log(event);
+    // Add fruit only when MatAutocomplete is not open
+    // To make sure this does not conflict with OptionSelected Event
+    console.log('event');
+    console.log(event);
+    if (!this.matAutocomplete.isOpen) {
+       console.log('ADD');
+      const input = event.input;
+      const value = event.value;
+
+      // Add our fruit
+      if ((value || '').trim()) {
+        const tag = new Tag();
+        tag.tagName = value.trim();
+        console.log(tag.tagName);
+        this.imagesCollectionService.addTag(tag, this.imagesCollection);
+        // this.fruits.push({'id': 13, 'name': value.trim()});
+        // this.allFruits.push({'id': 13, 'name': value.trim()});
+       }
+
+      // Reset the input value
+      if (input) {
+        input.value = '';
+      }
+
+      this.fruitCtrl.setValue(null);
+    }
+  }
+
+  addTag(tagName: String) {
+    // if tag is already in Tag List
+      // add tag to this imageCollection
+
+    // else
+      // create new Tag
+      // add tag to this imageCollection
+  }
+
+  remove(fruit: string): void {
+    // const index = this.fruits.indexOf(fruit);
+
+    // if (index >= 0) {
+    //   this.fruits.splice(index, 1);
+    //   this.imagesCollectionService.deleteTag(null);
+    // }
+
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    console.log('SELECTED');
+    console.log(event);
+
+    // console.log('event.option.viewValue');
+    // console.log(event.option.viewValue);
+    // this.fruits.push(event.option.value);
+    this.fruitInput.nativeElement.value = '';
+    this.fruitCtrl.setValue(null);
+  }
+
+  private _filter(value: string): string[] {
+
+    // console.log('filter_________');
+    // console.log(value);
+    try {
+      const filterValue = value['name'].toLowerCase();
+      // console.log('filterValue')
+      // console.log(filterValue);
+      // console.log( 'this.allFruitsSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
+      // console.log( this.fruits);
+
+      // console.log('this.allFruits.filter(fruit => fruit[name].toLowerCase().indexOf(filterValue) === 0)');
+      // console.log( this.allFruits.filter(fruit => fruit['name'].toLowerCase().indexOf(filterValue) === 0));
+
+      // return this.allFruits.filter(fruit => fruit['name'].toLowerCase().indexOf(filterValue) === 0);
+    } catch (e) {
+      return [''];
+
+    }
   }
 
 }

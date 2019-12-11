@@ -11,7 +11,7 @@ import {
   MatSortModule,
   MatTableModule,
   MatCheckboxModule,
-  MatLabel, MatFormFieldModule, MatInputModule
+  MatLabel, MatFormFieldModule, MatInputModule, MatAutocompleteModule, MatIconModule
 } from '@angular/material';
 import { ImagesCollectionNewComponent } from './images-collection-new/images-collection-new.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -19,6 +19,7 @@ import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {
   ImagesCollectionTemplateComponent
 } from './images-collection-template/images-collection-template.component';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   imports: [
@@ -35,7 +36,10 @@ import {
     MatInputModule,
     ReactiveFormsModule,
     InlineEditorModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatChipsModule
   ],
   entryComponents: [ImagesCollectionNewComponent],
   declarations: [
