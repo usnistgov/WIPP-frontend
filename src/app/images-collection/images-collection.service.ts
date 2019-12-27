@@ -16,7 +16,7 @@ import {PaginatedTags, Tag} from './tag';
 export class ImagesCollectionService {
 
   private imagesCollectionsUrl = environment.apiRootUrl + '/imagesCollections';
-  private tagsUrl = environment.apiRootUrl + '/tag';
+  private tagsUrl = environment.apiRootUrl + '/tags';
 
   constructor(
     private http: HttpClient
@@ -94,7 +94,7 @@ export class ImagesCollectionService {
     return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
   }
 
-  setImagesCollectionTags(imagesCollection: ImagesCollection, tags: string[]): Observable<ImagesCollection> {
+  setImagesCollectionTags(imagesCollection: ImagesCollection, tags: Tag[]): Observable<ImagesCollection> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
@@ -155,24 +155,17 @@ export class ImagesCollectionService {
       }));
   }
 
-  getAllTags(imagesCollection: ImagesCollection, params): Observable<PaginatedTags> {
-     const httpOptions = {
+  getAllTags(): Observable<Tag> {
+    const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    if (params) {
-      const page = params.pageIndex ? params.pageIndex : null;
-      const size = params.size ? params.size : null;
-      const sort = params.sort ? params.sort : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
-      httpOptions.params = httpParams;
-    }
-    return this.http.get<any>(`${this.imagesCollectionsUrl}/${imagesCollection.id}/tags`, httpOptions).pipe(
-      map((result: any) => {
-        console.log(result); // <--it's an object
-        result.tags = result._embedded.tags;
-        return result;
-      }));
+    // 1000 is the maximum number of results
+    const httpParams = new HttpParams().set('page', '0').set('size', String(1000)).set('sort', null);
+    httpOptions.params = httpParams;
+    return this.http.get<Tag[]>(`${this.tagsUrl}`, httpOptions).pipe(map((allTags: any ) => {
+      console.log(allTags);
+      allTags.tags = allTags._embedded.tags; return allTags; }));
   }
 
   createImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
@@ -203,19 +196,30 @@ export class ImagesCollectionService {
     }
   }
 
-  addTag(tag: Tag, imagesCollection: ImagesCollection) {
-    // return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {locked: true});
-    return this.http.post<Tag>(`${this.tagsUrl}`, {locked: true});
+  createTag(tag: Tag) {
+    return this.http.post<Tag>(`${this.tagsUrl}`, tag);
+  }
+
+  addTag(tagList: Tag[], imagesCollection: ImagesCollection, allTags: Tag[]) {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    const tagToAdd = '{"tags": [';
+    const end = '] }';
+    const list = [];
+    for (const tag of tagList) {
+
+      if (!allTags.some(e => e.tagName === tag.tagName) ) {
+      this.createTag(tag).subscribe();
+      }
+    list.push('{"tagName": "' + tag.tagName + '"}' );
+    }
+    return this.http.patch<Tag>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, tagToAdd + list + end, httpOptions);
   }
 
   deleteTag(tag: Tag) {
     return this.http.delete<Image>(tag._links.self.href);
-  }
-
-  deleteAllTags(imagesCollection: ImagesCollection) {
-    if (imagesCollection.numberOfTags > 0) {
-      return this.http.delete(`${this.imagesCollectionsUrl}/${imagesCollection.id}/tag`);
-    }
   }
 
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
@@ -244,46 +248,4 @@ export class ImagesCollectionService {
     }
     return observableOf(null);
   }
-
-
-  // getByTagContainingIgnoreCase(params, tag): Observable<ImagesCollection> {
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({'Content-Type': 'application/json'}),
-  //     params: {}
-  //   };
-  //   let httpParams = new HttpParams().set('tag', tag);
-  //   if (params) {
-  //     const page = params.pageIndex ? params.pageIndex : null;
-  //     const size = params.size ? params.size : null;
-  //     const sort = params.sort ? params.sort : null;
-  //     httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
-  //   }
-  //   httpOptions.params = httpParams;
-  //   return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByTagContainingIgnoreCase', httpOptions).pipe(
-  //     map((result: any) => {
-  //       result.imagesCollections = result._embedded.imagesCollections;
-  //       return result;
-  //     }));
-  // }
-  //
-  // getByTag(params, tag): Observable<ImagesCollection> {
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({'Content-Type': 'application/json'}),
-  //     params: {}
-  //   };
-  //   let httpParams = new HttpParams().set('tag', tag);
-  //   if (params) {
-  //     const page = params.pageIndex ? params.pageIndex : null;
-  //     const size = params.size ? params.size : null;
-  //     const sort = params.sort ? params.sort : null;
-  //     httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
-  //   }
-  //   httpOptions.params = httpParams;
-  //   return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByTag', httpOptions).pipe(
-  //     map((result: any) => {
-  //       result.imagesCollections = result._embedded.imagesCollections;
-  //       return result;
-  //     }));
-  // }
-
 }

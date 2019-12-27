@@ -1,34 +1,5 @@
 <h3 class="wipp-title">Collection detail</h3>
 
-<mat-form-field class="example-chip-list">
-  <mat-chip-list #chipList aria-label="Fruit selection">
-    <mat-chip
-      *ngFor="let fruit of fruits"
-      [selectable]=true
-      [removable]=true
-      (removed)="remove(fruit)"
->
-      {{fruit.name}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-    <input
-      placeholder="Add tags..."
-      #fruitInput
-      [formControl]="fruitCtrl"
-      [matAutocomplete]="auto"
-      [matChipInputFor]="chipList"
-      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [matChipInputAddOnBlur]="addOnBlur"
-      (matChipInputTokenEnd)="add($event)">
-  </mat-chip-list>
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
-      {{fruit.name}}
-    </mat-option>
-  </mat-autocomplete>
-</mat-form-field>
-
-
 <div>
   <div class="row">
     <div class="col-md-9">
@@ -423,39 +394,21 @@
   </div>
 </div>
 
-
-<mat-form-field class="example-chip-list">
-  <mat-chip-list #chipList aria-label="Fruit selection">
-    <mat-chip *ngFor="let fruit of imagesCollection.tags"
-              [selectable]="selectable"
-             [removable]="removable"
-              (removed)="remove(fruit)">
-      {{fruit.name}}
-      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-    </mat-chip>
-    <input placeholder="New fruit..."
-           [matChipInputFor]="chipList"
-           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           [matChipInputAddOnBlur]="addOnBlur"
-           (matChipInputTokenEnd)="add($event)">
-  </mat-chip-list>
-</mat-form-field>
-
 <mat-form-field class="example-chip-list">
   <mat-chip-list #chipList aria-label="Fruit selection">
     <mat-chip
-      *ngFor="let fruit of imagesCollection.tags"
-      [selectable]=true
-      [removable]=true
-      (removed)="remove(fruit)"
+      *ngFor="let fruit of tagList"
+    [selectable]="selectable"
+    [removable]="removable"
+    (removed)="remove(fruit)"
 >
-      {{fruit.name}}
-      <mat-icon matChipRemove>cancel</mat-icon>
+      {{fruit.tagName}}
+      <mat-icon matChipRemove (click)="remove(fruit)">cancel</mat-icon>
     </mat-chip>
     <input
       placeholder="Add tags..."
-      #fruitInput
-      [formControl]="fruitCtrl"
+      #tagInput
+      [formControl]="tagCtrl"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -463,8 +416,9 @@
       (matChipInputTokenEnd)="add($event)">
   </mat-chip-list>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
-      {{fruit.name}}
+    <mat-option *ngFor="let fruit of (filteredTags | async)" [value]="fruit">
+      {{fruit.tagName}}
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>
+<button class="btn btn-default" (click)="saveTags()"> Save tags </button>

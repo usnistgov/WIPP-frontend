@@ -15,7 +15,6 @@ import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
 import {FormControl} from '@angular/forms';
 import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
-import {MatChipsModule} from '@angular/material/chips';
 import {Tag} from '../tag';
 
 @Component({
@@ -33,9 +32,10 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   imagesCollection: ImagesCollection = new ImagesCollection();
   images: Observable<Image[]>;
   metadataFiles: Observable<MetadataFile[]>;
-  tags: Observable<Tag[]>;
-  fruits: Observable <Tag[]>;
+  tags: Tag[];
+  tagList: Tag[];
   sourceJob: Job = null;
+  filteredTags: Observable<Tag[]>;
 
   displayedColumnsImages: string[] = ['index', 'fileName', 'size', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
@@ -48,20 +48,17 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   uploadOption = 'regular';
   resultsLengthImages = 0;
   resultsLengthMetadataFiles = 0;
-  resultsLengthTags = 0;
   pageSizeImages = 10;
   pageSizeMetadataFiles = 10;
   goToPageImages;
   goToPageMetadataFiles;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
-  visible = true;
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
-  fruitCtrl = new FormControl();
-  filteredFruits: Observable<string[]>;
-  allFruits: Tag[];
+  tagCtrl = new FormControl();
 
-  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
@@ -146,6 +143,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       auditTime(1000),
       switchMap(() => this.refresh()))
       .subscribe();
+
   }
 
   ngAfterViewInit() {
@@ -155,22 +153,18 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     faRemoveElt.classList.add('fa-times');
 
     this.refresh().subscribe(imagesCollection => {
-      console.log(imagesCollection);
-      // this.fruits = this.imagesCollectionService.getTags(imagesCollection, null);
-      //
-      // this.allFruits = this.imagesCollectionService.getAllTags(imagesCollection, null);
-      console.log('allFruits');
-      console.log(this.allFruits);
-      // this.allFruits = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
-      // this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-      //   startWith(null),
-      //   map((fruit: any | null) => fruit ? this._filter(fruit) : imagesCollection.tags.slice()));
-
-
+    this.imagesCollectionService.getAllTags().subscribe((data) => {
+      this.tags = data['_embedded'].tags;
+      this.filteredTags = this.tagCtrl.valueChanges.pipe(
+        startWith(null),
+        map((fruit: any | null) => fruit ? this._filter(fruit) : this.tags.slice()));
+      });
       if (!imagesCollection.locked) {
         this.initFlow();
       }
-    });
+    }
+
+    );
     // If the user changes the sort order, reset back to the first page.
     // this.sort.sortChange.subscribe(() => this.imagesPaginator.pageIndex = 0);
   }
@@ -179,6 +173,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     return this.getImagesCollection().pipe(
       map(imagesCollection => {
         this.imagesCollection = imagesCollection;
+        this.tagList = imagesCollection.tags;
         this.getImages();
         this.getMetadataFiles();
         this.getTags();
@@ -222,7 +217,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     const metadataParamsObservable = this.metadataParamsChange.asObservable();
     this.metadataFiles = metadataParamsObservable.pipe(
       switchMap((page) => {
-        console.log(page);
         const metadataParams = {
           pageIndex: page.index,
           size: page.size,
@@ -242,26 +236,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   getTags(): void {
-    const tagsParamsObservable = this.tagsParamsChange.asObservable();
-    this.tags = tagsParamsObservable.pipe(
-      switchMap((page) => {
-        console.log(page);
-        const tagsParams = {
-          pageIndex: page.index,
-          size: page.size,
-          sort: page.sort
-        };
-        return this.imagesCollectionService.getTags(this.imagesCollection).pipe(
-          map((data) => {
-            this.resultsLengthTags = data.page.totalElements;
-            return data.tags;
-          }),
-          catchError(() => {
-            return observableOf([]);
-          })
-        );
-      })
-    );
   }
 
   getNbFiles(): number {
@@ -319,12 +293,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  deleteAllTags(): void {
-    this.imagesCollectionService.deleteAllTags(this.imagesCollection).subscribe(result => {
-      this.$throttleRefresh.next();
-    });
-  }
-
   getPattern(): string {
     const imagesCollection = this.imagesCollection;
     if (!imagesCollection.pattern) {
@@ -342,7 +310,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     const id = this.route.snapshot.paramMap.get('id');
     const imagesUploadUrl = this.imagesCollectionService.getImagesUrl(this.imagesCollection);
     const metadataFilesUploadUrl = this.imagesCollectionService.getMetadataFilesUrl(this.imagesCollection);
-    const tagsUploadUrl = this.imagesCollectionService.getTagsUrl(this.imagesCollection);
 
     this.flowHolder.opts.target = function (file) {
       const imagesExtensions = ['tif', 'tiff', 'jpg', 'jpeg', 'png'];
@@ -427,26 +394,20 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // when hit space / , / enter
   add(event: MatChipInputEvent): void {
-    // TODO post objet to db and tagList
-    // console.log(event);
     // Add fruit only when MatAutocomplete is not open
     // To make sure this does not conflict with OptionSelected Event
-    console.log('event');
-    console.log(event);
+
     if (!this.matAutocomplete.isOpen) {
-       console.log('ADD');
       const input = event.input;
       const value = event.value;
 
-      // Add our fruit
       if ((value || '').trim()) {
         const tag = new Tag();
         tag.tagName = value.trim();
-        console.log(tag.tagName);
-        this.imagesCollectionService.addTag(tag, this.imagesCollection);
-        // this.fruits.push({'id': 13, 'name': value.trim()});
-        // this.allFruits.push({'id': 13, 'name': value.trim()});
+        tag.tagName = value.trim();
+        this.tagList.push(tag);
        }
 
       // Reset the input value
@@ -454,59 +415,34 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
         input.value = '';
       }
 
-      this.fruitCtrl.setValue(null);
+      this.tagCtrl.setValue(null);
     }
   }
 
-  addTag(tagName: String) {
-    // if tag is already in Tag List
-      // add tag to this imageCollection
-
-    // else
-      // create new Tag
-      // add tag to this imageCollection
-  }
-
-  remove(fruit: string): void {
-    // const index = this.fruits.indexOf(fruit);
-
-    // if (index >= 0) {
-    //   this.fruits.splice(index, 1);
-    //   this.imagesCollectionService.deleteTag(null);
-    // }
-
+  remove(tag: Tag): void {
+  const index = this.tagList.indexOf(this.tagList.find(e => e === tag));
+  this.tagList.splice(index, 1);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    console.log('SELECTED');
-    console.log(event);
-
-    // console.log('event.option.viewValue');
-    // console.log(event.option.viewValue);
-    // this.fruits.push(event.option.value);
-    this.fruitInput.nativeElement.value = '';
-    this.fruitCtrl.setValue(null);
+    this.tagList.push(event.option.value);
+    this.tagInput.nativeElement.value = '';
+    this.tagCtrl.setValue(null);
   }
 
-  private _filter(value: string): string[] {
-
-    // console.log('filter_________');
-    // console.log(value);
+  private _filter(value: string): Tag[] {
     try {
-      const filterValue = value['name'].toLowerCase();
-      // console.log('filterValue')
-      // console.log(filterValue);
-      // console.log( 'this.allFruitsSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
-      // console.log( this.fruits);
-
-      // console.log('this.allFruits.filter(fruit => fruit[name].toLowerCase().indexOf(filterValue) === 0)');
-      // console.log( this.allFruits.filter(fruit => fruit['name'].toLowerCase().indexOf(filterValue) === 0));
-
-      // return this.allFruits.filter(fruit => fruit['name'].toLowerCase().indexOf(filterValue) === 0);
+      const filterValue = value.toLowerCase();
+       return this.tags.filter(tag => !this.tagList.some(tagIn => tagIn['tagName'] === tag['tagName'])).filter(tag => tag['tagName'].toLowerCase().indexOf(filterValue) === 0);
     } catch (e) {
-      return [''];
+      return null;
 
     }
+  }
+
+  saveTags() {
+    this.imagesCollectionService.addTag(this.tagList, this.imagesCollection, this.tags).subscribe();
+    this.refresh();
   }
 
 }
