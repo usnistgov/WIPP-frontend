@@ -7,7 +7,14 @@ import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
-import {MatAutocomplete, MatAutocompleteSelectedEvent, MatPaginator, MatSort, MatChipInputEvent, MatChipInput} from '@angular/material';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+  MatPaginator,
+  MatSort,
+  MatChipInputEvent,
+  MatChipInput,
+} from '@angular/material';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
@@ -16,6 +23,7 @@ import {Job} from '../../job/job';
 import {FormControl} from '@angular/forms';
 import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {Tag} from '../tag';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -76,6 +84,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private router: Router,
     private elem: ElementRef,
     private modalService: NgbModal,
+    private spinner: NgxSpinnerService,
     private imagesCollectionService: ImagesCollectionService) {
     this.imagesParamsChange = new BehaviorSubject({
       index: 0,
@@ -83,11 +92,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       sort: ''
     });
     this.metadataParamsChange = new BehaviorSubject({
-      index: 0,
-      size: this.pageSizeMetadataFiles,
-      sort: ''
-    });
-    this.tagsParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSizeMetadataFiles,
       sort: ''
@@ -153,7 +157,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     faRemoveElt.classList.add('fa-times');
 
     this.refresh().subscribe(imagesCollection => {
-    this.imagesCollectionService.getAllTags().subscribe((data) => {
+    this.imagesCollectionService.getTags().subscribe((data) => {
       this.tags = data['_embedded'].tags;
       this.filteredTags = this.tagCtrl.valueChanges.pipe(
         startWith(null),
@@ -173,10 +177,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     return this.getImagesCollection().pipe(
       map(imagesCollection => {
         this.imagesCollection = imagesCollection;
-        this.tagList = imagesCollection.tags;
+        this.tagList = imagesCollection.tags ? imagesCollection.tags.slice() : [];
         this.getImages();
         this.getMetadataFiles();
-        this.getTags();
 
         if (this.imagesCollection.numberImportingImages !== 0) {
           this.$throttleRefresh.next();
@@ -233,9 +236,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
         );
       })
     );
-  }
-
-  getTags(): void {
   }
 
   getNbFiles(): number {
@@ -396,10 +396,11 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   // when hit space / , / enter
   add(event: MatChipInputEvent): void {
-    // Add fruit only when MatAutocomplete is not open
+    // Add tag only when MatAutocomplete is not open
     // To make sure this does not conflict with OptionSelected Event
 
     if (!this.matAutocomplete.isOpen) {
+
       const input = event.input;
       const value = event.value;
 
@@ -407,7 +408,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
         const tag = new Tag();
         tag.tagName = value.trim();
         tag.tagName = value.trim();
-        this.tagList.push(tag);
+        if (!this.tagList.some( x => x.tagName === tag.tagName)) {this.tagList.push(tag); }
+
+
        }
 
       // Reset the input value
@@ -425,9 +428,11 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.tagList.push(event.option.value);
+    if (!this.tagList.some( x => x.tagName === event.option.value.tagName)) {
+      this.tagList.push(event.option.value);
     this.tagInput.nativeElement.value = '';
     this.tagCtrl.setValue(null);
+    }
   }
 
   private _filter(value: string): Tag[] {
@@ -440,9 +445,16 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     }
   }
 
+
   saveTags() {
-    this.imagesCollectionService.addTag(this.tagList, this.imagesCollection, this.tags).subscribe();
-    this.refresh();
+    this.imagesCollectionService.addTag(this.tagList, this.imagesCollection, this.tags).subscribe(data => {
+      this.refresh().subscribe();
+    });
+  }
+
+  isArrayEqual(array1 , array2) {
+    if (!array1 || !array2) {return false;
+    } else {return ( (!array1.some(x => array2.indexOf(x) === -1)) && array1.length === array2.length); }
   }
 
 }

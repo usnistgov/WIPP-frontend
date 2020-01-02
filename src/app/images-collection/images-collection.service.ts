@@ -7,7 +7,6 @@ import {Image, PaginatedImages} from './image';
 import {MetadataFile, PaginatedMetadataFiles} from './metadata-file';
 import {environment} from '../../environments/environment';
 import {Job} from '../job/job';
-import {PaginatedNotebooks} from '../notebook/notebook';
 import {PaginatedTags, Tag} from './tag';
 
 @Injectable({
@@ -82,6 +81,26 @@ export class ImagesCollectionService {
       }));
   }
 
+  getImagesCollectionsByTagsContainingIgnoreCase(params, name): Observable<PaginatedImagesCollections> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    let httpParams = new HttpParams().set('tagName', name);
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
+    }
+    httpOptions.params = httpParams;
+    return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByTags_TagNameContainingIgnoreCase', httpOptions).pipe(
+      map((result: any) => {
+        result.imagesCollections = result._embedded.imagesCollections;
+        return result;
+      }));
+  }
+
   getImagesCollection(id: string): Observable<ImagesCollection> {
     return this.http.get<ImagesCollection>(`${this.imagesCollectionsUrl}/${id}`);
   }
@@ -94,13 +113,13 @@ export class ImagesCollectionService {
     return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
   }
 
-  setImagesCollectionTags(imagesCollection: ImagesCollection, tags: Tag[]): Observable<ImagesCollection> {
+/*  setImagesCollectionTags(imagesCollection: ImagesCollection, tags: Tag[]): Observable<ImagesCollection> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
     return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {tags: tags}, httpOptions);
-  }
+  }*/
 
   getImages(imagesCollection: ImagesCollection, params): Observable<PaginatedImages> {
     const httpOptions = {
@@ -142,20 +161,7 @@ export class ImagesCollectionService {
       }));
   }
 
-  getTags(imagesCollection: ImagesCollection): Observable<PaginatedTags> {
-    const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
-      params: {}
-    };
-    return this.http.get<any>(`${this.imagesCollectionsUrl}/${imagesCollection.id}/tags`, httpOptions).pipe(
-      map((result: any) => {
-        console.log(result); // <--it's an object
-        result.tags = result._embedded.tags;
-        return result;
-      }));
-  }
-
-  getAllTags(): Observable<Tag> {
+  getTags(): Observable<Tag> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
@@ -164,7 +170,6 @@ export class ImagesCollectionService {
     const httpParams = new HttpParams().set('page', '0').set('size', String(1000)).set('sort', null);
     httpOptions.params = httpParams;
     return this.http.get<Tag[]>(`${this.tagsUrl}`, httpOptions).pipe(map((allTags: any ) => {
-      console.log(allTags);
       allTags.tags = allTags._embedded.tags; return allTags; }));
   }
 
@@ -236,10 +241,6 @@ export class ImagesCollectionService {
 
   getMetadataFilesUrl(imagesCollection: ImagesCollection): string {
     return `${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`;
-  }
-
-  getTagsUrl(imagesCollection: ImagesCollection): string {
-    return `${this.imagesCollectionsUrl}/${imagesCollection.id}/tags`;
   }
 
   getSourceJob(imagesCollection: ImagesCollection): Observable<Job> {

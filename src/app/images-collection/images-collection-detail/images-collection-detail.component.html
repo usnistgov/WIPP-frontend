@@ -395,15 +395,13 @@
 </div>
 
 <mat-form-field class="example-chip-list">
-  <mat-chip-list #chipList aria-label="Fruit selection">
+  <mat-chip-list #chipList aria-label="Tag selection">
     <mat-chip
-      *ngFor="let fruit of tagList"
-    [selectable]="selectable"
-    [removable]="removable"
-    (removed)="remove(fruit)"
+      *ngFor="let tag of tagList"
+    (removed)="remove(tag)"
 >
-      {{fruit.tagName}}
-      <mat-icon matChipRemove (click)="remove(fruit)">cancel</mat-icon>
+      {{tag.tagName}}
+      <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
     <input
       placeholder="Add tags..."
@@ -416,9 +414,9 @@
       (matChipInputTokenEnd)="add($event)">
   </mat-chip-list>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let fruit of (filteredTags | async)" [value]="fruit">
-      {{fruit.tagName}}
+    <mat-option *ngFor="let tag of (filteredTags | async)" [value]="tag">
+      {{tag.tagName}}
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>
-<button class="btn btn-default" (click)="saveTags()"> Save tags </button>
+<button class="btn btn-light" (click)="saveTags()" [disabled]="isArrayEqual(imagesCollection.tags, tagList)"> Save tags </button>

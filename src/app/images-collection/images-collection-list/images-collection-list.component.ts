@@ -19,13 +19,13 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
   imports: [MatTableModule, MatTableDataSource, MatTable]
 })
 export class ImagesCollectionListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'creationDate', 'imagesTotalSize'];
+  displayedColumns: string[] = ['name', 'numberOfImages', 'tags', 'locked', 'creationDate', 'imagesTotalSize'];
   imagesCollections: Observable<ImagesCollection[]>;
   resultsLength = 0;
   pageSize = 10;
   isLoadingResults = true;
   pageSizeOptions: number[] = [10, 25, 50, 100];
-  paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filterName: string, filterNbOfImgs: string}>;
+  paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filterName: string, filterNbOfImgs: string, filterTag: string}>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -39,7 +39,8 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
       size: this.pageSize,
       sort: 'creationDate,desc',
       filterName: '',
-      filterNbOfImgs: ''
+      filterNbOfImgs: '',
+      filterTag: ''
     });
   }
 
@@ -50,7 +51,8 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
       size: this.paramsChange.value.size,
       sort: sort.active + ',' + sort.direction,
       filterName: this.paramsChange.value.filterName,
-      filterNbOfImgs: this.paramsChange.value.filterNbOfImgs
+      filterNbOfImgs: this.paramsChange.value.filterNbOfImgs,
+      filterTag: this.paramsChange.value.filterTag
     });
   }
 
@@ -60,7 +62,8 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
       size: page.pageSize,
       sort: this.paramsChange.value.sort,
       filterName: this.paramsChange.value.filterName,
-      filterNbOfImgs: this.paramsChange.value.filterNbOfImgs
+      filterNbOfImgs: this.paramsChange.value.filterNbOfImgs,
+      filterTag: this.paramsChange.value.filterTag
     });
   }
 
@@ -71,7 +74,8 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
       size: this.paramsChange.value.size,
       sort: this.paramsChange.value.sort,
       filterName: filterValue,
-      filterNbOfImgs: ''
+      filterNbOfImgs: '',
+      filterTag: ''
     });
   }
 
@@ -82,7 +86,20 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
       size: this.paramsChange.value.size,
       sort: this.paramsChange.value.sort,
       filterName: '',
-      filterNbOfImgs: filterValue
+      filterNbOfImgs: filterValue,
+      filterTag: ''
+    });
+  }
+
+  applyFilterByTag(filterValue: string) {
+    // if the user filters by tag, reset back to the first page
+    this.paramsChange.next({
+      index: 0,
+      size: this.paramsChange.value.size,
+      sort: this.paramsChange.value.sort,
+      filterName: '',
+      filterNbOfImgs: '',
+      filterTag: filterValue
     });
   }
 
@@ -124,6 +141,21 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
               })
             );
         }
+        if (page.filterTag) {
+          return this.imagesCollectionService
+            .getImagesCollectionsByTagsContainingIgnoreCase(params, page.filterTag)
+            .pipe(
+              map((data) => {
+                this.isLoadingResults = false;
+                this.resultsLength = data.page.totalElements;
+                return data.imagesCollections;
+              }),
+              catchError(() => {
+                this.isLoadingResults = false;
+                return observableOf([]);
+              })
+            );
+        }
         return this.imagesCollectionService.getImagesCollections(params).pipe(
           map((data) => {
             this.isLoadingResults = false;
@@ -143,6 +175,7 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ImagesCollectionNewComponent, {size: 'lg'});
     modalRef.componentInstance.modalReference = modalRef;
     modalRef.result.then((result) => {
+      result.tags = [];
       this.imagesCollectionService.createImagesCollection(result).subscribe(imagesCollection => {
         const imageCollId = imagesCollection ? imagesCollection.id : null;
         this.router.navigate(['images-collection', imageCollId]);
