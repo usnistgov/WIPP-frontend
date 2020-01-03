@@ -1,6 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title">
-    <span class="glyphicon glyphicon-star"></span> New csv collection
+    <span class="glyphicon glyphicon-star"></span> New CSV collection
   </h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
@@ -15,9 +15,9 @@
       <span style="color: #e32"> * </span>
       <input type="text" [(ngModel)]="csvCollection.name" id="name" class="form-control" name="name" autofocus
              required>
-      <small class="form-text text-muted">Enter the csv collection name.</small>
+      <small class="form-text text-muted">Enter the CSV collection name.</small>
 
-      <label for="name">Csv Collection Files (maximum of 5MB/file ; maximum of 30 MB in total):</label>
+      <label for="name">CSV Collection Files (maximum of 5MB/file ; maximum of 30 MB in total):</label>
       <span style="color: #e32"> * </span>
       <input #file type="file"  [multiple]=true (change)="onFileSelected($event)" name="file" class="col-md-12" id="file" accept=".csv" autofocus
              required>
