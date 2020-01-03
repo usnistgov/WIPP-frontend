@@ -44,6 +44,10 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   tagList: Tag[];
   sourceJob: Job = null;
   filteredTags: Observable<Tag[]>;
+  showNotes = false;
+  editNotes = false;
+  imageCollectionNotes;
+
 
   displayedColumnsImages: string[] = ['index', 'fileName', 'size', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
@@ -254,6 +258,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  updateCollectionNotes(notes: string): void {
+    this.imagesCollectionService.setImagesCollectionNotes(
+      this.imagesCollection, notes).subscribe(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+    });
+  }
+
   lockCollection(): void {
     this.imagesCollectionService.lockImagesCollection(
       this.imagesCollection).subscribe(imagesCollection => {
@@ -353,7 +364,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
           break;
         }
       }
-
+      
     });
     this.flowHolder.on('fileSuccess', function (file, message) {
       this.removeFile(file);
@@ -393,6 +404,25 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       this.sourceJob = job;
     });
   }
+  
+  changeShowNotes() {
+    this.showNotes = !this.showNotes;
+    this.editNotes = false;
+    this.imageCollectionNotes = this.imagesCollection.notes;
+  }
+
+  changeEditNotes() {
+    this.editNotes = !this.editNotes;
+  }
+
+  saveNotes() {
+    this.updateCollectionNotes(this.imageCollectionNotes);
+    this. editNotes = false;
+  }
+
+  clearNotes() {
+    this.imageCollectionNotes = this.imagesCollection.notes;
+    this.editNotes = false;
 
   // when hit space / , / enter
   add(event: MatChipInputEvent): void {
@@ -400,7 +430,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     // To make sure this does not conflict with OptionSelected Event
 
     if (!this.matAutocomplete.isOpen) {
-
       const input = event.input;
       const value = event.value;
 
@@ -409,15 +438,12 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
         tag.tagName = value.trim();
         tag.tagName = value.trim();
         if (!this.tagList.some( x => x.tagName === tag.tagName)) {this.tagList.push(tag); }
-
-
        }
-
+      
       // Reset the input value
       if (input) {
         input.value = '';
       }
-
       this.tagCtrl.setValue(null);
     }
   }
@@ -441,10 +467,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
        return this.tags.filter(tag => !this.tagList.some(tagIn => tagIn['tagName'] === tag['tagName'])).filter(tag => tag['tagName'].toLowerCase().indexOf(filterValue) === 0);
     } catch (e) {
       return null;
-
     }
   }
-
 
   saveTags() {
     this.imagesCollectionService.addTag(this.tagList, this.imagesCollection, this.tags).subscribe(data => {
@@ -453,8 +477,11 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   isArrayEqual(array1 , array2) {
-    if (!array1 || !array2) {return false;
-    } else {return ( (!array1.some(x => array2.indexOf(x) === -1)) && array1.length === array2.length); }
+    if (!array1 || !array2) {
+      return false;
+    } else {
+      return ( (!array1.some(x => array2.indexOf(x) === -1)) && array1.length === array2.length);
+    }
   }
 
 }

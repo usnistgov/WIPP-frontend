@@ -14,6 +14,7 @@ export class ImagesCollection {
   numberOfTags: number;
   _links: any;
   metadataFilesTotalSize: number;
+  notes: string;
   pattern: string;
   tags: Tag[];
 }

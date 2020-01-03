@@ -6,11 +6,6 @@ import {map} from 'rxjs/operators';
 import {Job} from '../job/job';
 import {PaginatedPyramid, Pyramid} from './pyramid';
 
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'}),
-  params: {}
-};
-
 @Injectable({
   providedIn: 'root'
 })
@@ -120,7 +115,6 @@ export class PyramidService {
             layer.baseUrl = firstTimeSlice._links.dzi.href;
             layer.singleFrame = true;
           }
-
           const lastTimeSlice = timeSlicesArray[1][0];
           const lastTimeSliceNumber = Number(lastTimeSlice.name);
 
@@ -149,8 +143,21 @@ export class PyramidService {
   }
 
   getPyramidTimeSlices(pyramid: Pyramid, params): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+
+    let httpParams = new HttpParams();
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
+    }
+    httpOptions.params = httpParams;
     if (pyramid._links['timeSlices']) {
-      return this.http.get<any>(`${this.pyramidsUrl}/${pyramid.id}/timeSlices`, params).pipe(map(
+      return this.http.get<any>(`${this.pyramidsUrl}/${pyramid.id}/timeSlices`, httpOptions).pipe(map(
         (result: any) => {
           result.pyramidTimeSlices = result._embedded.pyramidTimeSlices;
           return result;

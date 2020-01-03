@@ -113,13 +113,13 @@ export class ImagesCollectionService {
     return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
   }
 
-/*  setImagesCollectionTags(imagesCollection: ImagesCollection, tags: Tag[]): Observable<ImagesCollection> {
-    const httpOptions = {
+  setImagesCollectionNotes(imagesCollection: ImagesCollection, notes: string): Observable<ImagesCollection> {
+      const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {tags: tags}, httpOptions);
-  }*/
+      return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {notes: notes}, httpOptions);
+  }
 
   getImages(imagesCollection: ImagesCollection, params): Observable<PaginatedImages> {
     const httpOptions = {
@@ -221,10 +221,6 @@ export class ImagesCollectionService {
     list.push('{"tagName": "' + tag.tagName + '"}' );
     }
     return this.http.patch<Tag>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, tagToAdd + list + end, httpOptions);
-  }
-
-  deleteTag(tag: Tag) {
-    return this.http.delete<Image>(tag._links.self.href);
   }
 
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
