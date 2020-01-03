@@ -6,6 +6,7 @@ import {CsvCollection} from '../csv-collection';
 import {CsvCollectionService} from '../csv-collection.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-new.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-csv-collection-list',
@@ -26,7 +27,9 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
 
   constructor(
     private csvCollectionService: CsvCollectionService,
-    private modalService: NgbModal) {
+    private modalService: NgbModal,
+    private router: Router
+  ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
@@ -96,10 +99,10 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
 
   createNew() {
     const modalRef = this.modalService.open(CsvCollectionNewComponent, {size: 'lg'});
-    modalRef.result.then((result) => {
-        if (result) {
+    modalRef.result.then((csvCollection) => {
+          const csvCollId = csvCollection ? csvCollection.id : null;
+          this.router.navigate(['csv-collections', csvCollId]);
           this.getCsvCollections();
-        }
       },
       (reason) => {
         console.log('dismissed');
