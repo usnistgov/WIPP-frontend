@@ -60,6 +60,10 @@
   margin-top: 20px;
 }
 
+.example-chip-list {
+  width: 100%;
+}
+
 .wideTxtArea {
   width: 100%;
   height: 150px;

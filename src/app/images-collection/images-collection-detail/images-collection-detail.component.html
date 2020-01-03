@@ -1,4 +1,5 @@
 <h3 class="wipp-title">Collection detail</h3>
+
 <div>
   <div class="row">
     <div class="col-md-5">
@@ -431,3 +432,30 @@
     </div>
   </div>
 </div>
+
+<mat-form-field class="example-chip-list">
+  <mat-chip-list #chipList aria-label="Tag selection">
+    <mat-chip
+      *ngFor="let tag of tagList"
+    (removed)="remove(tag)"
+>
+      {{tag.tagName}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input
+      placeholder="Add tags..."
+      #tagInput
+      [formControl]="tagCtrl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [matChipInputAddOnBlur]="addOnBlur"
+      (matChipInputTokenEnd)="add($event)">
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let tag of (filteredTags | async)" [value]="tag">
+      {{tag.tagName}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+<button class="btn btn-light" (click)="saveTags()" [disabled]="isArrayEqual(imagesCollection.tags, tagList)"> Save tags </button>

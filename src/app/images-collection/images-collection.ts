@@ -1,3 +1,5 @@
+import {Tag} from './tag';
+
 export class ImagesCollection {
   id: string;
   name: string;
@@ -9,10 +11,12 @@ export class ImagesCollection {
   numberImportingImages: number;
   numberOfImportErrors: number;
   numberOfMetadataFiles: number;
+  numberOfTags: number;
+  _links: any;
   metadataFilesTotalSize: number;
   notes: string;
   pattern: string;
-  _links: any;
+  tags: Tag[];
 }
 
 export interface PaginatedImagesCollections {
