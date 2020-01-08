@@ -22,6 +22,7 @@ import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.compon
 import {NotebookModule} from './notebook/notebook.module';
 import {AppConfigService} from './app-config.service';
 import {appInitializerFactory} from './app-init-factory';
+import {PyramidVisualizationModule} from './pyramid-visualization/pyramid-visualization.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import {appInitializerFactory} from './app-init-factory';
     ImagesCollectionModule,
     StitchingVectorModule,
     PyramidModule,
+    PyramidVisualizationModule,
     TensorflowModelModule,
     CsvCollectionModule,
     NotebookModule,
