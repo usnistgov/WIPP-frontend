@@ -1,16 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {MatPaginator, MatSort} from '@angular/material';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {CsvCollection} from '../csv-collection';
 import {CsvCollectionService} from '../csv-collection.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-new.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-csv-collection-list',
   templateUrl: './csv-collection-list.component.html',
   styleUrls: ['./csv-collection-list.component.css']
 })
-export class CsvCollectionListComponent implements OnInit {
+export class CsvCollectionListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'creationDate'];
   csvCollections: Observable<CsvCollection[]>;
 
@@ -23,7 +26,10 @@ export class CsvCollectionListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private csvCollectionService: CsvCollectionService) {
+    private csvCollectionService: CsvCollectionService,
+    private modalService: NgbModal,
+    private router: Router
+  ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
@@ -89,6 +95,15 @@ export class CsvCollectionListComponent implements OnInit {
         );
       })
     );
+  }
+
+  createNew() {
+    const modalRef = this.modalService.open(CsvCollectionNewComponent, {size: 'lg'});
+    modalRef.componentInstance.modalReference = modalRef;
+  }
+
+  ngOnDestroy() {
+    this.modalService.dismissAll();
   }
 
 }
