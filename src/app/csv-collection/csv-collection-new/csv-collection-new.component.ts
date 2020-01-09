@@ -1,10 +1,8 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {catchError} from 'rxjs/operators';
-import {ModalErrorComponent} from '../../modal-error/modal-error.component';
-import {throwError} from 'rxjs';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CsvCollection} from '../csv-collection';
 import {CsvCollectionService} from '../csv-collection.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-csv-collection-new',
@@ -25,7 +23,8 @@ export class CsvCollectionNewComponent implements OnInit {
 
   constructor(public activeModal: NgbActiveModal,
               private modalService: NgbModal,
-              private csvCollectionService: CsvCollectionService) {
+              private csvCollectionService: CsvCollectionService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -49,23 +48,17 @@ export class CsvCollectionNewComponent implements OnInit {
 
   upload() {
     this.csvCollectionService.uploadFile(this.csvCollection)
-      .pipe(
-        catchError(err => {
-          console.log('Handling error locally and rethrowing it...', err);
-          this.activeModal.close(err);
-          const modalRef = this.modalService.open(ModalErrorComponent);
-          modalRef.componentInstance.title = 'Cannot upload csv collection.';
-          modalRef.componentInstance.message = err.error.message;
-          return throwError(err);
-        })
-      )
       .subscribe(
         csvCollection => {
-          console.log(csvCollection);
-          this.activeModal.close(csvCollection);
+          this.displayAlertMessage('success', 'Success! Redirecting...');
+          const csvCollectionId = csvCollection ? csvCollection.id : null;
+          setTimeout(() => {
+            this.router.navigate(['csv-collections', csvCollectionId]);
+          }, 2000);
         },
-        err => console.log('HTTP Error', err),
-        () => console.log('HTTP request completed.')
+        err => {
+          this.displayAlertMessage('danger', 'Could not register CSV collection: ' + err.error);
+        }
       );
   }
 

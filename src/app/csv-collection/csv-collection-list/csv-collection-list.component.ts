@@ -99,14 +99,7 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
 
   createNew() {
     const modalRef = this.modalService.open(CsvCollectionNewComponent, {size: 'lg'});
-    modalRef.result.then((csvCollection) => {
-          const csvCollId = csvCollection ? csvCollection.id : null;
-          this.router.navigate(['csv-collections', csvCollId]);
-          this.getCsvCollections();
-      },
-      (reason) => {
-        console.log('dismissed');
-      });
+    modalRef.componentInstance.modalReference = modalRef;
   }
 
   ngOnDestroy() {

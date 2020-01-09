@@ -29,13 +29,13 @@
 <div class="modal-footer">
   <button type="button" class="btn btn-danger" (click)="activeModal.dismiss('Cross click')" >
     <i class="fas fa-times-circle" style="margin-right: 10px">
-      <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Cancel</p>
+      <p class="footerButton">Cancel</p>
     </i>
   </button>
   <button type="button" class="btn btn-success" (click)="upload()"
           [disabled]="!csvCollection.name || !csvCollection.files">
     <i class="fas fa-save" style="margin-right: 10px">
-      <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Save</p>
+      <p class="footerButton">Save</p>
     </i>
   </button>
 </div>
