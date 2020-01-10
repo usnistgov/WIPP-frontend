@@ -32,7 +32,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/@wipp/wdzt/build/deps/js/wdzt-deps.js",
+              "node_modules/@wipp/wdzt/build/deps/wdzt-deps.js",
               "node_modules/notebookjs/notebook.js"
 
             ]
