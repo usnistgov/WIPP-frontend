@@ -27,9 +27,9 @@
           }}
         </dd>
 
-        <dt class="col-md-4">Source job:</dt>
+        <dt class="col-md-4">Source:</dt>
         <dd class="col-md-8">
-          <span *ngIf="sourceJob; then jobTemplate; else uploadedTemplate"></span>
+          <span *ngIf="sourceJob; then jobTemplate; else importTemplate"></span>
           <ng-template #jobTemplate>
             <a (click)="displayJobModal(imagesCollection.sourceJob)"
                class="wipp-link"
@@ -38,8 +38,18 @@
               {{sourceJob.name}}
             </a>
           </ng-template>
-          <ng-template #uploadedTemplate>
-            Uploaded
+          <ng-template #importTemplate>
+            <div *ngIf="imagesCollection.importMethod == 'CATALOG'">
+              <a [href]="sourceCatlaogLink"
+                target="_blank"
+                placement="left"
+                class="wipp-link">
+                {{imagesCollection.sourceCatalog}}
+              </a>
+            </div>
+            <div *ngIf="imagesCollection.importMethod == 'UPLOADED' || imagesCollection.importMethod  == null">
+              Uploaded
+            </div>
           </ng-template>
         </dd>
       </dl>
