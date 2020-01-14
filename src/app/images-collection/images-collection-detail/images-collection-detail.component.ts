@@ -51,7 +51,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   goToPageImages;
   goToPageMetadataFiles;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
-  sourceCatlaogLink = '';
+  sourceCatalogLink = '';
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('browseDirBtn') browseDirBtn: ElementRef;
@@ -152,7 +152,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     return this.getImagesCollection().pipe(
       map(imagesCollection => {
         this.imagesCollection = imagesCollection;
-        this.sourceCatlaogLink = urljoin(this.appConfigService.getConfig().catalogUiUrl, this.imagesCollection.sourceCatalog);
+        if (this.imagesCollection.sourceCatalog) {
+          this.sourceCatalogLink = urljoin(this.appConfigService.getConfig().catalogUiUrl, this.imagesCollection.sourceCatalog);
+        }
         this.getImages();
         this.getMetadataFiles();
         if (this.imagesCollection.numberImportingImages !== 0) {

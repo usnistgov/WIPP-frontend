@@ -40,16 +40,21 @@
           </ng-template>
           <ng-template #importTemplate>
             <div *ngIf="imagesCollection.importMethod == 'CATALOG'">
-              <a [href]="sourceCatlaogLink"
-                target="_blank"
-                placement="left"
-                class="wipp-link">
-                {{imagesCollection.sourceCatalog}}
+              <a [href]="sourceCatalogLink"
+                 target="_blank"
+                 [ngbTooltip]="catalogTipContent"
+                 placement="left">
+                Catalog
               </a>
             </div>
-            <div *ngIf="imagesCollection.importMethod == 'UPLOADED' || imagesCollection.importMethod  == null">
+            <div *ngIf="!imagesCollection.importMethod || imagesCollection.importMethod == 'UPLOADED'">
               Uploaded
             </div>
+          </ng-template>
+
+          <ng-template #catalogTipContent>Go to Catalog
+            <span
+              aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
           </ng-template>
         </dd>
       </dl>
