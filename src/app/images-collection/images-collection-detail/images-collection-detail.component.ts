@@ -13,6 +13,8 @@ import {MetadataFile} from '../metadata-file';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
+import urljoin from 'url-join';
+import {AppConfigService} from '../../app-config.service';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -30,6 +32,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   images: Observable<Image[]>;
   metadataFiles: Observable<MetadataFile[]>;
   sourceJob: Job = null;
+  showNotes = false;
+  editNotes = false;
+  imageCollectionNotes;
 
   displayedColumnsImages: string[] = ['index', 'fileName', 'size', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
@@ -46,6 +51,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   goToPageImages;
   goToPageMetadataFiles;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
+  sourceCatalogLink = '';
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('browseDirBtn') browseDirBtn: ElementRef;
@@ -62,7 +68,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private router: Router,
     private elem: ElementRef,
     private modalService: NgbModal,
-    private imagesCollectionService: ImagesCollectionService) {
+    private imagesCollectionService: ImagesCollectionService,
+    private appConfigService: AppConfigService) {
     this.imagesParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSizeImages,
@@ -145,6 +152,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     return this.getImagesCollection().pipe(
       map(imagesCollection => {
         this.imagesCollection = imagesCollection;
+        if (this.imagesCollection.sourceCatalog) {
+          this.sourceCatalogLink = urljoin(this.appConfigService.getConfig().catalogUiUrl, this.imagesCollection.sourceCatalog);
+        }
         this.getImages();
         this.getMetadataFiles();
         if (this.imagesCollection.numberImportingImages !== 0) {
@@ -216,6 +226,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   updateCollectionName(name: string): void {
     this.imagesCollectionService.setImagesCollectionName(
       this.imagesCollection, name).subscribe(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+    });
+  }
+
+  updateCollectionNotes(notes: string): void {
+    this.imagesCollectionService.setImagesCollectionNotes(
+      this.imagesCollection, notes).subscribe(imagesCollection => {
       this.imagesCollection = imagesCollection;
     });
   }
@@ -358,6 +375,26 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.imagesCollectionService.getSourceJob(this.imagesCollection).subscribe(job => {
       this.sourceJob = job;
     });
+  }
+
+  changeShowNotes() {
+    this.showNotes = !this.showNotes;
+    this.editNotes = false;
+    this.imageCollectionNotes = this.imagesCollection.notes;
+  }
+
+  changeEditNotes() {
+    this.editNotes = !this.editNotes;
+  }
+
+  saveNotes() {
+    this.updateCollectionNotes(this.imageCollectionNotes);
+    this. editNotes = false;
+  }
+
+  clearNotes() {
+    this.imageCollectionNotes = this.imagesCollection.notes;
+    this.editNotes = false;
   }
 
 }

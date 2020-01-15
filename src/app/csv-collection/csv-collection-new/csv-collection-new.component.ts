@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, Input} from '@angular/core';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CsvCollection} from '../csv-collection';
 import {CsvCollectionService} from '../csv-collection.service';
