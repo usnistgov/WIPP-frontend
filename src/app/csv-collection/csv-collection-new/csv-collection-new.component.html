@@ -16,11 +16,6 @@
       <input type="text" [(ngModel)]="csvCollection.name" id="name" class="form-control" name="name" autofocus
              required>
       <small class="form-text text-muted">Enter the CSV collection name.</small>
-
-      <label for="name">CSV Collection Files (maximum of 5MB/file ; maximum of 30 MB in total):</label>
-      <span style="color: #e32"> * </span>
-      <input #file type="file"  [multiple]=true (change)="onFileSelected($event)" name="file" class="col-md-12" id="file" accept=".csv" autofocus
-             required>
       <span class="asterisk_input"></span>
     </div>
   </form>
@@ -32,8 +27,8 @@
       <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Cancel</p>
     </i>
   </button>
-  <button type="button" class="btn btn-success" (click)="upload()"
-          [disabled]="!csvCollection.name || !csvCollection.files">
+  <button type="button" class="btn btn-success" (click)="createCollection()"
+          [disabled]="!csvCollection.name">
     <i class="fas fa-save" style="margin-right: 10px">
       <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Save</p>
     </i>
