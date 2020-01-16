@@ -167,6 +167,22 @@ export class ImagesCollectionService {
     }
   }
 
+  makePublicImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {publiclyAvailable: true}, httpOptions);
+  }
+
+  makePrivateImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {publiclyAvailable: false}, httpOptions);
+  }
+
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),

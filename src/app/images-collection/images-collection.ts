@@ -13,6 +13,7 @@ export class ImagesCollection {
   notes: string;
   pattern: string;
   owner: string;
+  publiclyAvailable: boolean = true;
   _links: any;
 }
 

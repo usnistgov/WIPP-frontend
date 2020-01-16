@@ -3,6 +3,8 @@ export class CsvCollection {
   name: string;
   creationDate: Date;
   sourceJob: string;
+  owner: string;
+  publiclyAvailable: boolean = true;
   _links: any;
 }
 

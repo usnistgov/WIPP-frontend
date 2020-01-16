@@ -230,6 +230,20 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  makePublicCollection(): void {
+    this.imagesCollectionService.makePublicImagesCollection(
+      this.imagesCollection).subscribe(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+    });
+  }
+
+  makePrivateCollection(): void {
+    this.imagesCollectionService.makePrivateImagesCollection(
+      this.imagesCollection).subscribe(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+    });
+  }
+
   lockCollection(): void {
     this.imagesCollectionService.lockImagesCollection(
       this.imagesCollection).subscribe(imagesCollection => {

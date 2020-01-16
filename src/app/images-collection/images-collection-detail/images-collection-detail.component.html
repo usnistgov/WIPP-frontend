@@ -14,7 +14,7 @@
 
         <dt class="col-md-4">Creation date:</dt>
         <dd class="col-md-8">{{imagesCollection.creationDate| date}}</dd>
-
+        
         <dt class="col-md-4">Owner:</dt>
         <dd class="col-md-8">{{imagesCollection.owner}}</dd>
 
@@ -115,6 +115,20 @@
               placement="left"
               class="btn btn-light" (click)="lockCollection();">
         <span class="fa fa-lock-open"
+              aria-hidden="true"></span>
+      </button>
+      <button *ngIf="imagesCollection.publiclyAvailable" type="button"
+              ngbTooltip="Make collection private"
+              placement="left"
+              class="btn btn-light" (click)="makePrivateCollection();">
+        <span class="fa fa-users"
+              aria-hidden="true"></span>
+      </button>
+      <button *ngIf="!imagesCollection.publiclyAvailable" type="button"
+              ngbTooltip="Make collection public"
+              placement="left"
+              class="btn btn-light" (click)="makePublicCollection();">
+        <span class="fa fa-user-secret"
               aria-hidden="true"></span>
       </button>
       <div *ngIf="imagesCollection.locked"
