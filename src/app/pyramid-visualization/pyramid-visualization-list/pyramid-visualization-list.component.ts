@@ -1,21 +1,22 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
+import {Visualization} from '../visualization';
 import {MatPaginator, MatSort} from '@angular/material';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {CsvCollection} from '../csv-collection';
-import {CsvCollectionService} from '../csv-collection.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-new.component';
 import {Router} from '@angular/router';
+import {PyramidVisualizationService} from '../pyramid-visualization.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {PyramidVisualizationNewComponent} from '../pyramid-visualization-new/pyramid-visualization-new.component';
 
 @Component({
-  selector: 'app-csv-collection-list',
-  templateUrl: './csv-collection-list.component.html',
-  styleUrls: ['./csv-collection-list.component.css']
+  selector: 'app-pyramid-visualization-list',
+  templateUrl: './pyramid-visualization-list.component.html',
+  styleUrls: ['./pyramid-visualization-list.component.css']
 })
-export class CsvCollectionListComponent implements OnInit, OnDestroy {
+export class PyramidVisualizationListComponent implements OnInit {
+
   displayedColumns: string[] = ['name', 'creationDate'];
-  csvCollections: Observable<CsvCollection[]>;
+  visualizations: Observable<Visualization[]>;
 
   resultsLength = 0;
   pageSize = 10;
@@ -26,9 +27,9 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private csvCollectionService: CsvCollectionService,
     private modalService: NgbModal,
-    private router: Router
+    private router: Router,
+    private visualizationService: PyramidVisualizationService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -61,12 +62,8 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getCsvCollections();
-  }
-
-  getCsvCollections(): void {
     const paramsObservable = this.paramsChange.asObservable();
-    this.csvCollections = paramsObservable.pipe(
+    this.visualizations = paramsObservable.pipe(
       switchMap((page) => {
         const params = {
           pageIndex: page.index,
@@ -74,20 +71,20 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
           sort: page.sort
         };
         if (page.filter) {
-          return this.csvCollectionService.getCsvCollectionsByNameContainingIgnoreCase(params, page.filter).pipe(
+          return this.visualizationService.getVisualizationsByNameContainingIgnoreCase(params, page.filter).pipe(
             map((data) => {
               this.resultsLength = data.page.totalElements;
-              return data.csvCollections;
+              return data.visualizations;
             }),
             catchError(() => {
               return observableOf([]);
             })
           );
         }
-        return this.csvCollectionService.getCsvCollections(params).pipe(
+        return this.visualizationService.getVisualizations(params).pipe(
           map((data) => {
             this.resultsLength = data.page.totalElements;
-            return data.csvCollections;
+            return data.visualizations;
           }),
           catchError(() => {
             return observableOf([]);
@@ -98,12 +95,17 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
   }
 
   createNew() {
-    const modalRef = this.modalService.open(CsvCollectionNewComponent, {size: 'lg'});
+    const modalRef = this.modalService.open(PyramidVisualizationNewComponent);
     modalRef.componentInstance.modalReference = modalRef;
+    modalRef.result.then((result) => {
+      this.visualizationService.createVisualization(result).subscribe(visualization => {
+        const visualizationId = visualization ? visualization.id : null;
+        this.router.navigate(['pyramid-visualizations', visualizationId]);
+      });
+    }, (reason) => {
+      console.log('dismissed');
+    });
   }
 
-  ngOnDestroy() {
-    this.modalService.dismissAll();
-  }
 
 }

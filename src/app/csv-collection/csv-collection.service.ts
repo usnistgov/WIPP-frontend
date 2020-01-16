@@ -62,4 +62,14 @@ export class CsvCollectionService {
     return this.http.get<Job>(jobUrl);
   }
 
+  uploadFile(csvCollection: CsvCollection): Observable<CsvCollection> {
+    const formData = new FormData();
+    for (const file of csvCollection.files) {
+      formData.append('files', file, file.name);
+    }
+    formData.append('name', csvCollection.name);
+
+    return this.http.post<CsvCollection>(this.csvCollectionUrl + '/upload', formData);
+  }
+
 }

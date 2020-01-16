@@ -22,10 +22,14 @@ import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.compon
 import {NotebookModule} from './notebook/notebook.module';
 import {AppConfigService} from './app-config.service';
 import {appInitializerFactory} from './app-init-factory';
+<<<<<<< HEAD
 import { KEYCLOAK_HTTP_PROVIDER, KeycloakHttp } from './services/keycloak/keycloak.http';
 import { KeycloakService } from './services/keycloak/keycloak.service';
 import { KeycloakInterceptorService} from './services/keycloak/keycloak.interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+=======
+import {PyramidVisualizationModule} from './pyramid-visualization/pyramid-visualization.module';
+>>>>>>> 46761d2130386cbef7b46dd01f4a3f385819cef7
 
 @NgModule({
   declarations: [
@@ -39,6 +43,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     ImagesCollectionModule,
     StitchingVectorModule,
     PyramidModule,
+    PyramidVisualizationModule,
     TensorflowModelModule,
     CsvCollectionModule,
     NotebookModule,

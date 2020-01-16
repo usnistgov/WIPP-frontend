@@ -166,4 +166,13 @@ export class PyramidService {
     return throwError('The pyramid has no time slices.');
   }
 
+  getPyramidFromBaseUrl(dziUrl) {
+    const splits = dziUrl.split('/');
+    const lastSplit = splits[splits.length - 1];
+    const pyramidId = lastSplit.indexOf('.dzi') === lastSplit.length - 4 ?
+      splits[splits.length - 2] : lastSplit;
+    return this.getPyramid(pyramidId);
+  }
+
+
 }
