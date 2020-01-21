@@ -123,7 +123,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             type === 'csvCollection' ||
             type === 'notebook') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
-              task['dependencies'].push(value.sourceJob);
+              if (task['dependencies'].indexOf(value.sourceJob) === -1) {
+                task['dependencies'].push(value.sourceJob);
+              }
             }
             value = value.hasOwnProperty('id') ? value.id : null;
           }
