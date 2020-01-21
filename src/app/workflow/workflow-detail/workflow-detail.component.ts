@@ -343,7 +343,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             ];
           }
           if (ui.hasOwnProperty('default')) {
-            inputSchema['default'] = input.default;
+            inputSchema['default'] = ui.default;
           }
           plugin.properties.inputs.properties[input.name] = inputSchema;
         });
