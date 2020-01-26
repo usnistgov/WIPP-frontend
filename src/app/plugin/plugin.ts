@@ -4,6 +4,7 @@ export class Plugin {
   version: string;
   description: string;
   author: string;
+  category: string;
   institution: string;
   repository: string;
   website: string;

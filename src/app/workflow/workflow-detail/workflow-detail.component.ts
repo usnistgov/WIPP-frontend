@@ -1,11 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PluginService} from '../../plugin/plugin.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
 import {ActivatedRoute} from '@angular/router';
 import {Workflow} from '../workflow';
-import {interval, of as observableOf, Subject} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
 import {FormProperty, PropertyGroup} from 'ngx-schema-form/lib/model/formproperty';
@@ -13,6 +14,8 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { SelectionModel } from '@angular/cdk/collections';
 
 
 @Component({
@@ -26,7 +29,16 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   workflow: Workflow = new Workflow();
 
   selectedSchema = null;
-  pluginList = [];
+  pluginList : [];//Observable<any[] | Plugin[]>;
+  selection = new SelectionModel<Plugin>(false, []);
+  //pluginListSearchCriteria : Observable<any[] | Plugin[]>;
+  pluginsObervable: Observable<any[] | Plugin[]>;
+  displayedColumns: string[] = ['name', 'version', 'description'];
+  institutionList = [];
+  categoryList = [];
+  categorySelected = 'all';
+  institutionSelected = 'all';
+  nameSearch = null;
   jobOutputs = {
     collections: [],
     stitchingVectors: [],
@@ -67,6 +79,15 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   argoUiBaseUrl = '';
   argoUiLink;
 
+  resultsLength = 0;
+  pageSize = 10;
+  pageSizeOptions: number[] = [10, 25, 50, 100];
+  paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string}>;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
@@ -74,6 +95,34 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     private pluginService: PluginService,
     private workflowService: WorkflowService,
     private appConfigService: AppConfigService) {
+      this.paramsChange = new BehaviorSubject({
+        index: 0,
+        size: this.pageSize,
+        sort: 'creationDate,desc',
+        filter: ''
+      });
+  }
+
+  sortChanged(sort) {
+    // If the user changes the sort order, reset back to the first page.
+    this.paramsChange.next({
+      index: 0, size: this.paramsChange.value.size,
+      sort: sort.active + ',' + sort.direction, filter: this.paramsChange.value.filter
+    });
+  }
+
+  pageChanged(page) {
+    this.paramsChange.next({
+      index: page.pageIndex, size: page.pageSize,
+      sort: this.paramsChange.value.sort, filter: this.paramsChange.value.filter
+    });
+  }
+
+  applyFilterByName(filterValue: string) {
+    // if the user filters by name, reset back to the first page
+    this.paramsChange.next({
+      index: 0, size: this.paramsChange.value.size, sort: this.paramsChange.value.sort, filter: filterValue
+    });
   }
 
   ngOnInit() {
@@ -82,20 +131,101 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       this.workflow = workflow;
       this.updateArgoUrl();
     });
+    //Recuperation de la liste plugin : code existant
     this.pluginService.getAllPluginsOrderedByName()
       .subscribe(plugins => {
         this.pluginList = plugins.plugins;
         this.generateSchema(this.pluginList);
         this.resetForm();
         this.getJobs();
+        alert("pluginList recupéré");
       });
+
+    //Utilisation de plugins search criteria
+     //this.getPlugins();
+   
+
+      /*this.getPlugins();
+      this.pluginList.subscribe(
+        (plugins) => {
+          alert("tout est ok");
+          //this.pluginList.map(plugin => alert(plugin));
+          this.generateSchema(this.pluginList);
+          this.resetForm();
+          //alert("selected schema after reste : " + this.selectedSchema);
+          this.getJobs();
+        },
+        (error) => {
+          alert("crasshhhhh");
+        }
+      );*/
+      //this.generateSchema(this.pluginListSearchCriteria);
+      //this.resetForm();
+      this.getJobs();
+      
+      //stubCategoryInstitution
+    this.stubCategory_Institution();
   }
 
+  /*getPlugins(): void {
+    const paramsObservable = this.paramsChange.asObservable();
+    this.plugins = paramsObservable.pipe(
+      switchMap((page) => {
+        const params = {
+          pageIndex: page.index,
+          size: page.size,
+          sort: page.sort
+        };
+        if (page.filter) {
+          return this.pluginService.getPluginsByNameContainingIgnoreCase(params, page.filter).pipe(
+            map((data) => {
+              this.resultsLength = data.page.totalElements;
+              return data.plugins;
+            }),
+            catchError(() => {
+              return observableOf([]);
+            })
+          );
+        }
+        return this.pluginService.getPlugins(params).pipe(
+          map((data) => {
+            this.resultsLength = data.page.totalElements;
+            return data.plugins;
+          }),
+          catchError(() => {
+            return observableOf([]);
+          })
+        );
+      })
+    );
+  }*/
+  
   resetForm() {
     this.selectedSchema = this.pluginList[0];
+    //this.selectedSchema = this.pluginsObervable[0];
+    //this.selectedSchema = this.pluginListSearchCriteria[0];
   }
 
   open(content) {
+    //plugin search criteria
+    //this.pluginListSearchCriteria = this.pluginList; //new MatTableDataSource(this.pluginList);
+    //get institutionList
+    
+    /*for(let plugin of this.pluginListSearchCriteria) {
+      this.institutionList.push(plugin.institution);
+    }*/
+    //this.plugins.forEach(plugin => {alert(plugin)});
+    
+
+    //stubCategory
+    //this.stubCategory();
+
+    //getCategoryList
+    /*for(let plugin of this.pluginList) {
+      this.categoryList.push(plugin.category);
+    }*/
+    
+
     this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
       const task = {};
 
@@ -425,6 +555,36 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       this.argoUiLink = urljoin(this.argoUiBaseUrl, this.workflow.generatedName);
     }
   }
+
+  stubCategory_Institution() {
+    /*for(let i=0; i< this.pluginList.length; i++) {
+      this.pluginList[i].category = "category" + i%4;
+    }*/
+    this.categoryList = ['cat0', 'cat1', 'cat2', 'cat3', 'cat4', 'cat5', 'cat6'];
+    this.institutionList = ['National Institute of Standards and Technology', 'ISIMA', 'Isima'];
+    //Suppression des dupllications
+    this.categoryList = this.categoryList.filter((n,i) => this.categoryList.indexOf(n)===i && n!=null);
+    this.institutionList = this.institutionList.filter((n,i) => this.institutionList.indexOf(n)===i);
+  }
+
+  updatePluginSearchList() {
+    /*if(this.categorySelected === 'all' && this.institutionSelected === 'all')
+      this.pluginListSearchCriteria = this.pluginList;
+    else if(this.categorySelected === 'all' && this.institutionSelected !== 'all'){
+      this.pluginListSearchCriteria = this.pluginList.filter(plugin => plugin.institution === this.institutionSelected)
+    }
+    else if(this.categorySelected !== 'all' && this.institutionSelected === 'all'){
+      this.pluginListSearchCriteria = this.pluginList.filter(plugin => plugin.category === this.categorySelected)
+    }
+    else{
+      this.pluginListSearchCriteria = this.pluginList.filter(plugin => plugin.category === this.categorySelected && plugin.institution === this.institutionSelected)
+    }
+    
+    if(this.nameSearch != null)
+      this.pluginListSearchCriteria = this.pluginListSearchCriteria.filter(plugin => plugin.name.toUpperCase().includes(this.nameSearch.toUpperCase()));
+    
+    */
+    }
 
   ngOnDestroy() {
     this.modalService.dismissAll();

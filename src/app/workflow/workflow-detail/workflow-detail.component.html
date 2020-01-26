@@ -51,7 +51,7 @@
     <div class="row">
       <div class="col-md-2">
         <button class="btn btn-outline-dark wipp-btn wf-btn-graph" (click)="open(addStepModal)"
-                [disabled]="! workflow.name || workflow.status!='CREATED' || ! selectedSchema">
+                [disabled]="! workflow.name || workflow.status!='CREATED' "> <!--|| ! selectedSchema-->
           <i class="fas fa-plus-circle">
             <p>Add task</p>
           </i>
@@ -109,6 +109,73 @@
 
 <ng-template #addStepModal let-c="close" let-d="dismiss">
   <div class="modal-header">
+    <h4 class="modal-title">New Task - Select plugin to use</h4> <!--TO DO-->
+    <button type="button" class="close" aria-label="Close" (click)="d()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group"> <!--TO DO-->
+      <h5>PLUGIN SEARCH CRITERIA</h5> 
+      <!--Category-->
+      <div class="criteria category">
+        <label for="pluginCategory">Choose category:</label>
+        <select id="pluginCategory" name="pluginCategory" class="form-control" [(ngModel)]="categorySelected" (change)="updatePluginSearchList()">
+          <option value="all">All categories</option>
+          <option *ngFor="let category of categoryList" [(ngValue)]="category">{{ category }}</option>
+        </select>
+      </div>
+      <!--Institution-->
+      <div class="form-group criteria institution">
+        <label for="pluginInstitution">Choose institution:</label>
+        <select id="pluginInstitution" name="pluginInstitution" class="form-control" [(ngModel)]="institutionSelected" (change)="updatePluginSearchList()">
+          <option value="all">All institutions</option>
+          <option *ngFor="let institution of institutionList" [(ngValue)]="institution">{{ institution }}</option>
+        </select>
+      </div>
+      <!--Name-->
+      <label for="pluginName2">Search by name</label> <br/>
+      <input id="pluginName2" name="pluginName2" class="form-control" type="text" placeholder="Type plugin name here..." [(ngModel)]="nameSearch" matInput (keyup)="applyFilterByName($event.target.value)">
+    </div>
+
+    <div class="form-group">
+      <h5>SEARCH RESULTS</h5>
+      <!-- Plugins list respected search criteria -->
+
+      <table mat-table class="table-hover" [dataSource]="pluginList" (matSortChange)="sortChanged($event)" matSort>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          <td mat-cell *matCellDef="let plugin"> {{plugin.name}} </td>
+        </ng-container>
+
+        <!-- Version Column -->
+        <ng-container matColumnDef="version">
+          <th mat-header-cell *matHeaderCellDef> Version </th>
+          <td mat-cell *matCellDef="let plugin"> {{plugin.version}} </td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let plugin"> {{plugin.description}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="d(); open(addStepModalPluginSelected)"></tr>
+      </table>
+
+      <mat-paginator #paginator (page)="pageChanged($event)" [length]="resultsLength" [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #addStepModalPluginSelected let-c="close" let-d="dismiss">
+  <div class="modal-header">
     <h4 class="modal-title">New Task</h4>
     <button type="button" class="close" aria-label="Close" (click)="d()">
       <span aria-hidden="true">&times;</span>
@@ -137,6 +204,7 @@
     </button>
   </div>
 </ng-template>
+
 
 <ng-template #argoUiTipContent> See in Argo dashboard
   <span

@@ -102,4 +102,25 @@ export class PluginService {
     return this.http.get<JSON>(url);
   }
 
+  getPluginsByCategory(category: string) {
+    let pluginList = [];
+    this.getAllPluginsOrderedByName()
+      .subscribe(plugins => {
+        pluginList = plugins.plugins;
+      });
+    return pluginList.find(x => x.category == category);;
+  }
+
+  getAllInstitutions(): string[] {
+    let pluginList;
+    let institutionList: string[];
+    this.getAllPluginsOrderedByName().subscribe(plugins => {
+      pluginList = plugins.plugins;
+    });
+    for(let plugin of pluginList) {
+      institutionList.push(plugin.institution);
+    }
+    institutionList = institutionList.filter((n,i) => institutionList.indexOf(n)===i);
+    return institutionList;
+  }
 }

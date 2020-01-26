@@ -22,7 +22,7 @@ export class PluginListComponent implements OnInit, OnDestroy {
 
   resultsLength = 0;
   pageSize = 10;
-  pageSizeOptions: number[] = [10, 25, 50, 100];
+  public pageSizeOptions: number[] = [10, 25, 50, 100];
   paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string}>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
