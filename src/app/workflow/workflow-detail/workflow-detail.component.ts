@@ -4,7 +4,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
 import {ActivatedRoute} from '@angular/router';
 import {Workflow} from '../workflow';
-import {interval, of as observableOf, Subject} from 'rxjs';
+import {forkJoin, interval, of as observableOf, Subject} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
@@ -13,6 +13,12 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
+import {JobService} from '../../job/job.service';
+import {ImagesCollectionService} from '../../images-collection/images-collection.service';
+import {StitchingVectorService} from '../../stitching-vector/stitching-vector.service';
+import {CsvCollectionService} from '../../csv-collection/csv-collection.service';
+import {NotebookService} from '../../notebook/notebook.service';
+import {TensorflowModelService} from '../../tensorflow-model/tensorflow-model.service';
 
 
 @Component({
@@ -35,7 +41,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     notebooks: []
   };
   jobs: Job[] = [];
+  jobToCopy: Job = new Job();
   workflowId = this.route.snapshot.paramMap.get('id');
+  jobModel = {}
 
   // ngx-graph settings and properties
   update$: Subject<any> = new Subject();
@@ -73,7 +81,13 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private pluginService: PluginService,
     private workflowService: WorkflowService,
-    private appConfigService: AppConfigService) {
+    private imagesCollectionService: ImagesCollectionService,
+    private stitchingVectorService: StitchingVectorService,
+    private csvCollectionService: CsvCollectionService,
+    private notebookService: NotebookService,
+    private tensorflowModelService: TensorflowModelService,
+    private appConfigService: AppConfigService,
+    private jobService: JobService) {
   }
 
   ngOnInit() {
@@ -93,6 +107,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   resetForm() {
     this.selectedSchema = this.pluginList[0];
+    this.jobModel = {};
   }
 
   open(content) {
@@ -152,7 +167,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   populateJobOutputs(job) {
     const pluginId = job.wippExecutable;
-    const matchingPlugin = this.pluginList.find(x => x.id == pluginId);
+    const matchingPlugin = this.pluginList.find(x => x.id === pluginId);
 
     matchingPlugin.outputs.forEach(output => {
       if (output.type === 'collection') {
@@ -374,7 +389,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       this.populateGraph(data);
       this.updateGraph();
       this.resetJobOutputs();
-      for (let job of data) {
+      for (const job of data) {
         this.populateJobOutputs(job);
       }
     });
@@ -389,6 +404,147 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       , (reason) => {
         console.log('dismissed');
       });
+  }
+
+
+  openCopy(content, jobId: string) {
+    this.getJob(content, jobId);
+  }
+
+  getJob(content, jobId: string ) {
+    this.jobService.getJob(jobId).subscribe(job => {
+        this.jobToCopy = job;
+        this.jobService.getPlugin(job.wippExecutable).subscribe(plugin => {
+          this.selectedSchema = this.pluginList.find(x => x.id === plugin.id);
+          this.jobModel['taskName'] = this.jobToCopy.name + '-copy';
+    this.jobModel['inputs'] = {};
+const requests = [];
+    for (const input of Object.keys(this.jobToCopy.parameters)) {
+      if ((this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search' || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search') && this.jobToCopy.parameters[input].indexOf('{') === -1) {
+        const id = this.jobToCopy.parameters[input];
+        const object = {'data': {},
+            'inputName': ''}
+        switch (this.selectedSchema.properties.inputs.properties[input]['format']) {
+          case 'collection':
+            requests.push(this.imagesCollectionService.getImagesCollection(id)
+      .pipe(map(response => {
+        response['data'] = response;
+        response['inputName'] = input;
+           return response;
+         })
+    ));
+            break;
+          case 'stitchingVector':
+    requests.push(this.stitchingVectorService.getStitchingVector(id)
+      .pipe(map(response => {
+        object.data = response;
+        object.inputName = input;
+           return object;
+         })))
+            break;
+          case 'tensorflowModel':
+            requests.push(this.tensorflowModelService.getTensorflowModel(id)
+      .pipe(map(response => {
+        object.data = response;
+        object.inputName = input;
+           return object;
+         })));
+            break;
+          case 'csvCollection':
+                requests.push(this.csvCollectionService.getCsvCollection(id)
+      .pipe(map(response => {
+        object.data = response;
+        object.inputName = input;
+           return object;
+         })));
+            break;
+          case 'notebook':
+                requests.push(this.notebookService.getNotebook(id)
+      .pipe(map(response => {
+        object.data = response;
+        object.inputName = input;
+           return object;
+         })));
+            break;
+        }
+      }  else if (this.jobToCopy.parameters[input].indexOf('{') !== -1) {
+        this.jobModel['inputs'][input] = {}
+        this.jobModel['inputs'][input]['id'] = this.jobToCopy.parameters[input];
+        const prevId = this.jobToCopy.parameters[input].substring(3, this.jobToCopy.parameters[input].indexOf('.'));
+        const prevOutputName = this.jobToCopy.parameters[input].substring(this.jobToCopy.parameters[input].indexOf('.'), this.jobToCopy.parameters[input].length - 3);
+        const prevJob = this.jobs.find(x => x.id === prevId);
+          this.jobModel['inputs'][input]['name'] = prevJob.name + prevOutputName ;
+      } else {
+        this.jobModel['inputs'][input] = this.jobToCopy.parameters[input] ? this.jobToCopy.parameters[input] : null ;
+      }
+    }
+    if (requests.length === 0) {this.openCopyModal(content);
+    } else {forkJoin(requests).subscribe(results => {
+        for (const result of results) {
+          this.jobModel['inputs'][result['inputName']] = result['data'];
+        }
+         this.openCopyModal(content);
+      });
+        }});
+      }
+    );
+  }
+
+  openCopyModal(content) {
+    const task = {};
+    task['parameters'] = this.jobToCopy.parameters;
+    task['dependencies'] = this.jobToCopy.dependencies;
+    this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
+
+      // configure job
+      task['name'] = this.jobModel['taskName'];
+      task['wippExecutable'] = this.selectedSchema.id;
+      task['wippWorkflow'] = this.workflow.id;
+      task['type'] = this.selectedSchema.name;
+      task['outputParameters'] = {};
+      // add job parameters
+
+      this.selectedSchema.outputs.forEach(output => {
+        task['outputParameters'][output.name] = null;
+      });
+
+      for (const inputEntry in result.inputs) {
+        if (result.inputs.hasOwnProperty(inputEntry)) {
+          const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
+          let value = result.inputs[inputEntry];
+          if (type === 'collection' ||
+            type === 'stitchingVector' ||
+            type === 'tensorflowModel' ||
+            type === 'csvCollection' ||
+            type === 'notebook') {
+            if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
+              if (task['dependencies'].indexOf(value.sourceJob) === -1) {
+                task['dependencies'].push(value.sourceJob);
+              }
+            }
+            value = value.hasOwnProperty('id') ? value.id : null;
+          }
+          if (type === 'array') {
+            value = value.join(',');
+          }
+          task['parameters'][inputEntry] = value;
+        }
+
+
+      }
+      // push job
+      this.workflowService.createJob(task).subscribe(job => {
+        this.resetForm();
+        this.getJobs();
+      }, error => {
+        this.resetForm();
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Error while creating new task';
+        modalRefErr.componentInstance.message = error.error;
+      });
+    }, (result) => {
+      this.resetForm();
+    });
   }
 
   // Create workflow DAG
@@ -411,7 +567,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   updateGraph() {
     this.update$.next(true);
   }
-  
+
   resetJobOutputs() {
     this.jobOutputs = {
       collections: [],
