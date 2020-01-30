@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Injector, Input, OnDestroy, OnInit} from '@angular/core';
 import {PluginService} from '../../plugin/plugin.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
@@ -14,11 +14,7 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
 import {JobService} from '../../job/job.service';
-import {ImagesCollectionService} from '../../images-collection/images-collection.service';
-import {StitchingVectorService} from '../../stitching-vector/stitching-vector.service';
-import {CsvCollectionService} from '../../csv-collection/csv-collection.service';
-import {NotebookService} from '../../notebook/notebook.service';
-import {TensorflowModelService} from '../../tensorflow-model/tensorflow-model.service';
+import {dataMap} from '../../data-service';
 
 
 @Component({
@@ -34,16 +30,16 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   selectedSchema = null;
   pluginList = [];
   jobOutputs = {
-    collections: [],
-    stitchingVectors: [],
-    tensorflowModels: [],
-    csvCollections: [],
-    notebooks: []
+    collection: [],
+    stitchingVector: [],
+    tensorflowModel: [],
+    csvCollection: [],
+    notebook: []
   };
   jobs: Job[] = [];
   jobToCopy: Job = new Job();
   workflowId = this.route.snapshot.paramMap.get('id');
-  jobModel = {}
+  jobModel = {};
 
   // ngx-graph settings and properties
   update$: Subject<any> = new Subject();
@@ -75,19 +71,18 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   argoUiBaseUrl = '';
   argoUiLink;
 
+  public data: Array<any>;
+  public service: any;
+
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
     private pluginService: PluginService,
     private workflowService: WorkflowService,
-    private imagesCollectionService: ImagesCollectionService,
-    private stitchingVectorService: StitchingVectorService,
-    private csvCollectionService: CsvCollectionService,
-    private notebookService: NotebookService,
-    private tensorflowModelService: TensorflowModelService,
     private appConfigService: AppConfigService,
-    private jobService: JobService) {
+    private jobService: JobService,
+    private injector: Injector) {
   }
 
   ngOnInit() {
@@ -170,47 +165,14 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     const matchingPlugin = this.pluginList.find(x => x.id === pluginId);
 
     matchingPlugin.outputs.forEach(output => {
-      if (output.type === 'collection') {
-        const outputCollection = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.collections.push(outputCollection);
-      } else if (output.type === 'stitchingVector') {
-        const outputStitchingVector = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.stitchingVectors.push(outputStitchingVector);
-      } else if (output.type === 'tensorflowModel') {
-        const outputTensorflowModel = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.tensorflowModels.push(outputTensorflowModel);
-      } else if (output.type === 'csvCollection') {
-        const outputCsvCollection = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.csvCollections.push(outputCsvCollection);
-      } else if (output.type === 'notebook') {
-        const outputNotebook = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.notebooks.push(outputNotebook);
-      }
+      const outputData = {
+        id: '{{ ' + job.id + '.' + output.name + ' }}',
+        name: '{{ ' + job.name + '.' + output.name + ' }}',
+        sourceJob: job['id'],
+        virtual: true
+      };
+      this.jobOutputs[output.type].push(outputData);
+
     });
   }
 
@@ -268,36 +230,17 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             plugin.properties.inputs.required.push(input.name);
           }
           // type-specific properties
+
           switch (input.type) {
             case 'collection':
-              inputSchema['type'] = 'string';
-              inputSchema['widget'] = 'search';
-              inputSchema['format'] = 'collection';
-              inputSchema['getOutputCollections'] = () => this.jobOutputs.collections;
-              break;
             case 'stitchingVector':
-              inputSchema['type'] = 'string';
-              inputSchema['widget'] = 'search';
-              inputSchema['format'] = 'stitchingVector';
-              inputSchema['getOutputStitchingVectors'] = () => this.jobOutputs.stitchingVectors;
-              break;
             case 'tensorflowModel':
-              inputSchema['type'] = 'string';
-              inputSchema['widget'] = 'search';
-              inputSchema['format'] = 'tensorflowModel';
-              inputSchema['getOutputTensorflowModels'] = () => this.jobOutputs.tensorflowModels;
-              break;
             case 'csvCollection':
-              inputSchema['type'] = 'string';
-              inputSchema['widget'] = 'search';
-              inputSchema['format'] = 'csvCollection';
-              inputSchema['getOutputCsvCollections'] = () => this.jobOutputs.csvCollections;
-              break;
             case 'notebook':
               inputSchema['type'] = 'string';
               inputSchema['widget'] = 'search';
-              inputSchema['format'] = 'notebook';
-              inputSchema['getOutputNotebooks'] = () => this.jobOutputs.notebooks;
+              inputSchema['format'] = input.type;
+              inputSchema['getOutputs'] = () => this.jobOutputs[input.type];
               break;
             case 'enum':
               inputSchema['type'] = 'string';
@@ -417,75 +360,42 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         this.jobService.getPlugin(job.wippExecutable).subscribe(plugin => {
           this.selectedSchema = this.pluginList.find(x => x.id === plugin.id);
           this.jobModel['taskName'] = this.jobToCopy.name + '-copy';
-    this.jobModel['inputs'] = {};
-const requests = [];
-    for (const input of Object.keys(this.jobToCopy.parameters)) {
-      if ((this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search' || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search') && this.jobToCopy.parameters[input].indexOf('{') === -1) {
-        const id = this.jobToCopy.parameters[input];
-        const object = {'data': {},
-            'inputName': ''}
-        switch (this.selectedSchema.properties.inputs.properties[input]['format']) {
-          case 'collection':
-            requests.push(this.imagesCollectionService.getImagesCollection(id)
-      .pipe(map(response => {
-        response['data'] = response;
-        response['inputName'] = input;
-           return response;
-         })
-    ));
-            break;
-          case 'stitchingVector':
-    requests.push(this.stitchingVectorService.getStitchingVector(id)
-      .pipe(map(response => {
-        object.data = response;
-        object.inputName = input;
-           return object;
-         })))
-            break;
-          case 'tensorflowModel':
-            requests.push(this.tensorflowModelService.getTensorflowModel(id)
-      .pipe(map(response => {
-        object.data = response;
-        object.inputName = input;
-           return object;
-         })));
-            break;
-          case 'csvCollection':
-                requests.push(this.csvCollectionService.getCsvCollection(id)
-      .pipe(map(response => {
-        object.data = response;
-        object.inputName = input;
-           return object;
-         })));
-            break;
-          case 'notebook':
-                requests.push(this.notebookService.getNotebook(id)
-      .pipe(map(response => {
-        object.data = response;
-        object.inputName = input;
-           return object;
-         })));
-            break;
-        }
-      }  else if (this.jobToCopy.parameters[input].indexOf('{') !== -1) {
-        this.jobModel['inputs'][input] = {}
-        this.jobModel['inputs'][input]['id'] = this.jobToCopy.parameters[input];
-        const prevId = this.jobToCopy.parameters[input].substring(3, this.jobToCopy.parameters[input].indexOf('.'));
-        const prevOutputName = this.jobToCopy.parameters[input].substring(this.jobToCopy.parameters[input].indexOf('.'), this.jobToCopy.parameters[input].length - 3);
-        const prevJob = this.jobs.find(x => x.id === prevId);
-          this.jobModel['inputs'][input]['name'] = prevJob.name + prevOutputName ;
-      } else {
-        this.jobModel['inputs'][input] = this.jobToCopy.parameters[input] ? this.jobToCopy.parameters[input] : null ;
-      }
-    }
-    if (requests.length === 0) {this.openCopyModal(content);
-    } else {forkJoin(requests).subscribe(results => {
-        for (const result of results) {
-          this.jobModel['inputs'][result['inputName']] = result['data'];
-        }
-         this.openCopyModal(content);
-      });
-        }});
+          this.jobModel['inputs'] = {};
+          const requests = [];
+          for (const input of Object.keys(this.jobToCopy.parameters)) {
+            if ((this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search' || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search') && this.jobToCopy.parameters[input].indexOf('{') === -1) {
+              const id = this.jobToCopy.parameters[input];
+
+              // Resolve AbstractFactory
+              const injectable = dataMap.get(this.selectedSchema.properties.inputs.properties[input]['format']);
+              // Inject service
+              this.service = this.injector.get(injectable);
+              requests.push(this.service.getById(id).pipe(map(response => {
+                  response['data'] = response;
+                  response['inputName'] = input;
+                  return response;
+                })
+              ));
+
+            }  else if (this.jobToCopy.parameters[input].indexOf('{') !== -1) {
+              this.jobModel['inputs'][input] = {};
+              this.jobModel['inputs'][input]['id'] = this.jobToCopy.parameters[input];
+              const prevId = this.jobToCopy.parameters[input].substring(3, this.jobToCopy.parameters[input].indexOf('.'));
+              const prevOutputName = this.jobToCopy.parameters[input].substring(this.jobToCopy.parameters[input].indexOf('.'), this.jobToCopy.parameters[input].length - 3);
+              const prevJob = this.jobs.find(x => x.id === prevId);
+              this.jobModel['inputs'][input]['name'] = prevJob.name + prevOutputName ;
+            } else {
+              this.jobModel['inputs'][input] = this.jobToCopy.parameters[input] ? this.jobToCopy.parameters[input] : null ;
+            }
+          }
+          if (requests.length === 0) {this.openCopyModal(content);
+          } else {forkJoin(requests).subscribe(results => {
+            for (const result of results) {
+              this.jobModel['inputs'][result['inputName']] = result['data'];
+            }
+            this.openCopyModal(content);
+          });
+          }});
       }
     );
   }
@@ -570,11 +480,11 @@ const requests = [];
 
   resetJobOutputs() {
     this.jobOutputs = {
-      collections: [],
-      stitchingVectors: [],
-      tensorflowModels: [],
-      csvCollections: [],
-      notebooks: []
+      collection: [],
+      stitchingVector: [],
+      tensorflowModel: [],
+      csvCollection: [],
+      notebook: []
     };
   }
 

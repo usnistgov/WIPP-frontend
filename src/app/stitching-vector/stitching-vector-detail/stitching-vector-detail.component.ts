@@ -34,7 +34,7 @@ export class StitchingVectorDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.stitchingVectorService.getStitchingVector(this.stitchingVectorId)
+    this.stitchingVectorService.getById(this.stitchingVectorId)
       .subscribe(stitchingVector => {
         this.stitchingVector = stitchingVector;
         this.getJob();

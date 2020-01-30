@@ -4,12 +4,13 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Notebook, PaginatedNotebooks} from './notebook';
 import {map} from 'rxjs/operators';
+import {DataService} from '../data-service';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotebookService {
+export class NotebookService implements DataService<Notebook, PaginatedNotebooks> {
 
   private notebooksUrl = environment.apiRootUrl + '/notebooks';
 
@@ -17,7 +18,7 @@ export class NotebookService {
     private http: HttpClient) {
   }
 
-  getNotebook(id: string): Observable<Notebook> {
+  getById(id: string): Observable<Notebook> {
     return this.http.get<Notebook>(`${this.notebooksUrl}/${id}`);
   }
 
@@ -25,7 +26,7 @@ export class NotebookService {
     return this.http.get<string>(`${this.notebooksUrl}/${id}/getFile`);
   }
 
-  getNotebooks(params): Observable<PaginatedNotebooks> {
+  get(params): Observable<PaginatedNotebooks> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
@@ -44,7 +45,7 @@ export class NotebookService {
       }));
   }
 
-  getNotebooksByNameContainingIgnoreCase(params, name): Observable<PaginatedNotebooks> {
+  getByNameContainingIgnoreCase(params, name): Observable<PaginatedNotebooks> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
@@ -60,8 +61,9 @@ export class NotebookService {
     httpOptions.params = httpParams;
     return this.http.get<any>(this.notebooksUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
-        result.notebooks = result._embedded.notebooks;
+        result.data = result._embedded.notebooks;
         return result;
       }));
   }
+
 }

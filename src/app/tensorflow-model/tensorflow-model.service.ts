@@ -5,22 +5,23 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedTensorflowModels, TensorboardLogs, TensorflowModel} from './tensorflow-model';
 import {Job} from '../job/job';
+import {DataService} from '../data-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TensorflowModelService {
+export class TensorflowModelService implements DataService<TensorflowModel, PaginatedTensorflowModels> {
 
   private tensorflowModelUrl = environment.apiRootUrl + '/tensorflowModels';
   private tensorboardLogsUrl = environment.apiRootUrl + '/tensorboardLogs';
 
   constructor(private http: HttpClient) { }
 
-  getTensorflowModel(id: string): Observable<TensorflowModel> {
+  getById(id: string): Observable<TensorflowModel> {
     return this.http.get<TensorflowModel>(`${this.tensorflowModelUrl}/${id}`);
   }
 
-  getTensorflowModels(params): Observable<PaginatedTensorflowModels> {
+  get(params): Observable<PaginatedTensorflowModels> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -39,7 +40,7 @@ export class TensorflowModelService {
       }));
   }
 
-  getTensorflowModelsByNameContainingIgnoreCase(params, name): Observable<PaginatedTensorflowModels> {
+  getByNameContainingIgnoreCase(params, name): Observable<PaginatedTensorflowModels> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -54,7 +55,7 @@ export class TensorflowModelService {
     httpOptions.params = httpParams;
     return this.http.get<any>(this.tensorflowModelUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
-        result.tensorflowModels = result._embedded.tensorflowModels;
+        result.data = result._embedded.tensorflowModels;
         return result;
       }));
   }
@@ -75,4 +76,5 @@ export class TensorflowModelService {
         return result;
       }));
   }
+
 }

@@ -18,7 +18,7 @@ export class StitchingVectorTemplateComponent extends DynamicComponent implement
 static key = 'stitchingvectortemplatecomponent';
 
   ngOnInit() {
-      this.stitchingVectorService.getStitchingVector(this.idData).subscribe(result => {
+      this.stitchingVectorService.getById(this.idData).subscribe(result => {
         this.text = result.name;
       });
     }

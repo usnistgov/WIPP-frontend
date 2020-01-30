@@ -70,7 +70,7 @@ export class TensorflowModelListComponent implements OnInit {
           sort: page.sort
         };
         if (page.filter) {
-          return this.tensorflowModelService.getTensorflowModelsByNameContainingIgnoreCase(params, page.filter).pipe(
+          return this.tensorflowModelService.getByNameContainingIgnoreCase(params, page.filter).pipe(
             map((data) => {
               this.resultsLength = data.page.totalElements;
               return data.tensorflowModels;
@@ -80,7 +80,7 @@ export class TensorflowModelListComponent implements OnInit {
             })
           );
         }
-        return this.tensorflowModelService.getTensorflowModels(params).pipe(
+        return this.tensorflowModelService.get(params).pipe(
           map((data) => {
             this.resultsLength = data.page.totalElements;
             return data.tensorflowModels;

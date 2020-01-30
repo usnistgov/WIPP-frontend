@@ -47,7 +47,7 @@ export class NotebookListComponent implements OnInit {
           sort: page.sort
         };
         if (page.filter) {
-          return this.notebookService.getNotebooksByNameContainingIgnoreCase(params, page.filter).pipe(
+          return this.notebookService.getByNameContainingIgnoreCase(params, page.filter).pipe(
             map((data) => {
               this.resultsLength = data.page.totalElements;
               return data.notebooks;
@@ -57,7 +57,7 @@ export class NotebookListComponent implements OnInit {
             })
           );
         }
-        return this.notebookService.getNotebooks(params).pipe(
+        return this.notebookService.get(params).pipe(
           map((data) => {
             this.resultsLength = data.page.totalElements;
             return data.notebooks;

@@ -166,7 +166,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   getImagesCollection() {
-    return this.imagesCollectionService.getImagesCollection(this.imageCollectionId);
+    return this.imagesCollectionService.getById(this.imageCollectionId);
   }
 
   getImages(): void {

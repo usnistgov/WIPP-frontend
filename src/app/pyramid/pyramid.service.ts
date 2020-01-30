@@ -5,22 +5,23 @@ import {forkJoin, Observable, throwError} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Job} from '../job/job';
 import {PaginatedPyramid, Pyramid} from './pyramid';
+import {DataService} from '../data-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PyramidService {
+export class PyramidService implements DataService<Pyramid, PaginatedPyramid> {
   private pyramidsUrl = environment.apiRootUrl + '/pyramids';
 
   constructor(
     private http: HttpClient) {
   }
 
-  getPyramid(id: string): Observable<Pyramid> {
+  getById(id: string): Observable<Pyramid> {
     return this.http.get<Pyramid>(`${this.pyramidsUrl}/${id}`);
   }
 
-  getPyramids(params): Observable<PaginatedPyramid> {
+  get(params): Observable<PaginatedPyramid> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
@@ -39,7 +40,7 @@ export class PyramidService {
       }));
   }
 
-  getPyramidsByNameContainingIgnoreCase(params, name): Observable<PaginatedPyramid> {
+  getByNameContainingIgnoreCase(params, name): Observable<PaginatedPyramid> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -55,7 +56,7 @@ export class PyramidService {
     httpOptions.params = httpParams;
     return this.http.get<any>(this.pyramidsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
-        result.pyramids = result._embedded.pyramids;
+        result.data = result._embedded.pyramids;
         return result;
       }));
   }
@@ -171,8 +172,7 @@ export class PyramidService {
     const lastSplit = splits[splits.length - 1];
     const pyramidId = lastSplit.indexOf('.dzi') === lastSplit.length - 4 ?
       splits[splits.length - 2] : lastSplit;
-    return this.getPyramid(pyramidId);
+    return this.getById(pyramidId);
   }
-
 
 }

@@ -7,11 +7,13 @@ import {Image, PaginatedImages} from './image';
 import {MetadataFile, PaginatedMetadataFiles} from './metadata-file';
 import {environment} from '../../environments/environment';
 import {Job} from '../job/job';
+import {DataService} from '../data-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ImagesCollectionService {
+export class ImagesCollectionService implements DataService<ImagesCollection, PaginatedImagesCollections> {
+
 
   private imagesCollectionsUrl = environment.apiRootUrl + '/imagesCollections';
 
@@ -20,7 +22,11 @@ export class ImagesCollectionService {
   ) {
   }
 
-  getImagesCollections(params): Observable<PaginatedImagesCollections> {
+  getById(id: string): Observable<ImagesCollection> {
+    return this.http.get<ImagesCollection>(`${this.imagesCollectionsUrl}/${id}`);
+  }
+
+  get(params): Observable<PaginatedImagesCollections> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
@@ -39,7 +45,7 @@ export class ImagesCollectionService {
       }));
   }
 
-  getImagesCollectionsByNameContainingIgnoreCase(params, name): Observable<PaginatedImagesCollections> {
+  getByNameContainingIgnoreCase(params, name): Observable<PaginatedImagesCollections> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
@@ -54,7 +60,7 @@ export class ImagesCollectionService {
     httpOptions.params = httpParams;
     return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
-        result.imagesCollections = result._embedded.imagesCollections;
+        result.data = result._embedded.imagesCollections;
         return result;
       }));
   }
@@ -77,10 +83,6 @@ export class ImagesCollectionService {
         result.imagesCollections = result._embedded.imagesCollections;
         return result;
       }));
-  }
-
-  getImagesCollection(id: string): Observable<ImagesCollection> {
-    return this.http.get<ImagesCollection>(`${this.imagesCollectionsUrl}/${id}`);
   }
 
   setImagesCollectionName(imagesCollection: ImagesCollection, name: string): Observable<ImagesCollection> {
@@ -189,4 +191,5 @@ export class ImagesCollectionService {
     }
     return observableOf(null);
   }
+
 }

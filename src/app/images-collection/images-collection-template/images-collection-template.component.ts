@@ -18,7 +18,7 @@ export class ImagesCollectionTemplateComponent extends DynamicComponent implemen
   static key = 'collectiontemplatecomponent';
 
   ngOnInit() {
-      this.imagesCollectionService.getImagesCollection(this.idData).subscribe(result => {
+      this.imagesCollectionService.getById(this.idData).subscribe(result => {
         this.text = result.name;
       });
   }

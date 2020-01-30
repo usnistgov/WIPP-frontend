@@ -29,7 +29,7 @@ export class CsvCollectionDetailComponent implements OnInit {
 
   ngOnInit() {
     this.plotsUiLink = urljoin(this.appConfigService.getConfig().plotsUiUrl, 'plots', this.csvCollectionId);
-    this.csvCollectionService.getCsvCollection(this.csvCollectionId)
+    this.csvCollectionService.getById(this.csvCollectionId)
       .subscribe(csvCollection => {
         this.csvCollection = csvCollection;
         this.getJob();

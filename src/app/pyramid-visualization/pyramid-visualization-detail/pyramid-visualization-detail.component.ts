@@ -243,7 +243,7 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
 
   // Typeahead functions for pyramid search
   filter(term) {
-    return this.pyramidService.getPyramidsByNameContainingIgnoreCase(null, term).pipe(map(result => {
+    return this.pyramidService.getByNameContainingIgnoreCase(null, term).pipe(map(result => {
       return result.pyramids;
     }));
   }

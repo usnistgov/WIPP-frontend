@@ -6,11 +6,12 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from './timeSlice';
 import {Job} from '../job/job';
+import {DataService} from '../data-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class StitchingVectorService {
+export class StitchingVectorService implements DataService<StitchingVector, PaginatedStitchingVector> {
   private stitchingVectorsUrl = environment.apiRootUrl + '/stitchingVectors';
 
   constructor(
@@ -26,11 +27,11 @@ export class StitchingVectorService {
     return this.http.post<StitchingVector>(this.stitchingVectorsUrl + '/upload', formData);
   }
 
-  getStitchingVector(id: string): Observable<StitchingVector> {
+  getById(id: string): Observable<StitchingVector> {
     return this.http.get<StitchingVector>(`${this.stitchingVectorsUrl}/${id}`);
   }
 
-  getStitchingVectors(params): Observable<PaginatedStitchingVector> {
+  get(params): Observable<PaginatedStitchingVector> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
@@ -49,7 +50,7 @@ export class StitchingVectorService {
       }));
   }
 
-  getStitchingVectorsByNameContainingIgnoreCase(params, name): Observable<PaginatedStitchingVector> {
+  getByNameContainingIgnoreCase(params, name): Observable<PaginatedStitchingVector> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -64,7 +65,7 @@ export class StitchingVectorService {
     httpOptions.params = httpParams;
     return this.http.get<any>(this.stitchingVectorsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
-        result.stitchingVectors = result._embedded.stitchingVectors;
+        result.data = result._embedded.stitchingVectors;
         return result;
       }));
   }

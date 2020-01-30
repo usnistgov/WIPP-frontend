@@ -19,7 +19,7 @@ static key = 'tensorflowmodeltemplatecomponent';
 
   ngOnInit() {
       if (this.idData) {
-      this.tensorflowModelService.getTensorflowModel(this.idData).subscribe(result => {
+      this.tensorflowModelService.getById(this.idData).subscribe(result => {
         this.text = result.name;
       });
     }

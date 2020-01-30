@@ -5,21 +5,22 @@ import {map} from 'rxjs/operators';
 import {Job} from '../job/job';
 import {CsvCollection, PaginatedCsvCollections} from './csv-collection';
 import {environment} from '../../environments/environment';
+import {DataService} from '../data-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CsvCollectionService {
+export class CsvCollectionService implements DataService<CsvCollection, PaginatedCsvCollections> {
 
   private csvCollectionUrl = environment.apiRootUrl + '/csvCollections';
 
   constructor(private http: HttpClient) { }
 
-  getCsvCollection(id: string): Observable<CsvCollection> {
+  getById(id: string): Observable<CsvCollection> {
     return this.http.get<CsvCollection>(`${this.csvCollectionUrl}/${id}`);
   }
 
-  getCsvCollections(params): Observable<PaginatedCsvCollections> {
+  get(params): Observable<PaginatedCsvCollections> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -38,7 +39,7 @@ export class CsvCollectionService {
       }));
   }
 
-  getCsvCollectionsByNameContainingIgnoreCase(params, name): Observable<PaginatedCsvCollections> {
+  getByNameContainingIgnoreCase(params, name): Observable<PaginatedCsvCollections> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -53,7 +54,7 @@ export class CsvCollectionService {
     httpOptions.params = httpParams;
     return this.http.get<any>(this.csvCollectionUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
-        result.csvCollections = result._embedded.csvCollections;
+        result.data = result._embedded.csvCollections;
         return result;
       }));
   }

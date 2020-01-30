@@ -97,7 +97,7 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
           sort: page.sort
         };
         if (page.filterName) {
-          return this.imagesCollectionService.getImagesCollectionsByNameContainingIgnoreCase(params, page.filterName).pipe(
+          return this.imagesCollectionService.getByNameContainingIgnoreCase(params, page.filterName).pipe(
             map((data) => {
               this.isLoadingResults = false;
               this.resultsLength = data.page.totalElements;
@@ -124,7 +124,7 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
               })
             );
         }
-        return this.imagesCollectionService.getImagesCollections(params).pipe(
+        return this.imagesCollectionService.get(params).pipe(
           map((data) => {
             this.isLoadingResults = false;
             this.resultsLength = data.page.totalElements;
