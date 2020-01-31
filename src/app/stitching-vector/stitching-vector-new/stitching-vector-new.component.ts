@@ -2,9 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVector} from '../stitching-vector';
 import {StitchingVectorService} from '../stitching-vector.service';
-import {throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-stitching-vector-new',
@@ -24,7 +22,8 @@ export class StitchingVectorNewComponent implements OnInit {
   @ViewChild('file') file: ElementRef;
 
   constructor(public activeModal: NgbActiveModal, private modalService: NgbModal,
-              private stitchingVectorService: StitchingVectorService) {
+              private stitchingVectorService: StitchingVectorService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -45,24 +44,17 @@ export class StitchingVectorNewComponent implements OnInit {
 
   upload() {
     this.stitchingVectorService.uploadFile(this.stitchingVector)
-      .pipe(
-        catchError(err => {
-          console.log('Handling error locally and rethrowing it...', err);
-          this.activeModal.close(err);
-          const modalRef = this.modalService.open(ModalErrorComponent);
-          modalRef.componentInstance.title = 'Cannot upload stitching vector.';
-          modalRef.componentInstance.message = err.error.message;
-          return throwError(err);
-        })
-      )
       .subscribe(
         stitchingVector => {
-          console.log(stitchingVector);
-          this.activeModal.close(stitchingVector);
+          this.displayAlertMessage('success', 'Success! Redirecting...');
+          const stitchingVectorId = stitchingVector.id ? stitchingVector.id : null;
+          setTimeout(() => {
+          this.router.navigate(['stitching-vectors', stitchingVectorId]);
+          }, 2000);
         },
-        err => console.log('HTTP Error', err),
-        () => console.log('HTTP request completed.')
-      );
+        err => {
+          this.displayAlertMessage('danger', 'Could not register stitching vector: ' + err.error);
+        });
   }
 
   displayAlertMessage(type, message) {
