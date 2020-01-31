@@ -29,13 +29,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   selectedSchema = null;
   pluginList = [];
-  jobOutputs = {
-    collection: [],
-    stitchingVector: [],
-    tensorflowModel: [],
-    csvCollection: [],
-    notebook: []
-  };
+  jobOutputs;
   jobs: Job[] = [];
   jobToCopy: Job = new Job();
   workflowId = this.route.snapshot.paramMap.get('id');
@@ -351,10 +345,10 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
 
   openCopy(content, jobId: string) {
-    this.getJob(content, jobId);
+    this.populateAndOpenCopyModal(content, jobId);
   }
 
-  getJob(content, jobId: string ) {
+  populateAndOpenCopyModal(content, jobId: string ) {
     this.jobService.getJob(jobId).subscribe(job => {
         this.jobToCopy = job;
         this.jobService.getPlugin(job.wippExecutable).subscribe(plugin => {
@@ -363,9 +357,11 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           this.jobModel['inputs'] = {};
           const requests = [];
           for (const input of Object.keys(this.jobToCopy.parameters)) {
-            if ((this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search' || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search') && this.jobToCopy.parameters[input].indexOf('{') === -1) {
+            // if input to copy is an existing WIPP object
+            if (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
+              || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search') {
+              if (this.jobToCopy.parameters[input].indexOf('{') === -1) {
               const id = this.jobToCopy.parameters[input];
-
               // Resolve AbstractFactory
               const injectable = dataMap.get(this.selectedSchema.properties.inputs.properties[input]['format']);
               // Inject service
@@ -376,85 +372,35 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
                   return response;
                 })
               ));
-
-            }  else if (this.jobToCopy.parameters[input].indexOf('{') !== -1) {
+            }  else if (this.jobToCopy.parameters[input].indexOf('{') === 0) {
+               // if input to copy is a WIPP object not created yet (output of a previous step not executed)
               this.jobModel['inputs'][input] = {};
               this.jobModel['inputs'][input]['id'] = this.jobToCopy.parameters[input];
               const prevId = this.jobToCopy.parameters[input].substring(3, this.jobToCopy.parameters[input].indexOf('.'));
-              const prevOutputName = this.jobToCopy.parameters[input].substring(this.jobToCopy.parameters[input].indexOf('.'), this.jobToCopy.parameters[input].length - 3);
+              const prevOutputName = this.jobToCopy.parameters[input].substring(
+                this.jobToCopy.parameters[input].indexOf('.'),
+                this.jobToCopy.parameters[input].length - 3
+              );
               const prevJob = this.jobs.find(x => x.id === prevId);
-              this.jobModel['inputs'][input]['name'] = prevJob.name + prevOutputName ;
+              this.jobModel['inputs'][input]['name'] = prevJob.name + prevOutputName;
+              this.jobModel['inputs'][input]['virtual'] = true;
+              this.jobModel['inputs'][input]['sourceJob'] = prevId;
+              }
             } else {
+               // if input to copy is a standard type (string, int...)
               this.jobModel['inputs'][input] = this.jobToCopy.parameters[input] ? this.jobToCopy.parameters[input] : null ;
             }
           }
-          if (requests.length === 0) {this.openCopyModal(content);
+          if (requests.length === 0) {this.open(content);
           } else {forkJoin(requests).subscribe(results => {
             for (const result of results) {
               this.jobModel['inputs'][result['inputName']] = result['data'];
             }
-            this.openCopyModal(content);
+            this.open(content);
           });
           }});
       }
     );
-  }
-
-  openCopyModal(content) {
-    const task = {};
-    task['parameters'] = this.jobToCopy.parameters;
-    task['dependencies'] = this.jobToCopy.dependencies;
-    this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
-
-      // configure job
-      task['name'] = this.jobModel['taskName'];
-      task['wippExecutable'] = this.selectedSchema.id;
-      task['wippWorkflow'] = this.workflow.id;
-      task['type'] = this.selectedSchema.name;
-      task['outputParameters'] = {};
-      // add job parameters
-
-      this.selectedSchema.outputs.forEach(output => {
-        task['outputParameters'][output.name] = null;
-      });
-
-      for (const inputEntry in result.inputs) {
-        if (result.inputs.hasOwnProperty(inputEntry)) {
-          const type = this.selectedSchema.properties.inputs.properties[inputEntry]['format'];
-          let value = result.inputs[inputEntry];
-          if (type === 'collection' ||
-            type === 'stitchingVector' ||
-            type === 'tensorflowModel' ||
-            type === 'csvCollection' ||
-            type === 'notebook') {
-            if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
-              if (task['dependencies'].indexOf(value.sourceJob) === -1) {
-                task['dependencies'].push(value.sourceJob);
-              }
-            }
-            value = value.hasOwnProperty('id') ? value.id : null;
-          }
-          if (type === 'array') {
-            value = value.join(',');
-          }
-          task['parameters'][inputEntry] = value;
-        }
-
-
-      }
-      // push job
-      this.workflowService.createJob(task).subscribe(job => {
-        this.resetForm();
-        this.getJobs();
-      }, error => {
-        this.resetForm();
-        const modalRefErr = this.modalService.open(ModalErrorComponent);
-        modalRefErr.componentInstance.title = 'Error while creating new task';
-        modalRefErr.componentInstance.message = error.error;
-      });
-    }, (result) => {
-      this.resetForm();
-    });
   }
 
   // Create workflow DAG
