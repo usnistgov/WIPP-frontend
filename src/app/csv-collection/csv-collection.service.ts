@@ -67,7 +67,7 @@ export class CsvCollectionService {
     return this.http.get<Job>(jobUrl);
   }
 
-  getCsv(csvCollection: CsvCollection, params): Observable<PaginatedCsv> {
+  getCsvFiles(csvCollection: CsvCollection, params): Observable<PaginatedCsv> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -78,10 +78,8 @@ export class CsvCollectionService {
       const httpParams = new HttpParams().set('page', page).set('size', size);
       httpOptions.params = httpParams;
     }
-    console.log(httpOptions);
     return this.http.get<Csv>(`${this.csvCollectionUrl}/${csvCollection.id}/csv`, httpOptions).pipe(
       map((result: any) => {
-        console.log(result); // <--it's an object
         result.csv = result._embedded.csvs;
         return result;
       }));

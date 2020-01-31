@@ -40,7 +40,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
 
   $throttleRefresh: Subject<void> = new Subject<void>();
   flowHolder: Flow.IFlow;
-  displayedColumnsCsv: string[] = ['fileName', 'size'];
+  displayedColumnsCsv: string[] = ['fileName', 'fileSize'];
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('csvPaginator') csvPaginator: MatPaginator;
@@ -49,8 +49,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private csvCollectionService: CsvCollectionService,
-    private appConfigService: AppConfigService,
-    private elem: ElementRef) {
+    private appConfigService: AppConfigService) {
       this.csvParamsChange = new BehaviorSubject({
     index: 0,
     size: this.pageSize,
@@ -188,7 +187,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
           size: page.size,
           sort: page.sort
         };
-        return this.csvCollectionService.getCsv(this.csvCollection, params).pipe(
+        return this.csvCollectionService.getCsvFiles(this.csvCollection, params).pipe(
           map((data) => {
             this.resultsLengthCsv = data.page.totalElements;
             return data.csv;
