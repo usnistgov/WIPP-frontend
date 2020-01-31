@@ -6,6 +6,7 @@ import {Job} from '../job/job';
 import {CsvCollection, PaginatedCsvCollections} from './csv-collection';
 import {environment} from '../../environments/environment';
 import {DataService} from '../data-service';
+import {Csv, PaginatedCsv} from './csv';
 
 @Injectable({
   providedIn: 'root'
@@ -59,18 +60,42 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
       }));
   }
 
+  createCsvCollection(csvCollection: CsvCollection): Observable<CsvCollection> {
+    return this.http.post<CsvCollection>(this.csvCollectionUrl, csvCollection);
+  }
+
   getJob(jobUrl: string): Observable<Job> {
     return this.http.get<Job>(jobUrl);
   }
 
-  uploadFile(csvCollection: CsvCollection): Observable<CsvCollection> {
-    const formData = new FormData();
-    for (const file of csvCollection.files) {
-      formData.append('files', file, file.name);
+  getCsvFiles(csvCollection: CsvCollection, params): Observable<PaginatedCsv> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size);
+      httpOptions.params = httpParams;
     }
-    formData.append('name', csvCollection.name);
+    return this.http.get<Csv>(`${this.csvCollectionUrl}/${csvCollection.id}/csv`, httpOptions).pipe(
+      map((result: any) => {
+        result.csv = result._embedded.csvs;
+        return result;
+      }));
+  }
 
-    return this.http.post<CsvCollection>(this.csvCollectionUrl + '/upload', formData);
+    getCsvUrl(csvCollection: CsvCollection): string {
+      return `${this.csvCollectionUrl}/${csvCollection.id}/csv`;
+  }
+
+  lockCsvCollection(csvCollection: CsvCollection): Observable<CsvCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, {locked: true}, httpOptions);
   }
 
 }

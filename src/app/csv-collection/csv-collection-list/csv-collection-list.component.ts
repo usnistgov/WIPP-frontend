@@ -6,7 +6,6 @@ import {CsvCollection} from '../csv-collection';
 import {CsvCollectionService} from '../csv-collection.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-new.component';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-csv-collection-list',
@@ -27,8 +26,7 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
 
   constructor(
     private csvCollectionService: CsvCollectionService,
-    private modalService: NgbModal,
-    private router: Router
+    private modalService: NgbModal
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
