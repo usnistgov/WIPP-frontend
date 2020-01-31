@@ -3,6 +3,8 @@ export class ImagesCollection {
   name: string;
   creationDate: Date;
   sourceJob: string;
+  sourceCatalog: string;
+  importMethod: string;
   locked: boolean;
   numberOfImages: number;
   imagesTotalSize: number;
@@ -10,6 +12,7 @@ export class ImagesCollection {
   numberOfImportErrors: number;
   numberOfMetadataFiles: number;
   metadataFilesTotalSize: number;
+  notes: string;
   pattern: string;
   _links: any;
 }

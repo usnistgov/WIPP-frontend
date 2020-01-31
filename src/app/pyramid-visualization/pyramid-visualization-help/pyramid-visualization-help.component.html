@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <h4 class="modal-title">
+    <span class="fas fa-info-circle"></span>
+    Visualization configuration help.
+  </h4>
+  <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  A visualization configuration has two levels:
+  <ol>
+    <li>Group level</li>
+    <li>Layer level</li>
+  </ol>
+
+  <p>
+    A layer represents a pyramid you would like to display. Each layer
+    must be added to a group.<br>
+    When two layers are in the same group, they can be displayed at the same
+    time with some transparency thanks to the "Layer composition" module.
+  </p>
+  <p>
+    To create a new group, you must specified a unique label.
+  </p>
+  <p>
+    To create a new layer, you must specified a unique label, a
+    pyramid and the resolution of the image in pixels per meter.<br>
+    The id must be unique over all the layers of the visualization
+    (not just for its group).<br>
+    The pixels per meter parameter will be automatically filled if it can be
+    retrieved from the selected pyramid metadata.
+  </p>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" ng-click="close()">
+    OK
+  </button>
+</div>
+

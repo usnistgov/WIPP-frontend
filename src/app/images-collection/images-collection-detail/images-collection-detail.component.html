@@ -1,7 +1,7 @@
 <h3 class="wipp-title">Collection detail</h3>
 <div>
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-5">
       <dl class="row">
         <dt class="col-md-4">Name:</dt>
         <dd class="col-md-8">
@@ -27,9 +27,9 @@
           }}
         </dd>
 
-        <dt class="col-md-4">Source job:</dt>
+        <dt class="col-md-4">Source:</dt>
         <dd class="col-md-8">
-          <span *ngIf="sourceJob; then jobTemplate; else uploadedTemplate"></span>
+          <span *ngIf="sourceJob; then jobTemplate; else importTemplate"></span>
           <ng-template #jobTemplate>
             <a (click)="displayJobModal(imagesCollection.sourceJob)"
                class="wipp-link"
@@ -38,14 +38,68 @@
               {{sourceJob.name}}
             </a>
           </ng-template>
-          <ng-template #uploadedTemplate>
-            Uploaded
+          <ng-template #importTemplate>
+            <div *ngIf="imagesCollection.importMethod == 'CATALOG'">
+              <a [href]="sourceCatalogLink"
+                 target="_blank"
+                 [ngbTooltip]="catalogTipContent"
+                 placement="left">
+                Catalog
+              </a>
+            </div>
+            <div *ngIf="!imagesCollection.importMethod || imagesCollection.importMethod == 'UPLOADED'">
+              Uploaded
+            </div>
+          </ng-template>
+
+          <ng-template #catalogTipContent>Go to Catalog
+            <span
+              aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
           </ng-template>
         </dd>
-
       </dl>
     </div>
-    <div class="col-md-3 text-right">
+
+    <div class="col-md-5">
+      <dl class="row">
+        <dt class="col-md-3">
+          <button class="btn btn-block btn-default"
+                  (click)="changeShowNotes()">
+            <a *ngIf="showNotes; then hide; else show"></a>
+          </button>
+          <ng-template #show> Show Notes</ng-template>
+          <ng-template #hide> Hide Notes</ng-template>
+          <button class="btn btn-block btn-default"
+                  (click)="changeEditNotes()"
+                  [hidden]="!showNotes || editNotes">
+            Edit Notes
+          </button>
+          <div  [hidden]="!editNotes || !showNotes">
+              <button class="btn btn-success btn-block"
+                      (click)="saveNotes()"
+                      [disabled]="imageCollectionNotes == imagesCollection.notes">
+                Save
+              </button>
+              <button class="btn btn-danger btn-block"
+                      (click)="clearNotes()"
+                      [hidden]="!editNotes">
+                Cancel
+              </button>
+          </div>
+        </dt>
+
+        <dd class="col-md-9">
+             <textarea class="wideTxtArea"
+                       [hidden]="!showNotes"
+                       [disabled]="!editNotes"
+                       type="text"
+                       [(ngModel)]="imageCollectionNotes"
+                       name="imageCollectionNotes"></textarea>
+        </dd>
+      </dl>
+    </div>
+
+    <div class="col-md-2 text-right">
       <a *ngIf="getNbFiles() > 0"
          [href]="imagesCollection._links.download.href"
          ngbTooltip="Download as zip"

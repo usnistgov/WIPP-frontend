@@ -1,0 +1,175 @@
+<h3 class="wipp-title">Pyramid Visualization</h3>
+
+<div class="row">
+  <div class="col-md-4">
+    <strong>Name:</strong> {{ visualization.name }}
+  </div>
+
+  <div class="col-md-4">
+    <strong>Creation date:</strong> {{ visualization.creationDate | date }}
+  </div>
+
+  <div class="col-md-4 text-right">
+    <!--TODO: add download link (metadata not handled in pyramid building yet) -->
+    <!--<a [href]="visualization?._links?.download?.href"-->
+    <!--ngbTooltip="Download as zip"-->
+    <!--placement="left"-->
+    <!--class="btn btn-light">-->
+    <!--<span-->
+    <!--aria-hidden="true"><i class="fa fa-download"></i></span>-->
+    <!--</a>-->
+    <button type="button" class="btn wip-icon-btn-default btn-sm"
+            ngbTooltip="Hide/Show configs"
+            placement="left"
+            [class.active]="showSettings"
+            (click)="showSettings = !showSettings">
+      <span aria-hidden="true"><i class="fa fa-cog"></i></span>
+    </button>
+  </div>
+
+</div>
+
+<table [hidden]="!showSettings"
+       class="table table-bordered table-condensed table-striped table-fixed-layout top15">
+  <thead>
+  <tr>
+    <th class="wip-icon-button-column vert-align">
+      <button type="button" class="btn wip-icon-btn-default btn-sm"
+              ngbTooltip="Show help"
+              (click)="showHelp()">
+        <span aria-hidden="true"><i class="fa fa-info-circle"></i></span>
+      </button>
+    </th>
+    <th class="vert-align">Layer group label</th>
+    <th class="wip-icon-button-column text-center vert-align">
+                <span *ngIf="savedStatus === 'saved'"
+                      aria-hidden="true"
+                      ngbTooltip="Configuration saved on the server"
+                      placement="left"><i class="fa fa-check-circle"></i></span>
+      <span *ngIf="savedStatus === 'error'"
+            aria-hidden="true"
+            ngbTooltip="Error saving the configuration on the server"
+            placement="left"><i class="fa fa-exclamation-circle"></i></span>
+      <img *ngIf="savedStatus === 'saving'"
+           src="assets/img/loading.svg" alt="Saving configuration"
+           ngbTooltip="Saving configuration"
+           placement="left" class="wip-icon">
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let layersGroup of layersGroups">
+    <tr>
+      <td class="vert-align">
+        <button type="button" class="btn wip-icon-btn-default btn-sm"
+                ngbTooltip="Show/hide group"
+                (click)="layersGroup.collapsed = !layersGroup.collapsed">
+                      <span [hidden]="layersGroup.collapsed"
+                            aria-hidden="true"><i class="fa fa-arrow-down"></i></span>
+          <span [hidden]="!layersGroup.collapsed"
+                aria-hidden="true"><i class="fa fa-arrow-right"></i></span>
+        </button>
+      </td>
+      <td class="vert-align">{{layersGroup.label}}</td>
+      <td class="vert-align">
+        <button type="button" class="btn wip-icon-btn-default btn-sm"
+                ngbTooltip="Delete group"
+                (click)="removeGroup(layersGroup)">
+          <span aria-hidden="true">
+            <i class="fa fa-trash"></i>
+          </span>
+        </button>
+      </td>
+    </tr>
+    <tr [ngbCollapse]="layersGroup.collapsed">
+      <td class="vert-align"></td>
+      <td colspan="2" class="vert-align">
+        <!-- Layer level -->
+        <table class="table table-bordered table-condensed table-striped table-fixed-layout">
+          <thead>
+          <tr>
+            <th class="table-column-40p vert-align">Layer label</th>
+            <th class="table-column-40p vert-align">Pyramid</th>
+            <!--TODO: add ppm info (metadata not handled in pyramid building yet) -->
+            <!--<th class="vert-align">Pixels / meter</th>-->
+            <th class="wip-icon-button-column vert-align"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let layer of layersGroup.layers">
+            <td class="vert-align">{{layer.label}}</td>
+            <td class="vert-align">
+              <a routerLink="/pyramids/{{layer.pyramid?.id}}">
+                {{layer.pyramid?.name}}
+              </a>
+            </td>
+            <!--TODO: add ppm info (metadata not handled in pyramid building yet) -->
+            <!--<td class="vert-align">{{layer.ppm}}</td>-->
+            <td class="vert-align">
+              <button type="button" class="btn wip-icon-btn-default btn-sm"
+                      ngbTooltip="Delete layer"
+                      (click)="removeLayer(layersGroup, layer)">
+                <span aria-hidden="true"><i class="fa fa-trash"></i></span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td class="vert-align">
+              <input type="text" class="form-control"
+                     [(ngModel)]="layersGroup.newLayer.label">
+            </td>
+            <td class="vert-align">
+              <input type="text" class="form-control"
+                     autocomplete="off"
+                     [ngbTypeahead]="search"
+                     #instance="ngbTypeahead"
+                     [inputFormatter]="formatter"
+                     [resultFormatter]="formatter"
+                     (selectItem)="pyramidSelected(layersGroup)"
+                     placeholder="Start typing a pyramid name..."
+                     [(ngModel)]="layersGroup.newLayer.pyramid"
+                     required>
+            </td>
+            <!--TODO: add ppm info (metadata not handled in pyramid building yet) -->
+            <!--<td class="vert-align">-->
+              <!--<input type="number" min="0" class="form-control"-->
+                     <!--[(ngModel)]="layersGroup.newLayer.ppm">-->
+            <!--</td>-->
+            <td class="vert-align">
+              <button type="button" class="btn wip-icon-btn-default btn-sm"
+                      ngbTooltip="Add layer"
+                      (click)="addLayer(layersGroup)"
+                      [disabled]="!isNewLayerValid(layersGroup)">
+                          <span aria-hidden="true">
+                            <i class="fa fa-plus"></i>
+                          </span>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </ng-container>
+  <tr>
+    <td class="vert-align"></td>
+    <td class="vert-align">
+      <input type="text" class="form-control"
+             [(ngModel)]="newGroup['label']">
+    </td>
+    <td class="vert-align">
+      <button type="button" class="btn wip-icon-btn-default btn-sm"
+              uib-tooltip="Add group"
+              (click)="addGroup()"
+              [disabled]="!isNewGroupValid()">
+          <span aria-hidden="true">
+            <i class="fa fa-plus"></i>
+          </span>
+      </button>
+    </td>
+  </tr>
+
+  </tbody>
+</table>
+
+<wippWdzt [manifest]="manifest"></wippWdzt>
