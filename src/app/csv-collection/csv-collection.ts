@@ -1,9 +1,12 @@
 export class CsvCollection {
   id: string;
   name: string;
-  files: File[];
   creationDate: Date;
   sourceJob: string;
+  locked: boolean;
+  numberOfImportErrors: number;
+  numberImportingCsv: number;
+  csvTotalSize: number;
   _links: any;
 }
 

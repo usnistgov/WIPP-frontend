@@ -8,6 +8,7 @@ import { CsvCollectionTemplateComponent } from './csv-collection-template/csv-co
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CsvCollectionNewComponent } from './csv-collection-new/csv-collection-new.component';
 import { FormsModule } from '@angular/forms';
+import {NgMathPipesModule} from 'angular-pipes';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     NgbModule.forRoot(),
-    FormsModule
+    FormsModule,
+    NgMathPipesModule
   ],
   entryComponents: [
     CsvCollectionNewComponent
