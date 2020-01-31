@@ -35,7 +35,7 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
     }
     return this.http.get<any>(this.tensorflowModelUrl, httpOptions).pipe(
       map((result: any) => {
-        result.tensorflowModels = result._embedded.tensorflowModels;
+        result.data = result._embedded.tensorflowModels;
         return result;
       }));
   }

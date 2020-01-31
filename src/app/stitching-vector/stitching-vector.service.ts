@@ -45,7 +45,7 @@ export class StitchingVectorService implements DataService<StitchingVector, Pagi
     }
     return this.http.get<any>(this.stitchingVectorsUrl, httpOptions).pipe(
       map((result: any) => {
-        result.stitchingVectors = result._embedded.stitchingVectors;
+        result.data = result._embedded.stitchingVectors;
         return result;
       }));
   }
@@ -83,7 +83,7 @@ export class StitchingVectorService implements DataService<StitchingVector, Pagi
     }
     return this.http.get<any>(`${this.stitchingVectorsUrl}/${id}/timeSlices`, httpOptions).pipe(
       map((result: any) => {
-        result.timeSlices = result._embedded.stitchingVectorTimeSlices;
+        result.data = result._embedded.stitchingVectorTimeSlices;
         return result;
       }));
   }

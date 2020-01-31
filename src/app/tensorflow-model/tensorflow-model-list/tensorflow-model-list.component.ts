@@ -71,9 +71,9 @@ export class TensorflowModelListComponent implements OnInit {
         };
         if (page.filter) {
           return this.tensorflowModelService.getByNameContainingIgnoreCase(params, page.filter).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.tensorflowModels;
+            map((paginatedResult) => {
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               return observableOf([]);
@@ -81,9 +81,9 @@ export class TensorflowModelListComponent implements OnInit {
           );
         }
         return this.tensorflowModelService.get(params).pipe(
-          map((data) => {
-            this.resultsLength = data.page.totalElements;
-            return data.tensorflowModels;
+          map((paginatedResult) => {
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

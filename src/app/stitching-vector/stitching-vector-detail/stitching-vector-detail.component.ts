@@ -53,9 +53,9 @@ export class StitchingVectorDetailComponent implements OnInit {
           };
           return this.stitchingVectorService.getTimeSlices(this.stitchingVectorId, params);
         }),
-        map(data => {
-          this.resultsLength = data.page.totalElements;
-          return data.timeSlices;
+        map(paginatedResult => {
+          this.resultsLength = paginatedResult.page.totalElements;
+          return paginatedResult.data;
         }),
         catchError(() => {
           return observableOf([]);

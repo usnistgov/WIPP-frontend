@@ -35,7 +35,7 @@ export class PyramidService implements DataService<Pyramid, PaginatedPyramid> {
     }
     return this.http.get<any>(this.pyramidsUrl, httpOptions).pipe(
       map((result: any) => {
-        result.pyramids = result._embedded.pyramids;
+        result.data = result._embedded.pyramids;
         return result;
       }));
   }

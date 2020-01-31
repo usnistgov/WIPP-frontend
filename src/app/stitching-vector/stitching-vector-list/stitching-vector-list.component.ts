@@ -75,9 +75,9 @@ export class StitchingVectorListComponent implements OnInit {
         };
         if (page.filter) {
           return this.stitchingVectorService.getByNameContainingIgnoreCase(params, page.filter).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.stitchingVectors;
+            map((paginatedResult) => {
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               return observableOf([]);
@@ -85,9 +85,9 @@ export class StitchingVectorListComponent implements OnInit {
           );
         }
         return this.stitchingVectorService.get(params).pipe(
-          map((data) => {
-            this.resultsLength = data.page.totalElements;
-            return data.stitchingVectors;
+          map((paginatedResult) => {
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

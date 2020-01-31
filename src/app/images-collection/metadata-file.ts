@@ -7,6 +7,6 @@ export class MetadataFile {
 
 export interface PaginatedMetadataFiles {
   page: any;
-  metadataFiles: MetadataFile[];
+  data: MetadataFile[];
   _links: any;
 }

@@ -34,7 +34,7 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
     }
     return this.http.get<any>(this.csvCollectionUrl, httpOptions).pipe(
       map((result: any) => {
-        result.csvCollections = result._embedded.csvCollections;
+        result.data = result._embedded.csvCollections;
         return result;
       }));
   }

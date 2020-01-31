@@ -9,6 +9,6 @@ export class Image {
 
 export interface PaginatedImages {
   page: any;
-  images: Image[];
+  data: Image[];
   _links: any;
 }

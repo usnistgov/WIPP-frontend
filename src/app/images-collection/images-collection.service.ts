@@ -40,7 +40,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
     }
     return this.http.get<any>(this.imagesCollectionsUrl, httpOptions).pipe(
       map((result: any) => {
-        result.imagesCollections = result._embedded.imagesCollections;
+        result.data = result._embedded.imagesCollections;
         return result;
       }));
   }
@@ -80,7 +80,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
     httpOptions.params = httpParams;
     return this.http.get<any>(this.imagesCollectionsUrl + '/search/findByNameContainingIgnoreCaseAndNumberOfImages', httpOptions).pipe(
       map((result: any) => {
-        result.imagesCollections = result._embedded.imagesCollections;
+        result.data = result._embedded.imagesCollections;
         return result;
       }));
   }
@@ -116,7 +116,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
     return this.http.get<any>(`${this.imagesCollectionsUrl}/${imagesCollection.id}/images`, httpOptions).pipe(
       map((result: any) => {
         console.log(result); // <--it's an object
-        result.images = result._embedded.images;
+        result.data = result._embedded.images;
         return result;
       }));
   }
@@ -136,7 +136,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
     return this.http.get<any>(`${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`, httpOptions).pipe(
       map((result: any) => {
         console.log(result); // <--it's an object
-        result.metadataFiles = result._embedded.metadataFiles;
+        result.data = result._embedded.metadataFiles;
         return result;
       }));
   }

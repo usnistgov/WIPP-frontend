@@ -9,6 +9,6 @@ export class CsvCollection {
 
 export interface PaginatedCsvCollections {
   page: any;
-  csvCollections: CsvCollection[];
+  data: CsvCollection[];
   _links: any;
 }

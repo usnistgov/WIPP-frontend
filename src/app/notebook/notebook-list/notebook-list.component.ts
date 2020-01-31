@@ -1,10 +1,9 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {MatPaginator, MatSort} from '@angular/material';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {Notebook} from '../notebook';
 import {NotebookService} from '../notebook.service';
-import {HttpClient} from '@angular/common/http';
 
 
 @Component({
@@ -27,8 +26,7 @@ export class NotebookListComponent implements OnInit {
 
 
   constructor(
-    private notebookService: NotebookService,
-    private http: HttpClient) {
+    private notebookService: NotebookService) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
@@ -48,9 +46,9 @@ export class NotebookListComponent implements OnInit {
         };
         if (page.filter) {
           return this.notebookService.getByNameContainingIgnoreCase(params, page.filter).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.notebooks;
+            map((paginatedResult) => {
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               return observableOf([]);
@@ -58,9 +56,9 @@ export class NotebookListComponent implements OnInit {
           );
         }
         return this.notebookService.get(params).pipe(
-          map((data) => {
-            this.resultsLength = data.page.totalElements;
-            return data.notebooks;
+          map((paginatedResult) => {
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

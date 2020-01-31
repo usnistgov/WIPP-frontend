@@ -66,9 +66,9 @@ export class PyramidListComponent implements OnInit {
         };
         if (page.filter) {
           return this.pyramidService.getByNameContainingIgnoreCase(params, page.filter).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.pyramids;
+            map((paginatedResult) => {
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               return observableOf([]);
@@ -76,9 +76,9 @@ export class PyramidListComponent implements OnInit {
           );
         }
         return this.pyramidService.get(params).pipe(
-          map((data) => {
-            this.resultsLength = data.page.totalElements;
-            return data.pyramids;
+          map((paginatedResult) => {
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

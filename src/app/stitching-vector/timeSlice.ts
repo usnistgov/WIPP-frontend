@@ -6,6 +6,6 @@ export class TimeSlice {
 
 export interface PaginatedTimeSlices {
   page: any;
-  timeSlices: TimeSlice[];
+  data: TimeSlice[];
   _links: any;
 }

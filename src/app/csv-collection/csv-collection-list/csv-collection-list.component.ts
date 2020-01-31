@@ -75,9 +75,9 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
         };
         if (page.filter) {
           return this.csvCollectionService.getByNameContainingIgnoreCase(params, page.filter).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.csvCollections;
+            map((paginatedResult) => {
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               return observableOf([]);
@@ -85,9 +85,9 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
           );
         }
         return this.csvCollectionService.get(params).pipe(
-          map((data) => {
-            this.resultsLength = data.page.totalElements;
-            return data.csvCollections;
+          map((paginatedResult) => {
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

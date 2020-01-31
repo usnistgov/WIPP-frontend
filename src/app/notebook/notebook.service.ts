@@ -40,7 +40,7 @@ export class NotebookService implements DataService<Notebook, PaginatedNotebooks
     }
     return this.http.get<any>(this.notebooksUrl, httpOptions).pipe(
       map((result: any) => {
-        result.notebooks = result._embedded.notebooks;
+        result.data = result._embedded.notebooks;
         return result;
       }));
   }

@@ -37,7 +37,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   imageCollectionNotes;
 
   displayedColumnsImages: string[] = ['index', 'fileName', 'size', 'actions'];
-  displayedColumnsMetadata: string[] = ['index', 'name', 'size', 'actions'];
+  displayedColumnsMetadata: string[] = ['index', 'fileName', 'size', 'actions'];
 
   pageSizeOptions: number[] = [10, 25, 50, 100];
   imagesParamsChange: BehaviorSubject<{ index: number, size: number, sort: string }>;
@@ -179,9 +179,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
           sort: page.sort
         };
         return this.imagesCollectionService.getImages(this.imagesCollection, params).pipe(
-          map((data) => {
-            this.resultsLengthImages = data.page.totalElements;
-            return data.images;
+          map((paginatedResult) => {
+            this.resultsLengthImages = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);
@@ -195,16 +195,15 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     const metadataParamsObservable = this.metadataParamsChange.asObservable();
     this.metadataFiles = metadataParamsObservable.pipe(
       switchMap((page) => {
-        console.log(page);
         const metadataParams = {
           pageIndex: page.index,
           size: page.size,
           sort: page.sort
         };
         return this.imagesCollectionService.getMetadataFiles(this.imagesCollection, metadataParams).pipe(
-          map((data) => {
-            this.resultsLengthMetadataFiles = data.page.totalElements;
-            return data.metadataFiles;
+          map((paginatedResult) => {
+            this.resultsLengthMetadataFiles = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

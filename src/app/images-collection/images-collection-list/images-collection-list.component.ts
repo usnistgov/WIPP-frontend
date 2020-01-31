@@ -98,10 +98,10 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
         };
         if (page.filterName) {
           return this.imagesCollectionService.getByNameContainingIgnoreCase(params, page.filterName).pipe(
-            map((data) => {
+            map((paginatedResult) => {
               this.isLoadingResults = false;
-              this.resultsLength = data.page.totalElements;
-              return data.imagesCollections;
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               this.isLoadingResults = false;
@@ -113,10 +113,10 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
           return this.imagesCollectionService
             .getImagesCollectionsByNameContainingIgnoreCaseAndNumberOfImages(params, '', page.filterNbOfImgs)
             .pipe(
-              map((data) => {
+              map((paginatedResult) => {
                 this.isLoadingResults = false;
-                this.resultsLength = data.page.totalElements;
-                return data.imagesCollections;
+                this.resultsLength = paginatedResult.page.totalElements;
+                return paginatedResult.data;
               }),
               catchError(() => {
                 this.isLoadingResults = false;
@@ -125,10 +125,10 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
             );
         }
         return this.imagesCollectionService.get(params).pipe(
-          map((data) => {
+          map((paginatedResult) => {
             this.isLoadingResults = false;
-            this.resultsLength = data.page.totalElements;
-            return data.imagesCollections;
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             this.isLoadingResults = false;

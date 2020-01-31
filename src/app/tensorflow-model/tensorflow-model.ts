@@ -8,7 +8,7 @@ export class TensorflowModel {
 
 export interface PaginatedTensorflowModels {
   page: any;
-  tensorflowModels: TensorflowModel[];
+  data: TensorflowModel[];
   _links: any;
 }
 

@@ -256,7 +256,7 @@
     </div>
   </div>
 
-  <table mat-table [dataSource]="images" (matSortChange)="imagesSortChanged($event)"
+  <table mat-table [dataSource]="images" (matSortChange)="imagesSortChanged($event)" #imagesSort
          matSort matSortActive="fileName" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
@@ -377,7 +377,7 @@
     </ng-container>
 
     <!-- Name Column -->
-    <ng-container matColumnDef="name">
+    <ng-container matColumnDef="fileName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
       <td mat-cell *matCellDef="let row">
         {{ row.fileName }}

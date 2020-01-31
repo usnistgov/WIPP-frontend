@@ -72,9 +72,9 @@ export class PyramidVisualizationListComponent implements OnInit {
         };
         if (page.filter) {
           return this.visualizationService.getVisualizationsByNameContainingIgnoreCase(params, page.filter).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.visualizations;
+            map((paginatedResult) => {
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               return observableOf([]);
@@ -82,9 +82,9 @@ export class PyramidVisualizationListComponent implements OnInit {
           );
         }
         return this.visualizationService.getVisualizations(params).pipe(
-          map((data) => {
-            this.resultsLength = data.page.totalElements;
-            return data.visualizations;
+          map((paginatedResult) => {
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

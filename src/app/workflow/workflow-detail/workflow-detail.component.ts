@@ -29,9 +29,14 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   selectedSchema = null;
   pluginList = [];
-  jobOutputs;
+  jobOutputs = {
+    collection: [],
+    stitchingVector: [],
+    tensorflowModel: [],
+    csvCollection: [],
+    notebook: []
+  };
   jobs: Job[] = [];
-  jobToCopy: Job = new Job();
   workflowId = this.route.snapshot.paramMap.get('id');
   jobModel = {};
 
@@ -349,19 +354,18 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   }
 
   populateAndOpenCopyModal(content, jobId: string ) {
-    this.jobService.getJob(jobId).subscribe(job => {
-        this.jobToCopy = job;
-        this.jobService.getPlugin(job.wippExecutable).subscribe(plugin => {
+    this.jobService.getJob(jobId).subscribe(jobToCopy => {
+        this.jobService.getPlugin(jobToCopy.wippExecutable).subscribe(plugin => {
           this.selectedSchema = this.pluginList.find(x => x.id === plugin.id);
-          this.jobModel['taskName'] = this.jobToCopy.name + '-copy';
+          this.jobModel['taskName'] = jobToCopy.name + '-copy';
           this.jobModel['inputs'] = {};
           const requests = [];
-          for (const input of Object.keys(this.jobToCopy.parameters)) {
+          for (const input of Object.keys(jobToCopy.parameters)) {
             // if input to copy is an existing WIPP object
             if (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
               || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search') {
-              if (this.jobToCopy.parameters[input].indexOf('{') === -1) {
-                const id = this.jobToCopy.parameters[input];
+              if (jobToCopy.parameters[input].indexOf('{') === -1) {
+                const id = jobToCopy.parameters[input];
                 // Resolve AbstractFactory
                 const injectable = dataMap.get(this.selectedSchema.properties.inputs.properties[input]['format']);
                 // Inject service
@@ -375,11 +379,11 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               } else {
                 // if input to copy is a WIPP object not created yet (output of a previous step not executed)
                 this.jobModel['inputs'][input] = {};
-                this.jobModel['inputs'][input]['id'] = this.jobToCopy.parameters[input];
-                const prevId = this.jobToCopy.parameters[input].substring(3, this.jobToCopy.parameters[input].indexOf('.'));
-                const prevOutputName = this.jobToCopy.parameters[input].substring(
-                  this.jobToCopy.parameters[input].indexOf('.'),
-                  this.jobToCopy.parameters[input].length - 3
+                this.jobModel['inputs'][input]['id'] = jobToCopy.parameters[input];
+                const prevId = jobToCopy.parameters[input].substring(3, jobToCopy.parameters[input].indexOf('.'));
+                const prevOutputName = jobToCopy.parameters[input].substring(
+                  jobToCopy.parameters[input].indexOf('.'),
+                  jobToCopy.parameters[input].length - 3
                 );
                 const prevJob = this.jobs.find(x => x.id === prevId);
                 this.jobModel['inputs'][input]['name'] = prevJob.name + prevOutputName;
@@ -388,10 +392,11 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               }
             } else {
               // if input to copy is a standard type (string, int...)
-              this.jobModel['inputs'][input] = this.jobToCopy.parameters[input] ? this.jobToCopy.parameters[input] : null ;
+              this.jobModel['inputs'][input] = jobToCopy.parameters[input] ? jobToCopy.parameters[input] : null ;
             }
           }
-          if (requests.length === 0) {this.open(content);
+          if (requests.length === 0) {
+            this.open(content);
           } else {forkJoin(requests).subscribe(results => {
             for (const result of results) {
               this.jobModel['inputs'][result['inputName']] = result['data'];
