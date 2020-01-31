@@ -361,33 +361,33 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             if (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
               || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search') {
               if (this.jobToCopy.parameters[input].indexOf('{') === -1) {
-              const id = this.jobToCopy.parameters[input];
-              // Resolve AbstractFactory
-              const injectable = dataMap.get(this.selectedSchema.properties.inputs.properties[input]['format']);
-              // Inject service
-              this.service = this.injector.get(injectable);
-              requests.push(this.service.getById(id).pipe(map(response => {
-                  response['data'] = response;
-                  response['inputName'] = input;
-                  return response;
-                })
-              ));
-            }  else if (this.jobToCopy.parameters[input].indexOf('{') === 0) {
-               // if input to copy is a WIPP object not created yet (output of a previous step not executed)
-              this.jobModel['inputs'][input] = {};
-              this.jobModel['inputs'][input]['id'] = this.jobToCopy.parameters[input];
-              const prevId = this.jobToCopy.parameters[input].substring(3, this.jobToCopy.parameters[input].indexOf('.'));
-              const prevOutputName = this.jobToCopy.parameters[input].substring(
-                this.jobToCopy.parameters[input].indexOf('.'),
-                this.jobToCopy.parameters[input].length - 3
-              );
-              const prevJob = this.jobs.find(x => x.id === prevId);
-              this.jobModel['inputs'][input]['name'] = prevJob.name + prevOutputName;
-              this.jobModel['inputs'][input]['virtual'] = true;
-              this.jobModel['inputs'][input]['sourceJob'] = prevId;
+                const id = this.jobToCopy.parameters[input];
+                // Resolve AbstractFactory
+                const injectable = dataMap.get(this.selectedSchema.properties.inputs.properties[input]['format']);
+                // Inject service
+                this.service = this.injector.get(injectable);
+                requests.push(this.service.getById(id).pipe(map(response => {
+                    response['data'] = response;
+                    response['inputName'] = input;
+                    return response;
+                  })
+                ));
+              } else {
+                // if input to copy is a WIPP object not created yet (output of a previous step not executed)
+                this.jobModel['inputs'][input] = {};
+                this.jobModel['inputs'][input]['id'] = this.jobToCopy.parameters[input];
+                const prevId = this.jobToCopy.parameters[input].substring(3, this.jobToCopy.parameters[input].indexOf('.'));
+                const prevOutputName = this.jobToCopy.parameters[input].substring(
+                  this.jobToCopy.parameters[input].indexOf('.'),
+                  this.jobToCopy.parameters[input].length - 3
+                );
+                const prevJob = this.jobs.find(x => x.id === prevId);
+                this.jobModel['inputs'][input]['name'] = prevJob.name + prevOutputName;
+                this.jobModel['inputs'][input]['virtual'] = true;
+                this.jobModel['inputs'][input]['sourceJob'] = prevId;
               }
             } else {
-               // if input to copy is a standard type (string, int...)
+              // if input to copy is a standard type (string, int...)
               this.jobModel['inputs'][input] = this.jobToCopy.parameters[input] ? this.jobToCopy.parameters[input] : null ;
             }
           }
