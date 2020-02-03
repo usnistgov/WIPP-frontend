@@ -65,20 +65,20 @@ export class PyramidListComponent implements OnInit {
           sort: page.sort
         };
         if (page.filter) {
-          return this.pyramidService.getPyramidsByNameContainingIgnoreCase(params, page.filter).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.pyramids;
+          return this.pyramidService.getByNameContainingIgnoreCase(params, page.filter).pipe(
+            map((paginatedResult) => {
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               return observableOf([]);
             })
           );
         }
-        return this.pyramidService.getPyramids(params).pipe(
-          map((data) => {
-            this.resultsLength = data.page.totalElements;
-            return data.pyramids;
+        return this.pyramidService.get(params).pipe(
+          map((paginatedResult) => {
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

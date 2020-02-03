@@ -17,7 +17,7 @@ export class PyramidTemplateComponent extends DynamicComponent implements OnInit
 static key = 'pyramidtemplatecomponent';
 
   ngOnInit() {
-      this.pyramidService.getPyramid(this.idData).subscribe(result => {
+      this.pyramidService.getById(this.idData).subscribe(result => {
         this.text = result.name;
       });
   }

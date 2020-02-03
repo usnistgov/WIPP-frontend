@@ -80,7 +80,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     return this.getCsvCollection().pipe(
       map(csvCollection => {
         this.csvCollection = csvCollection;
-        this.getCsv();
+        this.getCsvFiles();
         if (this.csvCollection.numberImportingCsv !== 0) {
           this.$throttleRefresh.next();
         }
@@ -95,7 +95,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   getCsvCollection() {
-    return this.csvCollectionService.getCsvCollection(this.csvCollectionId);
+    return this.csvCollectionService.getById(this.csvCollectionId);
   }
 
   hasFilesNotComplete(files) {
@@ -111,6 +111,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
       this.csvCollectionService.getJob(this.csvCollection._links['sourceJob']['href']).subscribe(job => this.job = job);
     }
   }
+
   displayJobModal(jobId: string) {
     const modalRef = this.modalService.open(JobDetailComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.modalReference = modalRef;
@@ -178,7 +179,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getCsv(): void {
+  getCsvFiles(): void {
     const paramsObservable = this.csvParamsChange.asObservable();
     this.csv = paramsObservable.pipe(
       switchMap((page) => {
@@ -188,9 +189,9 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
           sort: page.sort
         };
         return this.csvCollectionService.getCsvFiles(this.csvCollection, params).pipe(
-          map((data) => {
-            this.resultsLengthCsv = data.page.totalElements;
-            return data.csv;
+          map((paginatedResult) => {
+            this.resultsLengthCsv = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

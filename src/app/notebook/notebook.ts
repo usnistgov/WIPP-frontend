@@ -9,6 +9,6 @@ export class Notebook {
 
 export interface PaginatedNotebooks {
   page: any;
-  notebooks: Notebook[];
+  data: Notebook[];
   _links: any;
 }

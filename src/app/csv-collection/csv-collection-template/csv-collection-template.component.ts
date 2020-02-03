@@ -17,7 +17,7 @@ export class CsvCollectionTemplateComponent extends DynamicComponent implements 
 
   ngOnInit() {
     if (this.idData) {
-      this.csvCollectionService.getCsvCollection(this.idData).subscribe(result => {
+      this.csvCollectionService.getById(this.idData).subscribe(result => {
         this.text = result.name;
       });
     }

@@ -30,7 +30,7 @@ export class TensorflowModelDetailComponent implements OnInit {
 
   ngOnInit() {
     this.tensorboardLink = urljoin(this.appConfigService.getConfig().tensorboardUrl, '#scalars&regexInput=');
-    this.tensorflowModelService.getTensorflowModel(this.tensorflowModelId)
+    this.tensorflowModelService.getById(this.tensorflowModelId)
       .subscribe(tensorflowModel => {
         this.tensorflowModel = tensorflowModel;
         this.getTensorboardLogsAndJob();

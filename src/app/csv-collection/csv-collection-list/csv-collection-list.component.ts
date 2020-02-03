@@ -72,20 +72,20 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
           sort: page.sort
         };
         if (page.filter) {
-          return this.csvCollectionService.getCsvCollectionsByNameContainingIgnoreCase(params, page.filter).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.csvCollections;
+          return this.csvCollectionService.getByNameContainingIgnoreCase(params, page.filter).pipe(
+            map((paginatedResult) => {
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               return observableOf([]);
             })
           );
         }
-        return this.csvCollectionService.getCsvCollections(params).pipe(
-          map((data) => {
-            this.resultsLength = data.page.totalElements;
-            return data.csvCollections;
+        return this.csvCollectionService.get(params).pipe(
+          map((paginatedResult) => {
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);
