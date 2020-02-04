@@ -1,0 +1,7 @@
+DOCKER_VERSION=<docker image version>
+JUPYTERHUB_URL=<jupyterhub url>
+VISION_URL=<vision ui url>
+ARGO_URL=<argo dashboard url>
+CATALOG_URL=<catalog ui url>
+
+FRONTEND_HOST_NAME=<host name>
