@@ -104,7 +104,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.jobModel = {};
   }
 
-  open(content) {
+  open(content, jobId: string) {
     this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
       const task = {};
 
@@ -144,16 +144,16 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           task['parameters'][inputEntry] = value;
         }
       }
-      // push job
-      this.workflowService.createJob(task).subscribe(job => {
-        this.resetForm();
-        this.getJobs();
-      }, error => {
-        this.resetForm();
-        const modalRefErr = this.modalService.open(ModalErrorComponent);
-        modalRefErr.componentInstance.title = 'Error while creating new task';
-        modalRefErr.componentInstance.message = error.error;
-      });
+        // push job
+        this.workflowService.createJob(task, jobId).subscribe(job => {
+          this.resetForm();
+          this.getJobs();
+        }, error => {
+          this.resetForm();
+          const modalRefErr = this.modalService.open(ModalErrorComponent);
+          modalRefErr.componentInstance.title = 'Error while creating new task';
+          modalRefErr.componentInstance.message = error.error;
+        });
     }, (result) => {
       this.resetForm();
     });
@@ -350,14 +350,21 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
 
   openCopy(content, jobId: string) {
-    this.populateAndOpenCopyModal(content, jobId);
+    this.populateAndOpenCopyModal(content, jobId, false);
   }
 
-  populateAndOpenCopyModal(content, jobId: string ) {
+  openEdit(content, jobId: string) {
+    this.populateAndOpenCopyModal(content, jobId, true);
+  }
+
+  populateAndOpenCopyModal(content, jobId: string, edit: boolean) {
     this.jobService.getJob(jobId).subscribe(jobToCopy => {
         this.jobService.getPlugin(jobToCopy.wippExecutable).subscribe(plugin => {
           this.selectedSchema = this.pluginList.find(x => x.id === plugin.id);
-          this.jobModel['taskName'] = jobToCopy.name + '-copy';
+          this.jobModel['taskName'] = jobToCopy.name;
+          if (!edit) {
+            this.jobModel['taskName'] += '-copy';
+          }
           this.jobModel['inputs'] = {};
           const requests = [];
           for (const input of Object.keys(jobToCopy.parameters)) {
@@ -395,13 +402,14 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               this.jobModel['inputs'][input] = jobToCopy.parameters[input] ? jobToCopy.parameters[input] : null ;
             }
           }
+          jobId = edit ? jobId : null;
           if (requests.length === 0) {
-            this.open(content);
+            this.open(content, jobId);
           } else {forkJoin(requests).subscribe(results => {
             for (const result of results) {
               this.jobModel['inputs'][result['inputName']] = result['data'];
             }
-            this.open(content);
+            this.open(content, jobId);
           });
           }});
       }
