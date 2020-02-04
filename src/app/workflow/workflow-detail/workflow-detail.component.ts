@@ -5,7 +5,7 @@ import {WorkflowService} from '../workflow.service';
 import {ActivatedRoute} from '@angular/router';
 import {Workflow} from '../workflow';
 
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap, find} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
@@ -16,6 +16,7 @@ import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { plugins } from 'prismjs';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   workflow: Workflow = new Workflow();
 
   selectedSchema = null;
-  pluginList : [];//Observable<any[] | Plugin[]>;
+  pluginList : Observable<any[] | Plugin[]>;//Observable<any[] | Plugin[]>;
   selection = new SelectionModel<Plugin>(false, []);
   //pluginListSearchCriteria : Observable<any[] | Plugin[]>;
   pluginsObervable: Observable<any[] | Plugin[]>;
@@ -82,7 +83,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   resultsLength = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [10, 25, 50, 100];
-  paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string}>;
+  paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string, category: string, institution: string}>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -99,7 +100,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         index: 0,
         size: this.pageSize,
         sort: 'creationDate,desc',
-        filter: ''
+        filter: '',
+        category: 'all',
+        institution: 'all'
       });
   }
 
@@ -107,22 +110,39 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     // If the user changes the sort order, reset back to the first page.
     this.paramsChange.next({
       index: 0, size: this.paramsChange.value.size,
-      sort: sort.active + ',' + sort.direction, filter: this.paramsChange.value.filter
+      sort: sort.active + ',' + sort.direction, filter: this.paramsChange.value.filter, category: this.paramsChange.value.category, institution: this.paramsChange.value.institution
     });
   }
 
   pageChanged(page) {
     this.paramsChange.next({
       index: page.pageIndex, size: page.pageSize,
-      sort: this.paramsChange.value.sort, filter: this.paramsChange.value.filter
+      sort: this.paramsChange.value.sort, filter: this.paramsChange.value.filter, category: this.paramsChange.value.category, institution: this.paramsChange.value.institution
     });
   }
 
   applyFilterByName(filterValue: string) {
     // if the user filters by name, reset back to the first page
     this.paramsChange.next({
-      index: 0, size: this.paramsChange.value.size, sort: this.paramsChange.value.sort, filter: filterValue
+      index: 0, size: this.paramsChange.value.size, sort: this.paramsChange.value.sort, filter: filterValue, category: this.paramsChange.value.category, institution: this.paramsChange.value.institution
     });
+  }
+  //Test
+  applyFilterByCategory(filterValue: string) {
+    // if the user filters by category, reset back to the first page
+    this.paramsChange.next({
+      index: 0, size: this.paramsChange.value.size, sort: this.paramsChange.value.sort, filter: this.paramsChange.value.filter, category: filterValue, institution: this.paramsChange.value.institution
+    });
+    //alert("Changement Critère de recherche : nom = " + this.paramsChange.value.filter + " cat select = " + this.paramsChange.value.category + " inst = " + this.paramsChange.value.institution);
+
+  }
+
+  applyFilterByInstituttion(filterValue: string) {
+    // if the user filters by institution, reset back to the first page
+    this.paramsChange.next({
+      index: 0, size: this.paramsChange.value.size, sort: this.paramsChange.value.sort, filter: this.paramsChange.value.filter, category: this.paramsChange.value.category, institution: filterValue
+    });
+    //alert("Changement Critère de recherche : nom = " + this.paramsChange.value.filter + " cat select = " + this.paramsChange.value.category + " inst = " + this.paramsChange.value.institution);
   }
 
   ngOnInit() {
@@ -132,17 +152,17 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       this.updateArgoUrl();
     });
     //Recuperation de la liste plugin : code existant
-    this.pluginService.getAllPluginsOrderedByName()
+    /*this.pluginService.getAllPluginsOrderedByName()
       .subscribe(plugins => {
         this.pluginList = plugins.plugins;
         this.generateSchema(this.pluginList);
         this.resetForm();
         this.getJobs();
         alert("pluginList recupéré");
-      });
+      });*/
 
     //Utilisation de plugins search criteria
-     //this.getPlugins();
+     this.getPlugins();
    
 
       /*this.getPlugins();
@@ -161,23 +181,36 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       );*/
       //this.generateSchema(this.pluginListSearchCriteria);
       //this.resetForm();
-      this.getJobs();
+      //this.getJobs();
       
       //stubCategoryInstitution
     this.stubCategory_Institution();
+
+    this.pluginList.subscribe(
+      (plugins) => {
+        //this.resetForm();
+        //this.selectedSchema = plugins[0];
+        //this.generateSchema(plugins);
+        //alert(this.selectedSchema.isSchemaValid);
+        this.getJobs();
+        //this.resetForm();
+        //this.generateSchema(this.selectedSchema);
+      }
+    );
   }
 
-  /*getPlugins(): void {
+  getPlugins(): void {
     const paramsObservable = this.paramsChange.asObservable();
-    this.plugins = paramsObservable.pipe(
+    this.pluginList = paramsObservable.pipe(
       switchMap((page) => {
         const params = {
           pageIndex: page.index,
           size: page.size,
           sort: page.sort
         };
-        if (page.filter) {
-          return this.pluginService.getPluginsByNameContainingIgnoreCase(params, page.filter).pipe(
+        //if (page.filter || (page.category !=='all' && page.institution !== 'all')) { //To update
+          //alert("Critère de recherche : nom = " + page.filter + " cat select = " + page.category + " inst = " + page.institution);
+          return this.pluginService.getPluginsByCriteria(params, page.filter, page.category, page.institution).pipe(
             map((data) => {
               this.resultsLength = data.page.totalElements;
               return data.plugins;
@@ -186,8 +219,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               return observableOf([]);
             })
           );
-        }
-        return this.pluginService.getPlugins(params).pipe(
+        //}
+        /*return this.pluginService.getPlugins(params).pipe(
           map((data) => {
             this.resultsLength = data.page.totalElements;
             return data.plugins;
@@ -195,37 +228,47 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           catchError(() => {
             return observableOf([]);
           })
-        );
+        );*/
       })
     );
-  }*/
+    /*.subscribe(
+      (result) => {
+        alert("Et now");
+      }
+    );*/
+  }
   
   resetForm() {
-    this.selectedSchema = this.pluginList[0];
-    //this.selectedSchema = this.pluginsObervable[0];
-    //this.selectedSchema = this.pluginListSearchCriteria[0];
+    /*this.selectedSchema = this.pluginList[0];
+    alert("reset form plugin selected schema : " + this.selectedSchema.name + " fieldBindings : " + this.selectedSchema.fieldBindings);
+    */
+    this.pluginList.subscribe(
+      (plugins) => {
+        this.selectedSchema = plugins[0];
+        this.generateSchema(this.selectedSchema);
+        //alert(this.selectedSchema.fieldBindings);
+        //alert("reset form plugin selected schema : " + this.selectedSchema.name + " fieldBindings : " + this.selectedSchema.fieldBindings);
+      },
+      (error) => {
+        
+      }
+    );
+    
   }
-
-  open(content) {
-    //plugin search criteria
-    //this.pluginListSearchCriteria = this.pluginList; //new MatTableDataSource(this.pluginList);
-    //get institutionList
+  updateSelectedSchema(plugin) { 
+    this.selectedSchema = plugin; 
+    this.generateSchema(this.selectedSchema);
+  }
+  open(content, plugin) {
+    if(plugin==='') {
+      //First ng-template open
+    }
+    else {
+      //Second ng-template open
+      this.selectedSchema = plugin; 
+      this.generateSchema(this.selectedSchema);
+    }
     
-    /*for(let plugin of this.pluginListSearchCriteria) {
-      this.institutionList.push(plugin.institution);
-    }*/
-    //this.plugins.forEach(plugin => {alert(plugin)});
-    
-
-    //stubCategory
-    //this.stubCategory();
-
-    //getCategoryList
-    /*for(let plugin of this.pluginList) {
-      this.categoryList.push(plugin.category);
-    }*/
-    
-
     this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
       const task = {};
 
@@ -280,9 +323,56 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   populateJobOutputs(job) {
     const pluginId = job.wippExecutable;
-    const matchingPlugin = this.pluginList.find(x => x.id == pluginId);
+    this.pluginService.getPlugin(pluginId).subscribe( (result) => {
+        const matchingPlugin = result;
+        matchingPlugin.outputs.forEach(output => {
+          if (output['type'] === 'collection') {
+            const outputCollection = {
+              id: '{{ ' + job.id + '.' + output['name'] + ' }}',
+              name: '{{ ' + job.name + '.' + output['name'] + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.collections.push(outputCollection);
+          } else if (output['type'] === 'stitchingVector') {
+            const outputStitchingVector = {
+              id: '{{ ' + job.id + '.' + output['name'] + ' }}',
+              name: '{{ ' + job.name + '.' + output['name'] + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.stitchingVectors.push(outputStitchingVector);
+          } else if (output['type'] === 'tensorflowModel') {
+            const outputTensorflowModel = {
+              id: '{{ ' + job.id + '.' + output['name'] + ' }}',
+              name: '{{ ' + job.name + '.' + output['name'] + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.tensorflowModels.push(outputTensorflowModel);
+          } else if (output['type'] === 'csvCollection') {
+            const outputCsvCollection = {
+              id: '{{ ' + job.id + '.' + output['name'] + ' }}',
+              name: '{{ ' + job.name + '.' + output['name'] + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.csvCollections.push(outputCsvCollection);
+          } else if (output['type'] === 'notebook') {
+            const outputNotebook = {
+              id: '{{ ' + job.id + '.' + output['name'] + ' }}',
+              name: '{{ ' + job.name + '.' + output['name'] + ' }}',
+              sourceJob: job['id'],
+              virtual: true
+            };
+            this.jobOutputs.notebooks.push(outputNotebook);
+          }
+        });
+      }
+    );
+    /*alert(matchingPlugin.name);*/
 
-    matchingPlugin.outputs.forEach(output => {
+    /*matchingPlugin.outputs.forEach(output => {
       if (output.type === 'collection') {
         const outputCollection = {
           id: '{{ ' + job.id + '.' + output.name + ' }}',
@@ -324,7 +414,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         };
         this.jobOutputs.notebooks.push(outputNotebook);
       }
-    });
+    });*/
   }
 
   submitWorkflow() {
@@ -348,9 +438,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  generateSchema(pluginList) {
-    pluginList.forEach(plugin => {
-      plugin.properties = {
+  generateSchema(pluginSS) {
+      alert("Plugin dans generate Schema (selectedSchama): " + this.selectedSchema.name );
+      this.selectedSchema.properties = {
         // task name field
         'taskName': {
           'type': 'string',
@@ -370,15 +460,15 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
       try {
         // default field bindings - none
-        plugin.fieldBindings = {};
+        this.selectedSchema.fieldBindings = {};
         // TODO: validation of plugin ui description
-        plugin.inputs.forEach(input => {
+        this.selectedSchema.inputs.forEach(input => {
           const inputSchema = {};
           // common properties
           inputSchema['key'] = 'inputs.' + input.name;
           // inputSchema['description'] = input.description;
           if (input.required) {
-            plugin.properties.inputs.required.push(input.name);
+            this.selectedSchema.properties.inputs.required.push(input.name);
           }
           // type-specific properties
           switch (input.type) {
@@ -433,7 +523,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               inputSchema['type'] = input.type;
           }
           // ui properties
-          const ui = plugin.ui.find(v => v.key === inputSchema['key']);
+          const ui = this.selectedSchema.ui.find(v => v.key === inputSchema['key']);
           if (ui.hasOwnProperty('title')) {
             inputSchema['title'] = ui.title;
           }
@@ -452,14 +542,17 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             }
           }
           // hidden fields
+          alert("on affiche le contenu  de ui => voir le log");
+          console.log("Contenu de ui : ", ui);
           if (ui.hasOwnProperty('hidden') && ui.hidden === true) {
             inputSchema['widget'] = 'hidden';
+            alert("hidden field");
           }
           // custom bindings - update value of target input from value of source input
           if (ui.hasOwnProperty('bind')) {
             const sourceField = '/inputs/' + ui.bind;
             const targetField = ui['key'].split('.').join('/');
-            plugin.fieldBindings[sourceField] = [
+            this.selectedSchema.fieldBindings[sourceField] = [
               {
                 'input': (event, formProperty: FormProperty) => {
                   const parent: PropertyGroup = formProperty.findRoot();
@@ -469,24 +562,36 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
                 }
               }
             ];
+            alert("fieldbinding modifié");
           }
           if (ui.hasOwnProperty('default')) {
             inputSchema['default'] = input.default;
           }
-          plugin.properties.inputs.properties[input.name] = inputSchema;
+          this.selectedSchema.properties.inputs.properties[input.name] = inputSchema;
         });
         // field sets - arrange fields by groups
-        const fieldsetsList = plugin.ui.find(v => v.key === 'fieldsets');
+        const fieldsetsList = this.selectedSchema.ui.find(v => v.key === 'fieldsets');
         if (fieldsetsList) {
-          plugin.properties.inputs.fieldsets = fieldsetsList.fieldsets;
+          this.selectedSchema.properties.inputs.fieldsets = fieldsetsList.fieldsets;
         }
-        plugin.isSchemaValid = true;
+        this.selectedSchema.isSchemaValid = true;
+
+        console.log(this.selectedSchema);
+        //alert("Fieldbings de plugin = " + plugins.Fieldbings);
+        //this.selectedSchema = plugin;
+        alert("selected schema update dans generate schema : " + this.selectedSchema.name + " fieldbinding : " + this.selectedSchema.fieldBindings + " (voir dans la console)");
+        console.log("Voir propriété field binding : ", this.selectedSchema);
+
       } catch (error) {
         console.log(error);
-        plugin.properties = {};
-        plugin.isSchemaValid = false;
+        this.selectedSchema.properties = {};
+        this.selectedSchema.isSchemaValid = false;
       }
-    });
+      /*console.log(this.selectedSchema);
+      //alert("Fieldbings de plugin = " + plugins.Fieldbings);
+      //this.selectedSchema = plugin;
+      alert("selected schema update dans generate schema : " + this.selectedSchema.name + " fieldbinding : " + this.selectedSchema.fieldBindings + " (voir dans la console)");
+      console.log("Voir propriété field binding : ", this.selectedSchema);*/
   }
 
   getJobs(): void {

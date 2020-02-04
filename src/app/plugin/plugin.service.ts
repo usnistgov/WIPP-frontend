@@ -102,25 +102,62 @@ export class PluginService {
     return this.http.get<JSON>(url);
   }
 
-  getPluginsByCategory(category: string) {
-    let pluginList = [];
-    this.getAllPluginsOrderedByName()
-      .subscribe(plugins => {
-        pluginList = plugins.plugins;
-      });
-    return pluginList.find(x => x.category == category);;
+  //Test
+  getAllCategories(): string[] {
+    const httpParams = new HttpParams();
+    httpOptions.params = httpParams;
+    let categories: string[] = [];
+    this.http.get<string[]>(this.pluginsUrl + '/search/getAllCatgories', httpOptions).subscribe(
+      (categ) => {
+        categories = categ.slice();
+      }
+    );
+    return categories;
   }
 
   getAllInstitutions(): string[] {
-    let pluginList;
-    let institutionList: string[];
-    this.getAllPluginsOrderedByName().subscribe(plugins => {
-      pluginList = plugins.plugins;
-    });
-    for(let plugin of pluginList) {
-      institutionList.push(plugin.institution);
+    const httpParams = new HttpParams();
+    httpOptions.params = httpParams;
+    let institutions: string[] = [];
+    this.http.get<string[]>(this.pluginsUrl + '/search/getAllInstitutions', httpOptions).subscribe(
+      (inst) => {
+        institutions = inst.slice();
+      }
+    );
+    return institutions;
+  }
+  //Test getPlugings by criteria
+  getPluginsByCriteria(params, name, category, institution): Observable<PaginatedPlugins> {
+    let httpParams = new HttpParams().set('name', name).set('category', category).set('institution', institution);
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
     }
-    institutionList = institutionList.filter((n,i) => institutionList.indexOf(n)===i);
-    return institutionList;
+    httpOptions.params = httpParams;
+    
+    if(category === 'all' && institution === 'all')
+      return this.getPlugins(params);
+
+    if(category === 'all' && institution !== 'all')
+      return this.http.get<any>(this.pluginsUrl + '/search/findByNameContainingIgnoreCaseAndInstitution', httpOptions).pipe(
+        map((result: any) => {
+          result.plugins = result._embedded.plugins;
+          return result;
+        }));
+
+    if(category !== 'all' && institution === 'all')
+      return this.http.get<any>(this.pluginsUrl + '/search/findByNameContainingIgnoreCaseAndCategory', httpOptions).pipe(
+        map((result: any) => {
+          result.plugins = result._embedded.plugins;
+          return result;
+        }));  
+
+    return this.http.get<any>(this.pluginsUrl + '/search/findByNameContainingIgnoreCaseAndCategoryAndInstitution', httpOptions).pipe(
+      map((result: any) => {
+        result.plugins = result._embedded.plugins;
+        return result;
+      }));
   }
 }
