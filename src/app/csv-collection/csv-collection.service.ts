@@ -76,7 +76,8 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size);
+      const sort = params.sort ? params.sort : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
     return this.http.get<Csv>(`${this.csvCollectionUrl}/${csvCollection.id}/csv`, httpOptions).pipe(
@@ -96,6 +97,20 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
       params: {}
     };
     return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, {locked: true}, httpOptions);
+  }
+
+  deleteCsvCollection(csvCollection: CsvCollection) {
+    return this.http.delete<CsvCollection>(csvCollection._links.self.href);
+  }
+
+  deleteCsvFile(csv: Csv) {
+    return this.http.delete<Csv>(csv._links.self.href);
+  }
+
+  deleteAllCsvFiles(csvCollection: CsvCollection) {
+    if (csvCollection.numberOfCsvFiles > 0) {
+      return this.http.delete(`${this.csvCollectionUrl}/${csvCollection.id}/csv`);
+    }
   }
 
 }

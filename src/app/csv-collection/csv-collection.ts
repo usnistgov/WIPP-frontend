@@ -6,6 +6,7 @@ export class CsvCollection {
   locked: boolean;
   numberOfImportErrors: number;
   numberImportingCsv: number;
+  numberOfCsvFiles: number;
   csvTotalSize: number;
   _links: any;
 }

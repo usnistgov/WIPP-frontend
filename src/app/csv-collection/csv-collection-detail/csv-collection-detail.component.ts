@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
 import {Job} from '../../job/job';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {CsvCollectionService} from '../csv-collection.service';
@@ -40,7 +40,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
 
   $throttleRefresh: Subject<void> = new Subject<void>();
   flowHolder: Flow.IFlow;
-  displayedColumnsCsv: string[] = ['fileName', 'fileSize'];
+  displayedColumnsCsv: string[] = ['index', 'fileName', 'fileSize', 'actions'];
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('csvPaginator') csvPaginator: MatPaginator;
@@ -48,6 +48,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
+    private router: Router,
     private csvCollectionService: CsvCollectionService,
     private appConfigService: AppConfigService) {
       this.csvParamsChange = new BehaviorSubject({
@@ -205,6 +206,26 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     this.csvCollectionService.lockCsvCollection(
       this.csvCollection).subscribe(csvCollection => {
       this.csvCollection = csvCollection;
+    });
+  }
+
+  deleteCollection(): void {
+    if (confirm('Are you sure you want to delete the collection ' + this.csvCollection.name + '?')) {
+      this.csvCollectionService.deleteCsvCollection(this.csvCollection).subscribe(collection => {
+        this.router.navigate(['csv-collections']);
+      });
+    }
+  }
+
+  deleteCsvFile(csv: Csv): void {
+    this.csvCollectionService.deleteCsvFile(csv).subscribe(result => {
+      this.$throttleRefresh.next();
+    });
+  }
+
+   deleteAllCsvFiles(): void {
+    this.csvCollectionService.deleteAllCsvFiles(this.csvCollection).subscribe(result => {
+      this.$throttleRefresh.next();
     });
   }
 
