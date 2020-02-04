@@ -60,6 +60,27 @@
             </i>
           </a>
         </li>
+        <li *ngIf="!keycloakAuth.authenticated" class="nav-item">
+          <a class="nav-link" (click)="login()">
+            <i class="fas fa-sign-in-alt">
+              <p>Login</p>
+            </i>
+          </a>
+        </li>
+        <li *ngIf="keycloakAuth.authenticated" class="nav-item" routerLinkActive="active">
+          <a class="nav-link" (click)="profile()" target="_blank">
+            <i class="fas fa-user">
+              <p>{{displayUserInfo()}}</p>
+            </i>
+          </a>
+        </li>
+        <li *ngIf="keycloakAuth.authenticated" class="nav-item">
+          <a class="nav-link" (click)="logout()">
+            <i class="fas fa-sign-out-alt">
+              <p>Logout</p>
+            </i>
+          </a>
+        </li>
       </ul>
     </div>
   </nav>

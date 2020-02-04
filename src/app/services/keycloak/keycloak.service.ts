@@ -2,45 +2,32 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../../../environments/environment';
-
-declare var Keycloak: any;
+import * as Keycloak from 'keycloak-js';
 
 @Injectable()
 export class KeycloakService {
     static auth: any = {};
 
     static init(): Promise<any> {
-        const keycloakAuth: any = Keycloak({
+        const keycloakAuth: Keycloak.KeycloakInstance = Keycloak({
             url: environment.keycloak.url,
             realm: environment.keycloak.realm,
             clientId: environment.keycloak.clientId
         });
 
         KeycloakService.auth.loggedIn = false;
-
         return new Promise((resolve, reject) => {
             keycloakAuth
-                .init({ onLoad: 'login-required' })
+                .init({ onLoad: 'check-sso', checkLoginIframe: false })
                 .success(() => {
-                    KeycloakService.auth.loggedIn = true;
+                    KeycloakService.auth.loggedIn = false;
                     KeycloakService.auth.authz = keycloakAuth;
-                    KeycloakService.auth.logoutUrl =
-                        keycloakAuth.authServerUrl +
-                        '/realms/' +
-                        environment.keycloak.realm +
-                        '/protocol/openid-connect/logout?redirect_uri=' +
-                        document.baseURI;
-
-                    KeycloakService.auth.authz.loadUserProfile().success(resolve());
-                    /*.success(data => {
-                        this.user = new User();
-                        this.user.username = data.username;
-                        this.user.firstName = data.firstName;
-                        this.user.lastName = data.lastName;
-                        this.user.email = data.email;
-
-                        resolve();
-                    });*/
+                    KeycloakService.auth.profileUrl =
+                    KeycloakService.auth.authz.authServerUrl +
+                    '/realms/' +
+                    environment.keycloak.realm +
+                    '/account';
+                    resolve();
                 })
                 .error(() => {
                     reject();
@@ -48,30 +35,25 @@ export class KeycloakService {
         });
     }
 
-    hasAnyRole(roles: String[]): boolean {
-        for (let i = 0; i < roles.length; i++) {
-            if (this.hasRole(roles[i])) {
-                return true;
-            }
-        }
+    constructor() { }
 
-        return false;
-    }
+    login(): void {
+        KeycloakService.auth.authz.login().success(
+          () => {
+            KeycloakService.auth.loggedIn = true;
+          }
+        );
+      }
 
-    hasRole(role: String): boolean {
-        return KeycloakService.auth.authz.hasRealmRole(role);
-    }
-
-    hasManageUsersRole(): boolean {
-        return KeycloakService.auth.authz.hasResourceRole('manage-users', 'realm-management');
-    }
-
-    logout() {
-        console.log('*** LOGOUT');
+    logout(): void {
+      KeycloakService.auth.authz.logout({redirectUri : document.baseURI}).success(() => {
         KeycloakService.auth.loggedIn = false;
         KeycloakService.auth.authz = null;
+      });
+    }
 
-        window.location.href = KeycloakService.auth.logoutUrl;
+    profile() {
+        window.location.href = KeycloakService.auth.profileUrls;
     }
 
     getToken(): Promise<string> {
@@ -91,10 +73,15 @@ export class KeycloakService {
         });
     }
 
-    /*getUser(): User {
-        return KeycloakService.user;
-    }*/
+    getUsername(): string {
+        return KeycloakService.auth.authz.tokenParsed.preferred_username;
+    }
+
     isLoggedIn(): boolean {
       return KeycloakService.auth.authz.authenticated;
+    }
+
+    getKeycloakAuth() {
+        return KeycloakService.auth.authz;
     }
 }
