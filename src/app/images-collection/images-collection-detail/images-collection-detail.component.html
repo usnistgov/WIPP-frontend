@@ -132,13 +132,6 @@
         <span class="fa fa-lock-open"
               aria-hidden="true"></span>
       </button>
-      <button *ngIf="imagesCollection.publiclyAvailable" type="button"
-              ngbTooltip="Make collection private"
-              placement="left"
-              class="btn btn-light" (click)="makePrivateCollection();">
-        <span class="fa fa-users"
-              aria-hidden="true"></span>
-      </button>
       <button *ngIf="!imagesCollection.publiclyAvailable" type="button"
               ngbTooltip="Make collection public"
               placement="left"
