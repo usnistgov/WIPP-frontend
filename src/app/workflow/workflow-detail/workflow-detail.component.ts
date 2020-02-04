@@ -163,27 +163,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
     //Utilisation de plugins search criteria
      this.getPlugins();
-   
-
-      /*this.getPlugins();
-      this.pluginList.subscribe(
-        (plugins) => {
-          alert("tout est ok");
-          //this.pluginList.map(plugin => alert(plugin));
-          this.generateSchema(this.pluginList);
-          this.resetForm();
-          //alert("selected schema after reste : " + this.selectedSchema);
-          this.getJobs();
-        },
-        (error) => {
-          alert("crasshhhhh");
-        }
-      );*/
-      //this.generateSchema(this.pluginListSearchCriteria);
-      //this.resetForm();
-      //this.getJobs();
       
-      //stubCategoryInstitution
+    //stubCategoryInstitution
     this.stubCategory_Institution();
 
     this.pluginList.subscribe(
@@ -317,7 +298,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         modalRefErr.componentInstance.message = error.error;
       });
     }, (result) => {
-      this.resetForm();
+      //this.resetForm();
     });
   }
 
@@ -438,8 +419,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  generateSchema(pluginSS) {
-      alert("Plugin dans generate Schema (selectedSchama): " + this.selectedSchema.name );
+  generateSchema(plugin) {
       this.selectedSchema.properties = {
         // task name field
         'taskName': {
@@ -542,11 +522,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             }
           }
           // hidden fields
-          alert("on affiche le contenu  de ui => voir le log");
-          console.log("Contenu de ui : ", ui);
           if (ui.hasOwnProperty('hidden') && ui.hidden === true) {
             inputSchema['widget'] = 'hidden';
-            alert("hidden field");
           }
           // custom bindings - update value of target input from value of source input
           if (ui.hasOwnProperty('bind')) {
@@ -562,7 +539,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
                 }
               }
             ];
-            alert("fieldbinding modifié");
           }
           if (ui.hasOwnProperty('default')) {
             inputSchema['default'] = input.default;
@@ -575,23 +551,13 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           this.selectedSchema.properties.inputs.fieldsets = fieldsetsList.fieldsets;
         }
         this.selectedSchema.isSchemaValid = true;
-
-        console.log(this.selectedSchema);
-        //alert("Fieldbings de plugin = " + plugins.Fieldbings);
-        //this.selectedSchema = plugin;
-        alert("selected schema update dans generate schema : " + this.selectedSchema.name + " fieldbinding : " + this.selectedSchema.fieldBindings + " (voir dans la console)");
-        console.log("Voir propriété field binding : ", this.selectedSchema);
-
+   
       } catch (error) {
         console.log(error);
         this.selectedSchema.properties = {};
         this.selectedSchema.isSchemaValid = false;
       }
-      /*console.log(this.selectedSchema);
-      //alert("Fieldbings de plugin = " + plugins.Fieldbings);
-      //this.selectedSchema = plugin;
-      alert("selected schema update dans generate schema : " + this.selectedSchema.name + " fieldbinding : " + this.selectedSchema.fieldBindings + " (voir dans la console)");
-      console.log("Voir propriété field binding : ", this.selectedSchema);*/
+      
   }
 
   getJobs(): void {
