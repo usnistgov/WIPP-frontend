@@ -17,5 +17,5 @@ sed -i.bak \
     deploy/kubernetes/services.yaml
 rm deploy/kubernetes/services.yaml.bak
 
-# kubectl apply --kubeconfig=${KUBECONFIG} -f deploy/kubernetes/services.yaml
-# kubectl apply --kubeconfig=${KUBECONFIG} -f deploy/kubernetes/frontend-deployment.yaml
+kubectl apply --kubeconfig=${KUBECONFIG} -f deploy/kubernetes/services.yaml
+kubectl apply --kubeconfig=${KUBECONFIG} -f deploy/kubernetes/frontend-deployment.yaml
