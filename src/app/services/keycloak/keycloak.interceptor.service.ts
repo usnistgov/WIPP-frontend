@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable, from } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { Observable, from, throwError } from 'rxjs';
+import { catchError, mergeMap, map } from 'rxjs/operators';
 import { KeycloakService } from './keycloak.service';
+import {Router} from "@angular/router"
 
 
 @Injectable()
 export class KeycloakInterceptorService implements HttpInterceptor {
   constructor(
-    private keycloakService: KeycloakService
+    private keycloakService: KeycloakService,
+    private router: Router
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -20,14 +22,30 @@ export class KeycloakInterceptorService implements HttpInterceptor {
               setHeaders: {
                 Authorization: `Bearer ${token}`
               }
-
-      
             });
           }
-          return next.handle(request);
+          return next.handle(request).pipe(
+            map((event: HttpEvent<any>) => {
+                return event;
+            }),
+            catchError((error: HttpErrorResponse) => {
+              if (error.status == 403){
+                this.router.navigate(['/403', error.error.path]);
+                return throwError(error);
+              }
+            }));
         }));
     }
-    return next.handle(request);
+    return next.handle(request).pipe(
+      map((event: HttpEvent<any>) => {
+          return event;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status == 403){
+          this.router.navigate(['/403', error.error.path]);
+          return throwError(error);
+        }
+      }));
   }
 
   getUserToken() {
