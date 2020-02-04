@@ -141,7 +141,7 @@
   <div class="modal-body">
     <div class="form-group">
       <label for="pluginName">Plugin:</label>
-      <select id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
+      <select [disabled]="editMode" id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
         <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}</option>
       </select>
     </div>
@@ -155,8 +155,8 @@
   <div class="modal-footer">
     <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">
       <i class="fas fa-plus-circle" style="margin-right: 10px">
-        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Add
-          task</p>
+        <p class="wf-addTask-text">
+          {{editMode ? 'Edit task' : 'Add task' }}</p>
       </i>
     </button>
   </div>

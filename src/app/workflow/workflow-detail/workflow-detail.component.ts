@@ -39,6 +39,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
   jobModel = {};
+  editMode = false;
 
   // ngx-graph settings and properties
   update$: Subject<any> = new Subject();
@@ -102,13 +103,17 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   resetForm() {
     this.selectedSchema = this.pluginList[0];
     this.jobModel = {};
+    this.editMode = false;
   }
 
-  open(content, jobId: string) {
+  open(content) {
     this.modalService.open(content, {'size': 'lg'}).result.then((result) => {
       const task = {};
 
       // configure job
+      if (this.editMode) {
+        task['id'] = this.jobModel['id'];
+      }
       task['name'] = this.workflow.name + '-' + result.taskName;
       task['wippExecutable'] = this.selectedSchema.id;
       task['wippWorkflow'] = this.workflow.id;
@@ -144,16 +149,18 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           task['parameters'][inputEntry] = value;
         }
       }
-        // push job
-        this.workflowService.createJob(task, jobId).subscribe(job => {
-          this.resetForm();
-          this.getJobs();
-        }, error => {
-          this.resetForm();
-          const modalRefErr = this.modalService.open(ModalErrorComponent);
-          modalRefErr.componentInstance.title = 'Error while creating new task';
-          modalRefErr.componentInstance.message = error.error;
-        });
+
+      const workflowServiceCall = this.editMode ? this.workflowService.updateJob(task)
+        : this.workflowService.createJob(task);
+      workflowServiceCall.subscribe(job => {
+        this.resetForm();
+        this.getJobs();
+      }, error => {
+        this.resetForm();
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Error while creating new task';
+        modalRefErr.componentInstance.message = error.error;
+      });
     }, (result) => {
       this.resetForm();
     });
@@ -350,19 +357,21 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
 
   openCopy(content, jobId: string) {
-    this.populateAndOpenCopyModal(content, jobId, false);
+    this.populateAndOpenCopyModal(content, jobId);
   }
 
   openEdit(content, jobId: string) {
-    this.populateAndOpenCopyModal(content, jobId, true);
+    this.editMode = true;
+    this.populateAndOpenCopyModal(content, jobId);
   }
 
-  populateAndOpenCopyModal(content, jobId: string, edit: boolean) {
+  populateAndOpenCopyModal(content, jobId: string) {
     this.jobService.getJob(jobId).subscribe(jobToCopy => {
         this.jobService.getPlugin(jobToCopy.wippExecutable).subscribe(plugin => {
           this.selectedSchema = this.pluginList.find(x => x.id === plugin.id);
-          this.jobModel['taskName'] = jobToCopy.name;
-          if (!edit) {
+          this.jobModel['id'] = jobId;
+          this.jobModel['taskName'] = jobToCopy.name.replace(this.workflow.name + '-', '');
+          if (!this.editMode) {
             this.jobModel['taskName'] += '-copy';
           }
           this.jobModel['inputs'] = {};
@@ -402,16 +411,16 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               this.jobModel['inputs'][input] = jobToCopy.parameters[input] ? jobToCopy.parameters[input] : null ;
             }
           }
-          jobId = edit ? jobId : null;
           if (requests.length === 0) {
-            this.open(content, jobId);
+            this.open(content);
           } else {forkJoin(requests).subscribe(results => {
             for (const result of results) {
               this.jobModel['inputs'][result['inputName']] = result['data'];
             }
-            this.open(content, jobId);
+            this.open(content);
           });
-          }});
+          }
+        });
       }
     );
   }
