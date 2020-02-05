@@ -36,8 +36,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   editNotes = false;
   imageCollectionNotes;
 
-  displayedColumnsImages: string[] = ['index', 'fileName', 'size', 'actions'];
-  displayedColumnsMetadata: string[] = ['index', 'fileName', 'size', 'actions'];
+  displayedColumnsImages: string[] = ['index', 'fileName', 'fileSize', 'actions'];
+  displayedColumnsMetadata: string[] = ['index', 'fileName', 'fileSize', 'actions'];
 
   pageSizeOptions: number[] = [10, 25, 50, 100];
   imagesParamsChange: BehaviorSubject<{ index: number, size: number, sort: string }>;
