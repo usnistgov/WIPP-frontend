@@ -53,7 +53,7 @@ export class KeycloakService {
     }
 
     profile() {
-        window.location.href = KeycloakService.auth.profileUrls;
+        window.location.href = KeycloakService.auth.profileUrl;
     }
 
     getToken(): Promise<string> {

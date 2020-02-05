@@ -15,8 +15,6 @@ export class AppComponent implements OnInit {
   isNavbarCollapsed = true;
   jupyterNotebooksLink = '';
   plotsUiLink = '';
-  public isLoggedIn : boolean;
-  public username : string;
   public keycloakAuth: KeycloakInstance;
 
   constructor(private appConfigService: AppConfigService, private keycloak: KeycloakService) {

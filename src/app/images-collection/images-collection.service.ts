@@ -12,9 +12,7 @@ import {Job} from '../job/job';
   providedIn: 'root'
 })
 export class ImagesCollectionService {
-
   private imagesCollectionsUrl = environment.apiRootUrl + '/imagesCollections';
-
   constructor(
     private http: HttpClient
   ) {
