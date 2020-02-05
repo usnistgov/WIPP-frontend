@@ -83,8 +83,16 @@ export class WorkflowService {
   }
 
   createJob(job): Observable<Job> {
-    return this.http.post<Job>(this.jobsUrl, job);
+      return this.http.post<Job>(this.jobsUrl, job);
   }
+
+  updateJob(job): Observable<Job> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<Job>(`${this.jobsUrl}/${job['id']}`, job, httpOptions);
+    }
 
   submitWorkflow(workflow): Observable<Workflow> {
     return this.http.post<Workflow>(

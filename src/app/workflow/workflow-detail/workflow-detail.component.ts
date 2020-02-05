@@ -39,6 +39,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
   jobModel = {};
+  editMode = false;
 
   // ngx-graph settings and properties
   update$: Subject<any> = new Subject();
@@ -102,6 +103,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   resetForm() {
     this.selectedSchema = this.pluginList[0];
     this.jobModel = {};
+    this.editMode = false;
   }
 
   open(content) {
@@ -109,6 +111,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       const task = {};
 
       // configure job
+      if (this.editMode) {
+        task['id'] = this.jobModel['id'];
+      }
       task['name'] = this.workflow.name + '-' + result.taskName;
       task['wippExecutable'] = this.selectedSchema.id;
       task['wippWorkflow'] = this.workflow.id;
@@ -144,8 +149,10 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           task['parameters'][inputEntry] = value;
         }
       }
-      // push job
-      this.workflowService.createJob(task).subscribe(job => {
+
+      const workflowServiceCall = this.editMode ? this.workflowService.updateJob(task)
+        : this.workflowService.createJob(task);
+      workflowServiceCall.subscribe(job => {
         this.resetForm();
         this.getJobs();
       }, error => {
@@ -353,11 +360,22 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.populateAndOpenCopyModal(content, jobId);
   }
 
-  populateAndOpenCopyModal(content, jobId: string ) {
+  openEdit(content, jobId: string) {
+    this.editMode = true;
+    this.populateAndOpenCopyModal(content, jobId);
+  }
+
+  populateAndOpenCopyModal(content, jobId: string) {
     this.jobService.getJob(jobId).subscribe(jobToCopy => {
         this.jobService.getPlugin(jobToCopy.wippExecutable).subscribe(plugin => {
           this.selectedSchema = this.pluginList.find(x => x.id === plugin.id);
-          this.jobModel['taskName'] = jobToCopy.name + '-copy';
+          if (this.editMode) {
+            this.jobModel['id'] = jobId;
+          }
+          this.jobModel['taskName'] = jobToCopy.name.replace(this.workflow.name + '-', '');
+          if (!this.editMode) {
+            this.jobModel['taskName'] += '-copy';
+          }
           this.jobModel['inputs'] = {};
           const requests = [];
           for (const input of Object.keys(jobToCopy.parameters)) {
@@ -403,7 +421,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             }
             this.open(content);
           });
-          }});
+          }
+        });
       }
     );
   }
