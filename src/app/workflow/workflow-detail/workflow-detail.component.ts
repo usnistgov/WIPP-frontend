@@ -369,7 +369,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.jobService.getJob(jobId).subscribe(jobToCopy => {
         this.jobService.getPlugin(jobToCopy.wippExecutable).subscribe(plugin => {
           this.selectedSchema = this.pluginList.find(x => x.id === plugin.id);
-          this.jobModel['id'] = jobId;
+          if (this.editMode) {
+            this.jobModel['id'] = jobId;
+          }
           this.jobModel['taskName'] = jobToCopy.name.replace(this.workflow.name + '-', '');
           if (!this.editMode) {
             this.jobModel['taskName'] += '-copy';
