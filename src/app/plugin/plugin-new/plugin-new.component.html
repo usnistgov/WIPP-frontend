@@ -1,38 +1,126 @@
-<div class="modal-header">
-  <h4 class="modal-title">New plugin</h4>
-  <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body">
-  <ngb-alert *ngIf="displayAlert" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>
-  <div class="row">
-    <div class="col-md-10">
-      <div class="form-group">
-        <input #browsePlugin type="file" (change)="onFileSelected($event)" name="browsePlugin" class="col-md-12" id="browsePlugin"
-               accept=".json, .txt">
-        <div>
-          <button id="getJsonBtn" (click)="getByUrl(linkPlugin.value); linkPlugin.value=''"
-                  [disabled]="!linkPlugin.checkValidity()">Get JSON
-          </button>
-          <input #linkPlugin (change)="browsePlugin.value=null;" type="url" required id="linkPlugin" name="linkPlugin"
-                 placeholder="Enter the URL of the JSON plugin manifest" class="top5 width80">
+<div class="bs-example">
+    <ul class="nav nav-tabs mt-12 ">
+        <li *ngFor="let wallet of coinwallet; let first = first;" [ngClass]="{firstItem: first}" class="nav-item" [class.active]="selectedwallet===wallet">
+            <a (click)="selectedwallet = wallet" aria-controls="one" class="nav-link" role="tab" data-toggle="tab">{{wallet}}</a>
+        </li>
+        <button type="button" class="close left10" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </ul>
+    <div class="tab-content">
+      <div class="container">
+        <div *ngIf="selectedwallet === coinwallet[0]" role="tabpanel" class="tab-pane active" id="one">
+
+
+          <h4 class="mt-2">New Plugin</h4>
+          <div class="modal-body">
+            <ngb-alert *ngIf="displayAlert" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>
+            <div class="row">
+              <div class="col-md-10">
+                <div class="form-group">
+                    <input #browsePlugin type="file" (change)="onFileSelected($event)" name="browsePlugin" class="col-md-12" id="browsePlugin"
+                          accept=".json, .txt">
+                    <div>
+                      <button id="getJsonBtn" (click)="getByUrl(linkPlugin.value); linkPlugin.value=''"
+                              [disabled]="!linkPlugin.checkValidity()">Get JSON
+                      </button>
+                      <input #linkPlugin (change)="browsePlugin.value=null;" type="url" required id="linkPlugin" name="linkPlugin"
+                              placeholder="Enter the URL of the JSON plugin manifest" class="top5 width80">
+                   </div>
+                   <textarea #pluginDescriptorText (change)="browsePlugin.value=null;" [(ngModel)]="pluginJSON"
+                            id="pluginDescriptorText"
+                            class="form-control top5" rows="10" placeholder="Or copy your JSON file content here">  </textarea>
+                </div>
+              </div>
+              <div class="col-md-2">
+                   <button class="btn btn-danger" (click)="clearAll()"><a>clear form</a></button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="registerBtn"
+                      (click)="postPlugin(pluginDescriptorText.value)" [disabled]="pluginDescriptorText.value.length<2">
+                      <i class="fas fa-save right10">
+                          <p id="registerText">Register plugin</p>
+                      </i>
+             </button>
+         </div>
         </div>
-        <textarea #pluginDescriptorText (change)="browsePlugin.value=null;" [(ngModel)]="pluginJSON"
-                  id="pluginDescriptorText"
-                  class="form-control top5" rows="10" placeholder="Or copy your JSON file content here">  </textarea>
+
+
+      </div>
+      <div class="container">
+        <div *ngIf="selectedwallet === coinwallet[1]" role="tabpanel" class="tab-pane active" id="two">
+            <h4 class="mt-2">Get Plugin From Repository</h4>
+
+
+
+            <table mat-table class="table-hover" [dataSource]="plugins"
+                   (matSortChange)="sortChanged($event)" matSort>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="name" (click)="postPlugin(raw)">
+                <th mat-header-cell *matHeaderCellDef>name</th>
+                <td mat-cell *matCellDef="let row">
+                  <span id="name">{{ row.name }}</span>
+                  <br>
+                  <p #more id="description" >{{ row.description }}</p>
+                  <!--<button (click)="myFunction()" id="myBtn">Read more</button>-->
+                </td>
+              </ng-container>
+
+              <!-- Description Column
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>description</th>
+                <td mat-cell *matCellDef="let row">{{ row.description.length }}</td>
+              </ng-container> -->
+
+              <ng-container matColumnDef="download">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let row">
+                  <div class="col-md-3">
+                    <button class="btn btn-primary wipp-btn wipp-btn-new"
+                            (click)="postPluginApi(row)">
+                      <i class="fas fa-cloud-download-alt">
+                         <p>Download</p>
+                      </i>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="header-row-filter-name">
+                <th mat-header-cell *matHeaderCellDef
+                    [style.text-align]="center"
+                    [attr.colspan]="1">
+                  <mat-form-field class="filter" floatLabel="never">
+                    <mat-label>Search by name</mat-label>
+                    <input matInput (keyup)="applyFilterByName($event.target.value)">
+                  </mat-form-field>
+                </th>
+              </ng-container>
+
+              <ng-container matColumnDef="header-row-blank">
+                <th mat-header-cell *matHeaderCellDef
+                    [style.text-align]="center"
+                    [attr.colspan]="2"></th>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-header-row *matHeaderRowDef="['header-row-filter-name', 'header-row-blank']"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            </table>
+
+            <mat-paginator (page)="pageChanged($event)" [length]="resultsLength" [pageSize]="pageSize"
+                           [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+
+
+
+
+        </div>
       </div>
     </div>
-    <div class="col-md-2">
-      <button class="btn btn-danger" (click)="clearAll()"><a>clear form</a></button>
-    </div>
-  </div>
 </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-primary" id="registerBtn"
-          (click)="postPlugin(pluginDescriptorText.value)" [disabled]="pluginDescriptorText.value.length<2">
-    <i class="fas fa-save right10">
-      <p id="registerText">Register plugin</p>
-    </i></button>
-</div>
-
+<!-- Fin My Code-->

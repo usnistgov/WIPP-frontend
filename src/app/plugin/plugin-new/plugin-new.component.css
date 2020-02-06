@@ -38,3 +38,18 @@
 .right10 {
   margin-right: 10px;
 }
+
+
+.left10 {
+  margin-left: 10px;
+}
+
+
+#description{
+  font-style: italic;
+  color: gray;
+}
+
+#name{
+  font-weight: bold;
+}
