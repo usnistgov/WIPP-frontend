@@ -3,6 +3,8 @@ export class Visualization {
   name: string;
   creationDate: Date;
   manifest: any;
+  owner: string;
+  publiclyAvailable: boolean = true;
   _links: any;
 }
 

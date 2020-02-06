@@ -13,6 +13,9 @@
              required>
       <small class="form-text text-muted">Enter the visualization name.</small>
     </div>
+    <mat-checkbox [(ngModel)]="visualization.publiclyAvailable" name="true">Public visualization</mat-checkbox>
+    <br *ngIf="!visualization.publiclyAvailable">
+    <span class="text-danger" *ngIf="!visualization.publiclyAvailable">This visualization will only be available to you.</span><br>
   </form>
 </div>
 <div class="modal-footer">

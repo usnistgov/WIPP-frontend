@@ -9,6 +9,10 @@
     <strong>Creation date:</strong> {{ visualization.creationDate | date }}
   </div>
 
+  <div class="col-md-4">
+    <strong>Owner:</strong> {{ visualization.owner }}
+  </div>
+
   <div class="col-md-4 text-right">
     <!--TODO: add download link (metadata not handled in pyramid building yet) -->
     <!--<a [href]="visualization?._links?.download?.href"-->
@@ -25,6 +29,14 @@
             (click)="showSettings = !showSettings">
       <span aria-hidden="true"><i class="fa fa-cog"></i></span>
     </button>
+    <button *ngIf="!visualization.publiclyAvailable" type="button"
+    ngbTooltip="Make visualization public"
+    placement="left"
+    class="btn btn-light" (click)="makePublicVisualization();">
+    <span class="fa fa-user-secret"
+        aria-hidden="true"></span>
+    </button>
+
   </div>
 
 </div>
