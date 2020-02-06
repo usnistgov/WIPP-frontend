@@ -184,7 +184,7 @@
   <div class="modal-body">
     
     <div>
-      <p>SelectedSchema Nom : {{ selectedSchema.name }} Version : {{ selectedSchema.version }} Description : {{ selectedSchema.description }}</p>
+      <h3>{{ selectedSchema.name }} - {{ selectedSchema.version }} </h3>
     </div>
     <sf-form [hidden]="!selectedSchema.isSchemaValid"
              [schema]="selectedSchema" [bindings]="selectedSchema.fieldBindings" #jsonForm>

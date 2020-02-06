@@ -30,9 +30,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   workflow: Workflow = new Workflow();
 
   selectedSchema = null;
-  pluginList : Observable<any[] | Plugin[]>;//Observable<any[] | Plugin[]>;
+  pluginList : Observable<any[] | Plugin[]>;
   selection = new SelectionModel<Plugin>(false, []);
-  //pluginListSearchCriteria : Observable<any[] | Plugin[]>;
   pluginsObervable: Observable<any[] | Plugin[]>;
   displayedColumns: string[] = ['name', 'version', 'description'];
   institutionList = [];
@@ -133,8 +132,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.paramsChange.next({
       index: 0, size: this.paramsChange.value.size, sort: this.paramsChange.value.sort, filter: this.paramsChange.value.filter, category: filterValue, institution: this.paramsChange.value.institution
     });
-    //alert("Changement Critère de recherche : nom = " + this.paramsChange.value.filter + " cat select = " + this.paramsChange.value.category + " inst = " + this.paramsChange.value.institution);
-
   }
 
   applyFilterByInstituttion(filterValue: string) {
@@ -142,7 +139,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.paramsChange.next({
       index: 0, size: this.paramsChange.value.size, sort: this.paramsChange.value.sort, filter: this.paramsChange.value.filter, category: this.paramsChange.value.category, institution: filterValue
     });
-    //alert("Changement Critère de recherche : nom = " + this.paramsChange.value.filter + " cat select = " + this.paramsChange.value.category + " inst = " + this.paramsChange.value.institution);
   }
 
   ngOnInit() {
@@ -151,16 +147,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       this.workflow = workflow;
       this.updateArgoUrl();
     });
-    //Recuperation de la liste plugin : code existant
-    /*this.pluginService.getAllPluginsOrderedByName()
-      .subscribe(plugins => {
-        this.pluginList = plugins.plugins;
-        this.generateSchema(this.pluginList);
-        this.resetForm();
-        this.getJobs();
-        alert("pluginList recupéré");
-      });*/
-
+    
     //Utilisation de plugins search criteria
      this.getPlugins();
       
@@ -212,23 +199,14 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         );*/
       })
     );
-    /*.subscribe(
-      (result) => {
-        alert("Et now");
-      }
-    );*/
+    
   }
   
   resetForm() {
-    /*this.selectedSchema = this.pluginList[0];
-    alert("reset form plugin selected schema : " + this.selectedSchema.name + " fieldBindings : " + this.selectedSchema.fieldBindings);
-    */
     this.pluginList.subscribe(
       (plugins) => {
         this.selectedSchema = plugins[0];
         this.generateSchema(this.selectedSchema);
-        //alert(this.selectedSchema.fieldBindings);
-        //alert("reset form plugin selected schema : " + this.selectedSchema.name + " fieldBindings : " + this.selectedSchema.fieldBindings);
       },
       (error) => {
         
@@ -300,6 +278,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     }, (result) => {
       //this.resetForm();
     });
+
+    //alert("test category");
+    //console.log("Category : " , this.pluginService.getAllCategories());
   }
 
   populateJobOutputs(job) {
@@ -351,51 +332,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         });
       }
     );
-    /*alert(matchingPlugin.name);*/
-
-    /*matchingPlugin.outputs.forEach(output => {
-      if (output.type === 'collection') {
-        const outputCollection = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.collections.push(outputCollection);
-      } else if (output.type === 'stitchingVector') {
-        const outputStitchingVector = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.stitchingVectors.push(outputStitchingVector);
-      } else if (output.type === 'tensorflowModel') {
-        const outputTensorflowModel = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.tensorflowModels.push(outputTensorflowModel);
-      } else if (output.type === 'csvCollection') {
-        const outputCsvCollection = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.csvCollections.push(outputCsvCollection);
-      } else if (output.type === 'notebook') {
-        const outputNotebook = {
-          id: '{{ ' + job.id + '.' + output.name + ' }}',
-          name: '{{ ' + job.name + '.' + output.name + ' }}',
-          sourceJob: job['id'],
-          virtual: true
-        };
-        this.jobOutputs.notebooks.push(outputNotebook);
-      }
-    });*/
+    
   }
 
   submitWorkflow() {
@@ -637,25 +574,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.categoryList = this.categoryList.filter((n,i) => this.categoryList.indexOf(n)===i && n!=null);
     this.institutionList = this.institutionList.filter((n,i) => this.institutionList.indexOf(n)===i);
   }
-
-  updatePluginSearchList() {
-    /*if(this.categorySelected === 'all' && this.institutionSelected === 'all')
-      this.pluginListSearchCriteria = this.pluginList;
-    else if(this.categorySelected === 'all' && this.institutionSelected !== 'all'){
-      this.pluginListSearchCriteria = this.pluginList.filter(plugin => plugin.institution === this.institutionSelected)
-    }
-    else if(this.categorySelected !== 'all' && this.institutionSelected === 'all'){
-      this.pluginListSearchCriteria = this.pluginList.filter(plugin => plugin.category === this.categorySelected)
-    }
-    else{
-      this.pluginListSearchCriteria = this.pluginList.filter(plugin => plugin.category === this.categorySelected && plugin.institution === this.institutionSelected)
-    }
-    
-    if(this.nameSearch != null)
-      this.pluginListSearchCriteria = this.pluginListSearchCriteria.filter(plugin => plugin.name.toUpperCase().includes(this.nameSearch.toUpperCase()));
-    
-    */
-    }
 
   ngOnDestroy() {
     this.modalService.dismissAll();

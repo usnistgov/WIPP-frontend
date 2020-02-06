@@ -19,6 +19,8 @@ export class PluginService {
   }
 
   private pluginsUrl = environment.apiRootUrl + '/plugins';
+  private pluginList: Plugin[];
+  private categoryList: string[] = [];
 
   getPlugins(params): Observable<PaginatedPlugins> {
     if (params) {
@@ -31,6 +33,7 @@ export class PluginService {
     return this.http.get<any>(this.pluginsUrl, httpOptions).pipe(
       map((result: any) => {
         result.plugins = result._embedded.plugins;
+        this.pluginList = result.plugins;
         return result;
       }));
   }
@@ -104,15 +107,9 @@ export class PluginService {
 
   //Test
   getAllCategories(): string[] {
-    const httpParams = new HttpParams();
-    httpOptions.params = httpParams;
-    let categories: string[] = [];
-    this.http.get<string[]>(this.pluginsUrl + '/search/getAllCatgories', httpOptions).subscribe(
-      (categ) => {
-        categories = categ.slice();
-      }
-    );
-    return categories;
+    this.pluginList.forEach((p) => this.categoryList.push(p.category));
+    this.categoryList = this.categoryList.filter((n,i) => this.categoryList.indexOf(n)===i && n!=null);
+    return this.categoryList;
   }
 
   getAllInstitutions(): string[] {
