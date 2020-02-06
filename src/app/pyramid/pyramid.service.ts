@@ -174,5 +174,13 @@ export class PyramidService {
     return this.getPyramid(pyramidId);
   }
 
+  makePublicPyramid(pyramid: Pyramid): Observable<Pyramid> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<Pyramid>(`${this.pyramidsUrl}/${pyramid.id}`, {publiclyAvailable: true}, httpOptions);
+  }
+
 
 }

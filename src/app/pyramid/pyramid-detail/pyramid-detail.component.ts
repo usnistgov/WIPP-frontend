@@ -53,4 +53,11 @@ export class PyramidDetailComponent implements OnInit {
       });
   }
 
+  makePublicPyramid(): void {
+    this.pyramidService.makePublicPyramid(
+      this.pyramid).subscribe(pyramid => {
+      this.pyramid = pyramid;
+    });
+  }
+
 }

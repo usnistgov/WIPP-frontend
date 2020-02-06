@@ -3,6 +3,8 @@ export class Pyramid {
   name: string;
   creationDate: Date;
   job: string;
+  owner: string;
+  publiclyAvailable: boolean = true;
   _links: any;
 }
 
