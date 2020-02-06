@@ -60,4 +60,11 @@ export class TensorflowModelDetailComponent implements OnInit {
         console.log('dismissed');
       });
   }
+  
+  makePublicTensorflowModel(): void {
+    this.tensorflowModelService.makePublicTensorflowModel(
+      this.tensorflowModel).subscribe(tensorflowModel => {
+      this.tensorflowModel = tensorflowModel;
+    });
+  }
 }

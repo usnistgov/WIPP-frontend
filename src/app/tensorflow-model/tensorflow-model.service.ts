@@ -75,4 +75,12 @@ export class TensorflowModelService {
         return result;
       }));
   }
+
+  makePublicTensorflowModel(tensorflowModel: TensorflowModel): Observable<TensorflowModel> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<TensorflowModel>(`${this.tensorflowModelUrl}/${tensorflowModel.id}`, {publiclyAvailable: true}, httpOptions);
+  }
 }

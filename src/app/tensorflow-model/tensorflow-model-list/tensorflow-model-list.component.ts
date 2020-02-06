@@ -11,7 +11,7 @@ import {catchError, map, switchMap} from 'rxjs/operators';
   styleUrls: ['./tensorflow-model-list.component.css']
 })
 export class TensorflowModelListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'creationDate'];
+  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyAvailable'];
   tensorflowModels: Observable<TensorflowModel[]>;
 
   resultsLength = 0;
