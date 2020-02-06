@@ -7,6 +7,7 @@ import {CsvCollectionService} from '../csv-collection.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-new.component';
 import {Router} from '@angular/router';
+import {KeycloakService} from '../../services/keycloak/keycloak.service'
 
 @Component({
   selector: 'app-csv-collection-list',
@@ -14,7 +15,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./csv-collection-list.component.css']
 })
 export class CsvCollectionListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['name', 'creationDate'];
+  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyAvailable'];
   csvCollections: Observable<CsvCollection[]>;
 
   resultsLength = 0;
@@ -28,7 +29,8 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
   constructor(
     private csvCollectionService: CsvCollectionService,
     private modalService: NgbModal,
-    private router: Router
+    private router: Router,
+    private keycloakService: KeycloakService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -104,6 +106,10 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  canCreate() : boolean {
+    return(this.keycloakService.isLoggedIn());
   }
 
 }

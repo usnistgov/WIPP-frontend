@@ -72,4 +72,12 @@ export class CsvCollectionService {
     return this.http.post<CsvCollection>(this.csvCollectionUrl + '/upload', formData);
   }
 
+  makePublicCsvCollection(csvCollection: CsvCollection): Observable<CsvCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, {publiclyAvailable: true}, httpOptions);
+  }
+
 }

@@ -10,6 +10,9 @@
         <dt class="col-md-4">Creation Date: </dt>
         <dd class="col-md-8">{{csvCollection.creationDate | date}}</dd>
 
+        <dt class="col-md-4">Owner:</dt>
+        <dd class="col-md-8">{{csvCollection.owner}}</dd>
+
         <dt class="col-md-4">Source job: </dt>
         <dd class="col-md-8" *ngIf="job; else not_applicable">
           <a (click)="displayJobModal(job.id)"
@@ -42,6 +45,13 @@
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
       </a>
+      <button *ngIf="!csvCollection.publiclyAvailable && canEdit()" type="button"
+              ngbTooltip="Make collection public"
+              placement="left"
+              class="btn btn-light" (click)="makePublicCollection();">
+        <span class="fa fa-user-secret"
+              aria-hidden="true"></span>
+      </button>
 
       <ng-template #plotTipContent>Visualize in Plots UI
         <span

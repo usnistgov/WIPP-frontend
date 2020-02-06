@@ -7,6 +7,7 @@ import {CsvCollectionService} from '../csv-collection.service';
 import {CsvCollection} from '../csv-collection';
 import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
+import {KeycloakService} from '../../services/keycloak/keycloak.service'
 
 @Component({
   selector: 'app-csv-collection-detail',
@@ -24,7 +25,9 @@ export class CsvCollectionDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private csvCollectionService: CsvCollectionService,
-    private appConfigService: AppConfigService) {
+    private appConfigService: AppConfigService,
+    private keycloakService: KeycloakService
+    ) {
   }
 
   ngOnInit() {
@@ -50,6 +53,17 @@ export class CsvCollectionDetailComponent implements OnInit {
       , (reason) => {
         console.log('dismissed');
       });
+  }
+
+  makePublicCollection(): void {
+    this.csvCollectionService.makePublicCsvCollection(
+      this.csvCollection).subscribe(csvCollection => {
+      this.csvCollection = csvCollection;
+    });
+  }
+
+  canEdit() : boolean {
+    return(this.keycloakService.isLoggedIn() && this.csvCollection.owner == this.keycloakService.getUsername());
   }
 
 }
