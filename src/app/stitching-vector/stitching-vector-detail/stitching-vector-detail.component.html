@@ -9,6 +9,18 @@
     <div class="col-md-12"><b>Creation Date: </b> {{stitchingVector.creationDate | date}}</div>
   </div>
 
+  <dt class="col-md-4">Owner:</dt>
+  <dd class="col-md-8">{{stitchingVector.owner}}</dd>
+
+  <div class="col-md-2 text-right">
+    <button *ngIf="!stitchingVector.publiclyAvailable && canEdit()" type="button"
+              ngbTooltip="Make stitching vector public"
+              placement="left"
+              class="btn btn-light" (click)="makePublicStitchingVector();">
+        <span class="fa fa-user-secret"
+              aria-hidden="true"></span>
+      </button>
+  </div>
   <div class="row" *ngIf="stitchingVector._links && stitchingVector._links.statistics">
     <div class="col-md-12">
       <b>Statistics file: </b>

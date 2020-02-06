@@ -8,6 +8,8 @@ export class StitchingVector {
   job: string;
   numberOfTimeSlices: any;
   tilesPattern: any;
+  owner: string;
+  publiclyAvailable: boolean = true;
   _links: any;
 }
 

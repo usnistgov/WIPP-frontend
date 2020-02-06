@@ -24,6 +24,10 @@
       <small class="form-text text-muted">Enter the stitching vector message.</small>
       <div style="height: 30px"></div>
 
+      <mat-checkbox [(ngModel)]="stitchingVector.publiclyAvailable" name="true">Public stitching vector</mat-checkbox>
+    <br *ngIf="!stitchingVector.publiclyAvailable">
+    <span class="text-danger" *ngIf="!stitchingVector.publiclyAvailable">This stitching vector will only be available to you.</span><br>
+
       <label for="name">Stitching Vector File (5 MB max):</label>
       <span style="color: #e32"> * </span>
       <input #file type="file" (change)="onFileSelected($event)" name="file" class="col-md-12" id="file" accept="text/plain" autofocus
