@@ -41,6 +41,16 @@
       </td>
     </tr>
 
+    <!--  owner line  -->
+    <tr *ngIf="job.owner">
+      <th>
+        <dt>Owner:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.owner}}</dd>
+      </td>
+    </tr>
+
     <!--  workflow name line  -->
     <tr *ngIf="workflow">
       <th>
