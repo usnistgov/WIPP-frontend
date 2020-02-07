@@ -156,13 +156,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
     this.pluginList.subscribe(
       (plugins) => {
-        //this.resetForm();
-        //this.selectedSchema = plugins[0];
-        //this.generateSchema(plugins);
-        //alert(this.selectedSchema.isSchemaValid);
         this.getJobs();
-        //this.resetForm();
-        //this.generateSchema(this.selectedSchema);
       }
     );
   }
@@ -176,19 +170,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           size: page.size,
           sort: page.sort
         };
-        //if (page.filter || (page.category !=='all' && page.institution !== 'all')) { //To update
-          //alert("Critère de recherche : nom = " + page.filter + " cat select = " + page.category + " inst = " + page.institution);
-          return this.pluginService.getPluginsByCriteria(params, page.filter, page.category, page.institution).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.plugins;
-            }),
-            catchError(() => {
-              return observableOf([]);
-            })
-          );
-        //}
-        /*return this.pluginService.getPlugins(params).pipe(
+
+        return this.pluginService.getPluginsByCriteria(params, page.filter, page.category, page.institution).pipe(
           map((data) => {
             this.resultsLength = data.page.totalElements;
             return data.plugins;
@@ -196,7 +179,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           catchError(() => {
             return observableOf([]);
           })
-        );*/
+        );
+        
       })
     );
     
@@ -279,8 +263,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       //this.resetForm();
     });
 
-    //alert("test category");
-    //console.log("Category : " , this.pluginService.getAllCategories());
   }
 
   populateJobOutputs(job) {

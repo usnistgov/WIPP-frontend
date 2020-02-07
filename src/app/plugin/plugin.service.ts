@@ -33,7 +33,6 @@ export class PluginService {
     return this.http.get<any>(this.pluginsUrl, httpOptions).pipe(
       map((result: any) => {
         result.plugins = result._embedded.plugins;
-        this.pluginList = result.plugins;
         return result;
       }));
   }
@@ -106,10 +105,20 @@ export class PluginService {
   }
 
   //Test
-  getAllCategories(): string[] {
-    this.pluginList.forEach((p) => this.categoryList.push(p.category));
-    this.categoryList = this.categoryList.filter((n,i) => this.categoryList.indexOf(n)===i && n!=null);
-    return this.categoryList;
+  getAllCategories(): Observable<string[]> {
+
+    const httpParams = new HttpParams();
+    httpOptions.params = httpParams;
+    return this.http.get<any>(this.pluginsUrl + '/search/findByOrderByNameAsc', httpOptions).pipe(
+      map((result: any) => {
+        this.pluginList = result._embedded.plugins;
+        this.pluginList.forEach((p) => this.categoryList.push(p.category));
+        this.categoryList = this.categoryList.filter((n,i) => this.categoryList.indexOf(n)===i && n!=null);
+        return this.categoryList;
+      }));
+    //this.pluginList.forEach((p) => this.categoryList.push(p.category));
+    //this.categoryList = this.categoryList.filter((n,i) => this.categoryList.indexOf(n)===i && n!=null);
+    //return this.categoryList;
   }
 
   getAllInstitutions(): string[] {
@@ -123,7 +132,7 @@ export class PluginService {
     );
     return institutions;
   }
-  //Test getPlugings by criteria
+  //Get Plugings by criteria
   getPluginsByCriteria(params, name, category, institution): Observable<PaginatedPlugins> {
     let httpParams = new HttpParams().set('name', name).set('category', category).set('institution', institution);
     if (params) {
@@ -134,6 +143,9 @@ export class PluginService {
     }
     httpOptions.params = httpParams;
     
+    if(category === 'all' && institution === 'all' && name !== '')
+      return this.getPluginsByNameContainingIgnoreCase(params, name);
+
     if(category === 'all' && institution === 'all')
       return this.getPlugins(params);
 

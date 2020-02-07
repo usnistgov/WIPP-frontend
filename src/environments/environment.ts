@@ -6,7 +6,7 @@ import { version } from '../../package.json';
 export const environment = {
   production: false,
   version: version,
-  apiRootUrl: 'http://172.27.254.206:8080/api'
+  apiRootUrl: 'http://10.188.134.133:8080/api'
 };
 
 /*
