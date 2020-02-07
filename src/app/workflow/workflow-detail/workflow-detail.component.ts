@@ -32,7 +32,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   selectedSchema = null;
   pluginList : Observable<any[] | Plugin[]>;
   selection = new SelectionModel<Plugin>(false, []);
-  pluginsObervable: Observable<any[] | Plugin[]>;
   displayedColumns: string[] = ['name', 'version', 'description'];
   institutionList = [];
   categoryList = [];
@@ -126,7 +125,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       index: 0, size: this.paramsChange.value.size, sort: this.paramsChange.value.sort, filter: filterValue, category: this.paramsChange.value.category, institution: this.paramsChange.value.institution
     });
   }
-  //Test
+  
   applyFilterByCategory(filterValue: string) {
     // if the user filters by category, reset back to the first page
     this.paramsChange.next({
@@ -148,17 +147,17 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       this.updateArgoUrl();
     });
     
-    //Utilisation de plugins search criteria
-     this.getPlugins();
+    this.getPlugins();
       
-    //stubCategoryInstitution
-    this.stubCategory_Institution();
-
     this.pluginList.subscribe(
       (plugins) => {
         this.getJobs();
       }
     );
+
+    //Get Category and Institution list
+    this.categoryList = this.pluginService.getAllCategories();
+    this.institutionList = this.pluginService.getAllInstitutions();
   }
 
   getPlugins(): void {
@@ -203,6 +202,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.generateSchema(this.selectedSchema);
   }
   open(content, plugin) {
+
     if(plugin==='') {
       //First ng-template open
     }
@@ -544,17 +544,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     if (this.workflow.generatedName) {
       this.argoUiLink = urljoin(this.argoUiBaseUrl, this.workflow.generatedName);
     }
-  }
-
-  stubCategory_Institution() {
-    /*for(let i=0; i< this.pluginList.length; i++) {
-      this.pluginList[i].category = "category" + i%4;
-    }*/
-    this.categoryList = ['cat0', 'cat1', 'cat2', 'cat3', 'cat4', 'cat5', 'cat6'];
-    this.institutionList = ['National Institute of Standards and Technology', 'ISIMA', 'Isima'];
-    //Suppression des dupllications
-    this.categoryList = this.categoryList.filter((n,i) => this.categoryList.indexOf(n)===i && n!=null);
-    this.institutionList = this.institutionList.filter((n,i) => this.institutionList.indexOf(n)===i);
   }
 
   ngOnDestroy() {

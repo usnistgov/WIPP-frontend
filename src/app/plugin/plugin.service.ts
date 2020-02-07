@@ -21,6 +21,7 @@ export class PluginService {
   private pluginsUrl = environment.apiRootUrl + '/plugins';
   private pluginList: Plugin[];
   private categoryList: string[] = [];
+  private institutionList: string[] = [];
 
   getPlugins(params): Observable<PaginatedPlugins> {
     if (params) {
@@ -104,35 +105,34 @@ export class PluginService {
     return this.http.get<JSON>(url);
   }
 
-  //Test
-  getAllCategories(): Observable<string[]> {
+  
+  getAllCategories(): string[] {
 
     const httpParams = new HttpParams();
     httpOptions.params = httpParams;
-    return this.http.get<any>(this.pluginsUrl + '/search/findByOrderByNameAsc', httpOptions).pipe(
+    this.http.get<any>(this.pluginsUrl + '/search/findByOrderByNameAsc', httpOptions).pipe(
       map((result: any) => {
         this.pluginList = result._embedded.plugins;
-        this.pluginList.forEach((p) => this.categoryList.push(p.category));
+        this.pluginList.forEach((p) => {
+          if(this.categoryList.find(cat => cat === p.category) == undefined && p.category != null)
+            this.categoryList.push(p.category);
+          if(this.institutionList.find(ins => ins === p.institution) == undefined && p.institution != null)
+            this.institutionList.push(p.institution);
+        });
+        return this.categoryList;
+      })).subscribe((result) => {
         this.categoryList = this.categoryList.filter((n,i) => this.categoryList.indexOf(n)===i && n!=null);
         return this.categoryList;
-      }));
-    //this.pluginList.forEach((p) => this.categoryList.push(p.category));
-    //this.categoryList = this.categoryList.filter((n,i) => this.categoryList.indexOf(n)===i && n!=null);
-    //return this.categoryList;
+      });
+      return this.categoryList;
   }
 
+  
+
   getAllInstitutions(): string[] {
-    const httpParams = new HttpParams();
-    httpOptions.params = httpParams;
-    let institutions: string[] = [];
-    this.http.get<string[]>(this.pluginsUrl + '/search/getAllInstitutions', httpOptions).subscribe(
-      (inst) => {
-        institutions = inst.slice();
-      }
-    );
-    return institutions;
+    return this.institutionList;
   }
-  //Get Plugings by criteria
+  //Get Plugings by search criteria
   getPluginsByCriteria(params, name, category, institution): Observable<PaginatedPlugins> {
     let httpParams = new HttpParams().set('name', name).set('category', category).set('institution', institution);
     if (params) {
