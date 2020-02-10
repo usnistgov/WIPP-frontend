@@ -13,6 +13,8 @@ export class AppComponent {
   isNavbarCollapsed = true;
   jupyterNotebooksLink = '';
   plotsUiLink = '';
+  onlineHelpLink = 'https://github.com/usnistgov/WIPP/tree/master/user-guide';
+  apiDocsLink = environment.apiRootUrl + '/swagger-ui.html';
 
   constructor(private appConfigService: AppConfigService) {
     this.jupyterNotebooksLink = this.appConfigService.getConfig().jupyterNotebooksUrl;

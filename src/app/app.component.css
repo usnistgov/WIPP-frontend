@@ -41,6 +41,11 @@ a:not([href]).dropdown-toggle:hover {
   font-weight: normal
 }
 
+.dropdown-menu-right {
+  right: 0;
+  left: auto;
+}
+
 .main-container {
   width: 98%;
   min-height: 100vh;
