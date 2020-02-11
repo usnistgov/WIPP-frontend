@@ -77,7 +77,7 @@
 
 <div class="row top-bottomMarge50">
   <div class="col-md-6">
-    <button [disabled]="csvCollection.locked" class="btn btn-light btn-block" #browseBtn>
+    <button [disabled]="csvCollection.locked || csvCollection.sourceJob" class="btn btn-light btn-block" #browseBtn>
       Add files to collection
     </button>
   </div>
