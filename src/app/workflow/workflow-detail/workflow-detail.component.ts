@@ -408,7 +408,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
                   jobToCopy.parameters[input].length - 3
                 );
                 const prevJob = this.jobs.find(x => x.id === prevId);
-                this.jobModel['inputs'][input]['name'] = prevJob.name + prevOutputName;
+                this.jobModel['inputs'][input]['name'] = '{{ ' + prevJob.name + prevOutputName + ' }}';
                 this.jobModel['inputs'][input]['virtual'] = true;
                 this.jobModel['inputs'][input]['sourceJob'] = prevId;
               }
