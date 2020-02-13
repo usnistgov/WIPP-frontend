@@ -75,9 +75,9 @@
 </div>
 
 
-<div class="row top-bottomMarge50">
+<div class="row top-bottomMarge50" *ngIf="!(csvCollection.locked || csvCollection.sourceJob)">
   <div class="col-md-6">
-    <button [disabled]="csvCollection.locked || csvCollection.sourceJob" class="btn btn-light btn-block" #browseBtn>
+    <button class="btn btn-light btn-block" #browseBtn>
       Add files to collection
     </button>
   </div>
