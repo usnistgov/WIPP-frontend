@@ -51,10 +51,10 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     private router: Router,
     private csvCollectionService: CsvCollectionService,
     private appConfigService: AppConfigService) {
-      this.csvParamsChange = new BehaviorSubject({
-    index: 0,
-    size: this.pageSize,
-    sort: ''});
+    this.csvParamsChange = new BehaviorSubject({
+      index: 0,
+      size: this.pageSize,
+      sort: ''});
   }
 
   ngOnInit() {
@@ -93,6 +93,11 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   csvSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
     this.csvParamsChange.next({index: 0, size: this.csvParamsChange.value.size, sort: sort.active + ',' + sort.direction});
+  }
+
+  csvPageChanged(page) {
+    this.csvParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.csvParamsChange.value.sort});
+    this.pageSize = page.pageSize;
   }
 
   getCsvCollection() {
@@ -223,7 +228,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-   deleteAllCsvFiles(): void {
+  deleteAllCsvFiles(): void {
     this.csvCollectionService.deleteAllCsvFiles(this.csvCollection).subscribe(result => {
       this.$throttleRefresh.next();
     });

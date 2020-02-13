@@ -183,7 +183,7 @@ Total size: {{csvCollection.csvTotalSize| bytes}}
   <div class="row">
     <div class="col-md-8"></div>
     <div class="col-md-4">
-      <mat-paginator [length]="resultsLengthCsv" [pageSize]="pageSize"
+      <mat-paginator (page)="csvPageChanged($event)" [length]="resultsLengthCsv" [pageSize]="pageSize"
                      [pageSizeOptions]="pageSizeOptions" #csvPaginator>
       </mat-paginator>
     </div>
