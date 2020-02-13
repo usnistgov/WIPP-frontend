@@ -383,8 +383,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           const requests = [];
           for (const input of Object.keys(jobToCopy.parameters)) {
             // if input to copy is an existing WIPP object
-            if (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
-              || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search') {
+            if (this.selectedSchema.properties.inputs.properties[input]['widget']
+               && (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
+              || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search')) {
               if (jobToCopy.parameters[input].indexOf('{') === -1) {
                 const id = jobToCopy.parameters[input];
                 // Resolve AbstractFactory
@@ -411,6 +412,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
                 this.jobModel['inputs'][input]['virtual'] = true;
                 this.jobModel['inputs'][input]['sourceJob'] = prevId;
               }
+            } else if (this.selectedSchema.properties.inputs.properties[input]['type'] === 'array') {
+              // if input to copy is an array of strings joined into a single string
+              this.jobModel['inputs'][input] = jobToCopy.parameters[input] ? jobToCopy.parameters[input].split(',') : null ;
             } else {
               // if input to copy is a standard type (string, int...)
               this.jobModel['inputs'][input] = jobToCopy.parameters[input] ? jobToCopy.parameters[input] : null ;
