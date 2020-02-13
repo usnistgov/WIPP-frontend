@@ -32,7 +32,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   jobOutputs = {
     collection: [],
     stitchingVector: [],
+    pyramid: [],
     tensorflowModel: [],
+    tensorboardLogs: [],
     csvCollection: [],
     notebook: []
   };
@@ -133,6 +135,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           let value = result.inputs[inputEntry];
           if (type === 'collection' ||
             type === 'stitchingVector' ||
+            type === 'pyramid' ||
             type === 'tensorflowModel' ||
             type === 'csvCollection' ||
             type === 'notebook') {
@@ -178,7 +181,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         virtual: true
       };
       this.jobOutputs[output.type].push(outputData);
-
     });
   }
 
@@ -240,6 +242,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           switch (input.type) {
             case 'collection':
             case 'stitchingVector':
+            case 'pyramid':
             case 'tensorflowModel':
             case 'csvCollection':
             case 'notebook':
@@ -452,7 +455,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.jobOutputs = {
       collection: [],
       stitchingVector: [],
+      pyramid: [],
       tensorflowModel: [],
+      tensorboardLogs: [],
       csvCollection: [],
       notebook: []
     };
