@@ -15,6 +15,7 @@ export class AppComponent {
   plotsUiLink = '';
   onlineHelpLink = 'https://github.com/usnistgov/WIPP/tree/master/user-guide';
   apiDocsLink = environment.apiRootUrl + '/swagger-ui.html';
+  displayApiDocsLink = !environment.production;
 
   constructor(private appConfigService: AppConfigService) {
     this.jupyterNotebooksLink = this.appConfigService.getConfig().jupyterNotebooksUrl;
