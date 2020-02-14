@@ -1,4 +1,4 @@
-import {Component, NgModule, OnInit, ViewChild} from '@angular/core';
+import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTable, MatTableDataSource, MatTableModule} from '@angular/material';
 import {StitchingVector} from '../stitching-vector';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -15,7 +15,7 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 @NgModule({
   imports: [MatTableModule, MatTableDataSource, MatTable]
 })
-export class StitchingVectorListComponent implements OnInit {
+export class StitchingVectorListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
   stitchingVectors: Observable<StitchingVector[]>;
 
@@ -100,6 +100,10 @@ export class StitchingVectorListComponent implements OnInit {
   createNew() {
     const modalRef = this.modalService.open(StitchingVectorNewComponent, {size: 'lg'});
     modalRef.componentInstance.modalReference = modalRef;
+  }
+
+  ngOnDestroy() {
+    this.modalService.dismissAll();
   }
 
 }
