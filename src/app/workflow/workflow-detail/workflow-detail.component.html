@@ -160,11 +160,11 @@
         <!-- Description Column -->
         <ng-container matColumnDef="description">
           <th mat-header-cell *matHeaderCellDef> Description </th>
-          <td mat-cell *matCellDef="let plugin"> {{plugin.description}} {{plugin.category}} {{plugin.institution}} </td> <!--Test cat inst-->
+          <td mat-cell *matCellDef="let plugin"> {{plugin.description}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr> <!--(click)="open(addStepModalPluginSelected, row.id); d()"-->
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr> 
       </table>
 
       <mat-paginator #paginator (page)="pageChanged($event)" [length]="resultsLength" [pageSize]="pageSize"
@@ -194,6 +194,14 @@
     </div>
   </div>
   <div class="modal-footer">
+
+    <!-- Back to previous modal template -->
+    <button class="btn btn-outline-dark" (click)="d(); open(addStepModal, '') ">
+          <i class="fas fa-arrow-circle-left" style="margin-left: 10px">
+            <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Back</p>
+          </i>
+    </button>
+
     <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">
       <i class="fas fa-plus-circle" style="margin-right: 10px">
         <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Add
