@@ -22,7 +22,7 @@
     <!--<span-->
     <!--aria-hidden="true"><i class="fa fa-download"></i></span>-->
     <!--</a>-->
-    <button type="button" class="btn wip-icon-btn-default btn-sm"
+    <button *ngIf="canEdit()" type="button" class="btn wip-icon-btn-default btn-sm"
             ngbTooltip="Hide/Show configs"
             placement="left"
             [class.active]="showSettings"

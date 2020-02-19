@@ -8,6 +8,7 @@ import {PyramidService} from '../../pyramid/pyramid.service';
 import {PyramidVisualizationService} from '../pyramid-visualization.service';
 import {PyramidVisualizationHelpComponent} from '../pyramid-visualization-help/pyramid-visualization-help.component';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import {KeycloakService} from '../../services/keycloak/keycloak.service'
 
 @Component({
   selector: 'app-pyramid-visualization-detail',
@@ -29,7 +30,9 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private pyramidService: PyramidService,
-    private visualizationService: PyramidVisualizationService) {
+    private visualizationService: PyramidVisualizationService,
+    private keycloakService: KeycloakService
+    ) {
   }
 
   ngOnInit() {
@@ -263,5 +266,9 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
       this.visualization).subscribe(visualization => {
       this.visualization = visualization;
     });
+  }
+
+  canEdit() : boolean {
+    return(this.keycloakService.isLoggedIn() && this.visualization.owner == this.keycloakService.getUsername());
   }
 }
