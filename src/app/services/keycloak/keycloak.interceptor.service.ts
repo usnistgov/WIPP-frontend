@@ -30,7 +30,7 @@ export class KeycloakInterceptorService implements HttpInterceptor {
             }),
             catchError((error: HttpErrorResponse) => {
               if (error.status == 403){
-                this.router.navigate(['/403', error.error.path]);
+                this.router.navigate(['/403', error.url]);
                 return throwError(error);
               }
             }));
@@ -42,7 +42,7 @@ export class KeycloakInterceptorService implements HttpInterceptor {
       }),
       catchError((error: HttpErrorResponse) => {
         if (error.status == 403){
-          this.router.navigate(['/403', error.error.path]);
+          this.router.navigate(['/403', error.url]);
           return throwError(error);
         }
       }));
