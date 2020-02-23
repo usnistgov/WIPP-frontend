@@ -22,7 +22,6 @@ import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.compon
 import {NotebookModule} from './notebook/notebook.module';
 import {AppConfigService} from './app-config.service';
 import {appInitializerFactory} from './app-init-factory';
-import { KEYCLOAK_HTTP_PROVIDER, KeycloakHttp } from './services/keycloak/keycloak.http';
 import { KeycloakService } from './services/keycloak/keycloak.service';
 import { KeycloakInterceptorService} from './services/keycloak/keycloak.interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -68,16 +67,10 @@ import { ForbiddenAccessComponent } from './forbidden-access/forbidden-access.co
       deps: [AppConfigService]
     },
     {
-      provide: KeycloakHttp,
-      useClass: KeycloakHttp,
-      multi: true
-    },
-    {
       provide: HTTP_INTERCEPTORS,
       useClass: KeycloakInterceptorService,
       multi: true
     },
-    KEYCLOAK_HTTP_PROVIDER,
     KeycloakService
   ],
   bootstrap: [AppComponent]
