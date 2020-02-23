@@ -28,7 +28,6 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
 
   constructor(
     private csvCollectionService: CsvCollectionService,
-    private modalService: NgbModal,
     private router: Router,
     private keycloakService: KeycloakService,
     private modalService: NgbModal

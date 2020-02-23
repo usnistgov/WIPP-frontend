@@ -138,8 +138,11 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
   initFlow(): void {
-    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': '.csv'});
+    if (this.browseBtn != undefined){ // this element can be null, if the user can not edit the collection
+      this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': '.csv'});
 
+    }
+    
     const id = '';
     const csvUploadUrl = this.csvCollectionService.getCsvUrl(this.csvCollection);
     this.flowHolder.opts.target = csvUploadUrl;
