@@ -142,7 +142,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // fixme: temporary fix while waiting for 1.0.0 release of ngx-inline-editor
     const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
-    if (faRemoveElt != null){
+    if (faRemoveElt != null){ // this element can be null, if the user can not edit the collection
       faRemoveElt.classList.remove('fa-remove');
       faRemoveElt.classList.add('fa-times');
     }
@@ -301,13 +301,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   initFlow(): void {
 
-    if (this.browseBtn != undefined){
+    if (this.browseBtn != undefined){ // this element can be null, if the user can not edit the collection
       this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false);
     }
-    if (this.browseDirBtn != undefined){
+    if (this.browseDirBtn != undefined){ // this element can be null, if the user can not edit the collection
       this.flowHolder.assignBrowse([this.browseDirBtn.nativeElement], true, false);
     }
-    if (this.dropArea != undefined){
+    if (this.dropArea != undefined){ // this element can be null, if the user can not edit the collection
       this.flowHolder.assignDrop();
     }
 

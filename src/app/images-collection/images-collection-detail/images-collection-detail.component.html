@@ -78,7 +78,7 @@
                   [hidden]="!showNotes || editNotes">
             Edit Notes
           </button>
-          <div *ngIf="canEdit()" [hidden]="!editNotes || !showNotes">
+          <div [hidden]="!editNotes || !showNotes || !canEdit()">
               <button class="btn btn-success btn-block"
                       (click)="saveNotes()"
                       [disabled]="imageCollectionNotes == imagesCollection.notes">

@@ -29,7 +29,7 @@
         </dd>
         <ng-template #not_applicable>N/A</ng-template>
       </dl>
-      <button *ngIf="!tensorflowModel.publiclyAvailable" type="button"
+      <button *ngIf="!tensorflowModel.publiclyAvailable && canEdit()" type="button"
               ngbTooltip="Make Tensorflow model public"
               placement="left"
               class="btn btn-light" (click)="makePublicTensorflowModel();">

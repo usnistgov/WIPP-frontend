@@ -13,7 +13,7 @@
     <div class="col-md-12"><b>Owner: </b> {{pyramid.owner}}</div>
   </div>
 
-  <button *ngIf="!pyramid.publiclyAvailable" type="button"
+  <button *ngIf="!pyramid.publiclyAvailable && canEdit()" type="button"
               ngbTooltip="Make pyramid public"
               placement="left"
               class="btn btn-light" (click)="makePublicPyramid();">
