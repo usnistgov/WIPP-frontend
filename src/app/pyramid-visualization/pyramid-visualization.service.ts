@@ -34,7 +34,7 @@ export class PyramidVisualizationService {
     }
     return this.http.get<any>(this.visualizationsUrl, httpOptions).pipe(
       map((result: any) => {
-        result.visualizations = result._embedded.visualizations;
+        result.data = result._embedded.visualizations;
         return result;
       }));
   }
@@ -55,7 +55,7 @@ export class PyramidVisualizationService {
     httpOptions.params = httpParams;
     return this.http.get<any>(this.visualizationsUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
-        result.visualizations = result._embedded.visualizations;
+        result.data = result._embedded.visualizations;
         return result;
       }));
   }

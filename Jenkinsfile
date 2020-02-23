@@ -42,6 +42,7 @@ pipeline {
                         env.JUPYTERHUB_URL = urls.JUPYTERHUB_URL
                         env.VISIONUI_URL = urls.VISIONUI_URL
                         env.ARGOUIBASE_URL = urls.ARGOUIBASE_URL
+                        env.CATALOGUI_URL = urls.CATALOGUI_URL
                         env.FRONTEND_HOST_NAME = urls.FRONTEND_HOST_NAME
                     }
                 }
@@ -98,6 +99,7 @@ pipeline {
                         sh "sed -i 's|JUPYTERHUB_URL_VALUE|${JUPYTERHUB_URL}|g' frontend-deployment.yaml"
                         sh "sed -i 's|VISIONUI_URL_VALUE|${VISIONUI_URL}|g' frontend-deployment.yaml"
                         sh "sed -i 's|ARGOUIBASE_URL_VALUE|${ARGOUIBASE_URL}|g' frontend-deployment.yaml"
+                        sh "sed -i 's|CATALOGUI_URL_VALUE|${CATALOGUI_URL}|g' frontend-deployment.yaml"
                         sh "sed -i 's/FRONTEND_HOST_NAME_VALUE/${FRONTEND_HOST_NAME}/g' services.yaml"
                     }
                     withAWS(credentials:'aws-jenkins-eks') {

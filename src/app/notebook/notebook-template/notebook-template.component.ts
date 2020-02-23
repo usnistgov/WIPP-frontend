@@ -17,7 +17,7 @@ export class NotebookTemplateComponent extends DynamicComponent implements OnIni
 static key = 'notebooktemplatecomponent';
 
   ngOnInit() {
-      this.notebookService.getNotebook(this.idData).subscribe(result => {
+      this.notebookService.getById(this.idData).subscribe(result => {
         this.text = result.name;
       });
   }

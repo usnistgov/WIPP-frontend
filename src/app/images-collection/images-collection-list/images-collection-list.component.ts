@@ -102,11 +102,11 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
           sort: page.sort
         };
         if (page.filterName) {
-          return this.imagesCollectionService.getImagesCollectionsByNameContainingIgnoreCase(params, page.filterName).pipe(
-            map((data) => {
+          return this.imagesCollectionService.getByNameContainingIgnoreCase(params, page.filterName).pipe(
+            map((paginatedResult) => {
               this.isLoadingResults = false;
-              this.resultsLength = data.page.totalElements;
-              return data.imagesCollections;
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               this.isLoadingResults = false;
@@ -118,10 +118,10 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
           return this.imagesCollectionService
             .getImagesCollectionsByNameContainingIgnoreCaseAndNumberOfImages(params, '', page.filterNbOfImgs)
             .pipe(
-              map((data) => {
+              map((paginatedResult) => {
                 this.isLoadingResults = false;
-                this.resultsLength = data.page.totalElements;
-                return data.imagesCollections;
+                this.resultsLength = paginatedResult.page.totalElements;
+                return paginatedResult.data;
               }),
               catchError(() => {
                 this.isLoadingResults = false;
@@ -129,11 +129,11 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
               })
             );
         }
-        return this.imagesCollectionService.getImagesCollections(params).pipe(
-          map((data) => {
+        return this.imagesCollectionService.get(params).pipe(
+          map((paginatedResult) => {
             this.isLoadingResults = false;
-            this.resultsLength = data.page.totalElements;
-            return data.imagesCollections;
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             this.isLoadingResults = false;

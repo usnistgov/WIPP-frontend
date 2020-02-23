@@ -1,4 +1,4 @@
-export class Image {
+export class Csv {
   id: string;
   fileName: string;
   fileSize: number;
@@ -7,8 +7,8 @@ export class Image {
   _links: any;
 }
 
-export interface PaginatedImages {
+export interface PaginatedCsv {
   page: any;
-  data: Image[];
+  data: Csv[];
   _links: any;
 }

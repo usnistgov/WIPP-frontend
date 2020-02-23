@@ -10,6 +10,6 @@ export class Visualization {
 
 export interface PaginatedVisualization {
   page: any;
-  visualizations: Visualization[];
+  data: Visualization[];
   _links: any;
 }

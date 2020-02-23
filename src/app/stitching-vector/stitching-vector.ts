@@ -15,6 +15,6 @@ export class StitchingVector {
 
 export interface PaginatedStitchingVector {
   page: any;
-  stitchingVectors: StitchingVector[];
+  data: StitchingVector[];
   _links: any;
 }

@@ -35,8 +35,8 @@
       <p class="footerButton">Cancel</p>
     </i>
   </button>
-  <button type="button" class="btn btn-success" (click)="upload()"
-          [disabled]="!csvCollection.name || !csvCollection.files">
+  <button type="button" class="btn btn-success" (click)="createCollection()"
+          [disabled]="!csvCollection.name">
     <i class="fas fa-save" style="margin-right: 10px">
       <p class="footerButton">Save</p>
     </i>

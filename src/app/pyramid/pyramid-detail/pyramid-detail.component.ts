@@ -26,7 +26,7 @@ export class PyramidDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pyramidService.getPyramid(this.pyramidId)
+    this.pyramidService.getById(this.pyramidId)
       .subscribe(pyramid => {
         this.pyramid = pyramid;
         this.getJob();

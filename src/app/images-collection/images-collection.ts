@@ -21,6 +21,6 @@ export class ImagesCollection {
 
 export interface PaginatedImagesCollections {
   page: any;
-  imagesCollections: ImagesCollection[];
+  data: ImagesCollection[];
   _links: any;
 }

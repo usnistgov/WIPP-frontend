@@ -7,7 +7,7 @@ import {CsvCollectionService} from '../csv-collection.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-new.component';
 import {Router} from '@angular/router';
-import {KeycloakService} from '../../services/keycloak/keycloak.service'
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-csv-collection-list',
@@ -30,7 +30,8 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
     private csvCollectionService: CsvCollectionService,
     private modalService: NgbModal,
     private router: Router,
-    private keycloakService: KeycloakService
+    private keycloakService: KeycloakService,
+    private modalService: NgbModal
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -76,20 +77,20 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
           sort: page.sort
         };
         if (page.filter) {
-          return this.csvCollectionService.getCsvCollectionsByNameContainingIgnoreCase(params, page.filter).pipe(
-            map((data) => {
-              this.resultsLength = data.page.totalElements;
-              return data.csvCollections;
+          return this.csvCollectionService.getByNameContainingIgnoreCase(params, page.filter).pipe(
+            map((paginatedResult) => {
+              this.resultsLength = paginatedResult.page.totalElements;
+              return paginatedResult.data;
             }),
             catchError(() => {
               return observableOf([]);
             })
           );
         }
-        return this.csvCollectionService.getCsvCollections(params).pipe(
-          map((data) => {
-            this.resultsLength = data.page.totalElements;
-            return data.csvCollections;
+        return this.csvCollectionService.get(params).pipe(
+          map((paginatedResult) => {
+            this.resultsLength = paginatedResult.page.totalElements;
+            return paginatedResult.data;
           }),
           catchError(() => {
             return observableOf([]);

@@ -10,7 +10,7 @@ export class Pyramid {
 
 export interface PaginatedPyramid {
   page: any;
-  pyramids: Pyramid[];
+  data: Pyramid[];
   _links: any;
 }
 

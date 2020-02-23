@@ -24,6 +24,8 @@ spec:
           value: JUPYTERHUB_URL_VALUE
         - name: VISIONUI_URL
           value: VISIONUI_URL_VALUE
+        - name: CATALOGUI_URL
+          value: CATALOGUI_URL_VALUE
         ports:
         - containerPort: 80
       restartPolicy: Always

@@ -53,12 +53,18 @@
             </i>
           </a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" href={{plotsUiLink}} target="_blank">
-            <i class="fas fa-chart-area">
-              <p>Plots</p>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown" routerLinkActive="active" ngbDropdown>
+          <a class="nav-link dropdown-toggle" id="helpDropdown" routerLinkActive="active" ngbDropdownToggle>
+            <i class="fas fa-question-circle">
+              <p>Help</p>
             </i>
           </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="helpDropdown" ngbDropdownMenu>
+            <a class="dropdown-item" href={{onlineHelpLink}} ngbDropdownItem>User guide</a>
+            <a class="dropdown-item" href={{apiDocsLink}} ngbDropdownItem *ngIf="displayApiDocsLink">API docs</a>
+          </div>
         </li>
       </ul>
         <ul class="navbar-nav ml-auto">

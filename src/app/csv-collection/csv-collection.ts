@@ -1,16 +1,20 @@
 export class CsvCollection {
   id: string;
   name: string;
-  files: File[];
   creationDate: Date;
   sourceJob: string;
   owner: string;
   publiclyAvailable: boolean = true;
+  locked: boolean;
+  numberOfImportErrors: number;
+  numberImportingCsv: number;
+  numberOfCsvFiles: number;
+  csvTotalSize: number;
   _links: any;
 }
 
 export interface PaginatedCsvCollections {
   page: any;
-  csvCollections: CsvCollection[];
+  data: CsvCollection[];
   _links: any;
 }

@@ -48,7 +48,7 @@ export class NotebookDetailComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
-    this.notebookService.getNotebook(this.notebookId).subscribe(notebook => {
+    this.notebookService.getById(this.notebookId).subscribe(notebook => {
         this.notebook = notebook;
       },
       error => {
