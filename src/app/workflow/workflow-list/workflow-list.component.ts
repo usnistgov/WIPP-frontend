@@ -7,6 +7,7 @@ import {Workflow} from '../workflow';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-workflow-list',
@@ -28,7 +29,8 @@ export class WorkflowListComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private workflowService: WorkflowService
+    private workflowService: WorkflowService,
+    private keycloakService: KeycloakService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -110,5 +112,9 @@ export class WorkflowListComponent implements OnInit {
     }, (reason) => {
       console.log('dismissed');
     });
+  }
+
+  canCreate() : boolean {
+    return(this.keycloakService.isLoggedIn());
   }
 }

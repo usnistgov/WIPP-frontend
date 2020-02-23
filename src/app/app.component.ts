@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { environment} from '../environments/environment';
 import {AppConfigService} from './app-config.service';
 import {KeycloakService} from './services/keycloak/keycloak.service';

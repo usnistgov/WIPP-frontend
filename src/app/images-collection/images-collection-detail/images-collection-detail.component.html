@@ -365,7 +365,7 @@
     <div class='col-sm-3 text-right'></div>
     <div class='col-sm-3 text-right'></div>
     <div class='col-sm-2 text-right'>
-      <button *ngIf="!imagesCollection.locked" type="button"
+      <button *ngIf="!imagesCollection.locked  && canEdit()" type="button"
               ngbTooltip="Delete all metadata files"
               placement="left"
               class="btn btn-light"
@@ -413,7 +413,7 @@
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
         </a>
-        <button *ngIf="!imagesCollection.locked" type="button"
+        <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
                 ngbTooltip="Remove from collection"
                 placement="left"
                 class="btn btn-light" (click)="deleteMetadataFile(row);">
