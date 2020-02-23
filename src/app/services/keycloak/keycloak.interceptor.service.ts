@@ -5,6 +5,7 @@ import { catchError, mergeMap, map } from 'rxjs/operators';
 import { KeycloakService } from './keycloak.service';
 import {Router} from "@angular/router"
 
+// This service is responsible for intercepting requests
 
 @Injectable()
 export class KeycloakInterceptorService implements HttpInterceptor {
@@ -14,6 +15,7 @@ export class KeycloakInterceptorService implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // If the user is logged in, we add the Bearer token to the request
     if (this.keycloakService.isLoggedIn()) {
       return this.getUserToken().pipe(
         mergeMap((token) => {
@@ -28,7 +30,9 @@ export class KeycloakInterceptorService implements HttpInterceptor {
             map((event: HttpEvent<any>) => {
                 return event;
             }),
+            // if we catch an http error response
             catchError((error: HttpErrorResponse) => {
+              // if this error is a 403 error, we navigate to the forbidden-access page
               if (error.status == 403){
                 this.router.navigate(['/403', error.url]);
                 return throwError(error);
@@ -36,11 +40,14 @@ export class KeycloakInterceptorService implements HttpInterceptor {
             }));
         }));
     }
+    // If the user is not logged in
     return next.handle(request).pipe(
       map((event: HttpEvent<any>) => {
           return event;
       }),
+      // if we catch an http error response
       catchError((error: HttpErrorResponse) => {
+        // if this error is a 403 error, we navigate to the forbidden-access page
         if (error.status == 403){
           this.router.navigate(['/403', error.url]);
           return throwError(error);

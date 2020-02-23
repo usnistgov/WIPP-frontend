@@ -6,7 +6,7 @@ import { ForbiddenAccessComponent } from './forbidden-access/forbidden-access.co
 
 const appRoutes: Routes = [
   { path: '',   redirectTo: '/images-collections', pathMatch: 'full' },
-  { path: '403/:path', component: ForbiddenAccessComponent },
+  { path: '403/:path', component: ForbiddenAccessComponent }, // we route the 302 page to ForbiddenAccessComponent
   { path: '**', component: PageNotFoundComponent }
 ];
 

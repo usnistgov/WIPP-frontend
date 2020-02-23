@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
 import * as Keycloak from 'keycloak-js';
 
+//This class is responsible for the interactions between keycloak-js and the Keycloak instance
 @Injectable()
 export class KeycloakService {
     static auth: any = {};
@@ -18,8 +19,10 @@ export class KeycloakService {
         KeycloakService.auth.loggedIn = false;
         return new Promise((resolve, reject) => {
             keycloakAuth
+                // We use check-sso, so login is not mandatory
                 .init({ onLoad: 'check-sso', checkLoginIframe: false })
                 .success(() => {
+                    // We initialize some attributes
                     KeycloakService.auth.loggedIn = false;
                     KeycloakService.auth.authz = keycloakAuth;
                     KeycloakService.auth.profileUrl =
@@ -37,9 +40,11 @@ export class KeycloakService {
 
     constructor() { }
 
+    // On login, this method is called
     login(): void {
         KeycloakService.auth.authz.login().success(
           () => {
+              // on succes, loggedIn is set to true
             KeycloakService.auth.loggedIn = true;
           }
         );
@@ -47,12 +52,14 @@ export class KeycloakService {
 
     logout(): void {
       KeycloakService.auth.authz.logout({redirectUri : document.baseURI}).success(() => {
+          // on logout, loggedIn is set to false
         KeycloakService.auth.loggedIn = false;
         KeycloakService.auth.authz = null;
       });
     }
 
     profile() {
+        // redirect to the profile page
         window.location.href = KeycloakService.auth.profileUrl;
     }
 
