@@ -105,7 +105,9 @@ export class PluginService {
     return this.http.get<JSON>(url);
   }
 
-  
+  /**
+   * This function retrieves the list of categories present in the database
+   */
   getAllCategories(): string[] {
 
     const httpParams = new HttpParams();
@@ -128,11 +130,15 @@ export class PluginService {
   }
 
   
-
+  /**
+   * This function retrieves the list of institution present in the database
+   */
   getAllInstitutions(): string[] {
     return this.institutionList;
   }
-  //Get Plugings by search criteria
+  /**
+   * This function retrieves the list of plugins which correspond to the search criteria
+   */
   getPluginsByCriteria(params, name, category, institution): Observable<PaginatedPlugins> {
     let httpParams = new HttpParams().set('name', name).set('category', category).set('institution', institution);
     if (params) {

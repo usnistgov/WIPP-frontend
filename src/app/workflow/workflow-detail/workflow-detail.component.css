@@ -63,3 +63,7 @@ text {
 .institution {
   float: right;
 }
+
+::ng-deep .cdk-overlay-container {
+  z-index: 1053;
+}

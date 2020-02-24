@@ -79,8 +79,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   argoUiLink;
 
   resultsLength = 0;
-  pageSize = 10;
-  pageSizeOptions: number[] = [10, 25, 50, 100];
+  pageSize = 2;//10;
+  pageSizeOptions: number[] = [2, 3, 5, 6];//[10, 25, 50, 100];
   paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string, category: string, institution: string}>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

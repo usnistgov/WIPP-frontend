@@ -168,7 +168,7 @@
       </table>
 
       <mat-paginator #paginator (page)="pageChanged($event)" [length]="resultsLength" [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+      [pageSizeOptions]="pageSizeOptions" hidePageSize="false"></mat-paginator>
     </div>
   </div>
 </ng-template>
@@ -195,7 +195,7 @@
   </div>
   <div class="modal-footer">
 
-    <!-- Back to previous modal template -->
+    <!-- Back to the plugin selection -->
     <button class="btn btn-outline-dark" (click)="d(); open(addStepModal, '') ">
           <i class="fas fa-arrow-circle-left" style="margin-left: 10px">
             <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Back</p>
