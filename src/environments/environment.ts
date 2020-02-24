@@ -10,7 +10,7 @@ export const environment = {
   keycloak: {
     "url": 'http://193.50.40.104:8180/auth',
     "realm": 'WIPPKeycloak',
-    "clientId": 'wipp-frontend'
+    "clientId": 'wipp-keycloak-client'
   }
 };
 
