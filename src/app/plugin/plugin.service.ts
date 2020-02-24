@@ -131,7 +131,7 @@ export class PluginService {
 
   
   /**
-   * This function retrieves the list of institution present in the database
+   * This function retrieves the list of institution present in the database early updated in getAllCategories() 
    */
   getAllInstitutions(): string[] {
     return this.institutionList;
