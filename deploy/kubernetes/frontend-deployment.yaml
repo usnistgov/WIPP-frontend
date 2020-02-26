@@ -19,13 +19,13 @@ spec:
         args: ["wipp-backend", "8080"]
         env:
         - name: ARGOUIBASE_URL
-          value: ARGOUIBASE_URL_VALUE
+          value: ARGO_URL_VALUE
         - name: JUPYTERHUB_URL
           value: JUPYTERHUB_URL_VALUE
         - name: VISIONUI_URL
-          value: VISIONUI_URL_VALUE
+          value: VISION_URL_VALUE
         - name: CATALOGUI_URL
-          value: CATALOGUI_URL_VALUE
+          value: CATALOG_URL_VALUE
         ports:
         - containerPort: 80
       restartPolicy: Always

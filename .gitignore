@@ -40,3 +40,4 @@ Thumbs.db
 
 # Config Files
 src/assets/config/config.json
+.env
