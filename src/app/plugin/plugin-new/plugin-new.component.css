@@ -41,9 +41,14 @@
 
 
 .left10 {
-  margin-left: 10px;
+  display: block;
+  right: 10px;
+  top: 0;
+  position: absolute ;
+  margin-right: 10px;
+  margin-top: 5px;
+  float:right;
 }
-
 
 #description{
   font-style: italic;

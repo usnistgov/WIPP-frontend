@@ -32,7 +32,7 @@
                             class="form-control top5" rows="10" placeholder="Or copy your JSON file content here">  </textarea>
                 </div>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-3">
                    <button class="btn btn-danger" (click)="clearAll()"><a>clear form</a></button>
               </div>
             </div>
@@ -52,7 +52,7 @@
       <div class="container">
         <div *ngIf="selectedwallet === coinwallet[1]" role="tabpanel" class="tab-pane active" id="two">
             <h4 class="mt-2">Get Plugin From Repository</h4>
-
+            <ngb-alert *ngIf="displayAlertNmrr" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>
 
 
             <table mat-table class="table-hover" [dataSource]="plugins"
@@ -62,27 +62,21 @@
               <ng-container matColumnDef="name" (click)="postPlugin(raw)">
                 <th mat-header-cell *matHeaderCellDef>name</th>
                 <td mat-cell *matCellDef="let row">
-                  <span id="name">{{ row.name }}</span>
+                  <span id="name">{{ row.name }} {{ row.version }}</span>
                   <br>
                   <p #more id="description" >{{ row.description }}</p>
                   <!--<button (click)="myFunction()" id="myBtn">Read more</button>-->
                 </td>
               </ng-container>
 
-              <!-- Description Column
-              <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef>description</th>
-                <td mat-cell *matCellDef="let row">{{ row.description.length }}</td>
-              </ng-container> -->
-
               <ng-container matColumnDef="download">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let row">
                   <div class="col-md-3">
                     <button class="btn btn-primary wipp-btn wipp-btn-new"
-                            (click)="postPluginApi(row)">
+                            (click)="postNmrrPlugins(row)">
                       <i class="fas fa-cloud-download-alt">
-                         <p>Download</p>
+                         <p>Register</p>
                       </i>
                     </button>
                   </div>

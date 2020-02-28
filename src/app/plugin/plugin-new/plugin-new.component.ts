@@ -23,6 +23,8 @@ export class PluginNewComponent implements OnInit {
   @ViewChild('linkPlugin') linkPlugin: ElementRef;
   @ViewChild('pluginDescriptorText') pluginDescriptorText: ElementRef;
   @ViewChild('more') desc: ElementRef;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
 
   //public plugins: MatTableDataSource< Plugin[] >;
   displayedColumns: string[] = [ 'name' , 'download'];
@@ -30,6 +32,7 @@ export class PluginNewComponent implements OnInit {
 
 
   displayAlert = false;
+  displayAlertNmrr=false;
   alertMessage = '';
   alertType = 'danger';
 
@@ -37,6 +40,9 @@ export class PluginNewComponent implements OnInit {
 
   resultsLength = 0;
   pageSize = 10;
+
+  search = false;
+  pluginName;
 
   coinwallet: string[] = ['From repository','Custom'];
   selectedwallet = this.coinwallet[0];
@@ -49,7 +55,8 @@ export class PluginNewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getSoftwaresFromApi();
+    this.plugins.paginator = this.paginator;
+    this.getPluginsFromNmrr();
 
   }
 
@@ -92,6 +99,7 @@ export class PluginNewComponent implements OnInit {
   }
 
   postPlugin(pluginText) {
+    //console.log(pluginText);
     const jsonState = this.isJsonValid(pluginText);
     if (jsonState[0]) {
       this.pluginService.postPlugin(pluginText).subscribe(
@@ -114,6 +122,12 @@ export class PluginNewComponent implements OnInit {
     this.alertMessage = message;
     this.alertType = type;
     this.displayAlert = true;
+  }
+
+  displayAlertMessageNmrr(type, message) {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.displayAlertNmrr = true;
   }
 
 /*
@@ -154,55 +168,96 @@ export class PluginNewComponent implements OnInit {
   }
 */
 
-
-  getSoftwaresFromApi(id?) :void {
+  // get plugins from nmrr
+  getPluginsFromNmrr(page?) :void {
     const parametres = {
-          page: id ? id : null
+          page: page ? page : null
     };
 
-    this.NmrrApiService.getApiSoftwares(parametres).subscribe(
+    this.NmrrApiService.getPluginsFromNmrr(parametres).subscribe(
       data => {
-        this.resultsLength = Math.floor(data.count/10)+1;
+        this.resultsLength = data.count;
         this.plugins.data = this.NmrrApiService.getPluginsFromdata(data.results)
       },
       err => {
-        this.displayAlertMessage('danger',
+        this.displayAlertMessageNmrr('danger',
           'Unable to get data from api');
       }
     );
   }
 
 
+  // if the user try to chage the page this methode wwill be executed
   pageChanged(page) {
     this.plugins = new MatTableDataSource([]) ;
-    this.getSoftwaresFromApi(page.pageIndex+1);
+    if(this.search == false){
+      this.getPluginsFromNmrr(page.pageIndex+1);
+    }
+    else{
+      this.getPluginsByName(this.pluginName,page.pageIndex+1);
+    }
   }
 
 
-  myFunction() {
-    //const htmlElement = this.desc.nativeElement as HTMLElement;
-    //htmlElement.setAttribute("style", "display:none;");
+  // get plugins whose the name contains a patern
+   getPluginsByName(pluginName,id?){
+         const parametres = {
+               page: id ? id : null,
+               name:pluginName
+         };
+
+         this.NmrrApiService.getPluginsFromNmrrByName(parametres).subscribe(
+           data => {
+             console.log("count :"+data.count);
+
+             this.resultsLength = data.count;
+             this.plugins.data = this.NmrrApiService.getPluginsFromdata(data.results)
+           },
+           err => {
+             this.displayAlertMessageNmrr('danger',
+               'Unable to get data from api');
+           }
+         );
    }
 
-   postPluginApi(row) {
+
+   applyFilterByName(pluginName){
+     if (!pluginName) {
+         // if there is at least one caracter in the search input, we get all the plugins
+       this.search = false;
+       this.getPluginsFromNmrr();
+       this.paginator.firstPage();
+     }
+     else{
+      // if there is no character in the search imput, we get all the plugins
+       this.pluginName = pluginName;
+       this.search = true;
+       this.getPluginsByName(pluginName);
+       this.paginator.firstPage();
+     }
+   }
+
+   // add the plugin to the wipp database
+   postNmrrPlugins(row) {
      var pluginText = row.jsondata;
      console.log(row);
+     console.log(row.jsondata);
 
      const jsonState = this.isJsonValid(pluginText);
      if (jsonState[0]) {
        this.pluginService.postPlugin(pluginText).subscribe(
          plugin => {
-           this.displayAlertMessage('success', 'Success! Redirecting...');
+           this.displayAlertMessageNmrr('success', 'Success! Redirecting...');
            const pluginId = plugin ? plugin.id : null;
            setTimeout(() => {
              this.router.navigate(['plugins', pluginId]);
            }, 2000);
          },
          err => {
-           this.displayAlertMessage('danger', 'Could not register plugin: ' + err.error.message);
+           this.displayAlertMessageNmrr('danger', 'Could not register plugin: ' + err.error.message);
          });
      } else {
-       this.displayAlertMessage('danger', 'Invalid JSON - ' + jsonState[1]);
+       this.displayAlertMessageNmrr('danger', 'Invalid JSON - ' + jsonState[1]);
      }
    }
 

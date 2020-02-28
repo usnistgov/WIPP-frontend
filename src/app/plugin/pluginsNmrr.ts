@@ -1,8 +1,9 @@
-export interface Softwares {
+//it will store the page retrieved from NMRR
+export interface PluginsNmrr {
   count: number;
   next: string;
   previous: string;
-  results: Software[];
+  results: PluginNmrr[];
   _links: any;
 }
 
@@ -28,7 +29,8 @@ export class Template{
    _links: any;
 }*/
 
-export class Software {
+//it will store each item in the plugin list
+export class PluginNmrr {
   id: string;
   template: string;
   workspace: string;
@@ -40,9 +42,19 @@ export class Software {
 
 }
 
-export class PlugginApi {
+
+// xml data
+export class PluginApi {
   id: string;
   name: string;
   description: string;
+  version: string;
+  title: string;
+  author: string;
+  institution: string;
+  repository: string;
+  website: string;
+  citation: string;
+  containerId: string;
   jsondata :string;
 }

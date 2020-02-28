@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Softwares,PlugginApi,Software} from './softwares';
+import {PluginsNmrr,PluginApi,PluginNmrr} from './pluginsNmrr';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
@@ -20,22 +20,32 @@ export class NmrrApiService {
 
   constructor(private http: HttpClient) { }
 
-  private apiUrl ='http://127.0.0.1:8111/rest/data';
-  private getUrl ='http://mgi_superuser:mgi_superuser_pwd@localhost:8111/rest/data';
-
-
-
-  getApiSoftwares(params?): Observable<Softwares> {
+  // get plugins from nmrr registry using it's api
+  getPluginsFromNmrr(params?): Observable<PluginsNmrr> {
     if (params) {
       if(params.page){
         const httpParams = new HttpParams().set('page', params.page);
         httpOptions.params = httpParams;
       }
     }
-    const transferObject ={"query": {"Resource.role.type":"Pluggin"}};
+    const transferObject ={"query": {"Resource.role.type":"Plugin"}};
     const jsonObject = JSON.stringify(transferObject);
     const httpParams = new HttpParams();
-    return this.http.post<any>(this.getUrl+'/query/',jsonObject,httpOptions);
+    return this.http.post<any>(environment.getUrl+'/query/',jsonObject,httpOptions);
+  }
+
+  // get plugins whose the name contains a patern
+  getPluginsFromNmrrByName(params?): Observable<PluginsNmrr> {
+    if (params) {
+      if(params.page){
+        const httpParams = new HttpParams().set('page', params.page);
+        httpOptions.params = httpParams;
+      }
+    }
+    const transferObject ={"query": {"Resource.role.type":"Plugin" , "Resource.role.title":{ "$regex": ".*"+params.name+".*", "$options" : "i" }}};
+    const jsonObject = JSON.stringify(transferObject);
+    const httpParams = new HttpParams();
+    return this.http.post<any>(environment.getUrl+'/query/',jsonObject,httpOptions);
   }
 
 /*
@@ -65,18 +75,29 @@ export class NmrrApiService {
     return pluginElement;
   }
 */
-  getPluginsFromdata(datas:Software[]):PlugginApi[]{
-    var pluginList : PlugginApi[] = [];
+  // parse the xml retrieved from nmrr to get plugin data
+  getPluginsFromdata(datas:PluginNmrr[]):PluginApi[]{
+    var pluginList : PluginApi[] = [];
     for (var data of datas) {
         var parser=new DOMParser();
         var xmldoc = parser.parseFromString(data.xml_content,"text/xml");
         var rootElement = xmldoc.documentElement;
-        var pluginElement = new PlugginApi();
+        var pluginXml = rootElement.getElementsByTagName("role");
+        var pluginElement = new PluginApi();
         pluginElement.id = data.id;
-        pluginElement.name = rootElement.getElementsByTagName("title")[0].innerHTML;
-        pluginElement.description = rootElement.getElementsByTagName("description")[0].innerHTML;
-        pluginElement.jsondata = rootElement.getElementsByTagName("plugginData")[0].innerHTML;
-        console.log(pluginElement.jsondata);
+        var pluginElement = new PluginApi();
+        pluginElement.name = pluginXml[0].getElementsByTagName("title")[0].innerHTML;
+        pluginElement.description = pluginXml[0].getElementsByTagName("description")[0].innerHTML;
+        pluginElement.version = pluginXml[0].getElementsByTagName("version")[0].innerHTML;
+        pluginElement.title = pluginXml[0].getElementsByTagName("title")[0].innerHTML;
+        //pluginElement.author = pluginXml[0].getElementsByTagName("author")[0].innerHTML;
+        //pluginElement.institution = pluginXml[0].getElementsByTagName("institution")[0].innerHTML;
+        //pluginElement.repository = pluginXml[0].getElementsByTagName("repository")[0].innerHTML;
+        //pluginElement.website = pluginXml[0].getElementsByTagName("website")[0].innerHTML;
+        //pluginElement.citation = pluginXml[0].getElementsByTagName("citation")[0].innerHTML;
+        //pluginElement.containerId = pluginXml[0].getElementsByTagName("containerId")[0].innerHTML;
+        pluginElement.jsondata = pluginXml[0].getElementsByTagName("pluginManifest")[0].innerHTML;
+        //console.log(pluginElement.jsondata);
         pluginList.push(pluginElement);
     }
     return pluginList;
