@@ -9,6 +9,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Job} from '../../job/job';
 import {merge, of as observableOf} from 'rxjs';
 import {TimeSlice} from '../timeSlice';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-stitching-vector-detail',
@@ -30,7 +31,9 @@ export class StitchingVectorDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private stitchingVectorService: StitchingVectorService) {
+    private stitchingVectorService: StitchingVectorService,
+    private keycloakService: KeycloakService
+    ) {
   }
 
   ngOnInit() {
@@ -78,6 +81,17 @@ export class StitchingVectorDetailComponent implements OnInit {
       , (reason) => {
         console.log('dismissed');
       });
+  }
+
+  makePublicStitchingVector(): void {
+    this.stitchingVectorService.makePublicStitchingVector(
+      this.stitchingVector).subscribe(imagesCollection => {
+      this.stitchingVector = imagesCollection;
+    });
+  }
+
+  canEdit() : boolean {
+    return(this.keycloakService.isLoggedIn() && this.stitchingVector.owner == this.keycloakService.getUsername());
   }
 
 }

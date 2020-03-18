@@ -14,6 +14,8 @@ export class ImagesCollection {
   metadataFilesTotalSize: number;
   notes: string;
   pattern: string;
+  owner: string;
+  publiclyAvailable: boolean = true;
   _links: any;
 }
 

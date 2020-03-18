@@ -14,9 +14,7 @@ import {DataService} from '../data-service';
 })
 export class ImagesCollectionService implements DataService<ImagesCollection, PaginatedImagesCollections> {
 
-
   private imagesCollectionsUrl = environment.apiRootUrl + '/imagesCollections';
-
   constructor(
     private http: HttpClient
   ) {
@@ -167,6 +165,14 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
     if (imagesCollection.numberOfMetadataFiles > 0) {
       return this.http.delete(`${this.imagesCollectionsUrl}/${imagesCollection.id}/metadataFiles`);
     }
+  }
+
+  makePublicImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {publiclyAvailable: true}, httpOptions);
   }
 
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {

@@ -92,4 +92,12 @@ export class StitchingVectorService implements DataService<StitchingVector, Pagi
     return this.http.get<Job>(jobUrl);
   }
 
+  makePublicStitchingVector(stitchingVector: StitchingVector): Observable<StitchingVector> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<StitchingVector>(`${this.stitchingVectorsUrl}/${stitchingVector.id}`, {publiclyAvailable: true}, httpOptions);
+  }
+
 }

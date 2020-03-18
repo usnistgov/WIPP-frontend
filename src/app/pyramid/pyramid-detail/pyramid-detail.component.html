@@ -9,6 +9,18 @@
     <div class="col-md-12"><b>Creation Date: </b> {{pyramid.creationDate | date}}</div>
   </div>
 
+  <div class="row">
+    <div class="col-md-12"><b>Owner: </b> {{pyramid.owner}}</div>
+  </div>
+
+  <button *ngIf="!pyramid.publiclyAvailable && canEdit()" type="button"
+              ngbTooltip="Make pyramid public"
+              placement="left"
+              class="btn btn-light" (click)="makePublicPyramid();">
+        <span class="fa fa-user-secret"
+              aria-hidden="true"></span>
+      </button>
+
 
   <div class="row" *ngIf="job">
     <div class="col-md-5">

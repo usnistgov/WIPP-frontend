@@ -16,6 +16,14 @@
       <input type="text" [(ngModel)]="csvCollection.name" id="name" class="form-control" name="name" autofocus
              required>
       <small class="form-text text-muted">Enter the CSV collection name.</small>
+      <mat-checkbox [(ngModel)]="csvCollection.publiclyAvailable" name="true">Public collection</mat-checkbox>
+      <br *ngIf="!csvCollection.publiclyAvailable">
+      <span class="text-danger" *ngIf="!csvCollection.publiclyAvailable">This collection will only be available to you.</span><br>
+
+      <label for="name">CSV Collection Files (maximum of 5MB/file ; maximum of 30 MB in total):</label>
+      <span style="color: #e32"> * </span>
+      <input #file type="file"  [multiple]=true (change)="onFileSelected($event)" name="file" class="col-md-12" id="file" accept=".csv" autofocus
+             required>
       <span class="asterisk_input"></span>
     </div>
   </form>

@@ -3,6 +3,8 @@ export class CsvCollection {
   name: string;
   creationDate: Date;
   sourceJob: string;
+  owner: string;
+  publiclyAvailable: boolean = true;
   locked: boolean;
   numberOfImportErrors: number;
   numberImportingCsv: number;

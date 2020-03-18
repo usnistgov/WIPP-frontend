@@ -5,6 +5,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Pyramid} from '../pyramid';
 import {PyramidService} from '../pyramid.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-pyramid-detail',
@@ -20,7 +21,8 @@ export class PyramidDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private pyramidService: PyramidService) {
+    private pyramidService: PyramidService,
+    private keycloakService: KeycloakService) {
   }
 
   ngOnInit() {
@@ -51,6 +53,17 @@ export class PyramidDetailComponent implements OnInit {
       , (reason) => {
         console.log('dismissed');
       });
+  }
+
+  makePublicPyramid(): void {
+    this.pyramidService.makePublicPyramid(
+      this.pyramid).subscribe(pyramid => {
+      this.pyramid = pyramid;
+    });
+  }
+
+  canEdit() : boolean {
+    return(this.keycloakService.isLoggedIn() && this.pyramid.owner == this.keycloakService.getUsername());
   }
 
 }

@@ -15,6 +15,7 @@ import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
 import urljoin from 'url-join';
 import {AppConfigService} from '../../app-config.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service'
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -69,7 +70,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private elem: ElementRef,
     private modalService: NgbModal,
     private imagesCollectionService: ImagesCollectionService,
-    private appConfigService: AppConfigService) {
+    private appConfigService: AppConfigService,
+    private keycloakService: KeycloakService
+    ) {
     this.imagesParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSizeImages,
@@ -82,6 +85,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  canEdit() : boolean {
+    return(this.keycloakService.isLoggedIn() && this.imagesCollection.owner == this.keycloakService.getUsername());
+  }
   imagesSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
     this.imagesParamsChange.next({index: 0, size: this.imagesParamsChange.value.size, sort: sort.active + ',' + sort.direction});
@@ -136,8 +142,10 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // fixme: temporary fix while waiting for 1.0.0 release of ngx-inline-editor
     const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
-    faRemoveElt.classList.remove('fa-remove');
-    faRemoveElt.classList.add('fa-times');
+    if (faRemoveElt != null){ // this element can be null, if the user can not edit the collection
+      faRemoveElt.classList.remove('fa-remove');
+      faRemoveElt.classList.add('fa-times');
+    }
 
     this.refresh().subscribe(imagesCollection => {
       if (!imagesCollection.locked) {
@@ -236,6 +244,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  makePublicCollection(): void {
+    this.imagesCollectionService.makePublicImagesCollection(
+      this.imagesCollection).subscribe(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+    });
+  }
+
   lockCollection(): void {
     this.imagesCollectionService.lockImagesCollection(
       this.imagesCollection).subscribe(imagesCollection => {
@@ -285,9 +300,15 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   initFlow(): void {
 
-    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false);
-    this.flowHolder.assignBrowse([this.browseDirBtn.nativeElement], true, false);
-    this.flowHolder.assignDrop(this.dropArea.nativeElement);
+    if (this.browseBtn != undefined){ // this element can be null, if the user can not edit the collection
+      this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false);
+    }
+    if (this.browseDirBtn != undefined){ // this element can be null, if the user can not edit the collection
+      this.flowHolder.assignBrowse([this.browseDirBtn.nativeElement], true, false);
+    }
+    if (this.dropArea != undefined){ // this element can be null, if the user can not edit the collection
+      this.flowHolder.assignDrop();
+    }
 
     const id = this.route.snapshot.paramMap.get('id');
     const imagesUploadUrl = this.imagesCollectionService.getImagesUrl(this.imagesCollection);

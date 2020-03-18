@@ -14,6 +14,7 @@ export class Job {
   wippWorkflow: string;
   wippVersion: string;
   type: string;
+  owner: string;
   _links: any;
 }
 

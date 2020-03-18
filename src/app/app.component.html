@@ -67,6 +67,29 @@
           </div>
         </li>
       </ul>
+        <ul class="navbar-nav ml-auto">
+          <li *ngIf="!isLoggedIn()" class="nav-item navbar-right">
+            <a class="nav-link" (click)="login()" style="cursor: pointer;" target="_blank">
+              <i class="fas fa-sign-in-alt">
+                <p>Login</p>
+              </i>
+            </a>
+          </li>
+          <li *ngIf="isLoggedIn()" class="nav-item navbar-right" routerLinkActive="active">
+            <a class="nav-link" (click)="profile()" target="_blank" style="cursor: pointer;">
+              <i class="fas fa-user">
+                <p>{{displayUserInfo()}}</p>
+              </i>
+            </a>
+          </li>
+          <li *ngIf="isLoggedIn()" class="nav-item navbar-right">
+            <a class="nav-link" (click)="logout()" target="_blank" style="cursor: pointer;">
+              <i class="fas fa-sign-out-alt">
+                <p>Logout</p>
+              </i>
+            </a>
+          </li>
+        </ul>
     </div>
   </nav>
 </header>

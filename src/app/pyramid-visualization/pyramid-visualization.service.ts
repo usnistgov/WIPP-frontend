@@ -72,4 +72,12 @@ export class PyramidVisualizationService {
     return this.http.patch<Visualization>(`${this.visualizationsUrl}/${visualization.id}`, {manifest: manifest}, httpOptions);
   }
 
+  makePublicVisualization(visualization: Visualization): Observable<Visualization> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<Visualization>(`${this.visualizationsUrl}/${visualization.id}`, {publiclyAvailable: true}, httpOptions);
+  }
+
 }

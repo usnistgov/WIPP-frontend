@@ -7,6 +7,7 @@ import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-tensorflow-model-detail',
@@ -25,7 +26,8 @@ export class TensorflowModelDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private appConfigService: AppConfigService,
-    private tensorflowModelService: TensorflowModelService) {
+    private tensorflowModelService: TensorflowModelService,
+    private keycloakService: KeycloakService) {
   }
 
   ngOnInit() {
@@ -59,5 +61,16 @@ export class TensorflowModelDetailComponent implements OnInit {
       , (reason) => {
         console.log('dismissed');
       });
+  }
+  
+  makePublicTensorflowModel(): void {
+    this.tensorflowModelService.makePublicTensorflowModel(
+      this.tensorflowModel).subscribe(tensorflowModel => {
+      this.tensorflowModel = tensorflowModel;
+    });
+  }
+
+  canEdit() : boolean {
+    return(this.keycloakService.isLoggedIn() && this.tensorflowModel.owner == this.keycloakService.getUsername());
   }
 }

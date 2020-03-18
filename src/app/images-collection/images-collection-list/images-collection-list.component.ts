@@ -9,6 +9,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ImagesCollectionNewComponent} from '../images-collection-new/images-collection-new.component';
 import {Router} from '@angular/router';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import {KeycloakService} from '../../services/keycloak/keycloak.service'
 
 @Component({
   selector: 'app-images-collection-list',
@@ -19,7 +20,7 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
   imports: [MatTableModule, MatTableDataSource, MatTable]
 })
 export class ImagesCollectionListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'creationDate', 'imagesTotalSize'];
+  displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'publiclyAvailable', 'creationDate', 'imagesTotalSize', 'owner'];
   imagesCollections: Observable<ImagesCollection[]>;
   resultsLength = 0;
   pageSize = 10;
@@ -32,7 +33,8 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   constructor(
     private imagesCollectionService: ImagesCollectionService,
     private modalService: NgbModal,
-    private router: Router
+    private router: Router,
+    private keycloakService: KeycloakService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -43,6 +45,9 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
     });
   }
 
+  canCreate() : boolean {
+    return(this.keycloakService.isLoggedIn());
+  }
   sortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
     this.paramsChange.next({

@@ -1,6 +1,6 @@
 <h3 class="wipp-title">Images Collections</h3>
 
-<div class="row">
+<div *ngIf="canCreate()" class="row">
   <div class="col-md-3">
     <button class="btn btn-primary wipp-btn wipp-btn-new" (click)="createNew();">
       <i class="fas fa-plus-circle">
@@ -37,12 +37,31 @@
     </td>
   </ng-container>
 
+  <!-- Private Column -->
+  <ng-container matColumnDef="publiclyAvailable">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Private</th>
+    <td mat-cell *matCellDef="let row">
+      <span *ngIf="!row.publiclyAvailable" class="fa fa-user-secret"
+            aria-hidden="true"></span>
+      <span *ngIf="row.publiclyAvailable" class="fa fa-users"
+            aria-hidden="true"></span>
+    </td>
+  </ng-container>
+
   <!-- Creation date Column -->
   <ng-container matColumnDef="creationDate">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       Creation date
     </th>
     <td mat-cell *matCellDef="let row">{{row.creationDate | date}}</td>
+  </ng-container>
+
+  <!-- Owner Column -->
+  <ng-container matColumnDef="owner">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      Owner
+    </th>
+    <td mat-cell *matCellDef="let row">{{row.owner}}</td>
   </ng-container>
 
   <!-- Images total size Column -->

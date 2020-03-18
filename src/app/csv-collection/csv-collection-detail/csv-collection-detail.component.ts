@@ -7,6 +7,7 @@ import {CsvCollectionService} from '../csv-collection.service';
 import {CsvCollection} from '../csv-collection';
 import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
 import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
@@ -50,7 +51,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private router: Router,
     private csvCollectionService: CsvCollectionService,
-    private appConfigService: AppConfigService) {
+    private appConfigService: AppConfigService,
+    private keycloakService: KeycloakService) {
     this.csvParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
@@ -129,9 +131,18 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
       });
   }
 
+  makePublicCollection(): void {
+    this.csvCollectionService.makePublicCsvCollection(
+      this.csvCollection).subscribe(csvCollection => {
+      this.csvCollection = csvCollection;
+    });
+  }
   initFlow(): void {
-    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': '.csv'});
+    if (this.browseBtn != undefined){ // this element can be null, if the user can not edit the collection
+      this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': '.csv'});
 
+    }
+    
     const id = '';
     const csvUploadUrl = this.csvCollectionService.getCsvUrl(this.csvCollection);
     this.flowHolder.opts.target = csvUploadUrl;
@@ -214,6 +225,9 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  canEdit() : boolean {
+    return(this.keycloakService.isLoggedIn() && this.csvCollection.owner == this.keycloakService.getUsername());
+  }
   deleteCollection(): void {
     if (confirm('Are you sure you want to delete the collection ' + this.csvCollection.name + '?')) {
       this.csvCollectionService.deleteCsvCollection(this.csvCollection).subscribe(collection => {
