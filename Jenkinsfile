@@ -31,23 +31,6 @@ pipeline {
                 }
             }
         }
-        stage('Load config file') {
-            steps {
-                // Config JSON file is stored in Jenkins and should contain sensitive environment values.
-                configFileProvider([configFile(fileId: 'env-ci', targetLocation: 'env-ci.json')]) {
-                    script {
-                        def urls = readJSON file: 'env-ci.json'
-
-                        env.ARTIFACTORY_URL = urls.ARTIFACTORY_URL
-                        env.JUPYTERHUB_URL = urls.JUPYTERHUB_URL
-                        env.VISIONUI_URL = urls.VISIONUI_URL
-                        env.ARGOUIBASE_URL = urls.ARGOUIBASE_URL
-                        env.CATALOGUI_URL = urls.CATALOGUI_URL
-                        env.FRONTEND_HOST_NAME = urls.FRONTEND_HOST_NAME
-                    }
-                }
-            }
-        }
         stage('Checkout source code') {
             steps {
                 cleanWs()
@@ -59,7 +42,11 @@ pipeline {
                 environment name: 'SKIP_BUILD', value: 'false'
             }
             steps {
-                
+                configFileProvider([configFile(fileId: '2e7ca7c3-751d-46bf-a8ed-94faa706ba22', targetLocation: 'artifactory_url')]) {
+                    script {
+                        env.ARTIFACTORY_URL = readFile(file: 'artifactory_url')
+                    }
+                }
                 withCredentials([string(credentialsId: 'ARTIFACTORY_USER', variable: 'ARTIFACTORY_USER'),
                                     string(credentialsId: 'ARTIFACTORY_TOKEN', variable: 'ARTIFACTORY_TOKEN')]) {
                     script {
@@ -91,23 +78,24 @@ pipeline {
 
             }
         }
-        stage('Deploy WIPP to Kubernetes') {
+        stage('Deploy WIPP to AWS CI') {
             steps {
-                dir('deploy/kubernetes') {
-                    script {
-                        sh "sed -i 's/FRONTEND_VERSION_VALUE/${DOCKER_VERSION}/g' frontend-deployment.yaml"
-                        sh "sed -i 's|JUPYTERHUB_URL_VALUE|${JUPYTERHUB_URL}|g' frontend-deployment.yaml"
-                        sh "sed -i 's|VISIONUI_URL_VALUE|${VISIONUI_URL}|g' frontend-deployment.yaml"
-                        sh "sed -i 's|ARGOUIBASE_URL_VALUE|${ARGOUIBASE_URL}|g' frontend-deployment.yaml"
-                        sh "sed -i 's|CATALOGUI_URL_VALUE|${CATALOGUI_URL}|g' frontend-deployment.yaml"
-                        sh "sed -i 's/FRONTEND_HOST_NAME_VALUE/${FRONTEND_HOST_NAME}/g' services.yaml"
-                    }
+                configFileProvider([configFile(fileId: 'env-ci', targetLocation: '.env')]) {
                     withAWS(credentials:'aws-jenkins-eks') {
                         sh "aws --region ${AWS_REGION} eks update-kubeconfig --name ${KUBERNETES_CLUSTER_NAME}"
-                        sh '''
-                            kubectl apply -f frontend-deployment.yaml
-                            kubectl apply -f services.yaml
-                        '''
+                        sh "./deploy.sh"
+                    }
+                }
+            }
+        }
+        stage('Deploy WIPP to NCATS') {
+            agent {
+                node { label 'ls-api-ci.ncats' }
+            }
+            steps {
+                configFileProvider([configFile(fileId: 'env-single-node', targetLocation: '.env')]) {
+                    withKubeConfig([credentialsId: 'ncats_polus2']) {
+                        sh "./deploy.sh"
                     }
                 }
             }
