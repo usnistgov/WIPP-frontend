@@ -77,7 +77,7 @@ export class PyramidVisualizationService {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    return this.http.patch<Visualization>(`${this.visualizationsUrl}/${visualization.id}`, {publiclyAvailable: true}, httpOptions);
+    return this.http.patch<Visualization>(`${this.visualizationsUrl}/${visualization.id}`, {publiclyShared: true}, httpOptions);
   }
 
 }

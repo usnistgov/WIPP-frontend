@@ -17,7 +17,7 @@ import {KeycloakService} from '../../services/keycloak/keycloak.service'
 })
 export class PyramidVisualizationListComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyAvailable'];
+  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyShared'];
   visualizations: Observable<Visualization[]>;
 
   resultsLength = 0;

@@ -63,7 +63,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     this.plotsUiLink = urljoin(this.appConfigService.getConfig().plotsUiUrl, 'plots', this.csvCollectionId);
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
-      method: 'octet'
+      method: 'octet',
+      headers: {Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`}
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -225,8 +226,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  canEdit() : boolean {
-    return(this.keycloakService.isLoggedIn() && this.csvCollection.owner == this.keycloakService.getUsername());
+  canEdit(): boolean {
+    return(this.keycloakService.isLoggedIn() && this.csvCollection.owner === this.keycloakService.getUsername());
   }
   deleteCollection(): void {
     if (confirm('Are you sure you want to delete the collection ' + this.csvCollection.name + '?')) {

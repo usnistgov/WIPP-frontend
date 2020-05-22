@@ -20,7 +20,7 @@ import {KeycloakService} from '../../services/keycloak/keycloak.service'
   imports: [MatTableModule, MatTableDataSource, MatTable]
 })
 export class ImagesCollectionListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'publiclyAvailable', 'creationDate', 'imagesTotalSize', 'owner'];
+  displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'publiclyShared', 'creationDate', 'imagesTotalSize', 'owner'];
   imagesCollections: Observable<ImagesCollection[]>;
   resultsLength = 0;
   pageSize = 10;

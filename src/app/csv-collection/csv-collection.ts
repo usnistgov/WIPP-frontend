@@ -4,7 +4,7 @@ export class CsvCollection {
   creationDate: Date;
   sourceJob: string;
   owner: string;
-  publiclyAvailable: boolean = true;
+  publiclyShared: boolean;
   locked: boolean;
   numberOfImportErrors: number;
   numberImportingCsv: number;

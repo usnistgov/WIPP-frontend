@@ -118,7 +118,7 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, {publiclyAvailable: true}, httpOptions);
+    return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, {publiclyShared: true}, httpOptions);
   }
 
 }

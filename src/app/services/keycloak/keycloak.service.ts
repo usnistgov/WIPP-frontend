@@ -42,19 +42,20 @@ export class KeycloakService {
 
     // On login, this method is called
     login(): void {
-        KeycloakService.auth.authz.login().success(
+        KeycloakService.auth.authz.login({redirectUri : document.baseURI}).success(
           () => {
-              // on succes, loggedIn is set to true
+              // on success, loggedIn is set to true
             KeycloakService.auth.loggedIn = true;
           }
         );
       }
 
     logout(): void {
-      KeycloakService.auth.authz.logout({redirectUri : document.baseURI}).success(() => {
+      KeycloakService.auth.authz.logout({redirectUri : document.baseURI}).success(
+        () => {
           // on logout, loggedIn is set to false
-        KeycloakService.auth.loggedIn = false;
-        KeycloakService.auth.authz = null;
+          KeycloakService.auth.loggedIn = false;
+          KeycloakService.auth.authz = null;
       });
     }
 

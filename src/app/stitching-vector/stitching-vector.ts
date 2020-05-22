@@ -9,7 +9,7 @@ export class StitchingVector {
   numberOfTimeSlices: any;
   tilesPattern: any;
   owner: string;
-  publiclyAvailable: boolean = true;
+  publiclyShared: boolean = true;
   _links: any;
 }
 

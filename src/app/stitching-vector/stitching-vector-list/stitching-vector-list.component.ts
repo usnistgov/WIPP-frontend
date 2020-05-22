@@ -17,7 +17,7 @@ import {KeycloakService} from '../../services/keycloak/keycloak.service'
   imports: [MatTableModule, MatTableDataSource, MatTable]
 })
 export class StitchingVectorListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices', 'owner', 'publiclyAvailable'];
+  displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices', 'owner', 'publiclyShared'];
   stitchingVectors: Observable<StitchingVector[]>;
 
   resultsLength = 0;

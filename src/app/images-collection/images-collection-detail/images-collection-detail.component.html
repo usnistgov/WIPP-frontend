@@ -133,11 +133,11 @@
         <span class="fa fa-lock-open"
               aria-hidden="true"></span>
       </button>
-      <button *ngIf="!imagesCollection.publiclyAvailable && canEdit()" type="button"
+      <button *ngIf="!imagesCollection.publiclyShared && canEdit()" type="button"
               ngbTooltip="Make collection public"
               placement="left"
               class="btn btn-light" (click)="makePublicCollection();">
-        <span class="fa fa-user-secret"
+        <span class="fa fa-user-lock"
               aria-hidden="true"></span>
       </button>
       <div *ngIf="imagesCollection.locked"
@@ -150,7 +150,7 @@
     </div>
   </div>
 
-  <div *ngIf="!imagesCollection.locked && canEdit()">
+  <div *ngIf="!imagesCollection.locked">
     <h4>Upload Options</h4>
     <div class="row">
       <div class="col-md-9">
@@ -182,7 +182,7 @@
     </div>
     <br/>
 
-    <div class="row" *ngIf="canEdit()">
+    <div class="row">
       <div class="col-md-4">
         <button class="btn btn-light btn-block" #browseBtn>
           Add files to collection

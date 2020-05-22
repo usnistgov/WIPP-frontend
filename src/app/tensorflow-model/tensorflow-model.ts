@@ -4,7 +4,7 @@ export class TensorflowModel {
   creationDate: Date;
   sourceJob: string;
   owner: string;
-  publiclyAvailable: boolean = true;
+  publiclyShared: boolean = true;
   _links: any;
 }
 
@@ -20,6 +20,6 @@ export class TensorboardLogs {
   creationDate: Date;
   sourceJob: string;
   owner: string;
-  publiclyAvailable: boolean = true;
+  publiclyShared: boolean = true;
   _links: any;
 }

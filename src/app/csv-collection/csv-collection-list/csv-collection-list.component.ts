@@ -15,7 +15,7 @@ import {KeycloakService} from '../../services/keycloak/keycloak.service';
   styleUrls: ['./csv-collection-list.component.css']
 })
 export class CsvCollectionListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyAvailable'];
+  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyShared'];
   csvCollections: Observable<CsvCollection[]>;
 
   resultsLength = 0;

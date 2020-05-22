@@ -16,10 +16,6 @@
       <small class="form-text text-muted">Enter the collection name.</small>
     </div>
 
-    <mat-checkbox [(ngModel)]="imagesCollection.publiclyAvailable" name="true">Public collection</mat-checkbox>
-    <br *ngIf="!imagesCollection.publiclyAvailable">
-    <span class="text-danger" *ngIf="!imagesCollection.publiclyAvailable">This collection will only be available to you.</span><br>
-
     <mat-checkbox [(ngModel)]="usePattern" name="false">Filter images upon upload using a filename pattern</mat-checkbox>
     <span class="text-danger" *ngIf="!usePattern && imagesCollection.pattern">Warning: pattern is not empty, but this option is not checked</span>
 

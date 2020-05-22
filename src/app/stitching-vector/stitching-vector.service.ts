@@ -97,7 +97,7 @@ export class StitchingVectorService implements DataService<StitchingVector, Pagi
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    return this.http.patch<StitchingVector>(`${this.stitchingVectorsUrl}/${stitchingVector.id}`, {publiclyAvailable: true}, httpOptions);
+    return this.http.patch<StitchingVector>(`${this.stitchingVectorsUrl}/${stitchingVector.id}`, {publiclyShared: true}, httpOptions);
   }
 
 }

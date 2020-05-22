@@ -82,6 +82,6 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    return this.http.patch<TensorflowModel>(`${this.tensorflowModelUrl}/${tensorflowModel.id}`, {publiclyAvailable: true}, httpOptions);
+    return this.http.patch<TensorflowModel>(`${this.tensorflowModelUrl}/${tensorflowModel.id}`, {publiclyShared: true}, httpOptions);
   }
 }

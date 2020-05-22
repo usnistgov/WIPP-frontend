@@ -15,7 +15,7 @@ export class ImagesCollection {
   notes: string;
   pattern: string;
   owner: string;
-  publiclyAvailable: boolean = true;
+  publiclyShared: boolean;
   _links: any;
 }
 

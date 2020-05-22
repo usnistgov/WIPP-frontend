@@ -29,11 +29,11 @@
             (click)="showSettings = !showSettings">
       <span aria-hidden="true"><i class="fa fa-cog"></i></span>
     </button>
-    <button *ngIf="!visualization.publiclyAvailable && canEdit()" type="button"
-    ngbTooltip="Make visualization public"
-    placement="left"
-    class="btn btn-light" (click)="makePublicVisualization();">
-    <span class="fa fa-user-secret"
+    <button *ngIf="!visualization.publiclyShared && canEdit()" type="button"
+            ngbTooltip="Make visualization public"
+            placement="left"
+            class="btn btn-light" (click)="makePublicVisualization();">
+    <span class="fa fa-user-lock"
         aria-hidden="true"></span>
     </button>
 

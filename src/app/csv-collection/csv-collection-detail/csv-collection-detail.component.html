@@ -68,11 +68,11 @@
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
       </a>
-      <button *ngIf="!csvCollection.publiclyAvailable && canEdit()" type="button"
+      <button *ngIf="!csvCollection.publiclyShared && canEdit()" type="button"
               ngbTooltip="Make collection public"
               placement="left"
               class="btn btn-light" (click)="makePublicCollection();">
-        <span class="fa fa-user-secret"
+        <span class="fa fa-user-lock"
               aria-hidden="true"></span>
       </button>
 
@@ -85,7 +85,7 @@
 </div>
 
 
-<div class="row top-bottomMarge50" *ngIf="!(csvCollection.locked || csvCollection.sourceJob) && canEdit()">
+<div class="row top-bottomMarge50" *ngIf="!(csvCollection.locked || csvCollection.sourceJob)">
   <div class="col-md-6">
     <button class="btn btn-light btn-block" #browseBtn>
       Add files to collection

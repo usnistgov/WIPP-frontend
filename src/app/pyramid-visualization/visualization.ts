@@ -4,7 +4,7 @@ export class Visualization {
   creationDate: Date;
   manifest: any;
   owner: string;
-  publiclyAvailable: boolean = true;
+  publiclyShared: boolean = true;
   _links: any;
 }
 

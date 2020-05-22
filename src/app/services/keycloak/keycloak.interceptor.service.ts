@@ -4,6 +4,7 @@ import { Observable, from, throwError } from 'rxjs';
 import { catchError, mergeMap, map } from 'rxjs/operators';
 import { KeycloakService } from './keycloak.service';
 import {Router} from "@angular/router"
+import {environment} from '../../../environments/environment';
 
 // This service is responsible for intercepting requests
 
@@ -16,7 +17,7 @@ export class KeycloakInterceptorService implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // If the user is logged in, we add the Bearer token to the request
-    if (this.keycloakService.isLoggedIn()) {
+    if (request.url.startsWith(environment.apiRootUrl) && this.keycloakService.isLoggedIn()) {
       return this.getUserToken().pipe(
         mergeMap((token) => {
           if (token) {
@@ -33,8 +34,8 @@ export class KeycloakInterceptorService implements HttpInterceptor {
             // if we catch an http error response
             catchError((error: HttpErrorResponse) => {
               // if this error is a 403 error, we navigate to the forbidden-access page
-              if (error.status == 403){
-                this.router.navigate(['/403', error.url]);
+              if (error.status === 403) {
+                this.router.navigate(['/403']);
                 return throwError(error);
               }
             }));
@@ -47,9 +48,9 @@ export class KeycloakInterceptorService implements HttpInterceptor {
       }),
       // if we catch an http error response
       catchError((error: HttpErrorResponse) => {
-        // if this error is a 403 error, we navigate to the forbidden-access page
-        if (error.status == 403){
-          this.router.navigate(['/403', error.url]);
+        // if this error is a 401 error, we navigate to the forbidden-access page
+        if (error.status === 401) {
+          this.router.navigate(['/403']);
           return throwError(error);
         }
       }));

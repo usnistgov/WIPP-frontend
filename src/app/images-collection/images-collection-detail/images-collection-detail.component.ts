@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
+import {auditTime, catchError, map, mergeMap, switchMap} from 'rxjs/operators';
 import * as Flow from '@flowjs/flow.js';
 import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
@@ -8,14 +8,14 @@ import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
 import {MatPaginator, MatSort} from '@angular/material';
-import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
+import {BehaviorSubject, from, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
 import urljoin from 'url-join';
 import {AppConfigService} from '../../app-config.service';
-import {KeycloakService} from '../../services/keycloak/keycloak.service'
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -85,8 +85,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  canEdit() : boolean {
-    return(this.keycloakService.isLoggedIn() && this.imagesCollection.owner == this.keycloakService.getUsername());
+  canEdit(): boolean {
+    return(this.keycloakService.isLoggedIn() && this.imagesCollection.owner === this.keycloakService.getUsername());
   }
   imagesSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
@@ -131,7 +131,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
-      method: 'octet'
+      method: 'octet',
+      headers: {Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`}
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -142,13 +143,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // fixme: temporary fix while waiting for 1.0.0 release of ngx-inline-editor
     const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
-    if (faRemoveElt != null){ // this element can be null, if the user can not edit the collection
+    if (faRemoveElt != null) { // this element can be null, if the user can not edit the collection
       faRemoveElt.classList.remove('fa-remove');
       faRemoveElt.classList.add('fa-times');
     }
 
     this.refresh().subscribe(imagesCollection => {
-      if (!imagesCollection.locked) {
+      if (this.canEdit() && !imagesCollection.locked) {
         this.initFlow();
       }
     });
@@ -300,15 +301,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   initFlow(): void {
 
-    if (this.browseBtn != undefined){ // this element can be null, if the user can not edit the collection
-      this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false);
-    }
-    if (this.browseDirBtn != undefined){ // this element can be null, if the user can not edit the collection
-      this.flowHolder.assignBrowse([this.browseDirBtn.nativeElement], true, false);
-    }
-    if (this.dropArea != undefined){ // this element can be null, if the user can not edit the collection
-      this.flowHolder.assignDrop();
-    }
+    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false);
+    this.flowHolder.assignBrowse([this.browseDirBtn.nativeElement], true, false);
+    this.flowHolder.assignDrop(this.dropArea.nativeElement);
 
     const id = this.route.snapshot.paramMap.get('id');
     const imagesUploadUrl = this.imagesCollectionService.getImagesUrl(this.imagesCollection);

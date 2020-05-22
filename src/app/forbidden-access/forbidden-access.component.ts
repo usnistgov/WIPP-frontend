@@ -7,14 +7,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./forbidden-access.component.css']
 })
 export class ForbiddenAccessComponent implements OnInit {
-  path: String;
-  private sub: any;
-  constructor(private route: ActivatedRoute) { }
+  constructor() { }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-       this.path = params['path'];
-    });
   }
 
 }

@@ -172,7 +172,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {publiclyAvailable: true}, httpOptions);
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {publiclyShared: true}, httpOptions);
   }
 
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {

@@ -4,7 +4,7 @@ export class Pyramid {
   creationDate: Date;
   job: string;
   owner: string;
-  publiclyAvailable: boolean = true;
+  publiclyShared: boolean = true;
   _links: any;
 }
 
