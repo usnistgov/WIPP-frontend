@@ -12,6 +12,7 @@ import {DataService} from '../data-service';
 })
 export class PyramidService implements DataService<Pyramid, PaginatedPyramid> {
   private pyramidsUrl = environment.apiRootUrl + '/pyramids';
+  private pyramidAnnotationsUrl = environment.apiRootUrl + '/pyramidAnnotations';
 
   constructor(
     private http: HttpClient) {
@@ -83,7 +84,10 @@ export class PyramidService implements DataService<Pyramid, PaginatedPyramid> {
           'fetching': {
             'url': pyramid._links.fetching.href
           }
-        }]
+        }],
+        'pyramidAnnotations': {
+          'serviceUrl': this.pyramidAnnotationsUrl
+        }
       }]
     };
     const layer: any = manifest.layersGroups[0].layers[0];
