@@ -83,11 +83,11 @@ export class PyramidService implements DataService<Pyramid, PaginatedPyramid> {
           'paddingSize': 1,
           'fetching': {
             'url': pyramid._links.fetching.href
+          },
+          'pyramidAnnotations': {
+            'serviceUrl': this.pyramidAnnotationsUrl
           }
-        }],
-        'pyramidAnnotations': {
-          'serviceUrl': this.pyramidAnnotationsUrl
-        }
+        }]
       }]
     };
     const layer: any = manifest.layersGroups[0].layers[0];
