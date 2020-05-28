@@ -23,6 +23,7 @@ import {NotebookModule} from './notebook/notebook.module';
 import {AppConfigService} from './app-config.service';
 import {appInitializerFactory} from './app-init-factory';
 import {PyramidVisualizationModule} from './pyramid-visualization/pyramid-visualization.module';
+import {PyramidAnnotationModule} from './pyramid-annotation/pyramid-annotation.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import {PyramidVisualizationModule} from './pyramid-visualization/pyramid-visual
     HttpClientModule,
     ImagesCollectionModule,
     StitchingVectorModule,
+    PyramidAnnotationModule,
     PyramidModule,
     PyramidVisualizationModule,
     TensorflowModelModule,
