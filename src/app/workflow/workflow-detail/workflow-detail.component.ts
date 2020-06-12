@@ -371,6 +371,21 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.populateAndOpenCopyModal(content, jobId);
   }
 
+  jobHasDependencies(jobId: String) {
+    const hasDependencies = this.jobs.filter(job => job.dependencies.includes(jobId)).length > 0 ? this.jobs.filter(job => job.dependencies.includes(jobId)) : null;
+    return (hasDependencies);
+  }
+
+  deleteJob(content, jobId: string) {
+    // TODO popup: are you sure ? these jobs will be deleted: name + name dependencies (+ name dependencies of dependencies...)
+
+    const job: Job  = this.jobs.find(jobi => jobi.id === jobId);
+    // deleteCollection(): void {
+    if ( confirm('Are you sure you want to delete the collection ' + job.name + '?')) {
+      this.jobService.deleteJob(job).subscribe(data => this.getJobs());
+    }
+  }
+
   populateAndOpenCopyModal(content, jobId: string) {
     this.jobService.getJob(jobId).subscribe(jobToCopy => {
         this.jobService.getPlugin(jobToCopy.wippExecutable).subscribe(plugin => {
@@ -387,8 +402,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           for (const input of Object.keys(jobToCopy.parameters)) {
             // if input to copy is an existing WIPP object
             if (this.selectedSchema.properties.inputs.properties[input]['widget']
-               && (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
-              || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search')) {
+              && (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
+                || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search')) {
               if (jobToCopy.parameters[input].indexOf('{') === -1) {
                 const id = jobToCopy.parameters[input];
                 // Resolve AbstractFactory

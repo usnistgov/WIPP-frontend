@@ -49,4 +49,8 @@ export class JobService {
     return this.http.get<Workflow>(`${this.workflowsUrl}/${workflowId}`, httpOptions);
   }
 
+  deleteJob(job: Job) {
+     return this.http.delete<Job>(job._links.self.href);
+  }
+
 }
