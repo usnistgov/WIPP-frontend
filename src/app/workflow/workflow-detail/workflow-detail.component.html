@@ -123,7 +123,7 @@
               </svg>
             </svg:g>
 
-            <svg:g class="node" *ngIf="workflow.status === 'CREATED' && !jobHasDependencies(node.id)" (click)="deleteJob(addStepModal, node.id)">
+            <svg:g class="node" *ngIf="workflow.status === 'CREATED'" (click)="deleteJob(addStepModal, node.id)">
               <svg:rect
                 [attr.x]="node.dimension.width + 37 "
                 [attr.width]="20"

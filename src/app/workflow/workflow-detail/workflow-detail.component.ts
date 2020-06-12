@@ -361,7 +361,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-
   openCopy(content, jobId: string) {
     this.populateAndOpenCopyModal(content, jobId);
   }
@@ -371,18 +370,34 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.populateAndOpenCopyModal(content, jobId);
   }
 
-  jobHasDependencies(jobId: String) {
-    const hasDependencies = this.jobs.filter(job => job.dependencies.includes(jobId)).length > 0 ? this.jobs.filter(job => job.dependencies.includes(jobId)) : null;
-    return (hasDependencies);
+  getDependencies(jobId: String) {
+    const jobDependencies = this.jobs.filter(job =>
+      job.dependencies.includes(jobId)).length > 0 ? this.jobs.filter(job => job.dependencies.includes(jobId)) : null;
+    return (jobDependencies);
   }
 
   deleteJob(content, jobId: string) {
-    // TODO popup: are you sure ? these jobs will be deleted: name + name dependencies (+ name dependencies of dependencies...)
+    const job: Job  = this.jobs.find(jobA => jobA.id === jobId);
+    const jobDependencies = this.getDependencies(jobId);
+    let text = 'Are you sure you want to delete the job ' + job.name + '? \n' ;
+    if (jobDependencies) {
+      text += 'This job has dependencies which will be deleted too \n ';
+    }
+    const requests = [];
+    requests.push(this.jobService.deleteJob(job));
+    this.deleteDependencies(job, requests);
+    if (confirm(text)) {
+      forkJoin(requests).subscribe(data => this.getJobs());
+    }
+  }
 
-    const job: Job  = this.jobs.find(jobi => jobi.id === jobId);
-    // deleteCollection(): void {
-    if ( confirm('Are you sure you want to delete the collection ' + job.name + '?')) {
-      this.jobService.deleteJob(job).subscribe(data => this.getJobs());
+  deleteDependencies(job: Job, requests) {
+    const dependencies = this.getDependencies(job.id);
+    if (dependencies) {
+      for (const dependency of dependencies) {
+        requests.push(this.jobService.deleteJob(dependency));
+        this.deleteDependencies(dependency, requests);
+      }
     }
   }
 
