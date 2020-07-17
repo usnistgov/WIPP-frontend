@@ -24,6 +24,7 @@ import {AppConfigService} from './app-config.service';
 import {appInitializerFactory} from './app-init-factory';
 import {PyramidVisualizationModule} from './pyramid-visualization/pyramid-visualization.module';
 import {PyramidAnnotationModule} from './pyramid-annotation/pyramid-annotation.module';
+import { GenericDataModule } from './generic-data/generic-data.module';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {PyramidAnnotationModule} from './pyramid-annotation/pyramid-annotation.m
     TensorflowModelModule,
     CsvCollectionModule,
     NotebookModule,
+    GenericDataModule,
     PluginModule,
     WorkflowModule,
     AppRoutingModule,
