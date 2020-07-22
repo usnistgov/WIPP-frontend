@@ -6,7 +6,8 @@ import { version } from '../../package.json';
 export const environment = {
   production: false,
   version: version,
-  apiRootUrl: 'http://localhost:8080/api'
+  getUrl :'http://mgi_superuser:mgi_superuser_pwd@localhost:8111/rest/data',
+  apiRootUrl: 'http://10.210.115.75:8080/api'
 };
 
 /*
