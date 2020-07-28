@@ -361,7 +361,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-
   openCopy(content, jobId: string) {
     this.populateAndOpenCopyModal(content, jobId);
   }
@@ -369,6 +368,37 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   openEdit(content, jobId: string) {
     this.editMode = true;
     this.populateAndOpenCopyModal(content, jobId);
+  }
+
+  getDependencies(jobId: String) {
+    const jobDependencies = this.jobs.filter(job =>
+      job.dependencies.includes(jobId)).length > 0 ? this.jobs.filter(job => job.dependencies.includes(jobId)) : null;
+    return (jobDependencies);
+  }
+
+  deleteJob(content, jobId: string) {
+    const job: Job  = this.jobs.find(jobA => jobA.id === jobId);
+    const jobDependencies = this.getDependencies(jobId);
+    let text = 'Are you sure you want to delete the job ' + job.name + '? \n' ;
+    if (jobDependencies) {
+      text += 'This job has dependencies which will be deleted too \n ';
+    }
+    const requests = [];
+    requests.push(this.jobService.deleteJob(job));
+    this.deleteDependencies(job, requests);
+    if (confirm(text)) {
+      forkJoin(requests).subscribe(data => this.getJobs());
+    }
+  }
+
+  deleteDependencies(job: Job, requests) {
+    const dependencies = this.getDependencies(job.id);
+    if (dependencies) {
+      for (const dependency of dependencies) {
+        requests.push(this.jobService.deleteJob(dependency));
+        this.deleteDependencies(dependency, requests);
+      }
+    }
   }
 
   populateAndOpenCopyModal(content, jobId: string) {
@@ -387,8 +417,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           for (const input of Object.keys(jobToCopy.parameters)) {
             // if input to copy is an existing WIPP object
             if (this.selectedSchema.properties.inputs.properties[input]['widget']
-               && (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
-              || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search')) {
+              && (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
+                || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search')) {
               if (jobToCopy.parameters[input].indexOf('{') === -1) {
                 const id = jobToCopy.parameters[input];
                 // Resolve AbstractFactory
