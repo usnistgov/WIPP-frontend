@@ -2,7 +2,7 @@ import {Component, Injector, Input, OnDestroy, OnInit} from '@angular/core';
 import {PluginService} from '../../plugin/plugin.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Workflow} from '../workflow';
 import {forkJoin, interval, of as observableOf, Subject} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
@@ -15,6 +15,7 @@ import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
 import {JobService} from '../../job/job.service';
 import {dataMap} from '../../data-service';
+import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
 
 
 @Component({
@@ -85,7 +86,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     private workflowService: WorkflowService,
     private appConfigService: AppConfigService,
     private jobService: JobService,
-    private injector: Injector) {
+    private injector: Injector,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -206,6 +208,29 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       });
     });
   }
+
+  copyWorkflow() {
+    const modalRef = this.modalService.open(WorkflowNewComponent);
+    modalRef.componentInstance.modalReference = modalRef;
+    modalRef.componentInstance.isCopy = true;
+    modalRef.result.then((result) => {
+       this.spinner.show();
+      this.workflowService.copyWorkflow(this.workflow, result.name).subscribe(workflow => {
+        const workflowId = workflow ? workflow.id : null;
+        this.router.navigate(['../workflows/detail', workflowId]).then(() => {
+           this.spinner.hide();
+          this.refreshPage(); } );
+      }, error => {
+          this.spinner.hide(); }
+          );
+    }, (reason) => {
+      console.log('dismissed');
+    });
+  }
+
+   refreshPage() {
+    window.location.reload();
+   }
 
   generateSchema(pluginList) {
     pluginList.forEach(plugin => {

@@ -11,6 +11,7 @@ export class WorkflowNewComponent implements OnInit {
 
   @Input() modalReference: any;
   workflow: Workflow = new Workflow();
+  isCopy = false;
 
   constructor(private activeModal: NgbActiveModal) { }
 
