@@ -296,6 +296,12 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               inputSchema['format'] = 'array';
               inputSchema['items'] = input.options.items;
               break;
+            // Workaround for https://github.com/guillotinaweb/ngx-schema-form/issues/332
+            case 'number':
+            case 'float':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'integer';
+              break;
             default:
               inputSchema['type'] = input.type;
           }
