@@ -50,6 +50,10 @@
   float:right;
 }
 
+.selected {
+  background-color: #F8F9FA;
+}
+
 #description{
   font-style: italic;
   color: gray;
