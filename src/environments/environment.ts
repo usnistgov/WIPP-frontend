@@ -6,8 +6,11 @@ import { version } from '../../package.json';
 export const environment = {
   production: false,
   version: version,
-  getUrl :'http://mgi_superuser:mgi_superuser_pwd@localhost:8111/rest/data',
-  apiRootUrl: 'http://10.210.115.75:8080/api'
+  registryAPI: 'http://129.6.18.170:8081/rest/data',
+  // registryAPI: 'http://192.168.1.162/rest/data',
+  // registryAPI: 'https://test-wipp-plugins.nist.gov/rest/data',
+  // getUrl : 'http://mgi_superuser:mgi_superuser_pwd@localhost:8111/rest/data',
+  apiRootUrl: 'http://localhost:8080/api'
 };
 
 /*

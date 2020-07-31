@@ -3,11 +3,9 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {PluginService} from '../plugin.service';
 import {NmrrApiService} from '../nmrr-api.service';
 import {Router} from '@angular/router';
-import {Plugin} from '../plugin';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {MatPaginator, MatSort} from '@angular/material';
-import {SelectionModel} from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
+import {PluginNmrr} from '../pluginsNmrr';
 
 
 @Component({
@@ -25,14 +23,13 @@ export class PluginNewComponent implements OnInit {
   @ViewChild('more') desc: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-
-  //public plugins: MatTableDataSource< Plugin[] >;
   displayedColumns: string[] = [ 'name' , 'download'];
   plugins: MatTableDataSource<any> = new MatTableDataSource([]) ;
+  pluginsNmrr: PluginNmrr[];
 
 
   displayAlert = false;
-  displayAlertNmrr=false;
+  displayAlertNmrr = false;
   alertMessage = '';
   alertType = 'danger';
 
@@ -44,20 +41,18 @@ export class PluginNewComponent implements OnInit {
   search = false;
   pluginName;
 
-  coinwallet: string[] = ['From repository','Custom'];
-  selectedwallet = this.coinwallet[0];
+  tabs: string[] = ['From Laptop', 'From Registry'];
+  selectedTab = this.tabs[0];
 
   constructor(
     private activeModal: NgbActiveModal,
     private pluginService: PluginService,
-    private NmrrApiService: NmrrApiService,
+    private nmrrApiService: NmrrApiService,
     private router: Router) {
   }
 
   ngOnInit() {
     this.plugins.paginator = this.paginator;
-    this.getPluginsFromNmrr();
-
   }
 
   onFileSelected(event) {
@@ -69,10 +64,21 @@ export class PluginNewComponent implements OnInit {
     };
   }
 
-  getByUrl(url) {
+  getNmrrPlugins(tab) {
+    if (tab === 'From Registry') {
+      this.getPluginsFromNmrr();
+    }
+  }
+
+  getByUrl(url, pluginId?) {
     this.pluginService.getJsonFromURL(url).subscribe(
       data => {
-        this.pluginJSON = JSON.stringify(data, undefined, 7);
+        if (pluginId) {
+          const index = this.pluginsNmrr.findIndex(plugin => plugin.id === pluginId);
+          this.pluginsNmrr[index].manifest = JSON.stringify(data, undefined, 7);
+        } else {
+          this.pluginJSON = JSON.stringify(data, undefined, 7);
+        }
       },
       err => {
         this.displayAlertMessage('danger',
@@ -99,7 +105,7 @@ export class PluginNewComponent implements OnInit {
   }
 
   postPlugin(pluginText) {
-    //console.log(pluginText);
+    console.log(pluginText);
     const jsonState = this.isJsonValid(pluginText);
     if (jsonState[0]) {
       this.pluginService.postPlugin(pluginText).subscribe(
@@ -130,54 +136,17 @@ export class PluginNewComponent implements OnInit {
     this.displayAlertNmrr = true;
   }
 
-/*
-  getPluginsFromApi(id?) :void {
-    const parametres = {
-          page: id ? id : null
-    };
-
-    this.NmrrApiService.getApiSoftwares(parametres).subscribe(
-      data => {
-        this.resultsLength = data.count;
-        for (var val of data.results) {
-              const params = {
-                    id: val.id
-              };
-              //console.log(val);
-               this.NmrrApiService.getSoftwareDetail(params).subscribe(
-                data2 => {
-                     const data = this.plugins.data;
-                     data.push(this.NmrrApiService.getInfoFromdata(data2));
-                     this.plugins.data = data;
-                     //this.plugins.filteredData.push(this.NmrrApiService.getInfoFromdata(data2));
-                     //console.log(data2);
-                },
-                err2 => {
-                  this.displayAlertMessage('danger',
-                    'Unable to get data from api');
-                  }
-
-              );
-        }
-      },
-      err => {
-        this.displayAlertMessage('danger',
-          'Unable to get data from api');
-      }
-    );
-  }
-*/
-
   // get plugins from nmrr
-  getPluginsFromNmrr(page?) :void {
-    const parametres = {
-          page: page ? page : null
+  getPluginsFromNmrr(page?): void {
+    const parameters = {
+      page: page ? page : null
     };
 
-    this.NmrrApiService.getPluginsFromNmrr(parametres).subscribe(
+    this.nmrrApiService.getPluginsFromNmrr(parameters).subscribe(
       data => {
         this.resultsLength = data.count;
-        this.plugins.data = this.NmrrApiService.getPluginsFromdata(data.results)
+        this.pluginsNmrr = data.results;
+        this.getPluginsFromData();
       },
       err => {
         this.displayAlertMessageNmrr('danger',
@@ -187,78 +156,73 @@ export class PluginNewComponent implements OnInit {
   }
 
 
-  // if the user try to chage the page this methode wwill be executed
+  // if the user try to change the page this method will be executed
   pageChanged(page) {
     this.plugins = new MatTableDataSource([]) ;
-    if(this.search == false){
-      this.getPluginsFromNmrr(page.pageIndex+1);
-    }
-    else{
-      this.getPluginsByName(this.pluginName,page.pageIndex+1);
+    if (this.search === false) {
+      this.getPluginsFromNmrr(page.pageIndex + 1);
+    } else {
+      this.getPluginsByName(this.pluginName, page.pageIndex + 1);
     }
   }
 
 
   // get plugins whose the name contains a patern
-   getPluginsByName(pluginName,id?){
-         const parametres = {
-               page: id ? id : null,
-               name:pluginName
-         };
+  getPluginsByName(pluginName, id?) {
+    const parameters = {
+      page: id ? id : null,
+      name: pluginName
+    };
 
-         this.NmrrApiService.getPluginsFromNmrrByName(parametres).subscribe(
-           data => {
-             console.log("count :"+data.count);
+    this.nmrrApiService.getPluginsFromNmrrByName(parameters).subscribe(
+      data => {
+        this.resultsLength = data.count;
+        this.pluginsNmrr = data.results;
+        this.getPluginsFromData();
+      },
+      err => {
+        this.displayAlertMessageNmrr('danger',
+          'Unable to get data from api');
+      }
+    );
+  }
 
-             this.resultsLength = data.count;
-             this.plugins.data = this.NmrrApiService.getPluginsFromdata(data.results)
-           },
-           err => {
-             this.displayAlertMessageNmrr('danger',
-               'Unable to get data from api');
-           }
-         );
-   }
 
+  applyFilterByName(pluginName) {
+    if (!pluginName) {
+      // if there is at least one character in the search input, we get all the plugins
+      this.search = false;
+      this.getPluginsFromNmrr();
+      this.paginator.firstPage();
+    } else {
+      // if there is no character in the search input, we get all the plugins
+      this.pluginName = pluginName;
+      this.search = true;
+      this.getPluginsByName(pluginName);
+      this.paginator.firstPage();
+    }
+  }
 
-   applyFilterByName(pluginName){
-     if (!pluginName) {
-         // if there is at least one caracter in the search input, we get all the plugins
-       this.search = false;
-       this.getPluginsFromNmrr();
-       this.paginator.firstPage();
-     }
-     else{
-      // if there is no character in the search imput, we get all the plugins
-       this.pluginName = pluginName;
-       this.search = true;
-       this.getPluginsByName(pluginName);
-       this.paginator.firstPage();
-     }
-   }
+  getPluginsFromData() {
+    for (const pluginNmrr of this.pluginsNmrr) {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(pluginNmrr.xml_content, 'text/xml');
+      const rootElement = xmlDoc.documentElement;
+      const pluginXml = rootElement.getElementsByTagName('role')[0];
 
-   // add the plugin to the wipp database
-   postNmrrPlugins(row) {
-     var pluginText = row.jsondata;
-     console.log(row);
-     console.log(row.jsondata);
+      pluginNmrr.title = pluginNmrr.title.substr(0, pluginNmrr.title.indexOf('.xml'));
+      const fromUrl = this.hasUrlLink(pluginXml);
+      if (!fromUrl) {
+        pluginNmrr.manifest = pluginXml.getElementsByTagName('PluginManifestContent')[0].innerHTML;
+      } else {
+        const urlLink = pluginXml.getElementsByTagName('PluginManifestURL')[0].innerHTML;
+        this.getByUrl(urlLink, pluginNmrr.id);
+      }
+    }
+  }
 
-     const jsonState = this.isJsonValid(pluginText);
-     if (jsonState[0]) {
-       this.pluginService.postPlugin(pluginText).subscribe(
-         plugin => {
-           this.displayAlertMessageNmrr('success', 'Success! Redirecting...');
-           const pluginId = plugin ? plugin.id : null;
-           setTimeout(() => {
-             this.router.navigate(['plugins', pluginId]);
-           }, 2000);
-         },
-         err => {
-           this.displayAlertMessageNmrr('danger', 'Could not register plugin: ' + err.error.message);
-         });
-     } else {
-       this.displayAlertMessageNmrr('danger', 'Invalid JSON - ' + jsonState[1]);
-     }
-   }
+  hasUrlLink(pluginXml) {
+    return (pluginXml.getElementsByTagName('PluginManifestURL')[0]);
+  }
 
 }

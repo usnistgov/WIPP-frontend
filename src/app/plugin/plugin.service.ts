@@ -62,6 +62,7 @@ export class PluginService {
   }
 
   postPlugin(pluginDescriptor): Observable<Plugin> {
+    console.log('POST SERVICE')
     const httpParams = new HttpParams();
     httpOptions.params = httpParams;
     return this.http.post<Plugin>(this.pluginsUrl,

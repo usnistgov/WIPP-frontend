@@ -1,7 +1,9 @@
 <div class="bs-example">
-    <ul class="nav nav-tabs mt-12 ">
-        <li *ngFor="let wallet of coinwallet; let first = first;" [ngClass]="{firstItem: first}" class="nav-item" [class.active]="selectedwallet===wallet">
-            <a (click)="selectedwallet = wallet" aria-controls="one" class="nav-link" role="tab" data-toggle="tab">{{wallet}}</a>
+    <ul class="nav nav-tabs mt-12">
+        <li *ngFor="let tab of tabs"
+        [ngClass]="{'selected': tab === selectedTab}">
+            <a (click)="selectedTab = tab; getNmrrPlugins(tab)"
+               class="nav-link">{{tab}}</a>
         </li>
         <button type="button" class="close left10" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
           <span aria-hidden="true">&times;</span>
@@ -9,8 +11,7 @@
     </ul>
     <div class="tab-content">
       <div class="container">
-        <div *ngIf="selectedwallet === coinwallet[0]" role="tabpanel" class="tab-pane active" id="one">
-
+        <div *ngIf="selectedTab === tabs[0]" class="tab-pane active">
 
           <h4 class="mt-2">New Plugin</h4>
           <div class="modal-body">
@@ -50,22 +51,19 @@
 
       </div>
       <div class="container">
-        <div *ngIf="selectedwallet === coinwallet[1]" role="tabpanel" class="tab-pane active" id="two">
-            <h4 class="mt-2">Get Plugin From Repository</h4>
+        <div *ngIf="selectedTab === tabs[1]" class="tab-pane active">
+            <h4 class="mt-2">Get Plugin From Registry</h4>
             <ngb-alert *ngIf="displayAlertNmrr" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>
 
 
-            <table mat-table class="table-hover" [dataSource]="plugins"
+            <table mat-table class="table-hover" [dataSource]="pluginsNmrr"
                    (matSortChange)="sortChanged($event)" matSort>
 
               <!-- Name Column -->
-              <ng-container matColumnDef="name" (click)="postPlugin(raw)">
-                <th mat-header-cell *matHeaderCellDef>name</th>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
                 <td mat-cell *matCellDef="let row">
-                  <span id="name">{{ row.name }} {{ row.version }}</span>
-                  <br>
-                  <p #more id="description" >{{ row.description }}</p>
-                  <!--<button (click)="myFunction()" id="myBtn">Read more</button>-->
+                  <span id="name">{{ row.title }}</span>
                 </td>
               </ng-container>
 
@@ -74,7 +72,8 @@
                 <td mat-cell *matCellDef="let row">
                   <div class="col-md-3">
                     <button class="btn btn-primary wipp-btn wipp-btn-new"
-                            (click)="postNmrrPlugins(row)">
+                            (click)="postPlugin(row.manifest)">
+                       <!--(click)="postPlugin(row)">-->
                       <i class="fas fa-cloud-download-alt">
                          <p>Register</p>
                       </i>

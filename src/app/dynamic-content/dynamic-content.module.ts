@@ -9,6 +9,7 @@ import {TensorflowModelTemplateComponent} from '../tensorflow-model/tensorflow-m
 import {TensorboardLogsTemplateComponent} from '../tensorflow-model/tensorflow-model-template/tensorboard-logs-template.component';
 import {CsvCollectionTemplateComponent} from '../csv-collection/csv-collection-template/csv-collection-template.component';
 import {NotebookTemplateComponent} from '../notebook/notebook-template/notebook-template.component';
+import {PyramidAnnotationTemplateComponent} from '../pyramid-annotation/pyramid-annotation-template/pyramid-annotation-template.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import {NotebookTemplateComponent} from '../notebook/notebook-template/notebook-
     ImagesCollectionTemplateComponent,
     PyramidTemplateComponent,
     StitchingVectorTemplateComponent,
+    PyramidAnnotationTemplateComponent,
     TensorflowModelTemplateComponent,
     TensorboardLogsTemplateComponent,
     CsvCollectionTemplateComponent,
