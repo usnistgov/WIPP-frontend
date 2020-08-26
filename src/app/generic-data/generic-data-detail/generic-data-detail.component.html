@@ -1,0 +1,47 @@
+<h3 class="wipp-title">Generic Data Detail</h3>
+
+<div>
+  <div class="row">
+    <div class="col-md-9">
+      <dl class="row">
+        <dt class="col-md-4">Name: </dt>
+        <dd class="col-md-8">{{genericData.name}}</dd>
+
+        <dt class="col-md-4">Creation Date: </dt>
+        <dd class="col-md-8">{{genericData.creationDate | date}}</dd>
+
+        <dt class="col-md-4">Source job: </dt>
+        <dd class="col-md-8" *ngIf="job; else not_applicable">
+          <a (click)="displayJobModal(job.id)"
+             class="wipp-link"
+             ngbTooltip="Show Job"
+             placement="left">
+            {{job.name}}
+          </a>
+        </dd>
+
+        <dt class="col-md-4">Type: </dt>
+        <dd class="col-md-8" *ngIf="genericData.type; else not_applicable">
+          {{genericData.type}}
+        </dd>
+
+        <dt class="col-md-4">Description: </dt>
+        <dd class="col-md-8" *ngIf="genericData.description; else not_applicable">
+          {{genericData.description}}
+        </dd>
+        <ng-template #not_applicable>N/A</ng-template>
+      </dl>
+    </div>
+
+    <div class="col-md-3 text-right">
+      <a
+        [href]="genericData._links.download.href"
+        ngbTooltip="Download as zip"
+        placement="left"
+        class="btn btn-light">
+                  <span
+                    aria-hidden="true"><i class="fa fa-download"></i></span>
+      </a>
+    </div>
+  </div>
+</div>
