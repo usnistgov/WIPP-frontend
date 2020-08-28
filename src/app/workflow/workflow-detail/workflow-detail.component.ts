@@ -2,7 +2,7 @@ import {Component, Injector, Input, OnDestroy, OnInit} from '@angular/core';
 import {PluginService} from '../../plugin/plugin.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {WorkflowService} from '../workflow.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Workflow} from '../workflow';
 import {forkJoin, interval, of as observableOf, Subject} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
@@ -15,6 +15,7 @@ import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
 import {JobService} from '../../job/job.service';
 import {dataMap} from '../../data-service';
+import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   jobOutputs = {
     collection: [],
     stitchingVector: [],
+    pyramidAnnotation: [],
     pyramid: [],
     tensorflowModel: [],
     tensorboardLogs: [],
@@ -84,7 +86,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     private workflowService: WorkflowService,
     private appConfigService: AppConfigService,
     private jobService: JobService,
-    private injector: Injector) {
+    private injector: Injector,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -136,6 +139,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           if (type === 'collection' ||
             type === 'stitchingVector' ||
             type === 'pyramid' ||
+            type === 'pyramidAnnotation' ||
             type === 'tensorflowModel' ||
             type === 'csvCollection' ||
             type === 'notebook') {
@@ -205,6 +209,29 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  copyWorkflow() {
+    const modalRef = this.modalService.open(WorkflowNewComponent);
+    modalRef.componentInstance.modalReference = modalRef;
+    modalRef.componentInstance.isCopy = true;
+    modalRef.result.then((result) => {
+       this.spinner.show();
+      this.workflowService.copyWorkflow(this.workflow, result.name).subscribe(workflow => {
+        const workflowId = workflow ? workflow.id : null;
+        this.router.navigate(['../workflows/detail', workflowId]).then(() => {
+           this.spinner.hide();
+          this.refreshPage(); } );
+      }, error => {
+          this.spinner.hide(); }
+          );
+    }, (reason) => {
+      console.log('dismissed');
+    });
+  }
+
+   refreshPage() {
+    window.location.reload();
+   }
+
   generateSchema(pluginList) {
     pluginList.forEach(plugin => {
       plugin.properties = {
@@ -242,6 +269,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           switch (input.type) {
             case 'collection':
             case 'stitchingVector':
+            case  'pyramidAnnotation':
             case 'pyramid':
             case 'tensorflowModel':
             case 'csvCollection':
@@ -267,6 +295,12 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               inputSchema['type'] = 'array';
               inputSchema['format'] = 'array';
               inputSchema['items'] = input.options.items;
+              break;
+            // Workaround for https://github.com/guillotinaweb/ngx-schema-form/issues/332
+            case 'number':
+            case 'float':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'integer';
               break;
             default:
               inputSchema['type'] = input.type;
@@ -358,7 +392,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-
   openCopy(content, jobId: string) {
     this.populateAndOpenCopyModal(content, jobId);
   }
@@ -366,6 +399,37 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   openEdit(content, jobId: string) {
     this.editMode = true;
     this.populateAndOpenCopyModal(content, jobId);
+  }
+
+  getDependencies(jobId: String) {
+    const jobDependencies = this.jobs.filter(job =>
+      job.dependencies.includes(jobId)).length > 0 ? this.jobs.filter(job => job.dependencies.includes(jobId)) : null;
+    return (jobDependencies);
+  }
+
+  deleteJob(content, jobId: string) {
+    const job: Job  = this.jobs.find(jobA => jobA.id === jobId);
+    const jobDependencies = this.getDependencies(jobId);
+    let text = 'Are you sure you want to delete the job ' + job.name + '? \n' ;
+    if (jobDependencies) {
+      text += 'This job has dependencies which will be deleted too \n ';
+    }
+    const requests = [];
+    requests.push(this.jobService.deleteJob(job));
+    this.deleteDependencies(job, requests);
+    if (confirm(text)) {
+      forkJoin(requests).subscribe(data => this.getJobs());
+    }
+  }
+
+  deleteDependencies(job: Job, requests) {
+    const dependencies = this.getDependencies(job.id);
+    if (dependencies) {
+      for (const dependency of dependencies) {
+        requests.push(this.jobService.deleteJob(dependency));
+        this.deleteDependencies(dependency, requests);
+      }
+    }
   }
 
   populateAndOpenCopyModal(content, jobId: string) {
@@ -384,8 +448,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           for (const input of Object.keys(jobToCopy.parameters)) {
             // if input to copy is an existing WIPP object
             if (this.selectedSchema.properties.inputs.properties[input]['widget']
-               && (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
-              || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search')) {
+              && (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
+                || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search')) {
               if (jobToCopy.parameters[input].indexOf('{') === -1) {
                 const id = jobToCopy.parameters[input];
                 // Resolve AbstractFactory
@@ -459,6 +523,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.jobOutputs = {
       collection: [],
       stitchingVector: [],
+      pyramidAnnotation: [],
       pyramid: [],
       tensorflowModel: [],
       tensorboardLogs: [],

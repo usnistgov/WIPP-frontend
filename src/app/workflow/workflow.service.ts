@@ -102,6 +102,10 @@ export class WorkflowService {
     );
   }
 
+  copyWorkflow(workflow: Workflow, name: String): Observable<Workflow> {
+    return this.http.post<Workflow>(`${this.workflowsUrl}/${name}/copy`, workflow.id);
+  }
+
   getJobs(workflow: Workflow, params): Observable<PaginatedJobs> {
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;

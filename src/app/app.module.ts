@@ -27,6 +27,8 @@ import { KeycloakInterceptorService} from './services/keycloak/keycloak.intercep
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import {PyramidVisualizationModule} from './pyramid-visualization/pyramid-visualization.module';
 import { ForbiddenAccessComponent } from './forbidden-access/forbidden-access.component';
+import {PyramidAnnotationModule} from './pyramid-annotation/pyramid-annotation.module';
+import { GenericDataModule } from './generic-data/generic-data.module';
 
 @NgModule({
   declarations: [
@@ -40,11 +42,13 @@ import { ForbiddenAccessComponent } from './forbidden-access/forbidden-access.co
     HttpClientModule,
     ImagesCollectionModule,
     StitchingVectorModule,
+    PyramidAnnotationModule,
     PyramidModule,
     PyramidVisualizationModule,
     TensorflowModelModule,
     CsvCollectionModule,
     NotebookModule,
+    GenericDataModule,
     PluginModule,
     WorkflowModule,
     AppRoutingModule,

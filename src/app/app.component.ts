@@ -14,7 +14,7 @@ export class AppComponent {
   isNavbarCollapsed = true;
   jupyterNotebooksLink = '';
   onlineHelpLink = 'https://github.com/usnistgov/WIPP/tree/master/user-guide';
-  apiDocsLink = environment.apiRootUrl + '/swagger-ui.html';
+  apiDocsLink = environment.apiRootUrl + '/swagger-ui/index.html';
   displayApiDocsLink = !environment.production;
 
   constructor(private appConfigService: AppConfigService, private keycloak: KeycloakService) {
