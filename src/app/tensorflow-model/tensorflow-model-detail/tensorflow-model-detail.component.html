@@ -39,14 +39,14 @@
     </div>
 
     <div class="col-md-3 text-right">
-      <a
-        [href]="tensorflowModel._links.download.href"
+      <button
+        (click)="openDownload(tensorflowModel._links.download.href)"
         ngbTooltip="Download as zip"
         placement="left"
         class="btn btn-light">
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
-      </a>
+      </button>
     </div>
   </div>
 </div>

@@ -80,4 +80,8 @@ export class PyramidVisualizationService {
     return this.http.patch<Visualization>(`${this.visualizationsUrl}/${visualization.id}`, {publiclyShared: true}, httpOptions);
   }
 
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
+  }
+
 }

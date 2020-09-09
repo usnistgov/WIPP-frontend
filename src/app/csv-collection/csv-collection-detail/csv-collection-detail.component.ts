@@ -249,4 +249,9 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  openDownload(url: string) {
+    this.csvCollectionService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
+  }
+
 }

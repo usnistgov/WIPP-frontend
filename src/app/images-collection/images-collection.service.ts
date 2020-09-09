@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable, of as observableOf} from 'rxjs';
 import {ImagesCollection, PaginatedImagesCollections} from './images-collection';
 import {map} from 'rxjs/operators';
@@ -196,6 +196,10 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
       return this.http.get<Job>(imagesCollection._links['sourceJob']['href']);
     }
     return observableOf(null);
+  }
+
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
   }
 
 }

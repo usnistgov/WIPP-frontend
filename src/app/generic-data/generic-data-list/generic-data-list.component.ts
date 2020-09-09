@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
-import {TensorflowModel} from '../../tensorflow-model/tensorflow-model';
 import {MatPaginator, MatSort} from '@angular/material';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {GenericDataService} from '../generic-data.service';
+import {GenericData} from '../generic-data';
 
 @Component({
   selector: 'app-generic-data-list',
@@ -11,8 +11,8 @@ import {GenericDataService} from '../generic-data.service';
   styleUrls: ['./generic-data-list.component.css']
 })
 export class GenericDataListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'creationDate'];
-  genericDatas: Observable<TensorflowModel[]>;
+  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyShared'];
+  genericDatas: Observable<GenericData[]>;
 
   resultsLength = 0;
   pageSize = 10;

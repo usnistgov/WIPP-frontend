@@ -62,4 +62,16 @@ export class GenericDataService implements DataService<GenericData, PaginatedGen
   getJob(jobUrl: string): Observable<Job> {
     return this.http.get<Job>(jobUrl);
   }
+
+  makeDataPublic(genericData: GenericData): Observable<GenericData> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<GenericData>(`${this.genericDataUrl}/${genericData.id}`, {publiclyShared: true}, httpOptions);
+  }
+
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
+  }
 }

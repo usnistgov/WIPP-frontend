@@ -100,4 +100,8 @@ export class StitchingVectorService implements DataService<StitchingVector, Pagi
     return this.http.patch<StitchingVector>(`${this.stitchingVectorsUrl}/${stitchingVector.id}`, {publiclyShared: true}, httpOptions);
   }
 
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
+  }
+
 }

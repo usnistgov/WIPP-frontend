@@ -60,14 +60,14 @@
                   <span
                     aria-hidden="true"><i class="fa fa-chart-area"></i></span>
       </a>
-      <a
-        [href]="csvCollection?._links?.download?.href"
+      <button
+        (click)="openDownload(csvCollection?._links?.download?.href)"
         ngbTooltip="Download as zip"
         placement="left"
         class="btn btn-light">
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
-      </a>
+      </button>
       <button *ngIf="!csvCollection.publiclyShared && canEdit()" type="button"
               ngbTooltip="Make collection public"
               placement="left"

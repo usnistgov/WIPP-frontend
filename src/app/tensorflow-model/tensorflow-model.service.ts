@@ -84,4 +84,8 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
     };
     return this.http.patch<TensorflowModel>(`${this.tensorflowModelUrl}/${tensorflowModel.id}`, {publiclyShared: true}, httpOptions);
   }
+
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
+  }
 }

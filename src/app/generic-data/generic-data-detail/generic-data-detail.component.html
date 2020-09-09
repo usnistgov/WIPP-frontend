@@ -10,6 +10,9 @@
         <dt class="col-md-4">Creation Date: </dt>
         <dd class="col-md-8">{{genericData.creationDate | date}}</dd>
 
+        <dt class="col-md-4">Owner:</dt>
+        <dd class="col-md-8">{{genericData.owner}}</dd>
+
         <dt class="col-md-4">Source job: </dt>
         <dd class="col-md-8" *ngIf="job; else not_applicable">
           <a (click)="displayJobModal(job.id)"
@@ -34,14 +37,21 @@
     </div>
 
     <div class="col-md-3 text-right">
-      <a
-        [href]="genericData._links.download.href"
+      <button
+        (click)="openDownload(genericData._links.download.href)"
         ngbTooltip="Download as zip"
         placement="left"
         class="btn btn-light">
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
-      </a>
+      </button>
+      <button *ngIf="!genericData.publiclyShared && canEdit()" type="button"
+              ngbTooltip="Make data public"
+              placement="left"
+              class="btn btn-light" (click)="makeDataPublic();">
+        <span class="fa fa-user-lock"
+              aria-hidden="true"></span>
+      </button>
     </div>
   </div>
 </div>

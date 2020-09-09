@@ -221,7 +221,11 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
            this.spinner.hide();
           this.refreshPage(); } );
       }, error => {
-          this.spinner.hide(); }
+          this.spinner.hide();
+          const modalRefErr = this.modalService.open(ModalErrorComponent);
+          modalRefErr.componentInstance.title = 'Workflow copy failed';
+          modalRefErr.componentInstance.message = error.error;
+      }
           );
     }, (reason) => {
       console.log('dismissed');

@@ -412,4 +412,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.editNotes = false;
   }
 
+  openDownload(url: string) {
+    this.imagesCollectionService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
+  }
+
 }

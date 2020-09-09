@@ -94,4 +94,9 @@ export class StitchingVectorDetailComponent implements OnInit {
     return(this.keycloakService.isLoggedIn() && this.stitchingVector.owner == this.keycloakService.getUsername());
   }
 
+  openDownload(url: string) {
+    this.stitchingVectorService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
+  }
+
 }

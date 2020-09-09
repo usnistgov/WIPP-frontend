@@ -6,6 +6,7 @@ import {AppConfigService} from '../../app-config.service';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {GenericData} from '../generic-data';
 import {GenericDataService} from '../generic-data.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-generic-data-detail',
@@ -22,7 +23,8 @@ export class GenericDataDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private appConfigService: AppConfigService,
-    private genericDataService: GenericDataService) {
+    private genericDataService: GenericDataService,
+    private keycloakService: KeycloakService ) {
   }
 
   ngOnInit() {
@@ -41,6 +43,22 @@ export class GenericDataDetailComponent implements OnInit {
       , (reason) => {
         console.log('dismissed');
       });
+  }
+
+  canEdit(): boolean {
+    return(this.keycloakService.isLoggedIn() && this.genericData.owner === this.keycloakService.getUsername());
+  }
+
+  makeDataPublic(): void {
+    this.genericDataService.makeDataPublic(
+      this.genericData).subscribe(genericData => {
+      this.genericData = genericData;
+    });
+  }
+
+  openDownload(url: string) {
+    this.genericDataService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
   }
 
 }
