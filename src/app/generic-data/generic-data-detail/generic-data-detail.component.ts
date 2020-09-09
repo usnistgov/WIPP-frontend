@@ -3,18 +3,15 @@ import {Job} from '../../job/job';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {AppConfigService} from '../../app-config.service';
 import {GenericData} from '../generic-data';
 import {GenericFile} from '../generic-file';
 import {GenericDataService} from '../generic-data.service';
-import urljoin from 'url-join';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
 import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {MatPaginator} from '@angular/material';
-
 
 @Component({
   selector: 'app-generic-data-detail',
@@ -54,14 +51,6 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
         size: this.pageSize,
         sort: ''});
   }
-
-  // ngOnInit() {
-  //   this.genericDataService.getById(this.genericDataId)
-  //     .subscribe(genericData => {
-  //       this.genericData = genericData;
-  //     });
-  // }
-
 
   ngOnInit() {
     this.flowHolder = new Flow({
