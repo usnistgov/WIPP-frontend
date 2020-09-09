@@ -5,6 +5,11 @@ import { GenericDataDetailComponent } from './generic-data-detail/generic-data-d
 import { GenericDataTemplateComponent } from './generic-data-template/generic-data-template.component';
 import {MatFormFieldModule, MatInputModule, MatPaginatorModule, MatSortModule, MatTableModule} from '@angular/material';
 import {GenericDataRoutingModule} from './generic-data-routing.module';
+import { GenericDataNewComponent } from './generic-data-new/generic-data-new.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import {NgMathPipesModule} from 'angular-pipes';
+
 
 @NgModule({
   imports: [
@@ -14,11 +19,19 @@ import {GenericDataRoutingModule} from './generic-data-routing.module';
     MatSortModule,
     MatTableModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    NgbModule.forRoot(),
+    FormsModule,
+    NgMathPipesModule
   ],
-  declarations: [GenericDataListComponent,
+  entryComponents: [
+    GenericDataNewComponent
+  ],
+  declarations: [
+    GenericDataListComponent,
     GenericDataDetailComponent,
-    GenericDataTemplateComponent
+    GenericDataTemplateComponent,
+    GenericDataNewComponent
   ]
 })
 export class GenericDataModule { }

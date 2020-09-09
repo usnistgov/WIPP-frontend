@@ -7,6 +7,7 @@ export const environment = {
   production: false,
   version: version,
   apiRootUrl: 'http://localhost:8080/api'
+  //apiRootUrl: 'http://192.168.0.19:8080/api'
   //apiRootUrl: 'http://129.6.18.170:30101/api'
 };
 
