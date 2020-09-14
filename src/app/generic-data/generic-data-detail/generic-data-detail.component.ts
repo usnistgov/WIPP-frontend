@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Job} from '../../job/job';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AppConfigService} from '../../app-config.service';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
@@ -21,6 +21,7 @@ export class GenericDataDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
     private appConfigService: AppConfigService,
     private genericDataService: GenericDataService,
@@ -31,6 +32,8 @@ export class GenericDataDetailComponent implements OnInit {
     this.genericDataService.getById(this.genericDataId)
       .subscribe(genericData => {
         this.genericData = genericData;
+      }, error => {
+        this.router.navigate(['/404']);
       });
   }
 

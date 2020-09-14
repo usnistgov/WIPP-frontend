@@ -27,33 +27,10 @@ export class KeycloakInterceptorService implements HttpInterceptor {
               }
             });
           }
-          return next.handle(request).pipe(
-            map((event: HttpEvent<any>) => {
-                return event;
-            }),
-            // if we catch an http error response
-            catchError((error: HttpErrorResponse) => {
-              // if this error is a 403 error, we navigate to the forbidden-access page
-              if (error.status === 403) {
-                this.router.navigate(['/403']);
-                return throwError(error);
-              }
-            }));
+          return next.handle(request);
         }));
     }
-    // If the user is not logged in
-    return next.handle(request).pipe(
-      map((event: HttpEvent<any>) => {
-          return event;
-      }),
-      // if we catch an http error response
-      catchError((error: HttpErrorResponse) => {
-        // if this error is a 401 error, we navigate to the forbidden-access page
-        if (error.status === 401) {
-          this.router.navigate(['/403']);
-          return throwError(error);
-        }
-      }));
+    return next.handle(request);
   }
 
   getUserToken() {

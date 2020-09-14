@@ -33,14 +33,15 @@
 
         <dt class="col-md-4">Source:</dt>
         <dd class="col-md-8">
-          <span *ngIf="sourceJob; then jobTemplate; else importTemplate"></span>
+          <span *ngIf="imagesCollection.sourceJob; then jobTemplate; else importTemplate"></span>
           <ng-template #jobTemplate>
-            <a (click)="displayJobModal(imagesCollection.sourceJob)"
+            <a *ngIf="sourceJob; else jobNonAvailable" (click)="displayJobModal(imagesCollection.sourceJob)"
                class="wipp-link"
                ngbTooltip="Show Job"
                placement="left">
               {{sourceJob.name}}
             </a>
+            <ng-template #jobNonAvailable>N/A</ng-template>
           </ng-template>
           <ng-template #importTemplate>
             <div *ngIf="imagesCollection.importMethod == 'CATALOG'">

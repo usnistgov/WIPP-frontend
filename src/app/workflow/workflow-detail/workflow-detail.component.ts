@@ -95,6 +95,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
       this.workflow = workflow;
       this.updateArgoUrl();
+    }, error => {
+      this.router.navigate(['/404']);
     });
     this.pluginService.getAllPluginsOrderedByName()
       .subscribe(plugins => {

@@ -77,6 +77,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
       if (!csvCollection.locked) {
         this.initFlow();
       }
+    }, error => {
+      this.router.navigate(['/404']);
     });
   }
 

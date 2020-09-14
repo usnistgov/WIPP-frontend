@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PluginService} from '../plugin.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Plugin} from '../plugin';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -22,7 +22,8 @@ export class PluginDetailComponent implements OnInit, OnDestroy {
 
   constructor(private pluginService: PluginService,
               private modalService: NgbModal,
-              private route: ActivatedRoute
+              private route: ActivatedRoute,
+              private router: Router
   ) {
   }
 
@@ -42,6 +43,8 @@ export class PluginDetailComponent implements OnInit, OnDestroy {
       .subscribe(plugin => {
         this.plugin = plugin;
         this.curateManifest();
+      }, error => {
+        this.router.navigate(['/404']);
       });
   }
 

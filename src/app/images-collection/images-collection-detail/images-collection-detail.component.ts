@@ -152,6 +152,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       if (this.canEdit() && !imagesCollection.locked) {
         this.initFlow();
       }
+    }, error => {
+      this.router.navigate(['/404']);
     });
     // If the user changes the sort order, reset back to the first page.
     // this.sort.sortChange.subscribe(() => this.imagesPaginator.pageIndex = 0);

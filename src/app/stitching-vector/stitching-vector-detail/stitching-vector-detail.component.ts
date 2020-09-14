@@ -5,7 +5,7 @@ import {StitchingVectorService} from '../stitching-vector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVector} from '../stitching-vector';
 import {MatPaginator} from '@angular/material';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Job} from '../../job/job';
 import {merge, of as observableOf} from 'rxjs';
 import {TimeSlice} from '../timeSlice';
@@ -30,6 +30,7 @@ export class StitchingVectorDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
     private stitchingVectorService: StitchingVectorService,
     private keycloakService: KeycloakService
@@ -40,9 +41,11 @@ export class StitchingVectorDetailComponent implements OnInit {
     this.stitchingVectorService.getById(this.stitchingVectorId)
       .subscribe(stitchingVector => {
         this.stitchingVector = stitchingVector;
+        this.getTimeSlices();
         this.getJob();
+      }, error => {
+        this.router.navigate(['/404']);
       });
-    this.getTimeSlices();
   }
 
   getTimeSlices(): void {

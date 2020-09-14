@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Job} from '../../job/job';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Pyramid} from '../pyramid';
@@ -20,6 +20,7 @@ export class PyramidDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
     private pyramidService: PyramidService,
     private keycloakService: KeycloakService) {
@@ -31,6 +32,8 @@ export class PyramidDetailComponent implements OnInit {
         this.pyramid = pyramid;
         this.getJob();
         this.getManifest(pyramid);
+      }, error => {
+        this.router.navigate(['/404']);
       });
   }
 

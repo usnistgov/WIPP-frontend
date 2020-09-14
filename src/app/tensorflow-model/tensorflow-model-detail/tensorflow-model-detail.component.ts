@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Job} from '../../job/job';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {TensorflowModelService} from '../tensorflow-model.service';
 import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
@@ -24,6 +24,7 @@ export class TensorflowModelDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
     private appConfigService: AppConfigService,
     private tensorflowModelService: TensorflowModelService,
@@ -36,6 +37,8 @@ export class TensorflowModelDetailComponent implements OnInit {
       .subscribe(tensorflowModel => {
         this.tensorflowModel = tensorflowModel;
         this.getTensorboardLogsAndJob();
+      }, error => {
+        this.router.navigate(['/404']);
       });
   }
 
