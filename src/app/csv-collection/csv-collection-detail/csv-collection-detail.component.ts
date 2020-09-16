@@ -15,6 +15,7 @@ import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {MatPaginator} from '@angular/material';
 import {Csv} from '../csv';
+import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 
 @Component({
   selector: 'app-csv-collection-detail',
@@ -74,7 +75,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.refresh().subscribe(csvCollection => {
-      if (!csvCollection.locked) {
+      if (this.canEdit() && !csvCollection.locked) {
         this.initFlow();
       }
     }, error => {
@@ -138,15 +139,16 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     this.csvCollectionService.makePublicCsvCollection(
       this.csvCollection).subscribe(csvCollection => {
       this.csvCollection = csvCollection;
+    }, error => {
+      const modalRefErr = this.modalService.open(ModalErrorComponent);
+      modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
+      modalRefErr.componentInstance.message = error.error;
     });
   }
   initFlow(): void {
-    if (this.browseBtn != undefined){ // this element can be null, if the user can not edit the collection
-      this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': '.csv'});
-
-    }
+    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': '.csv'});
     
-    const id = '';
+    const id = this.route.snapshot.paramMap.get('id');
     const csvUploadUrl = this.csvCollectionService.getCsvUrl(this.csvCollection);
     this.flowHolder.opts.target = csvUploadUrl;
 
@@ -228,9 +230,6 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  canEdit(): boolean {
-    return(this.keycloakService.isLoggedIn() && this.csvCollection.owner === this.keycloakService.getUsername());
-  }
   deleteCollection(): void {
     if (confirm('Are you sure you want to delete the collection ' + this.csvCollection.name + '?')) {
       this.csvCollectionService.deleteCsvCollection(this.csvCollection).subscribe(collection => {
@@ -249,6 +248,10 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     this.csvCollectionService.deleteAllCsvFiles(this.csvCollection).subscribe(result => {
       this.$throttleRefresh.next();
     });
+  }
+
+  canEdit(): boolean {
+    return(this.keycloakService.isLoggedIn() && this.csvCollection.owner === this.keycloakService.getUsername());
   }
 
   openDownload(url: string) {

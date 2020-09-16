@@ -16,6 +16,7 @@ import {Job} from '../../job/job';
 import urljoin from 'url-join';
 import {AppConfigService} from '../../app-config.service';
 import {KeycloakService} from '../../services/keycloak/keycloak.service';
+import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -251,6 +252,10 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.imagesCollectionService.makePublicImagesCollection(
       this.imagesCollection).subscribe(imagesCollection => {
       this.imagesCollection = imagesCollection;
+    }, error => {
+      const modalRefErr = this.modalService.open(ModalErrorComponent);
+      modalRefErr.componentInstance.title = 'Error while changing Images Collection visibility to public';
+      modalRefErr.componentInstance.message = error.error;
     });
   }
 
