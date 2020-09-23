@@ -49,7 +49,7 @@ export class GenericDataDetailComponent implements OnInit {
   }
 
   canEdit(): boolean {
-    return(this.keycloakService.isLoggedIn() && this.genericData.owner === this.keycloakService.getUsername());
+    return this.keycloakService.canEdit(this.genericData);
   }
 
   makeDataPublic(): void {

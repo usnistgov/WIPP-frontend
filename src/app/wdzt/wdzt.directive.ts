@@ -1,4 +1,5 @@
 import {AfterContentChecked, AfterContentInit, AfterViewInit, Directive, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {KeycloakService} from '../services/keycloak/keycloak.service';
 
 @Directive({
   selector: 'wippWdzt'
@@ -8,16 +9,25 @@ export class WdztDirective implements AfterViewInit, OnChanges {
   @Input() public manifest: any;
   private w: any;
 
-  constructor(private elem: ElementRef) {
+  constructor(private elem: ElementRef,
+              private keycloakService: KeycloakService) {
   }
 
   ngAfterViewInit() {
     const id = this.elem.nativeElement.id = this.elem.nativeElement.id || WDZT.guid();
+    let ajaxHeaders = {};
+    if (this.keycloakService.isLoggedIn()) {
+      ajaxHeaders = {
+        Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`
+      };
+    }
     this.w = WDZT({
       id: id,
       imagesPrefix: 'assets/wdzt/images/',
       OpenSeadragon: {
-        crossOriginPolicy: 'Anonymous'
+        crossOriginPolicy: 'Anonymous',
+        loadTilesWithAjax: true,
+        ajaxHeaders: ajaxHeaders
       },
       autoAdjustHeight: true
     });

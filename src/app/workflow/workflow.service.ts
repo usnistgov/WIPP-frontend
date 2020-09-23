@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 import {PaginatedWorkflows, Workflow} from './workflow';
 import {Job, PaginatedJobs} from '../job/job';
+import {StitchingVector} from '../stitching-vector/stitching-vector';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
@@ -131,5 +132,13 @@ export class WorkflowService {
         result.jobs = result._embedded.jobs;
         return result;
       }));
+  }
+
+  makeWorkflowPublic(workflow: Workflow): Observable<Workflow> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<Workflow>(`${this.workflowsUrl}/${workflow.id}`, {publiclyShared: true}, httpOptions);
   }
 }

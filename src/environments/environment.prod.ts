@@ -5,8 +5,8 @@ export const environment = {
   version: version,
   apiRootUrl: '/api',
   keycloak: {
-    url: 'http://localhost:8081/auth',
-    realm: 'WIPPKeycloak',
-    clientId: 'wipp-keycloak-client'
+    url: '/auth',
+    realm: 'WIPP',
+    clientId: 'wipp-public-client'
   }
 };

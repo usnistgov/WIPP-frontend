@@ -272,6 +272,6 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
   }
 
   canEdit() : boolean {
-    return(this.keycloakService.isLoggedIn() && this.visualization.owner == this.keycloakService.getUsername());
+    return this.keycloakService.canEdit(this.visualization);
   }
 }

@@ -93,8 +93,8 @@ export class StitchingVectorDetailComponent implements OnInit {
     });
   }
 
-  canEdit() : boolean {
-    return(this.keycloakService.isLoggedIn() && this.stitchingVector.owner == this.keycloakService.getUsername());
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.stitchingVector);
   }
 
   openDownload(url: string) {

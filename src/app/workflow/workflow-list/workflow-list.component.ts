@@ -15,7 +15,7 @@ import {KeycloakService} from '../../services/keycloak/keycloak.service';
   styleUrls: ['./workflow-list.component.css']
 })
 export class WorkflowListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'status', 'creationDate', 'endTime'];
+  displayedColumns: string[] = ['name', 'status', 'creationDate', 'endTime', 'owner', 'publiclyShared'];
   // displayedColumns: string[] = ['name', 'status', 'creationDate', 'startTime', 'endTime'];
   workflows: Observable<Workflow[]>;
   resultsLength = 0;

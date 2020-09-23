@@ -1,6 +1,32 @@
-<div class="row wipp-title">
-  <div class="col-md-6">
-    <h3 class="d-inline">Workflow detail</h3>
+<h3 class="wipp-title">Workflow detail</h3>
+<div class="row">
+  <div class="col-md-5">
+    <dl class="row">
+      <dt class="col-md-4">Name: </dt>
+      <dd class="col-md-8">{{workflow.name}}</dd>
+
+      <dt class="col-md-4">Creation Date: </dt>
+      <dd class="col-md-8">{{workflow.creationDate | date}}</dd>
+
+      <dt class="col-md-4">Owner:</dt>
+      <dd class="col-md-8">{{workflow.owner}}</dd>
+
+      <dt class="col-md-4">Status:</dt>
+      <dd class="col-md-8">{{workflow.status}}
+        <span *ngIf="workflow.status === 'ERROR' && workflow.errorMessage"
+            ngbTooltip={{workflow.errorMessage}}
+            placement="right"
+            aria-hidden="true"><i class="far fa-question-circle"></i>
+        </span>
+      </dd>
+      <dt class="col-md-4">Visibility:</dt>
+      <dd class="col-md-8">
+        <div *ngIf="workflow.publiclyShared; else privateData">Public</div>
+      </dd>
+      <ng-template #privateData>Private</ng-template>
+    </dl>
+  </div>
+  <div class="col-md-5">
     <button *ngIf="workflow.status === 'CREATED'"
             class="btn btn-outline-dark wipp-btn wf-btn-submit"
             [disabled]="jobs.length < 1" (click)="submitWorkflow()">
@@ -23,42 +49,32 @@
         </p>
       </a>
     </button>
+  </div>
+
+  <div class="col-md-2 text-right">
 
     <button
-      class="btn btn-outline-dark wipp-btn wf-btn-submit"
-      (click)="copyWorkflow()"
-    >
-      <i class="fas fa-copy">
-       <p style=" display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
-          Copy workflow
-        </p>
-      </i>
+      class="btn btn-light" type="button"
+      ngbTooltip="Copy workflow"
+      placement="left"
+      (click)="copyWorkflow()">
+      <span class="fas fa-copy"
+            aria-hidden="true"></span>
     </button>
+    <button *ngIf="!workflow.publiclyShared && canEdit()" type="button"
+            ngbTooltip="Make workflow public"
+            placement="left"
+            class="btn btn-light" (click)="makeWorkflowPublic();">
+          <span class="fa fa-users"
+                aria-hidden="true"></span>
+    </button>
+
   </div>
 </div>
 
 <ngx-spinner></ngx-spinner>
 
 <div class="top20">
-  <div class="row">
-    <div class="col-md-12"><b>Name:</b> {{workflow.name}}</div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <b>Status:</b> {{workflow.status}}
-      <span *ngIf="workflow.status === 'ERROR' && workflow.errorMessage"
-            ngbTooltip={{workflow.errorMessage}}
-            placement="right"
-            aria-hidden="true"><i class="far fa-question-circle"></i>
-          </span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12"><b>Creation Date:</b> {{workflow.creationDate | date}}</div>
-  </div>
-  <div class="row">
-    <div class="col-md-12"><b>Owner:</b> {{workflow.owner}}</div>
-  </div>
 
   <div class="wf-tasks">
     <h4>Workflow tasks</h4>

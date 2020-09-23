@@ -251,7 +251,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   canEdit(): boolean {
-    return(this.keycloakService.isLoggedIn() && this.csvCollection.owner === this.keycloakService.getUsername());
+    return this.keycloakService.canEdit(this.csvCollection);
   }
 
   openDownload(url: string) {

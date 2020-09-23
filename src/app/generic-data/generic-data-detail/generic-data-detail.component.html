@@ -23,6 +23,12 @@
           </a>
         </dd>
 
+        <dt class="col-md-4">Visibility:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="genericData.publiclyShared; else privateData">Public</div>
+        </dd>
+        <ng-template #privateData>Private</ng-template>
+
         <dt class="col-md-4">Type: </dt>
         <dd class="col-md-8" *ngIf="genericData.type; else not_applicable">
           {{genericData.type}}
@@ -49,7 +55,7 @@
               ngbTooltip="Make data public"
               placement="left"
               class="btn btn-light" (click)="makeDataPublic();">
-        <span class="fa fa-user-lock"
+        <span class="fa fa-users"
               aria-hidden="true"></span>
       </button>
     </div>

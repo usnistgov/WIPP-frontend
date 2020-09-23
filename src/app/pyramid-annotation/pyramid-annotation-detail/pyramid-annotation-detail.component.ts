@@ -7,6 +7,7 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {PyramidAnnotation} from '../pyramid-annotation';
 import {PyramidAnnotationService} from '../pyramid-annotation.service';
 import {TimeSlice} from '../timeSlice';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-pyramid-annotation-detail',
@@ -25,7 +26,8 @@ export class PyramidAnnotationDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    private pyramidAnnotationService: PyramidAnnotationService) {
+    private pyramidAnnotationService: PyramidAnnotationService,
+    private keycloakService: KeycloakService) {
   }
 
   ngOnInit() {
@@ -56,5 +58,16 @@ export class PyramidAnnotationDetailComponent implements OnInit {
           return observableOf([]);
         })
       ).subscribe(data => this.timeSlices = data);
+  }
+
+  makePyramidAnnotationPublic(): void {
+    this.pyramidAnnotationService.makePyramidAnnotationPublic(
+      this.pyramidAnnotation).subscribe(pyramidAnnotation => {
+      this.pyramidAnnotation = pyramidAnnotation;
+    });
+  }
+
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.pyramidAnnotation);
   }
 }

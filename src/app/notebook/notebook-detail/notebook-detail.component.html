@@ -12,6 +12,11 @@
         <dd class="col-md-8">
           {{notebook.creationDate | date}}
         </dd>
+        <dt class="col-md-4">Visibility:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="notebook.publiclyShared; else privateData">Public</div>
+        </dd>
+        <ng-template #privateData>Private</ng-template>
         <dt class="col-md-4">Description:</dt>
         <dd class="col-md-8">
           {{notebook.description}}

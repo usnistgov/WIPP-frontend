@@ -87,7 +87,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   canEdit(): boolean {
-    return(this.keycloakService.isLoggedIn() && this.imagesCollection.owner === this.keycloakService.getUsername());
+    return this.keycloakService.canEdit(this.imagesCollection);
   }
   imagesSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.

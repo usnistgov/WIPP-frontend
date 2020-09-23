@@ -73,8 +73,8 @@ export class TensorflowModelDetailComponent implements OnInit {
     });
   }
 
-  canEdit() : boolean {
-    return(this.keycloakService.isLoggedIn() && this.tensorflowModel.owner == this.keycloakService.getUsername());
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.tensorflowModel);
   }
 
   openDownload(url: string) {

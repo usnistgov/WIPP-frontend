@@ -16,6 +16,7 @@ import urljoin from 'url-join';
 import {JobService} from '../../job/job.service';
 import {dataMap} from '../../data-service';
 import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 
 @Component({
@@ -86,6 +87,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     private workflowService: WorkflowService,
     private appConfigService: AppConfigService,
     private jobService: JobService,
+    private keycloakService: KeycloakService,
     private injector: Injector,
     private router: Router) {
   }
@@ -542,6 +544,22 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     if (this.workflow.generatedName) {
       this.argoUiLink = urljoin(this.argoUiBaseUrl, this.workflow.generatedName);
     }
+  }
+
+  makeWorkflowPublic(): void {
+    this.workflowService.makeWorkflowPublic(
+      this.workflow).subscribe(workflow => {
+        this.refreshPage();
+      },
+      error => {
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Unable to set workflow to public';
+        modalRefErr.componentInstance.message = error.error;
+      });
+  }
+
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.workflow);
   }
 
   ngOnDestroy() {

@@ -62,6 +62,12 @@
               aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
           </ng-template>
         </dd>
+
+        <dt class="col-md-4">Visibility:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="imagesCollection.publiclyShared; else privateData">Public</div>
+        </dd>
+        <ng-template #privateData>Private</ng-template>
       </dl>
     </div>
 
@@ -134,13 +140,6 @@
         <span class="fa fa-lock-open"
               aria-hidden="true"></span>
       </button>
-      <button *ngIf="!imagesCollection.publiclyShared && canEdit()" type="button"
-              ngbTooltip="Make collection public"
-              placement="left"
-              class="btn btn-light" (click)="makePublicCollection();">
-        <span class="fa fa-user-lock"
-              aria-hidden="true"></span>
-      </button>
       <div *ngIf="imagesCollection.locked"
            ngbTooltip="Collection locked"
            placement="left"
@@ -148,6 +147,13 @@
         <span class="fa fa-lock"
               aria-hidden="true"></span>
       </div>
+      <button *ngIf="!imagesCollection.publiclyShared && canEdit()" type="button"
+              ngbTooltip="Make collection public"
+              placement="left"
+              class="btn btn-light" (click)="makePublicCollection();">
+        <span class="fas fa-users"
+              aria-hidden="true"></span>
+      </button>
     </div>
   </div>
 

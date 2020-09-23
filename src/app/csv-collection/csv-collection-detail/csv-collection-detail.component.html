@@ -14,17 +14,24 @@
         <dd class="col-md-8">{{csvCollection.owner}}</dd>
 
         <dt class="col-md-4">Source job: </dt>
-        <dd class="col-md-8" *ngIf="csvCollection.job; else notApplicable">
-          <a *ngIf="job; else jobNonAvailable" (click)="displayJobModal(job.id)"
-             class="wipp-link"
-             ngbTooltip="Show Job"
-             placement="left">
-            {{job.name}}
-          </a>
+        <dd class="col-md-8">
+          <div *ngIf="csvCollection.job; else notApplicable">
+            <a *ngIf="job; else jobNonAvailable" (click)="displayJobModal(job.id)"
+               class="wipp-link"
+               ngbTooltip="Show Job"
+               placement="left">
+              {{job.name}}
+            </a>
+          </div>
           <ng-template #jobNonAvailable>N/A</ng-template>
+          <ng-template #notApplicable>Uploaded</ng-template>
         </dd>
 
-        <ng-template #notApplicable><a class="not_applicable">Uploaded</a></ng-template>
+        <dt class="col-md-4">Visibility: </dt>
+        <dd class="col-md-8">
+          <div *ngIf="csvCollection.publiclyShared; else privateData">Public</div>
+        </dd>
+        <ng-template #privateData>Private</ng-template>
       </dl>
     </div>
 

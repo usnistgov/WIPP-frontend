@@ -108,7 +108,7 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
     this.modalService.dismissAll();
   }
 
-  canCreate() : boolean {
+  canCreate(): boolean {
     return(this.keycloakService.isLoggedIn());
   }
 

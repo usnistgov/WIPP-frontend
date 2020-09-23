@@ -89,7 +89,20 @@ export class KeycloakService {
       return KeycloakService.auth.authz.authenticated;
     }
 
+    hasRole(role: string): boolean {
+      return KeycloakService.auth.authz.hasRealmRole(role);
+    }
+
     getKeycloakAuth() {
-        return KeycloakService.auth.authz;
+      return KeycloakService.auth.authz;
+    }
+
+    canEdit(resource: any): boolean {
+      if (this.isLoggedIn()) {
+        if (this.hasRole('admin') || (resource.hasOwnProperty('owner') && this.getUsername() === resource['owner'])) {
+          return true;
+        }
+      }
+      return false;
     }
 }

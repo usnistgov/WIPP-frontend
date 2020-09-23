@@ -65,8 +65,8 @@ export class PyramidDetailComponent implements OnInit {
     });
   }
 
-  canEdit() : boolean {
-    return(this.keycloakService.isLoggedIn() && this.pyramid.owner == this.keycloakService.getUsername());
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.pyramid);
   }
 
 }
