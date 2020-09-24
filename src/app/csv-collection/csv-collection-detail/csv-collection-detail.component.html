@@ -15,7 +15,7 @@
 
         <dt class="col-md-4">Source job: </dt>
         <dd class="col-md-8">
-          <div *ngIf="csvCollection.job; else notApplicable">
+          <div *ngIf="csvCollection.sourceJob; else notApplicable">
             <a *ngIf="job; else jobNonAvailable" (click)="displayJobModal(job.id)"
                class="wipp-link"
                ngbTooltip="Show Job"

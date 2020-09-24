@@ -9,6 +9,7 @@ export class Workflow {
   _links: any;
   generatedName: string;
   owner: string;
+  publiclyShared: boolean;
 }
 
 export interface PaginatedWorkflows {
