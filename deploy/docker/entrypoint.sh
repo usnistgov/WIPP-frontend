@@ -13,6 +13,8 @@ BACKEND_PORT=$2
 sed -i \
   -e 's/@backend_host@/'"${BACKEND_HOST}"'/' \
   -e 's/@backend_port@/'"${BACKEND_PORT}"'/' \
+  -e 's|@keycloak_host@|'"${KEYCLOAK_HOST}"'|' \
+  -e 's|@keycloak_port@|'"${KEYCLOAK_PORT}"'|' \
   /etc/nginx/conf.d/default.conf
 
 # Update external tools URLs in frontend conf
@@ -22,8 +24,6 @@ sed -i \
   -e 's|VISIONUI_URL|'"${VISIONUI_URL}"'|' \
   -e 's|CATALOGUI_URL|'"${CATALOGUI_URL}"'|' \
   -e 's|ARGOUIBASE_URL|'"${ARGOUIBASE_URL}"'|' \
-  -e 's|KEYCLOAK_HOST|'"${KEYCLOAK_HOST}"'|' \
-  -e 's|KEYCLOAK_PORT|'"${KEYCLOAK_PORT}"'|' \
   /var/www/frontend/assets/config/config.json
 
 nginx -g 'daemon off;'
