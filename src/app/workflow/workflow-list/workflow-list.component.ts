@@ -114,7 +114,7 @@ export class WorkflowListComponent implements OnInit {
     });
   }
 
-  canCreate() : boolean {
+  canCreate(): boolean {
     return(this.keycloakService.isLoggedIn());
   }
 }

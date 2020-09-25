@@ -562,6 +562,10 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     return this.keycloakService.canEdit(this.workflow);
   }
 
+  canCreate(): boolean {
+    return(this.keycloakService.isLoggedIn());
+  }
+
   ngOnDestroy() {
     this.modalService.dismissAll();
   }
