@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "pack": "ng build && cp -r ./projects/wipp-frontend-lib/src/assets dist npm pack"
   },
   "private": true,
   "dependencies": {
@@ -47,6 +48,7 @@
     "ngx-json-viewer": "^2.4.0",
     "ngx-schema-form": "^2.4.1",
     "ngx-spinner": "^7.2.0",
+    "node-sass": "^4.14.1",
     "notebookjs": "^0.4.2",
     "prismjs": "^1.17.1",
     "react": "^16.8.6",
@@ -58,6 +60,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.12.4",
+    "@angular-devkit/build-ng-packagr": "~0.13.0",
     "@angular/cli": "^7.3.9",
     "@angular/compiler-cli": "^7.2.15",
     "@angular/language-service": "^7.2.15",
@@ -75,8 +78,11 @@
     "karma-coverage-istanbul-reporter": "~2.0.0",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ng-packagr": "^4.2.0",
     "protractor": "^6.0.0",
     "ts-node": "~5.0.1",
+    "tsickle": ">=0.34.0",
+    "tslib": "^1.9.0",
     "tslint": "~5.9.1",
     "typescript": "^3.2.4"
   },
