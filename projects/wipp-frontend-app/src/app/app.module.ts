@@ -3,13 +3,11 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { WippFrontendLibModule, GenericDataModule, ImagesCollectionModule, 
-        CsvCollectionModule,DynamicContentModule, JobModule, NotebookModule, 
+        CsvCollectionModule, DynamicContentModule, JobModule, NotebookModule, 
         TensorflowModelModule, PluginModule, PyramidModule, PyramidAnnotationModule, 
-        StitchingVectorModule, WorkflowModule} from 'wipp-frontend-lib';
+        PyramidVisualizationModule, StitchingVectorModule, WorkflowModule} from 'wipp-frontend-lib';
 import {environment} from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
-import { PageNotFoundComponent } from 'projects/wipp-frontend-lib/src/public-api';
-import { UnknownDynamicComponent } from 'projects/wipp-frontend-lib/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule, MatTableModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule, MatCheckboxModule } from '@angular/material';
@@ -20,13 +18,11 @@ import * as config from '../assets/config/config.json';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    PageNotFoundComponent,
-    UnknownDynamicComponent
+    AppComponent
   ],
   imports: [
     WippFrontendLibModule.forRoot(environment.apiRootUrl, config),
-    // DynamicContentModule,
+    DynamicContentModule,
     // JobModule,
     BrowserModule,
     HttpClientModule,
@@ -34,7 +30,7 @@ import * as config from '../assets/config/config.json';
     StitchingVectorModule,
     PyramidAnnotationModule,
     PyramidModule,
-    //PyramidVisualizationModule,
+    PyramidVisualizationModule,
     TensorflowModelModule,
     CsvCollectionModule,
     NotebookModule,
@@ -50,7 +46,6 @@ import * as config from '../assets/config/config.json';
     MatProgressSpinnerModule,
     FormsModule,
     MatCheckboxModule,
-    HttpClientModule,
     NgbModule.forRoot()
   ],
   providers: [],

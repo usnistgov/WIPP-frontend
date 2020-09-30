@@ -1,14 +1,13 @@
 {
   "name": "wipp-frontend",
-  "version": "3.0.0-devel",
+  "version": "3.0.0-devel-test",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve wipp-frontend-app",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "pack": "ng build && cp -r ./projects/wipp-frontend-lib/src/assets dist npm pack"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
@@ -48,7 +47,6 @@
     "ngx-json-viewer": "^2.4.0",
     "ngx-schema-form": "^2.4.1",
     "ngx-spinner": "^7.2.0",
-    "node-sass": "^4.14.1",
     "notebookjs": "^0.4.2",
     "prismjs": "^1.17.1",
     "react": "^16.8.6",

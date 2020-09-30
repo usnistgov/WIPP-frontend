@@ -64,14 +64,11 @@
               },
               "projects/wipp-frontend-app/src/styles.css",
               "node_modules/@wipp/wdzt/build/deps/wdzt-deps.css",
-              "node_modules/prismjs/themes/prism.css",
-              "src/styles.css"
-            ],
+              "node_modules/prismjs/themes/prism.css"            ],
             "scripts": [
               "node_modules/@wipp/wdzt/build/deps/wdzt-deps.js",
               "node_modules/notebookjs/notebook.js"
             ]
-
           },
           "configurations": {
             "production": {

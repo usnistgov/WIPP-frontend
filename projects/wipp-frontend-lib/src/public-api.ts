@@ -19,6 +19,7 @@ export * from './lib/notebook/notebook.module';
 export * from './lib/plugin/plugin.module';
 export * from './lib/pyramid/pyramid.module';
 export * from './lib/pyramid-annotation/pyramid-annotation.module';
+export * from './lib/pyramid-visualization/pyramid-visualization.module';
 export * from './lib/stitching-vector/stitching-vector.module';
 export * from './lib/tensorflow-model/tensorflow-model.module';
 export * from './lib/workflow/workflow.module';
@@ -77,6 +78,11 @@ export * from './lib/pyramid-annotation/pyramid-annotation-detail/pyramid-annota
 export * from './lib/pyramid-annotation/pyramid-annotation-list/pyramid-annotation-list.component';
 export * from './lib/pyramid-annotation/pyramid-annotation-template/pyramid-annotation-template.component';
 
+// pyramid visualization
+export * from './lib/pyramid-visualization/pyramid-visualization-detail/pyramid-visualization-detail.component';
+export * from './lib/pyramid-visualization/pyramid-visualization-detail/pyramid-visualization-detail.component';
+export * from './lib/pyramid-visualization/pyramid-visualization-detail/pyramid-visualization-detail.component';
+
 // stitching-vector
 export * from './lib/stitching-vector/stitching-vector-detail/stitching-vector-detail.component';
 export * from './lib/stitching-vector/stitching-vector-list/stitching-vector-list.component';
@@ -93,6 +99,16 @@ export * from './lib/workflow/workflow-list/workflow-list.component';
 export * from './lib/workflow/workflow-new/workflow-new.component';
 export * from './lib/workflow/widgets/search-widget/search-widget.component';
 
-
 // Exporting services
+export * from './lib/csv-collection/csv-collection.service';
+export * from './lib/images-collection/images-collection.service';
+export * from './lib/generic-data/generic-data.service';
+export * from './lib/job/job.service';
 export * from './lib/notebook/notebook.service';
+export * from './lib/plugin/plugin.service';
+export * from './lib/pyramid/pyramid.service';
+export * from './lib/pyramid-annotation/pyramid-annotation.service';
+export * from './lib/pyramid-visualization/pyramid-visualization.service';
+export * from './lib/stitching-vector/stitching-vector.service';
+export * from './lib/tensorflow-model/tensorflow-model.service';
+export * from './lib/workflow/workflow.service';

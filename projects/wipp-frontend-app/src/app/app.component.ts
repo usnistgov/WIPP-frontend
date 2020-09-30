@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AppConfigService } from './app-config.service';
+import * as config from '../assets/config/config.json';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,9 @@ export class AppComponent {
   apiDocsLink = environment.apiRootUrl + '/swagger-ui/index.html';
   displayApiDocsLink = !environment.production;
 
-  constructor(private appConfigService: AppConfigService) {
+  constructor() {
     //this.jupyterNotebooksLink = this.appConfigService.getConfig().jupyterNotebooksUrl;
+    this.jupyterNotebooksLink = config.jupyterNotebooksUrl;
   }
   
 }

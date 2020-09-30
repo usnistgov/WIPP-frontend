@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PageNotFoundComponent } from 'projects/wipp-frontend-lib/src/public-api';
+import { PageNotFoundComponent } from 'wipp-frontend-lib';
 
 
 const appRoutes: Routes = [
