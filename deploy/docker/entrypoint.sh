@@ -13,9 +13,11 @@ BACKEND_PORT=$2
 sed -i \
   -e 's/@backend_host@/'"${BACKEND_HOST}"'/' \
   -e 's/@backend_port@/'"${BACKEND_PORT}"'/' \
-  -e 's|@keycloak_host@|'"${KEYCLOAK_HOST}"'|' \
-  -e 's|@keycloak_port@|'"${KEYCLOAK_PORT}"'|' \
   /etc/nginx/conf.d/default.conf
+
+sed -i \
+    -e "s|@KEYCLOAK_URL_VALUE@|${KEYCLOAK_URL}|g" \
+    /var/www/frontend/main.*.js
 
 # Update external tools URLs in frontend conf
 sed -i \
