@@ -14,8 +14,9 @@
         <dd class="col-md-8">{{tensorflowModel.owner}}</dd>
 
         <dt class="col-md-4">Training job: </dt>
-        <dd class="col-md-8" *ngIf="job; else not_applicable">
-          <a (click)="displayJobModal(job.id)"
+        <dd class="col-md-8">
+          <a *ngIf="job; else not_applicable"
+             (click)="displayJobModal(job.id)"
              class="wipp-link"
              ngbTooltip="Show Job"
              placement="left">
@@ -24,18 +25,19 @@
         </dd>
 
         <dt class="col-md-4">Tensorboard Logs: </dt>
-        <dd class="col-md-8" *ngIf="tensorboardLogs; else not_applicable">
-          <a href={{tensorboardLink}} target="_blank">{{tensorboardLogs.name}}</a>
+        <dd class="col-md-8">
+          <a  *ngIf="tensorboardLogs; else not_applicable"
+              href={{tensorboardLink}}
+              target="_blank">{{tensorboardLogs.name}}
+          </a>
         </dd>
         <ng-template #not_applicable>N/A</ng-template>
+        <dt class="col-md-4">Visibility:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="tensorflowModel.publiclyShared; else privateData">Public</div>
+        </dd>
+        <ng-template #privateData>Private</ng-template>
       </dl>
-      <button *ngIf="!tensorflowModel.publiclyShared && canEdit()" type="button"
-              ngbTooltip="Make Tensorflow model public"
-              placement="left"
-              class="btn btn-light" (click)="makePublicTensorflowModel();">
-        <span class="fa fa-users"
-              aria-hidden="true"></span>
-      </button>
     </div>
 
     <div class="col-md-3 text-right">
@@ -46,6 +48,13 @@
         class="btn btn-light">
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
+      </button>
+      <button *ngIf="!tensorflowModel.publiclyShared && canEdit()" type="button"
+              ngbTooltip="Make Tensorflow model public"
+              placement="left"
+              class="btn btn-light" (click)="makePublicTensorflowModel();">
+        <span class="fa fa-users"
+              aria-hidden="true"></span>
       </button>
     </div>
   </div>

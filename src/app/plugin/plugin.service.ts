@@ -4,7 +4,6 @@ import {PaginatedPlugins, Plugin} from './plugin';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
-import {PaginatedStitchingVector} from '../stitching-vector/stitching-vector';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
@@ -100,6 +99,10 @@ export class PluginService {
 
   getJsonFromURL(url: string): Observable<JSON> {
     return this.http.get<JSON>(url);
+  }
+
+  deletePlugin(plugin: Plugin) {
+    return this.http.delete<Plugin>(plugin._links.self.href);
   }
 
 }
