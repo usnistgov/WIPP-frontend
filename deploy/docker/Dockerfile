@@ -12,8 +12,10 @@ WORKDIR /var/www/
 
 # Copy WIPP frontend application
 COPY ${WIPP_FRONTEND}.tar.gz .
-RUN tar -xvzf ${WIPP_FRONTEND}.tar.gz \
-  && mv ${WIPP_FRONTEND_LIB} frontend/frontend-lib && mv ${WIPP_FRONTEND_APP} frontend/frontend-app
+RUN tar -xvzf ${WIPP_FRONTEND}.tar.gz 
+RUN pwd
+RUN ls -al
+RUN mv ${WIPP_FRONTEND_APP} frontend/frontend-app && mv ${WIPP_FRONTEND_LIB} frontend/frontend-lib
 
 # Copy WIPP frontend config
 COPY config.json frontend/frontend-app/assets/config/config.json
