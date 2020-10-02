@@ -85,4 +85,8 @@ export class PyramidAnnotationService implements DataService<PyramidAnnotation, 
     return this.http.patch<PyramidAnnotation>(`${this.pyramidAnnotationsUrl}/${pyramidAnnotation.id}`, {publiclyShared: true}, httpOptions);
   }
 
+  downloadAnnotation(url: string): Observable<any> {
+    return this.http.get(url);
+  }
+
 }

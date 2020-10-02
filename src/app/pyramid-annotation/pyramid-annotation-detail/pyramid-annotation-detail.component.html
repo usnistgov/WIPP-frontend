@@ -45,14 +45,16 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef> Actions</th>
     <td mat-cell *matCellDef="let row">
-      <a [href]="row._links.annotationPositions.href"
+      <button (click)="downloadAnnotation(
+          row._links.annotationPositions.href,
+          pyramidAnnotation.name + '-' + row.sliceNumber + '.json')"
          ngbTooltip="Download"
          placement="left"
          class="btn btn-light">
         <span
           aria-hidden="true"><i class="fa fa-download"></i>
         </span>
-      </a>
+      </button>
     </td>
   </ng-container>
 
