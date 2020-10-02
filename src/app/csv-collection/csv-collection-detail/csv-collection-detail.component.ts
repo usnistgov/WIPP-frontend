@@ -61,7 +61,11 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.plotsUiLink = urljoin(this.appConfigService.getConfig().plotsUiUrl, 'plots', this.csvCollectionId);
+    if (this.appConfigService.getConfig().plotsUiUrl) {
+      this.plotsUiLink = urljoin(this.appConfigService.getConfig().plotsUiUrl, 'plots', this.csvCollectionId);
+    } else {
+      this.plotsUiLink = null;
+    }
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',

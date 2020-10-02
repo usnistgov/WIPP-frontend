@@ -59,7 +59,7 @@
         <span class="fa fa-lock"
               aria-hidden="true"></span>
       </a>
-      <a
+      <a *ngIf="plotsUiLink"
         [href]="plotsUiLink"
         target="_blank"
         [ngbTooltip]="plotTipContent"
