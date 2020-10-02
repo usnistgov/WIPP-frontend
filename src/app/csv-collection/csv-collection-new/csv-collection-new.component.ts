@@ -39,7 +39,7 @@ export class CsvCollectionNewComponent implements OnInit {
         }, 2000);
       },
       err => {
-        this.displayAlertMessage('danger', 'Could not register csvCollection: ' + err.error.message);
+        this.displayAlertMessage('danger', 'Could not register csvCollection: ' + err.error);
       });
   }
 
