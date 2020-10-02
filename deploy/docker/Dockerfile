@@ -8,7 +8,7 @@ ARG WIPP_FRONTEND_APP="wipp-frontend-app"
 COPY VERSION /VERSION
 
 # Set working directory
-WORKDIR /home/simo/Documents/varwww
+WORKDIR /var/www
 
 # Copy WIPP frontend application
 COPY ${WIPP_FRONTEND}.tar.gz .
