@@ -15,7 +15,7 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
   imports: [MatTableModule, MatTableDataSource, MatTable]
 })
 export class PyramidAnnotationListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
+  displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices', 'owner', 'publiclyShared'];
   pyramidAnnotations: Observable<PyramidAnnotation[]>;
 
   resultsLength = 0;

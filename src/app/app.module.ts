@@ -22,7 +22,11 @@ import {UnknownDynamicComponent } from './dynamic-content/unknown-dynamic.compon
 import {NotebookModule} from './notebook/notebook.module';
 import {AppConfigService} from './app-config.service';
 import {appInitializerFactory} from './app-init-factory';
+import { KeycloakService } from './services/keycloak/keycloak.service';
+import { KeycloakInterceptorService} from './services/keycloak/keycloak.interceptor.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import {PyramidVisualizationModule} from './pyramid-visualization/pyramid-visualization.module';
+import { ForbiddenAccessComponent } from './forbidden-access/forbidden-access.component';
 import {PyramidAnnotationModule} from './pyramid-annotation/pyramid-annotation.module';
 import { GenericDataModule } from './generic-data/generic-data.module';
 
@@ -30,7 +34,8 @@ import { GenericDataModule } from './generic-data/generic-data.module';
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-    UnknownDynamicComponent
+    UnknownDynamicComponent,
+    ForbiddenAccessComponent
   ],
   imports: [
     BrowserModule,
@@ -64,7 +69,13 @@ import { GenericDataModule } from './generic-data/generic-data.module';
       useFactory: appInitializerFactory,
       multi: true,
       deps: [AppConfigService]
-    }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: KeycloakInterceptorService,
+      multi: true
+    },
+    KeycloakService
   ],
   bootstrap: [AppComponent]
 })

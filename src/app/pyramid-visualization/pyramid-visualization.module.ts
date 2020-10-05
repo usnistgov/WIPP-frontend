@@ -7,7 +7,7 @@ import { PyramidVisualizationHelpComponent } from './pyramid-visualization-help/
 import {PyramidVisualizationRoutingModule} from './pyramid-visualization-routing.module';
 import {WdztModule} from '../wdzt/wdzt.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {MatFormFieldModule, MatInputModule, MatPaginatorModule, MatSortModule, MatTableModule} from '@angular/material';
+import {MatFormFieldModule, MatInputModule, MatPaginatorModule, MatSortModule, MatTableModule, MatCheckboxModule} from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
@@ -20,7 +20,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
-
+    MatCheckboxModule,
     PyramidVisualizationRoutingModule,
     WdztModule,
     NgbModule.forRoot()

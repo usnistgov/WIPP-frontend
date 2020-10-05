@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable, of as observableOf} from 'rxjs';
 import {ImagesCollection, PaginatedImagesCollections} from './images-collection';
 import {map} from 'rxjs/operators';
@@ -14,9 +14,7 @@ import {DataService} from '../data-service';
 })
 export class ImagesCollectionService implements DataService<ImagesCollection, PaginatedImagesCollections> {
 
-
   private imagesCollectionsUrl = environment.apiRootUrl + '/imagesCollections';
-
   constructor(
     private http: HttpClient
   ) {
@@ -169,6 +167,14 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
     }
   }
 
+  makePublicImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {publiclyShared: true}, httpOptions);
+  }
+
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
@@ -190,6 +196,10 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
       return this.http.get<Job>(imagesCollection._links['sourceJob']['href']);
     }
     return observableOf(null);
+  }
+
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
   }
 
 }

@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
+import {auditTime, catchError, map, mergeMap, switchMap} from 'rxjs/operators';
 import * as Flow from '@flowjs/flow.js';
 import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
@@ -8,13 +8,15 @@ import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
 import {MatPaginator, MatSort} from '@angular/material';
-import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
+import {BehaviorSubject, from, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
 import urljoin from 'url-join';
 import {AppConfigService} from '../../app-config.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
+import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -69,7 +71,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private elem: ElementRef,
     private modalService: NgbModal,
     private imagesCollectionService: ImagesCollectionService,
-    private appConfigService: AppConfigService) {
+    private appConfigService: AppConfigService,
+    private keycloakService: KeycloakService
+    ) {
     this.imagesParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSizeImages,
@@ -82,6 +86,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.imagesCollection);
+  }
   imagesSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
     this.imagesParamsChange.next({index: 0, size: this.imagesParamsChange.value.size, sort: sort.active + ',' + sort.direction});
@@ -125,7 +132,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
-      method: 'octet'
+      method: 'octet',
+      headers: {Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`}
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -136,13 +144,17 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // fixme: temporary fix while waiting for 1.0.0 release of ngx-inline-editor
     const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
-    faRemoveElt.classList.remove('fa-remove');
-    faRemoveElt.classList.add('fa-times');
+    if (faRemoveElt != null) { // this element can be null, if the user can not edit the collection
+      faRemoveElt.classList.remove('fa-remove');
+      faRemoveElt.classList.add('fa-times');
+    }
 
     this.refresh().subscribe(imagesCollection => {
-      if (!imagesCollection.locked) {
+      if (this.canEdit() && !imagesCollection.locked) {
         this.initFlow();
       }
+    }, error => {
+      this.router.navigate(['/404']);
     });
     // If the user changes the sort order, reset back to the first page.
     // this.sort.sortChange.subscribe(() => this.imagesPaginator.pageIndex = 0);
@@ -233,6 +245,17 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.imagesCollectionService.setImagesCollectionNotes(
       this.imagesCollection, notes).subscribe(imagesCollection => {
       this.imagesCollection = imagesCollection;
+    });
+  }
+
+  makePublicCollection(): void {
+    this.imagesCollectionService.makePublicImagesCollection(
+      this.imagesCollection).subscribe(imagesCollection => {
+      this.imagesCollection = imagesCollection;
+    }, error => {
+      const modalRefErr = this.modalService.open(ModalErrorComponent);
+      modalRefErr.componentInstance.title = 'Error while changing Images Collection visibility to public';
+      modalRefErr.componentInstance.message = error.error;
     });
   }
 
@@ -394,6 +417,11 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   clearNotes() {
     this.imageCollectionNotes = this.imagesCollection.notes;
     this.editNotes = false;
+  }
+
+  openDownload(url: string) {
+    this.imagesCollectionService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
   }
 
 }

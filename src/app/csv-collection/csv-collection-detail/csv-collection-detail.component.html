@@ -10,29 +10,40 @@
         <dt class="col-md-4">Creation Date: </dt>
         <dd class="col-md-8">{{csvCollection.creationDate | date}}</dd>
 
+        <dt class="col-md-4">Owner:</dt>
+        <dd class="col-md-8">{{csvCollection.owner}}</dd>
+
         <dt class="col-md-4">Source job: </dt>
-        <dd class="col-md-8" *ngIf="job; else not_applicable">
-          <a (click)="displayJobModal(job.id)"
-             class="wipp-link"
-             ngbTooltip="Show Job"
-             placement="left">
-            {{job.name}}
-          </a>
+        <dd class="col-md-8">
+          <div *ngIf="csvCollection.sourceJob; else notApplicable">
+            <a *ngIf="job; else jobNonAvailable" (click)="displayJobModal(job.id)"
+               class="wipp-link"
+               ngbTooltip="Show Job"
+               placement="left">
+              {{job.name}}
+            </a>
+          </div>
+          <ng-template #jobNonAvailable>N/A</ng-template>
+          <ng-template #notApplicable>Uploaded</ng-template>
         </dd>
 
-        <ng-template #not_applicable><a class="not_applicable">Uploaded</a></ng-template>
+        <dt class="col-md-4">Visibility: </dt>
+        <dd class="col-md-8">
+          <div *ngIf="csvCollection.publiclyShared; else privateData">Public</div>
+        </dd>
+        <ng-template #privateData>Private</ng-template>
       </dl>
     </div>
 
     <div class="col-md-3 text-right">
-            <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob" type="button"
+            <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()" type="button"
               ngbTooltip="Delete collection"
               placement="left"
               class="btn btn-light" (click)="deleteCollection();">
                   <span class="fa fa-times"
                         aria-hidden="true"></span>
       </button>
-      <a *ngIf="!csvCollection.locked && !csvCollection.sourceJob">
+      <a *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()">
           <button  type="button"
                   ngbTooltip="Lock collection"
                   placement="left"
@@ -48,7 +59,7 @@
         <span class="fa fa-lock"
               aria-hidden="true"></span>
       </a>
-      <a
+      <a *ngIf="plotsUiLink"
         [href]="plotsUiLink"
         target="_blank"
         [ngbTooltip]="plotTipContent"
@@ -57,14 +68,21 @@
                   <span
                     aria-hidden="true"><i class="fa fa-chart-area"></i></span>
       </a>
-      <a
-        [href]="csvCollection?._links?.download?.href"
+      <button
+        (click)="openDownload(csvCollection?._links?.download?.href)"
         ngbTooltip="Download as zip"
         placement="left"
         class="btn btn-light">
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
-      </a>
+      </button>
+      <button *ngIf="!csvCollection.publiclyShared && canEdit()" type="button"
+              ngbTooltip="Make collection public"
+              placement="left"
+              class="btn btn-light" (click)="makePublicCollection();">
+        <span class="fa fa-user-lock"
+              aria-hidden="true"></span>
+      </button>
 
       <ng-template #plotTipContent>Visualize in Plots UI
         <span
@@ -124,7 +142,7 @@
 Total size: {{csvCollection.csvTotalSize| bytes}}
       </div>
   <div class='col-sm-4 text-right'>
-      <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob" type="button"
+      <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()" type="button"
               ngbTooltip="Delete all CSV files"
               placement="left"
               class="btn btn-light"
@@ -164,7 +182,7 @@ Total size: {{csvCollection.csvTotalSize| bytes}}
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
     <td mat-cell *matCellDef="let row">
-      <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob" type="button"
+      <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()" type="button"
                 ngbTooltip="Remove from collection"
                 placement="left"
                 class="btn btn-light" (click)="deleteCsvFile(row);">

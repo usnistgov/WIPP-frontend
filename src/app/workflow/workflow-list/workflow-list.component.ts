@@ -7,6 +7,7 @@ import {Workflow} from '../workflow';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-workflow-list',
@@ -14,7 +15,7 @@ import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
   styleUrls: ['./workflow-list.component.css']
 })
 export class WorkflowListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'status', 'creationDate', 'endTime'];
+  displayedColumns: string[] = ['name', 'status', 'creationDate', 'endTime', 'owner', 'publiclyShared'];
   // displayedColumns: string[] = ['name', 'status', 'creationDate', 'startTime', 'endTime'];
   workflows: Observable<Workflow[]>;
   resultsLength = 0;
@@ -28,7 +29,8 @@ export class WorkflowListComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private workflowService: WorkflowService
+    private workflowService: WorkflowService,
+    private keycloakService: KeycloakService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -110,5 +112,9 @@ export class WorkflowListComponent implements OnInit {
     }, (reason) => {
       console.log('dismissed');
     });
+  }
+
+  canCreate(): boolean {
+    return(this.keycloakService.isLoggedIn());
   }
 }

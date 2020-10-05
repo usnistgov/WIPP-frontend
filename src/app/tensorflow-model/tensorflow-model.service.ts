@@ -77,4 +77,15 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
       }));
   }
 
+  makePublicTensorflowModel(tensorflowModel: TensorflowModel): Observable<TensorflowModel> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<TensorflowModel>(`${this.tensorflowModelUrl}/${tensorflowModel.id}`, {publiclyShared: true}, httpOptions);
+  }
+
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
+  }
 }

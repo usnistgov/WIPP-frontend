@@ -33,7 +33,8 @@
             ],
             "scripts": [
               "node_modules/@wipp/wdzt/build/deps/wdzt-deps.js",
-              "node_modules/notebookjs/notebook.js"
+              "node_modules/notebookjs/notebook.js",
+              "node_modules/keycloak-js/dist/keycloak.js"
 
             ]
           },

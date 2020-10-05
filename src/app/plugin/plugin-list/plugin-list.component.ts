@@ -8,6 +8,7 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PluginNewComponent} from '../plugin-new/plugin-new.component';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 
 @Component({
@@ -30,7 +31,8 @@ export class PluginListComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalService: NgbModal,
-    private pluginService: PluginService
+    private pluginService: PluginService,
+    private keycloakService: KeycloakService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -102,6 +104,10 @@ export class PluginListComponent implements OnInit, OnDestroy {
   displayNewPluginModal() {
     const modalRef = this.modalService.open(PluginNewComponent, {size: 'lg'});
     modalRef.componentInstance.modalReference = modalRef;
+  }
+
+  canCreate(): boolean {
+    return this.keycloakService.hasRole('admin');
   }
 
   ngOnDestroy() {

@@ -5,6 +5,8 @@ export class GenericData {
   sourceJob: string;
   type: string;
   description: string;
+  owner: string;
+  publiclyShared: boolean;
   _links: any;
 }
 

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {Job} from '../../job/job';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AppConfigService} from '../../app-config.service';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {GenericData} from '../generic-data';
 import {GenericDataService} from '../generic-data.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-generic-data-detail',
@@ -20,15 +21,19 @@ export class GenericDataDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
     private appConfigService: AppConfigService,
-    private genericDataService: GenericDataService) {
+    private genericDataService: GenericDataService,
+    private keycloakService: KeycloakService ) {
   }
 
   ngOnInit() {
     this.genericDataService.getById(this.genericDataId)
       .subscribe(genericData => {
         this.genericData = genericData;
+      }, error => {
+        this.router.navigate(['/404']);
       });
   }
 
@@ -41,6 +46,22 @@ export class GenericDataDetailComponent implements OnInit {
       , (reason) => {
         console.log('dismissed');
       });
+  }
+
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.genericData);
+  }
+
+  makeDataPublic(): void {
+    this.genericDataService.makeDataPublic(
+      this.genericData).subscribe(genericData => {
+      this.genericData = genericData;
+    });
+  }
+
+  openDownload(url: string) {
+    this.genericDataService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
   }
 
 }

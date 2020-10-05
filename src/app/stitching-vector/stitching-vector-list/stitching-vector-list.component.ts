@@ -6,6 +6,7 @@ import {StitchingVectorNewComponent} from '../stitching-vector-new/stitching-vec
 import {StitchingVectorService} from '../stitching-vector.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
+import {KeycloakService} from '../../services/keycloak/keycloak.service'
 
 @Component({
   selector: 'app-stitching-vector-list',
@@ -16,7 +17,7 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
   imports: [MatTableModule, MatTableDataSource, MatTable]
 })
 export class StitchingVectorListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
+  displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices', 'owner', 'publiclyShared'];
   stitchingVectors: Observable<StitchingVector[]>;
 
   resultsLength = 0;
@@ -28,7 +29,8 @@ export class StitchingVectorListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     private stitchingVectorService: StitchingVectorService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private keycloakService: KeycloakService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -104,6 +106,10 @@ export class StitchingVectorListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  canCreate() : boolean {
+    return(this.keycloakService.isLoggedIn());
   }
 
 }

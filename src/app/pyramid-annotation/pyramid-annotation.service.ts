@@ -6,7 +6,6 @@ import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from '../stitching-vector/timeSlice';
-import {Job} from '../job/job';
 
 @Injectable({
   providedIn: 'root'
@@ -76,6 +75,18 @@ export class PyramidAnnotationService implements DataService<PyramidAnnotation, 
         result.data = result._embedded.pyramidAnnotationTimeSlices;
         return result;
       }));
+  }
+
+  makePyramidAnnotationPublic(pyramidAnnotation: PyramidAnnotation): Observable<PyramidAnnotation> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<PyramidAnnotation>(`${this.pyramidAnnotationsUrl}/${pyramidAnnotation.id}`, {publiclyShared: true}, httpOptions);
+  }
+
+  downloadAnnotation(url: string): Observable<any> {
+    return this.http.get(url);
   }
 
 }
