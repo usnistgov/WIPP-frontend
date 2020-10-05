@@ -10,14 +10,13 @@ COPY VERSION /VERSION
 # Set working directory
 WORKDIR /var/www/
 
-
 # Copy WIPP frontend application
 COPY ${WIPP_FRONTEND}.tar.gz .
-RUN tar -xvzf ${WIPP_FRONTEND}.tar.gz \
-  && mv ${WIPP_FRONTEND_APP} frontend && mv ${WIPP_FRONTEND_APP} frontend-lib
+RUN tar -xvzf ${WIPP_FRONTEND}.tar.gz\
+ && mv ${WIPP_FRONTEND_APP} frontend-app && mv ${WIPP_FRONTEND_LIB} frontend-lib
 
 # Copy WIPP frontend config
-COPY config.json frontend/assets/config/config.json
+COPY config.json frontend-app/assets/config/config.json
 
 # Copy nginx configuration and entrypoint script
 COPY default.conf /etc/nginx/conf.d/default.conf
