@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { WippFrontendLibModule, GenericDataModule, ImagesCollectionModule, 
         CsvCollectionModule, DynamicContentModule, JobModule, NotebookModule, 
@@ -14,6 +13,8 @@ import { MatInputModule, MatTableModule, MatPaginatorModule, MatSortModule, MatP
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as config from '../assets/config/config.json';
+import {AppConfigService} from './app-config.service';
+import {appInitializerFactory} from './app-init-factory';
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import * as config from '../assets/config/config.json';
     AppComponent
   ],
   imports: [
-    WippFrontendLibModule.forRoot(environment.apiRootUrl, config),
+    WippFrontendLibModule.forRoot(environment.apiRootUrl, AppConfigService),
     DynamicContentModule,
     // JobModule,
     BrowserModule,
@@ -48,7 +49,15 @@ import * as config from '../assets/config/config.json';
     MatCheckboxModule,
     NgbModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    AppConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFactory,
+      multi: true,
+      deps: [AppConfigService]
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
