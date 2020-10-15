@@ -7,6 +7,7 @@ import {CsvCollection, PaginatedCsvCollections} from './csv-collection';
 import {DataService} from '../data-service';
 import {Csv, PaginatedCsv} from './csv';
 import { API_ROOT_URL, CONFIG } from '../injection-token';
+import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-configuration';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +15,12 @@ import { API_ROOT_URL, CONFIG } from '../injection-token';
 export class CsvCollectionService implements DataService<CsvCollection, PaginatedCsvCollections> {
 
   private csvCollectionUrl = this.apiRootUrl + '/csvCollections';
-  private plotsUiUrl = this.config.plotsUiUrl;
+  private plotsUiUrl = this.configurationProvider.config.plotsUiUrl;
   //private plotsUiUrl: string = '';
 
   constructor(
     @Inject(API_ROOT_URL) private apiRootUrl: string,
-    @Inject(CONFIG) private config: any,
+    public configurationProvider: WippFrontendLibConfigurationProvider,
     private http: HttpClient) { 
   }
 

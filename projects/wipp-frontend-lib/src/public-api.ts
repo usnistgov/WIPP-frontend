@@ -2,6 +2,7 @@
  * Public API Surface of wipp-frontend-lib
  */
 
+export * from './lib/wipp-frontend-lib-configuration';
 export * from './lib/wipp-frontend-lib.service';
 export * from './lib/wipp-frontend-lib.component';
 export * from './lib/wipp-frontend-lib.module';

@@ -6,6 +6,7 @@ import {PaginatedTensorflowModels, TensorboardLogs, TensorflowModel} from './ten
 import {Job} from '../job/job';
 import {DataService} from '../data-service';
 import { API_ROOT_URL, CONFIG } from '../injection-token';
+import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-configuration';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,11 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
 
   private tensorflowModelUrl = this.apiRootUrl + '/tensorflowModels';
   private tensorboardLogsUrl = this.apiRootUrl + '/tensorboardLogs';
-  private tensorboardConfigUrl = this.config.tensorboardUrl;
+  private tensorboardConfigUrl = this.configurationProvider.config.tensorboardUrl;
 
   constructor(
     @Inject(API_ROOT_URL) private apiRootUrl: string,
-    @Inject(CONFIG) private config: any,
+    public configurationProvider: WippFrontendLibConfigurationProvider,
     private http: HttpClient) { }
 
   getById(id: string): Observable<TensorflowModel> {
