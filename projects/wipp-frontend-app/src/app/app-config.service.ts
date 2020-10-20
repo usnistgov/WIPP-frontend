@@ -19,8 +19,6 @@ export class AppConfigService {
   }
 
   getConfig() {
-    console.log('-----AppConfig------');
-    console.log(this.appConfig);
     return this.appConfig;
   }
 }

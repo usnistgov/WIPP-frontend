@@ -21,6 +21,5 @@ export class AppComponent {
   constructor(private appConfigService: AppConfigService) {
     this.jupyterNotebooksLink = this.appConfigService.getConfig().jupyterNotebooksUrl;
     this.plotsUiLink = this.appConfigService.getConfig().plotsUiUrl;
-    //this.jupyterNotebooksLink = config.jupyterNotebooksUrl;
   }
 }

@@ -11,26 +11,6 @@ import { DefaultLibConfiguration, LibConfiguration, WippFrontendLibConfiguration
   exports: [WippFrontendLibComponent, PageNotFoundComponent]
 })
 export class WippFrontendLibModule {
-
-  static forRootUsingUrl(url: string): ModuleWithProviders<WippFrontendLibModule> {
-    return {
-      ngModule: WippFrontendLibModule,
-      providers: [
-        { provide: API_ROOT_URL, useValue: url }
-      ]
-    };
-  }
-
-  // static forRoot(url: string, config: any): ModuleWithProviders<WippFrontendLibModule> {
-  //   return {
-  //     ngModule: WippFrontendLibModule,
-  //     providers: [
-  //       { provide: CONFIG, useValue: config },
-  //       { provide: API_ROOT_URL, useValue: url }
-  //     ]
-  //   };
-  // }
-
   static forRoot(url: string, libConfiguration: LibConfiguration = {}): ModuleWithProviders {
     return {
       ngModule: WippFrontendLibModule,
@@ -44,5 +24,4 @@ export class WippFrontendLibModule {
       ]
     };
   }
-
 }

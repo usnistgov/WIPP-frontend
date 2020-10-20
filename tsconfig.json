@@ -23,7 +23,7 @@
         "dist/wipp-frontend-lib"
       ],
       "wipp-frontend-lib/*": [
-        "dist/wipp-frontend-ling b/*"
+        "dist/wipp-frontend-lib/*"
       ]
     }
   }
