@@ -7,7 +7,7 @@ import {Image, PaginatedImages} from './image';
 import {MetadataFile, PaginatedMetadataFiles} from './metadata-file';
 import {Job} from '../job/job';
 import {DataService} from '../data-service';
-import { API_ROOT_URL, CONFIG } from '../injection-token';
+import { API_ROOT_URL } from '../injection-token';
 import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-configuration';
 
 @Injectable({
@@ -15,9 +15,7 @@ import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-confi
 })
 export class ImagesCollectionService implements DataService<ImagesCollection, PaginatedImagesCollections> {
 
-
   private imagesCollectionsUrl = this.apiRootUrl + '/imagesCollections';
-  //private catalogUiUrl = this.config.catalogUiUrl;
   private catalogUiUrl = this.configurationProvider.config.catalogUiUrl;
 
   constructor(

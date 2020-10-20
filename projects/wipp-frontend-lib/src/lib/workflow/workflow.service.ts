@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedWorkflows, Workflow} from './workflow';
 import {Job, PaginatedJobs} from '../job/job';
-import { API_ROOT_URL, CONFIG } from '../injection-token';
+import { API_ROOT_URL } from '../injection-token';
 import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-configuration';
 
 const httpOptions = {

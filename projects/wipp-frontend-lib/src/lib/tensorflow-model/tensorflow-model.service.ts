@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {PaginatedTensorflowModels, TensorboardLogs, TensorflowModel} from './tensorflow-model';
 import {Job} from '../job/job';
 import {DataService} from '../data-service';
-import { API_ROOT_URL, CONFIG } from '../injection-token';
+import { API_ROOT_URL } from '../injection-token';
 import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-configuration';
 
 @Injectable({

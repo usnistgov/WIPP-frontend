@@ -20,7 +20,6 @@ export class WippFrontendLibModule {
           useClass: DefaultLibConfiguration
         },
         { provide: API_ROOT_URL, useValue: url }
-
       ]
     };
   }
