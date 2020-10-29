@@ -1,6 +1,6 @@
 {
   "name": "wipp-frontend",
-  "version": "3.0.0-devel-test",
+  "version": "3.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve wipp-frontend-app",
