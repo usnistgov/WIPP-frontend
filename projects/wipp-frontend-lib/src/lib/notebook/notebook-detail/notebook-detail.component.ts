@@ -21,7 +21,12 @@ import {HttpClient} from '@angular/common/http';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 import {PlatformLocation} from '@angular/common';
+
+// nb variable used to be declared in typing.d.ts
+// When building the library, nb variable was not found. We can declare it here for now
 declare var nb: any;
+
+// Importing as marked causes "Marked not found error"
 const marked = markedImported;
 
 @Component({
