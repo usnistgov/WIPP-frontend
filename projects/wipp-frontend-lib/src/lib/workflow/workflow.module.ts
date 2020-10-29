@@ -29,7 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     ReactiveFormsModule,
     DynamicContentModule,
-    NgbModule.forRoot(),
+    NgbModule,
     SchemaFormModule.forRoot(),
     NgxGraphModule,
     NgxSpinnerModule,

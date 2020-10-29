@@ -26,7 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatSortModule,
     MatTableModule,
     MatInputModule,
-    NgbModule.forRoot(),
+    NgbModule,
     FormsModule,
     HttpClientModule
   ]

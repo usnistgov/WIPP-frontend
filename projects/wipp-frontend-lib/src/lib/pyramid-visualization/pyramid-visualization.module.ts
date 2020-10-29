@@ -22,7 +22,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     ReactiveFormsModule,
     PyramidVisualizationRoutingModule,
     WdztModule,
-    NgbModule.forRoot()
+    NgbModule
   ],
   entryComponents: [
     PyramidVisualizationNewComponent,

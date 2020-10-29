@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   imports: [
     CommonModule,
-    NgbModule.forRoot(),
+    NgbModule,
     NotebookRoutingModule,
     MatPaginatorModule,
     MatTableModule,

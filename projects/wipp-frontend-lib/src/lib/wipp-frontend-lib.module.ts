@@ -6,9 +6,7 @@ import { DefaultLibConfiguration, LibConfiguration, WippFrontendLibConfiguration
 
 @NgModule({
   declarations: [WippFrontendLibComponent, PageNotFoundComponent],
-  imports: [
-  ],
-  exports: [WippFrontendLibComponent, PageNotFoundComponent]
+  imports: []
 })
 export class WippFrontendLibModule {
   static forRoot(url: string, libConfiguration: LibConfiguration = {}): ModuleWithProviders {

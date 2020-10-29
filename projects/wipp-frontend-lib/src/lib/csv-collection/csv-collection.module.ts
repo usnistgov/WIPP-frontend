@@ -20,7 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
-    NgbModule.forRoot(),
+    NgbModule,
     FormsModule,
     NgMathPipesModule,
     HttpClientModule

@@ -22,10 +22,6 @@ import { HttpClientModule } from '@angular/common/http';
     GenericDataListComponent,
     GenericDataDetailComponent,
     GenericDataTemplateComponent
-  ],
-  exports: [
-    GenericDataListComponent,
-    GenericDataDetailComponent,
-    GenericDataTemplateComponent]
+  ]
 })
 export class GenericDataModule { }
