@@ -14,7 +14,6 @@ import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
 import urljoin from 'url-join';
-//import {AppConfigService} from '../../app-config.service';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -152,7 +151,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       map(imagesCollection => {
         this.imagesCollection = imagesCollection;
         if (this.imagesCollection.sourceCatalog) {
-          //this.sourceCatalogLink = urljoin(this.appConfigService.getConfig().catalogUiUrl, this.imagesCollection.sourceCatalog);
           this.sourceCatalogLink = urljoin(this.imagesCollectionService.getSourceCatalogLink(), this.imagesCollection.sourceCatalog);
         }
         this.getImages();

@@ -11,7 +11,6 @@ import {Job} from '../../job/job';
 import {FormProperty, PropertyGroup} from 'ngx-schema-form/lib/model/formproperty';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 import {NgxSpinnerService} from 'ngx-spinner';
-//import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
 import {JobService} from '../../job/job.service';
 import {dataMap} from '../../data-service';
@@ -84,14 +83,12 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private pluginService: PluginService,
     private workflowService: WorkflowService,
-    //private appConfigService: AppConfigService,
     private jobService: JobService,
     private injector: Injector,
     private router: Router) {
   }
 
   ngOnInit() {
-    //this.argoUiBaseUrl = this.appConfigService.getConfig().argoUiBaseUrl;
     this.argoUiBaseUrl = this.workflowService.getArgoUiBaseUrl();
     this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
       this.workflow = workflow;

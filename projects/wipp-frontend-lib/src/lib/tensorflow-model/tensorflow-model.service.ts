@@ -82,7 +82,7 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
       }));
   }
 
-  getTensorboardUrl(): string {
+  getTensorboardConfigUrl(): string {
     return this.tensorboardConfigUrl;
   }
 

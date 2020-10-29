@@ -5,7 +5,6 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {TensorflowModelService} from '../tensorflow-model.service';
 import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-//import {AppConfigService} from '../../app-config.service';
 import urljoin from 'url-join';
 
 @Component({
@@ -24,13 +23,11 @@ export class TensorflowModelDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
-    //private appConfigService: AppConfigService,
     private tensorflowModelService: TensorflowModelService) {
   }
 
   ngOnInit() {
-    //this.tensorboardLink = urljoin(this.appConfigService.getConfig().tensorboardUrl, '#scalars&regexInput=');
-    this.tensorboardLink = urljoin(this.tensorflowModelService.getTensorboardUrl(), '#scalars&regexInput=');
+    this.tensorboardLink = urljoin(this.tensorflowModelService.getTensorboardConfigUrl(), '#scalars&regexInput=');
     this.tensorflowModelService.getById(this.tensorflowModelId)
       .subscribe(tensorflowModel => {
         this.tensorflowModel = tensorflowModel;
