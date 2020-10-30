@@ -4,7 +4,7 @@ import {GenericData, PaginatedGenericDatas} from './generic-data';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-//import {Job} from '../job/job';
+import {Job} from '../job/job';
 import { API_ROOT_URL } from '../injection-token';
 
 @Injectable({
@@ -62,7 +62,7 @@ export class GenericDataService implements DataService<GenericData, PaginatedGen
       }));
   }
 
-  // getJob(jobUrl: string): Observable<Job> {
-  //   return this.http.get<Job>(jobUrl);
-  // }
+  getJob(jobUrl: string): Observable<Job> {
+    return this.http.get<Job>(jobUrl);
+  }
 }

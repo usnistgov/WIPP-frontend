@@ -11,14 +11,13 @@
         <dd class="col-md-8">{{genericData.creationDate | date}}</dd>
 
         <dt class="col-md-4">Source job: </dt>
-        <dd> Yoo
-        <!-- <dd class="col-md-8" *ngIf="job; else not_applicable">
+        <dd class="col-md-8" *ngIf="job; else not_applicable">
           <a (click)="displayJobModal(job.id)"
              class="wipp-link"
              ngbTooltip="Show Job"
              placement="left">
             {{job.name}}
-          </a> -->
+          </a>
         </dd>
 
         <dt class="col-md-4">Type: </dt>
