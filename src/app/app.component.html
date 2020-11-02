@@ -66,6 +66,7 @@
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="helpDropdown" ngbDropdownMenu>
             <a class="dropdown-item" href={{onlineHelpLink}} ngbDropdownItem>User guide</a>
             <a class="dropdown-item" href={{apiDocsLink}} ngbDropdownItem *ngIf="displayApiDocsLink">API docs</a>
+            <a class="dropdown-item-text"><small>Version {{version}}</small></a>
           </div>
         </li>
         <li *ngIf="!isLoggedIn()" class="nav-item navbar-right">
