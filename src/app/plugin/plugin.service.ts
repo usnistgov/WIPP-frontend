@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpBackend, HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {PaginatedPlugins, Plugin} from './plugin';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
@@ -12,9 +12,12 @@ const httpOptions = {
 
 @Injectable({providedIn: 'root'})
 export class PluginService {
+  private httpExternal: HttpClient;
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private httpBackend: HttpBackend
   ) {
+    this.httpExternal = new HttpClient(httpBackend);
   }
 
   private pluginsUrl = environment.apiRootUrl + '/plugins';
@@ -98,7 +101,7 @@ export class PluginService {
   }
 
   getJsonFromURL(url: string): Observable<JSON> {
-    return this.http.get<JSON>(url);
+    return this.httpExternal.get<JSON>(url);
   }
 
   deletePlugin(plugin: Plugin) {
