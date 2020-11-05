@@ -3,9 +3,44 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "WIPP-frontend": {
-      "root": "",
-      "sourceRoot": "src",
+    "wipp-frontend-lib": {
+      "root": "projects/wipp-frontend-lib",
+      "sourceRoot": "projects/wipp-frontend-lib/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/wipp-frontend-lib/tsconfig.lib.json",
+            "project": "projects/wipp-frontend-lib/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/wipp-frontend-lib/src/test.ts",
+            "tsConfig": "projects/wipp-frontend-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/wipp-frontend-lib/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/wipp-frontend-lib/tsconfig.lib.json",
+              "projects/wipp-frontend-lib/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "wipp-frontend-app": {
+      "root": "projects/wipp-frontend-app/",
+      "sourceRoot": "projects/wipp-frontend-app/src",
       "projectType": "application",
       "prefix": "app",
       "schematics": {},
@@ -13,36 +48,34 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/WIPP-frontend",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "outputPath": "dist/wipp-frontend-app",
+            "index": "projects/wipp-frontend-app/src/index.html",
+            "main": "projects/wipp-frontend-app/src/main.ts",
+            "polyfills": "projects/wipp-frontend-app/src/polyfills.ts",
+            "tsConfig": "projects/wipp-frontend-app/tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets",
+              "projects/wipp-frontend-app/src/favicon.ico",
+              "projects/wipp-frontend-app/src/assets",
               { "glob": "**/*", "input": "node_modules/@wipp/wdzt/build/deps/images", "output": "./assets/wdzt/images" }
             ],
             "styles": [
               {
                 "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
               },
+              "projects/wipp-frontend-app/src/styles.css",
               "node_modules/@wipp/wdzt/build/deps/wdzt-deps.css",
-              "node_modules/prismjs/themes/prism.css",
-              "src/styles.css"
-            ],
+              "node_modules/prismjs/themes/prism.css"            ],
             "scripts": [
               "node_modules/@wipp/wdzt/build/deps/wdzt-deps.js",
               "node_modules/notebookjs/notebook.js"
-
             ]
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "projects/wipp-frontend-app/src/environments/environment.ts",
+                  "with": "projects/wipp-frontend-app/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -53,44 +86,48 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "WIPP-frontend:build"
+            "browserTarget": "wipp-frontend-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "WIPP-frontend:build:production"
+              "browserTarget": "wipp-frontend-app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "WIPP-frontend:build"
+            "browserTarget": "wipp-frontend-app:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
+            "main": "projects/wipp-frontend-app/src/test.ts",
+            "polyfills": "projects/wipp-frontend-app/src/polyfills.ts",
+            "tsConfig": "projects/wipp-frontend-app/tsconfig.spec.json",
+            "karmaConfig": "projects/wipp-frontend-app/karma.conf.js",
             "styles": [
-              {
-                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
-              },
-              "src/styles.css"
+              "projects/wipp-frontend-app/src/styles.css"
             ],
             "scripts": [],
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "projects/wipp-frontend-app/src/favicon.ico",
+              "projects/wipp-frontend-app/src/assets"
             ]
           }
         },
@@ -98,8 +135,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "projects/wipp-frontend-app/tsconfig.app.json",
+              "projects/wipp-frontend-app/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -108,26 +145,27 @@
         }
       }
     },
-    "WIPP-frontend-e2e": {
-      "root": "e2e/",
+    "wipp-frontend-app-e2e": {
+      "root": "projects/wipp-frontend-app-e2e/",
       "projectType": "application",
+      "prefix": "",
       "architect": {
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "WIPP-frontend:serve"
+            "protractorConfig": "projects/wipp-frontend-app-e2e/protractor.conf.js",
+            "devServerTarget": "wipp-frontend-app:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "WIPP-frontend:serve:production"
+              "devServerTarget": "wipp-frontend-app:serve:production"
             }
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
+            "tsConfig": "projects/wipp-frontend-app-e2e/tsconfig.e2e.json",
             "exclude": [
               "**/node_modules/**"
             ]
@@ -136,5 +174,8 @@
       }
     }
   },
-  "defaultProject": "WIPP-frontend"
+  "defaultProject": "wipp-frontend-app",
+  "cli": {
+    "analytics": false
+  }
 }

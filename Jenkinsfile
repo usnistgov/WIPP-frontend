@@ -51,6 +51,7 @@ pipeline {
                                     string(credentialsId: 'ARTIFACTORY_TOKEN', variable: 'ARTIFACTORY_TOKEN')]) {
                     script {
                         sh 'npm ci'
+                        sh 'npm run ng build wipp-frontend-lib'
                         sh 'npm run ng build -- --prod'
                         sh 'tar -czf ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz -C dist .'
                         sh "curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN} -T ${ARTIFACT_PATH}/${PROJECT_NAME}.tar.gz ${ARTIFACTORY_URL}/${PROJECT_NAME}/${ARTIFACT_VERSION}.tar.gz"
@@ -88,17 +89,17 @@ pipeline {
                 }
             }
         }
-        stage('Deploy WIPP to NCATS') {
-            agent {
-                node { label 'ls-api-ci.ncats' }
-            }
-            steps {
-                configFileProvider([configFile(fileId: 'env-single-node', targetLocation: '.env')]) {
-                    withKubeConfig([credentialsId: 'ncats_polus2']) {
-                        sh "./deploy.sh"
-                    }
-                }
-            }
-        }
+        // stage('Deploy WIPP to NCATS') {
+        //     agent {
+        //         node { label 'ls-api-ci.ncats' }
+        //     }
+        //     steps {
+        //         configFileProvider([configFile(fileId: 'env-single-node', targetLocation: '.env')]) {
+        //             withKubeConfig([credentialsId: 'ncats_polus2']) {
+        //                 sh "./deploy.sh"
+        //             }
+        //         }
+        //     }
+        // }
     }
 }

@@ -12,7 +12,7 @@ Run `npm ci` to install dependencies using versions locked in package-lock.json 
 #### Configuration
 
 A configuration file defining links between the WIPP-frontend and other tools **must** be placed at 
-`src/assets/config/config.json`.  
+`projects/wipp-frontend-app/src/assets/config/config.json`.  
 The following properties are expected to be defined in this file:
 - `argoUiBaseUrl`: URL of the Argo Workflows Dashboard, for workflow execution monitoring,
 - `tensorboardUrl`: URL of TensorBoard, for TensorFlow jobs monitoring,
@@ -32,7 +32,7 @@ external tools configuration for WIPP.
 
 #### Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve wipp-frontend-app` for a dev server. Navigate to `http://localhost:4200/`. 
 
 #### API root URL in development mode
 
@@ -45,7 +45,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `ng build wipp-frontend-lib` to build the library and then `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Deployment
 1. Create a `.env` file in the root of the repository, using `sample-env` as an example.
@@ -66,6 +66,28 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## WIPP Development flow
 We are following the [Gitflow branching model](https://nvie.com/posts/a-successful-git-branching-model/) for the WIPP development.  
+
+## Wipp-frontend-lib's content
+
+The library exports a list of modules and components which could be reused by a third party app/library. The list of modules that can be imported:
+
+- `DynamicContentModule`
+- `BrowserModule`
+- `HttpClientModule`
+- `ImagesCollectionModule`
+- `StitchingVectorModule`
+- `PyramidAnnotationModule`
+- `PyramidModule`
+- `PyramidVisualizationModule`
+- `TensorflowModelModule`
+- `CsvCollectionModule`
+- `NotebookModule`
+- `GenericDataModule`
+- `PluginModule`
+- `WorkflowModule`
+- `WippFrontendModule`
+
+The library requires the links defined in `config.json` and the environment property `apiRootUrl` from `environments.ts`. These values must be passed when importing the `WippFrontendModule`. Also, a class that implements `WippFrontendLibConfigurationProvider` must be defined. See `projects/wipp-frontend-app/src/app/app.module.ts`.
 
 ### Contributing
 Please follow the [Contributing guidelines](CONTRIBUTING.md)

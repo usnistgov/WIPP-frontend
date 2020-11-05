@@ -1,0 +1,71 @@
+#logo {
+    /*background-color: rgb(249,249,249);*/
+    height: 120px;}
+  
+  #logo img {
+    max-height:90%;
+    max-width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 15px;
+  }
+  
+  .wipp-icon {
+    width: 16px;
+  }
+  
+  a:not([href]).dropdown-toggle:hover {
+      cursor: pointer;
+  }
+  
+  .navbar > a > i {
+    margin-right: 10px
+  }
+  
+  .navbar > a > i > p {
+    margin-left: 10px;
+    display: inline;
+    font-family: 'Roboto', sans-serif ;
+    font-weight: normal;
+  }
+  
+  .navbar > div > ul > li > a > i {
+    margin-right: 10px;
+  }
+  
+  .navbar > div > ul > li > a > i > p {
+    margin-left: 10px;
+    display: inline;
+    font-family: 'Roboto', sans-serif ;
+    font-weight: normal
+  }
+  
+  .dropdown-menu-right {
+    right: 0;
+    left: auto;
+  }
+  
+  .main-container {
+    width: 98%;
+    min-height: 100vh;
+  }
+  
+  body {
+    position: relative;
+    margin: 0;
+    padding-bottom: 6rem;
+    min-height: 100%;
+  }
+  
+  footer {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0.5rem 1rem;
+    text-align: right;
+    z-index: 10;
+    margin-top: 10px;
+    color: #555;
+    border-top: 1px solid #e7e7e7;
+  }
