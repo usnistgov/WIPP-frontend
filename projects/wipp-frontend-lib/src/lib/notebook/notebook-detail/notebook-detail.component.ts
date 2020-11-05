@@ -26,7 +26,7 @@ import {PlatformLocation} from '@angular/common';
 // When building the library, nb variable was not found. We can declare it here for now
 declare var nb: any;
 
-// Importing as marked causes "Marked not found error"
+// Importing as Marked causes  "Cannot call a namespace ('Marked') Error: Cannot call a namespace ('Marked')"
 const marked = markedImported;
 
 @Component({
