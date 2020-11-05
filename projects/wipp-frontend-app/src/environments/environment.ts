@@ -7,7 +7,8 @@ import {version} from '../../../../package.json';
 export const environment = {
   production: false,
   version: version,
-  apiRootUrl: 'http://localhost:8080/api'
+  apiRootUrl: 'http://localhost:8080/api',
+  enableTracing: true
 };
 
 /*

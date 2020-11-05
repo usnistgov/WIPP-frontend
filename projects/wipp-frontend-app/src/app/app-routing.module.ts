@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from 'wipp-frontend-lib';
+import { environment } from '../environments/environment';
 
 
 const appRoutes: Routes = [
@@ -12,7 +13,7 @@ const appRoutes: Routes = [
     imports: [
       RouterModule.forRoot(
         appRoutes,
-        { enableTracing: true } // <-- debugging purposes only
+        { enableTracing: environment.enableTracing } // <-- debugging purposes only
       )],
     exports: [
       RouterModule
