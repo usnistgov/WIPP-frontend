@@ -142,7 +142,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             type === 'tensorflowModel' ||
             type === 'csvCollection' ||
             type === 'notebook' ||
-            type == 'genericData') {
+            type === 'genericData') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
               if (task['dependencies'].indexOf(value.sourceJob) === -1) {
                 task['dependencies'].push(value.sourceJob);
