@@ -1,22 +1,3 @@
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-  name: wipp-frontend-ingress
-spec:
-  rules:
-  - host: FRONTEND_HOST_NAME_VALUE
-    http:
-      paths:
-      - backend:
-          serviceName: wipp-frontend
-          servicePort: 80
-        path: /
----
 apiVersion: v1
 kind: Service
 metadata:

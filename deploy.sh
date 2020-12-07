@@ -14,8 +14,9 @@ rm deploy/kubernetes/frontend-deployment.yaml.bak
 
 sed -i.bak \
     -e "s|FRONTEND_HOST_NAME_VALUE|${FRONTEND_HOST_NAME}|g" \
-    deploy/kubernetes/services.yaml
-rm deploy/kubernetes/services.yaml.bak
+    deploy/kubernetes/ingress.yaml
+rm deploy/kubernetes/ingress.yaml.bak
 
-kubectl apply --kubeconfig=${KUBECONFIG} -f deploy/kubernetes/services.yaml
 kubectl apply --kubeconfig=${KUBECONFIG} -f deploy/kubernetes/frontend-deployment.yaml
+kubectl apply --kubeconfig=${KUBECONFIG} -f deploy/kubernetes/services.yaml
+kubectl apply --kubeconfig=${KUBECONFIG} -f deploy/kubernetes/ingress.yaml
