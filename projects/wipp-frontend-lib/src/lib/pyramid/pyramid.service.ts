@@ -5,17 +5,18 @@ import {map} from 'rxjs/operators';
 import {Job} from '../job/job';
 import {PaginatedPyramid, Pyramid} from './pyramid';
 import {DataService} from '../data-service';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PyramidService implements DataService<Pyramid, PaginatedPyramid> {
-  private pyramidsUrl = this.apiRootUrl + '/pyramids';
-  private pyramidAnnotationsUrl = this.apiRootUrl + '/pyramidAnnotations';
+  private pyramidsUrl = this.env.apiRootUrl + '/pyramids';
+  private pyramidAnnotationsUrl = this.env.apiRootUrl + '/pyramidAnnotations';
+  private pyramidUiPath = this.env.uiPaths.pyramidsPath;
 
   constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     private http: HttpClient) {
   }
 
@@ -178,6 +179,10 @@ export class PyramidService implements DataService<Pyramid, PaginatedPyramid> {
     const pyramidId = lastSplit.indexOf('.dzi') === lastSplit.length - 4 ?
       splits[splits.length - 2] : lastSplit;
     return this.getById(pyramidId);
+  }
+
+  getPyramidUiPath(): string {
+    return this.pyramidUiPath;
   }
 
 }

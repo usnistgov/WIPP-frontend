@@ -5,17 +5,18 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Job} from '../job/job';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GenericDataService implements DataService<GenericData, PaginatedGenericDatas> {
 
-  private genericDataUrl = this.apiRootUrl + '/genericDatas';
+  private genericDataUrl = this.env.apiRootUrl + '/genericDatas';
+  private genericDataUiPath = this.env.uiPaths.genericDatasPath;
 
   constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     private http: HttpClient) { 
   }
 
@@ -64,5 +65,9 @@ export class GenericDataService implements DataService<GenericData, PaginatedGen
 
   getJob(jobUrl: string): Observable<Job> {
     return this.http.get<Job>(jobUrl);
+  }
+
+  getGenericDataUiPath(): string {
+    return this.genericDataUiPath;
   }
 }

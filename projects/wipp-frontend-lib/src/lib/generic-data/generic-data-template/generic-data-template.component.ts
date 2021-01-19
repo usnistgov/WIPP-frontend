@@ -5,9 +5,11 @@ import {GenericDataService} from '../generic-data.service';
 @Component({
   selector: 'app-generic-data-template',
   template:
-    '<a routerLink="/generic-datas/{{idData}}">{{text}}</a>',
+    '<a routerLink="/{{genericDatasUiPath}}/{{idData}}">{{text}}</a>',
 })
 export class GenericDataTemplateComponent extends DynamicComponent implements OnInit {
+
+  genericDatasUiPath: string;
 
   constructor(
     private genericDataService: GenericDataService) {
@@ -17,11 +19,16 @@ export class GenericDataTemplateComponent extends DynamicComponent implements On
   static key = 'genericdatatemplatecomponent';
 
   ngOnInit() {
+    this.getGenericDatasUiPath();
     if (this.idData) {
       this.genericDataService.getById(this.idData).subscribe(result => {
         this.text = result.name;
       });
     }
+  }
+
+  getGenericDatasUiPath() {
+    this.genericDatasUiPath = this.genericDataService.getGenericDataUiPath(); 
   }
 
 }

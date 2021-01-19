@@ -21,6 +21,8 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'creationDate', 'imagesTotalSize'];
   imagesCollections: Observable<ImagesCollection[]>;
+  imagesCollectionsUiPath: string;
+
   resultsLength = 0;
   pageSize = 10;
   isLoadingResults = true;
@@ -87,6 +89,7 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getImagesCollectionsUiPath();
     const paramsObservable = this.paramsChange.asObservable();
     this.imagesCollections = paramsObservable.pipe(
       switchMap((page) => {
@@ -158,5 +161,9 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  getImagesCollectionsUiPath() {
+    this.imagesCollectionsUiPath = this.imagesCollectionService.getImagesCollectionUiPath();
   }
 }

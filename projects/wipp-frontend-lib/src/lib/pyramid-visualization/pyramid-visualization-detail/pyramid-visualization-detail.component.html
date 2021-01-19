@@ -99,7 +99,7 @@
           <tr *ngFor="let layer of layersGroup.layers">
             <td class="vert-align">{{layer.label}}</td>
             <td class="vert-align">
-              <a routerLink="/pyramids/{{layer.pyramid?.id}}">
+              <a routerLink="/{{pyramidUiPath}}/{{layer.pyramid?.id}}">
                 {{layer.pyramid?.name}}
               </a>
             </td>

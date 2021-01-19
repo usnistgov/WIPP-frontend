@@ -17,6 +17,7 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 export class PyramidAnnotationListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
   pyramidAnnotations: Observable<PyramidAnnotation[]>;
+  pyramidAnnotationsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -94,6 +95,10 @@ export class PyramidAnnotationListComponent implements OnInit {
         );
       })
     );
+  }
+
+  getPyramidAnnotationUiPath() {
+    this.pyramidAnnotationsUiPath = this.pyramidAnnotationService.getPyramidAnnotationUiPath();
   }
 }
 

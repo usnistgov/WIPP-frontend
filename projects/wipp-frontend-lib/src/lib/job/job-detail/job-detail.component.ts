@@ -29,11 +29,15 @@ export class JobDetailComponent implements OnInit {
   workflow: Workflow;
   outputHash: IdHash = {};
 
+  workflowsPath: string;
+  pluginsPath: string;
+
   constructor(private activeModal: NgbActiveModal,
               private jobService: JobService) {
   }
 
   ngOnInit() {
+    this.getUiPaths();
     this.getJob();
   }
 
@@ -81,6 +85,11 @@ export class JobDetailComponent implements OnInit {
     const outputName = inputName.substr(idToOutputDelimiter, inputName.length - idToOutputDelimiter - idFirstLetter);
     const id = inputName.substr(idFirstLetter, idToOutputDelimiter - idFirstLetter);
     return [id, outputName];
+  }
+
+  getUiPaths() {
+    this.workflowsPath = this.jobService.getWorkflowsUiPath();
+    this.pluginsPath = this.jobService.getPluginsUiPath();
   }
 
 }

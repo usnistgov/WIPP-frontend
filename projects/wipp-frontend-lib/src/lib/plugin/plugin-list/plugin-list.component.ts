@@ -19,6 +19,7 @@ export class PluginListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [ 'name', 'version', 'description'];
   plugins: Observable<Plugin[]>;
   selection = new SelectionModel<Plugin>(false, []);
+  pluginsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -63,6 +64,7 @@ export class PluginListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getPluginsUiPath();
     this.getPlugins();
   }
 
@@ -106,6 +108,10 @@ export class PluginListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  getPluginsUiPath() {
+    this.pluginsUiPath = this.pluginService.getPluginsUiPath();
   }
 
 }

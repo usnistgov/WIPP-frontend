@@ -5,20 +5,26 @@ import {NotebookService} from '../notebook.service';
 @Component({
   selector: 'app-notebook-template',
   template:
-  ' <a routerLink="/notebooks/{{idData}}">{{text}}</a>'
+  ' <a routerLink="/{{notebooksUiPath}}/{{idData}}">{{text}}</a>'
 })
 export class NotebookTemplateComponent extends DynamicComponent implements OnInit {
 
-    constructor(
-    private notebookService: NotebookService) {
-    super();
-}
+  notebooksUiPath: string;
 
-static key = 'notebooktemplatecomponent';
+  constructor(private notebookService: NotebookService) {
+    super();
+  }
+
+  static key = 'notebooktemplatecomponent';
 
   ngOnInit() {
-      this.notebookService.getById(this.idData).subscribe(result => {
-        this.text = result.name;
-      });
+    this.getNotebooksUiPath();
+    this.notebookService.getById(this.idData).subscribe(result => {
+      this.text = result.name;
+    });
+  }
+
+  getNotebooksUiPath() {
+    this.notebooksUiPath = this.notebookService.getNotebooksUiPath();
   }
 }

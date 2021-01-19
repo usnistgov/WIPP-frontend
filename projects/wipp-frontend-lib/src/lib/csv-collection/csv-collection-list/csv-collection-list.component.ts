@@ -15,6 +15,7 @@ import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-ne
 export class CsvCollectionListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'creationDate'];
   csvCollections: Observable<CsvCollection[]>;
+  csvCollectionsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -59,6 +60,7 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getCsvCollectionsUiPath();
     this.getCsvCollections();
   }
 
@@ -104,4 +106,7 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
     this.modalService.dismissAll();
   }
 
+  getCsvCollectionsUiPath() {
+    this.csvCollectionsUiPath = this.csvCollectionService.getCsvCollectionUiPath();
+  }
 }

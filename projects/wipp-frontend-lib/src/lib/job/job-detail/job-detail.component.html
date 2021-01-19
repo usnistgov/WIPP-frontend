@@ -48,7 +48,7 @@
       </th>
       <td>
         <dd class="col-md-8 breakLine">
-          <a routerLink="/workflows/detail/{{workflow.id}}" (click)="modalReference.dismiss('Cross click')">{{workflow.name}}</a>
+          <a routerLink="/{{workflowsPath}}/detail/{{workflow.id}}" (click)="modalReference.dismiss('Cross click')">{{workflow.name}}</a>
         </dd>
       </td>
     </tr>
@@ -60,7 +60,7 @@
       </th>
       <td>
         <dd class="col-md-8 breakLine">
-          <a routerLink="/plugins/{{plugin.id}}" (click)="modalReference.dismiss('Cross click')">{{plugin.name}}:{{plugin.version}}</a>
+          <a routerLink="/{{pluginsPath}}/{{plugin.id}}" (click)="modalReference.dismiss('Cross click')">{{plugin.name}}:{{plugin.version}}</a>
         </dd>
       </td>
     </tr>

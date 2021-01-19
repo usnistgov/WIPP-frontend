@@ -18,6 +18,7 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 export class StitchingVectorListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
   stitchingVectors: Observable<StitchingVector[]>;
+  stitchingVectorsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -61,7 +62,12 @@ export class StitchingVectorListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getStitchingVectorsUiPath();
     this.getStitchingVectors();
+  }
+
+  getStitchingVectorsUiPath() {
+    this.stitchingVectorsUiPath = this.stitchingVectorService.getStitchingVectorUiPath();
   }
 
   getStitchingVectors(): void {

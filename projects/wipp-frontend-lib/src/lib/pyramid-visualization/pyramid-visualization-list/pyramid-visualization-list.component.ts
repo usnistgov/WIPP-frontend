@@ -17,6 +17,7 @@ export class PyramidVisualizationListComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'creationDate'];
   visualizations: Observable<Visualization[]>;
+  visualizationsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -62,6 +63,7 @@ export class PyramidVisualizationListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getPyramidVisualizationsUiPath();
     const paramsObservable = this.paramsChange.asObservable();
     this.visualizations = paramsObservable.pipe(
       switchMap((page) => {
@@ -100,12 +102,15 @@ export class PyramidVisualizationListComponent implements OnInit {
     modalRef.result.then((result) => {
       this.visualizationService.createVisualization(result).subscribe(visualization => {
         const visualizationId = visualization ? visualization.id : null;
-        this.router.navigate(['pyramid-visualizations', visualizationId]);
+        this.router.navigate([this.visualizationsUiPath, visualizationId]);
       });
     }, (reason) => {
       console.log('dismissed');
     });
   }
 
+  getPyramidVisualizationsUiPath() {
+    this.visualizationsUiPath = this.visualizationService.getVisualizationUiPath();
+  }
 
 }

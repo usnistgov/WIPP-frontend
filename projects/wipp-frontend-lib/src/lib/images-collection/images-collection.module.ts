@@ -18,13 +18,14 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {ImagesCollectionTemplateComponent} from './images-collection-template/images-collection-template.component';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     NgbModule,
     NgMathPipesModule,
-    ImagesCollectionRoutingModule,
+    RouterModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatTableModule,

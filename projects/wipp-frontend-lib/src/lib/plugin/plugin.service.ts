@@ -3,8 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {PaginatedPlugins, Plugin} from './plugin';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {PaginatedStitchingVector} from '../stitching-vector/stitching-vector';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
@@ -13,13 +12,12 @@ const httpOptions = {
 
 @Injectable({providedIn: 'root'})
 export class PluginService {
-  constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
-    private http: HttpClient
-  ) {
-  }
 
-  private pluginsUrl = this.apiRootUrl + '/plugins';
+  constructor(@Inject(ENV) private env: any, 
+              private http: HttpClient) {}
+
+  private pluginsUrl = this.env.apiRootUrl + '/plugins';
+  private pluginsUiPath = this.env.uiPaths.pluginsPath;
 
   getPlugins(params): Observable<PaginatedPlugins> {
     if (params) {
@@ -101,6 +99,10 @@ export class PluginService {
 
   getJsonFromURL(url: string): Observable<JSON> {
     return this.http.get<JSON>(url);
+  }
+
+  getPluginsUiPath(): string {
+    return this.pluginsUiPath;
   }
 
 }

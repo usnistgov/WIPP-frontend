@@ -217,7 +217,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
        this.spinner.show();
       this.workflowService.copyWorkflow(this.workflow, result.name).subscribe(workflow => {
         const workflowId = workflow ? workflow.id : null;
-        this.router.navigate(['../workflows/detail', workflowId]).then(() => {
+        this.router.navigate(['../' + this.workflowService.getWorkflowUiPath() + '/detail', workflowId]).then(() => {
            this.spinner.hide();
           this.refreshPage(); } );
       }, error => {

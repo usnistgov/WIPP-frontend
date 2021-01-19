@@ -14,6 +14,7 @@ import {NotebookService} from '../notebook.service';
 export class NotebookListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate'];
   notebooks: Observable<Notebook[]>;
+  notebooksUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -36,6 +37,7 @@ export class NotebookListComponent implements OnInit {
   }
 
     ngOnInit() {
+    this.getNotebooksUiPath();
     const paramsObservable = this.paramsChange.asObservable();
     this.notebooks = paramsObservable.pipe(
       switchMap((page) => {
@@ -90,8 +92,8 @@ export class NotebookListComponent implements OnInit {
     });
   }
 
-
-
-
-
+  getNotebooksUiPath() {
+    this.notebooksUiPath = this.notebookService.getNotebooksUiPath();
+  }
+  
 }

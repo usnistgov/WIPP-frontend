@@ -6,7 +6,7 @@ import {Plugin} from '../plugin/plugin';
 import {ImagesCollection} from '../images-collection/images-collection';
 import {StitchingVector} from '../stitching-vector/stitching-vector';
 import {Workflow} from '../workflow/workflow';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 
 
 const httpOptions = {
@@ -21,15 +21,18 @@ const httpOptions = {
 export class JobService {
 
   constructor(    
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     private http: HttpClient) {
   }
 
-  private jobsUrl = this.apiRootUrl + '/jobs';
-  private imagesCollection = this.apiRootUrl + '/imagesCollections';
-  private stitchingVector = this.apiRootUrl + '/stitchingVectors';
-  private pluginsUrl = this.apiRootUrl + '/plugins';
-  private workflowsUrl = this.apiRootUrl + '/workflows';
+  private jobsUrl = this.env.apiRootUrl + '/jobs';
+  private imagesCollection = this.env.apiRootUrl + '/imagesCollections';
+  private stitchingVector = this.env.apiRootUrl + '/stitchingVectors';
+  private pluginsUrl = this.env.apiRootUrl + '/plugins';
+  private workflowsUrl = this.env.apiRootUrl + '/workflows';
+
+  private workflowsUiPath = this.env.uiPaths.workflowsPath;
+  private pluginsUiPath = this.env.uiPaths.pluginsPath;
 
   getJob(jobId: string): Observable<Job> {
     return this.http.get<Job>(`${this.jobsUrl}/${jobId}`, httpOptions);
@@ -53,6 +56,14 @@ export class JobService {
 
   deleteJob(job: Job) {
      return this.http.delete<Job>(job._links.self.href);
+  }
+
+  getWorkflowsUiPath(): string {
+    return this.workflowsUiPath;
+  }
+
+  getPluginsUiPath(): string {
+    return this.pluginsUiPath;
   }
 
 }

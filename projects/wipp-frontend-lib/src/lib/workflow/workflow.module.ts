@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkflowListComponent } from './workflow-list/workflow-list.component';
 import {MatInputModule, MatPaginatorModule, MatSortModule, MatTableModule} from '@angular/material';
-import {WorkflowRoutingModule} from './workflow-routing.module';
 import { WorkflowDetailComponent } from './workflow-detail/workflow-detail.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -17,11 +16,12 @@ import {DynamicContentComponent} from '../dynamic-content/dynamic-content.compon
 import {DynamicContentModule} from '../dynamic-content/dynamic-content.module';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
-    WorkflowRoutingModule,
+    RouterModule,
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,

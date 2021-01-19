@@ -13,6 +13,7 @@ import {PyramidService} from '../pyramid.service';
 export class PyramidListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate'];
   pyramids: Observable<Pyramid[]>;
+  pyramidsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -56,6 +57,7 @@ export class PyramidListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getPyramidsUiPath();
     const paramsObservable = this.paramsChange.asObservable();
     this.pyramids = paramsObservable.pipe(
       switchMap((page) => {
@@ -86,5 +88,9 @@ export class PyramidListComponent implements OnInit {
         );
       })
     );
+  }
+
+  getPyramidsUiPath() {
+    this.pyramidsUiPath = this.pyramidService.getPyramidUiPath();
   }
 }

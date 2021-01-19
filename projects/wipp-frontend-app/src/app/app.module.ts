@@ -33,7 +33,7 @@ export class ConfigFromApp implements WippFrontendLibConfigurationProvider {
   ],
   imports: [
     WippFrontendLibModule.forRoot(
-      environment.apiRootUrl,
+      environment,
       {
         config: {
           provide: WippFrontendLibConfigurationProvider,

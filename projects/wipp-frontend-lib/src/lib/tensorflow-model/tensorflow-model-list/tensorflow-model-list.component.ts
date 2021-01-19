@@ -13,6 +13,7 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 export class TensorflowModelListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate'];
   tensorflowModels: Observable<TensorflowModel[]>;
+  tensorflowModelsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -55,8 +56,7 @@ export class TensorflowModelListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('Tensrflow model component!!!');
-    console.log(this.tensorflowModels);
+    this.getTensorflowModelsUiPath();
     this.getTensorflowModels();
   }
 
@@ -91,6 +91,10 @@ export class TensorflowModelListComponent implements OnInit {
         );
       })
     );
+  }
+
+  getTensorflowModelsUiPath() {
+    this.tensorflowModelsUiPath = this.tensorflowModelService.getTensorflowUiPath();
   }
 
 }

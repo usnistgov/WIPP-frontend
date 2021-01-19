@@ -5,20 +5,21 @@ import {map} from 'rxjs/operators';
 import {PaginatedTensorflowModels, TensorboardLogs, TensorflowModel} from './tensorflow-model';
 import {Job} from '../job/job';
 import {DataService} from '../data-service';
-import { API_ROOT_URL } from '../injection-token';
 import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-configuration';
+import { ENV } from '../injection-token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TensorflowModelService implements DataService<TensorflowModel, PaginatedTensorflowModels> {
 
-  private tensorflowModelUrl = this.apiRootUrl + '/tensorflowModels';
-  private tensorboardLogsUrl = this.apiRootUrl + '/tensorboardLogs';
+  private tensorflowModelUrl = this.env.apiRootUrl + '/tensorflowModels';
+  private tensorboardLogsUrl = this.env.apiRootUrl + '/tensorboardLogs';
   private tensorboardConfigUrl = this.configurationProvider.config.tensorboardUrl;
+  private tensorflowModelUiPath = this.env.uiPaths.tensorflowModelsUiPath;
 
   constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     public configurationProvider: WippFrontendLibConfigurationProvider,
     private http: HttpClient) { }
 
@@ -84,6 +85,10 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
 
   getTensorboardConfigUrl(): string {
     return this.tensorboardConfigUrl;
+  }
+
+  getTensorflowUiPath(): string {
+    return this.tensorflowModelUiPath;
   }
 
 }

@@ -5,20 +5,26 @@ import {PyramidService} from '../pyramid.service';
 @Component({
   selector: 'app-pyramid-template',
   template:
-  ' <a routerLink="/pyramids/{{idData}}">{{text}}</a>'
+  ' <a routerLink="/{{pyramidsUiPath}}/{{idData}}">{{text}}</a>'
 })
 export class PyramidTemplateComponent extends DynamicComponent implements OnInit {
 
-    constructor(
-    private pyramidService: PyramidService) {
-    super();
-}
+  pyramidsUiPath: string;
 
-static key = 'pyramidtemplatecomponent';
+  constructor(private pyramidService: PyramidService) {
+    super();
+  }
+
+  static key = 'pyramidtemplatecomponent';
 
   ngOnInit() {
-      this.pyramidService.getById(this.idData).subscribe(result => {
-        this.text = result.name;
-      });
+    this.getPyramidsUiPath();
+    this.pyramidService.getById(this.idData).subscribe(result => {
+      this.text = result.name;
+    });
+  }
+
+  getPyramidsUiPath() {
+    this.pyramidsUiPath = this.pyramidService.getPyramidUiPath();
   }
 }

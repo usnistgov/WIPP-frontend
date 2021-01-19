@@ -5,17 +5,17 @@ import {PaginatedPyramidAnnotation, PyramidAnnotation} from './pyramid-annotatio
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from '../stitching-vector/timeSlice';
-import {Job} from '../job/job';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PyramidAnnotationService implements DataService<PyramidAnnotation, PaginatedPyramidAnnotation> {
-  private pyramidAnnotationsUrl = this.apiRootUrl + '/pyramidAnnotations';
+  private pyramidAnnotationsUrl = this.env.apiRootUrl + '/pyramidAnnotations';
+  private pyramidAnnotationUiPath = this.env.uiPaths.pyramidAnnotationsPath;  
 
   constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     private http: HttpClient) {
   }
 
@@ -80,4 +80,7 @@ export class PyramidAnnotationService implements DataService<PyramidAnnotation, 
       }));
   }
 
+  getPyramidAnnotationUiPath(): string {
+    return this.pyramidAnnotationUiPath;
+  }
 }

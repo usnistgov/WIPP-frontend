@@ -6,16 +6,17 @@ import {map} from 'rxjs/operators';
 import {PaginatedTimeSlices} from './timeSlice';
 import {Job} from '../job/job';
 import {DataService} from '../data-service';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StitchingVectorService implements DataService<StitchingVector, PaginatedStitchingVector> {
-  private stitchingVectorsUrl = this.apiRootUrl + '/stitchingVectors';
+  private stitchingVectorsUrl = this.env.apiRootUrl + '/stitchingVectors';
+  private stitchingVectorUiPath = this.env.uiPaths.stitchingVectorsPath;
 
   constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     private http: HttpClient) {
   }
 
@@ -91,6 +92,10 @@ export class StitchingVectorService implements DataService<StitchingVector, Pagi
 
   getJob(jobUrl: string): Observable<Job> {
     return this.http.get<Job>(jobUrl);
+  }
+
+  getStitchingVectorUiPath(): string {
+    return this.stitchingVectorUiPath;
   }
 
 }

@@ -13,6 +13,7 @@ import { GenericData } from '../generic-data';
 export class GenericDataListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate'];
   genericDatas: Observable<GenericData[]>;
+  genericDatasUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -55,7 +56,7 @@ export class GenericDataListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.genericDatas);
+    this.getGenericDatasUiPath();
     this.getGenericDatas();
   }
 
@@ -90,6 +91,10 @@ export class GenericDataListComponent implements OnInit {
         );
       })
     );
+  }
+
+  getGenericDatasUiPath() {
+    this.genericDatasUiPath = this.genericDataService.getGenericDataUiPath();
   }
 
 }

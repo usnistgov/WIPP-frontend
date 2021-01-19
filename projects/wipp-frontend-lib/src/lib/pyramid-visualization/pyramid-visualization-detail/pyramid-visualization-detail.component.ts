@@ -18,6 +18,7 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
 
   visualizationId = this.route.snapshot.paramMap.get('id');
   visualization: Visualization = new Visualization();
+  pyramidUiPath: string;
   manifest: any = null;
   newGroup = {};
   layersGroups = [];
@@ -33,11 +34,16 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getPyramidUiPath();
     this.visualizationService.getVisualization(this.visualizationId)
       .subscribe(visualization => {
         this.visualization = visualization;
         this.loadManifest();
       });
+  }
+
+  getPyramidUiPath() {
+    this.pyramidUiPath = this.visualizationService.getPyramidUiPath();
   }
 
   loadManifest() {

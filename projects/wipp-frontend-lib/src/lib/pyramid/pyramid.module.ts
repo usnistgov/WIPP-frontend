@@ -8,19 +8,19 @@ import {
 } from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {InlineEditorModule} from '@qontu/ngx-inline-editor';
-import {PyramidRoutingModule} from './pyramid-routing.module';
 import {PyramidListComponent} from './pyramid-list/pyramid-list.component';
 import {PyramidDetailComponent} from './pyramid-detail/pyramid-detail.component';
 import {WdztModule} from '../wdzt/wdzt.module';
 import {PyramidTemplateComponent} from './pyramid-template/pyramid-template.component';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     NgbModule,
     NgMathPipesModule,
-    PyramidRoutingModule,
+    RouterModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatTableModule,
