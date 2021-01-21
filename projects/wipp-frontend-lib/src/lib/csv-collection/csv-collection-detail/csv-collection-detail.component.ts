@@ -10,7 +10,6 @@ import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
 import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
-import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {MatPaginator} from '@angular/material';
 import {Csv} from '../csv';
 
@@ -20,9 +19,6 @@ import {Csv} from '../csv';
   styleUrls: ['./csv-collection-detail.component.css']
 })
 
-@NgModule({
-  imports: [NgbModule, NgMathPipesModule, BytesPipe, InlineEditorModule]
-})
 export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
 
   csvCollection: CsvCollection = new CsvCollection();
@@ -41,8 +37,10 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   flowHolder: Flow.IFlow;
   displayedColumnsCsv: string[] = ['index', 'fileName', 'fileSize', 'actions'];
 
-  @ViewChild('browseBtn') browseBtn: ElementRef;
-  @ViewChild('csvPaginator') csvPaginator: MatPaginator;
+  //@ViewChild('browseBtn') browseBtn: ElementRef;
+  // @ViewChild('browseBtn', {static: false}) browseBtn !: ElementRef;
+  @ViewChild('browseBtn', {static: false}) browseBtn: ElementRef;
+  @ViewChild('csvPaginator', {static: false}) csvPaginator: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,

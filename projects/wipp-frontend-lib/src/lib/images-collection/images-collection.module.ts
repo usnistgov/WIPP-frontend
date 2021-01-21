@@ -15,7 +15,6 @@ import {
 } from '@angular/material';
 import { ImagesCollectionNewComponent } from './images-collection-new/images-collection-new.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {ImagesCollectionTemplateComponent} from './images-collection-template/images-collection-template.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -34,7 +33,6 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    InlineEditorModule,
     MatCheckboxModule,
     HttpClientModule
   ],

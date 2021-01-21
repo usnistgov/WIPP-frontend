@@ -20,8 +20,8 @@ export class GenericDataListComponent implements OnInit {
   pageSizeOptions: number[] = [10, 25, 50, 100];
   paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string}>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(
     private genericDataService: GenericDataService) {

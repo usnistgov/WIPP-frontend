@@ -10,7 +10,6 @@ import {Image} from '../image';
 import {MatPaginator, MatSort} from '@angular/material';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
-import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
 import urljoin from 'url-join';
@@ -21,9 +20,6 @@ import urljoin from 'url-join';
   styleUrls: ['./images-collection-detail.component.css']
 })
 
-@NgModule({
-  imports: [NgbModule, NgMathPipesModule, BytesPipe, InlineEditorModule]
-})
 export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   flowHolder: Flow.IFlow;
@@ -52,13 +48,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   imageCollectionId = this.route.snapshot.paramMap.get('id');
   sourceCatalogLink = '';
 
-  @ViewChild('browseBtn') browseBtn: ElementRef;
-  @ViewChild('browseDirBtn') browseDirBtn: ElementRef;
-  @ViewChild('dropArea') dropArea: ElementRef;
-  @ViewChild('imagesPaginator') imagesPaginator: MatPaginator;
-  @ViewChild('imagesSort') sort: MatSort;
-  @ViewChild('metadataFilesPaginator') metadataFilesPaginator: MatPaginator;
-  @ViewChild('metadataFilesSort') metadataFilesSort: MatSort;
+  @ViewChild('browseBtn', {static: false}) browseBtn: ElementRef;
+  @ViewChild('browseDirBtn', {static: false}) browseDirBtn: ElementRef;
+  @ViewChild('dropArea', {static: false}) dropArea: ElementRef;
+  @ViewChild('imagesPaginator', {static: false}) imagesPaginator: MatPaginator;
+  @ViewChild('imagesSort', {static: false}) sort: MatSort;
+  @ViewChild('metadataFilesPaginator', {static: false}) metadataFilesPaginator: MatPaginator;
+  @ViewChild('metadataFilesSort', {static: false}) metadataFilesSort: MatSort;
 
   $throttleRefresh: Subject<void> = new Subject<void>();
 
@@ -133,9 +129,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // fixme: temporary fix while waiting for 1.0.0 release of ngx-inline-editor
-    const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
-    faRemoveElt.classList.remove('fa-remove');
-    faRemoveElt.classList.add('fa-times');
+    // const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
+    // faRemoveElt.classList.remove('fa-remove');
+    // faRemoveElt.classList.add('fa-times');
 
     this.refresh().subscribe(imagesCollection => {
       if (!imagesCollection.locked) {

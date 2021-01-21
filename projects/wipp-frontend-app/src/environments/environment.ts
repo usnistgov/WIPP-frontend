@@ -7,7 +7,8 @@ import {version} from '../../../../package.json';
 export const environment = {
   production: false,
   version: version,
-  apiRootUrl: 'http://localhost:8080/api',
+  //apiRootUrl: 'http://localhost:8080/api',
+  apiRootUrl: 'http://wipp-api.ci.aws.labshare.org/api',
   uiPaths: {
     csvCollectionsPath: 'csv-collections',
     genericDatasPath: 'generic-datas',
