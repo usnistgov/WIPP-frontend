@@ -1,8 +1,10 @@
 import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
-import {MatTableModule, MatTableDataSource, MatPaginator, MatSort} from '@angular/material';
-import {MatTable} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatTable } from '@angular/material/table';
 import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -15,9 +17,9 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
   templateUrl: './images-collection-list.component.html',
   styleUrls: ['./images-collection-list.component.css']
 })
-@NgModule({
-  imports: [MatTableModule, MatTableDataSource, MatTable]
-})
+// @NgModule({
+//   imports: [MatTableModule, MatTableDataSource, MatTable]
+// })
 export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'creationDate', 'imagesTotalSize'];
   imagesCollections: Observable<ImagesCollection[]>;
@@ -29,8 +31,8 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   pageSizeOptions: number[] = [10, 25, 50, 100];
   paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filterName: string, filterNbOfImgs: string}>;
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   constructor(
     private imagesCollectionService: ImagesCollectionService,
     private modalService: NgbModal,

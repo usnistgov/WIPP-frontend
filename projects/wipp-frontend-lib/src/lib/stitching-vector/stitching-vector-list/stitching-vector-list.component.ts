@@ -1,5 +1,7 @@
 import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTable, MatTableDataSource, MatTableModule} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {StitchingVector} from '../stitching-vector';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVectorNewComponent} from '../stitching-vector-new/stitching-vector-new.component';
@@ -12,9 +14,9 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
   templateUrl: './stitching-vector-list.component.html',
   styleUrls: ['./stitching-vector-list.component.css']
 })
-@NgModule({
-  imports: [MatTableModule, MatTableDataSource, MatTable]
-})
+// @NgModule({
+//   imports: [MatTableModule, MatTableDataSource, MatTable]
+// })
 export class StitchingVectorListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
   stitchingVectors: Observable<StitchingVector[]>;
@@ -25,8 +27,8 @@ export class StitchingVectorListComponent implements OnInit, OnDestroy {
   pageSizeOptions: number[] = [10, 25, 50, 100];
   paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string}>;
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   constructor(
     private stitchingVectorService: StitchingVectorService,
     private modalService: NgbModal

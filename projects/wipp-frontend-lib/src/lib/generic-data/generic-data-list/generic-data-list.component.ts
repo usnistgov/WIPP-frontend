@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {GenericDataService} from '../generic-data.service';
 import { GenericData } from '../generic-data';
@@ -20,8 +21,8 @@ export class GenericDataListComponent implements OnInit {
   pageSizeOptions: number[] = [10, 25, 50, 100];
   paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string}>;
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private genericDataService: GenericDataService) {

@@ -1,6 +1,8 @@
 import {Component, NgModule, OnInit, ViewChild} from '@angular/core';
 import {PyramidAnnotation} from '../pyramid-annotation';
-import {MatPaginator, MatSort, MatTable, MatTableDataSource, MatTableModule} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {PyramidAnnotationService} from '../pyramid-annotation.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {catchError, map, switchMap} from 'rxjs/operators';
@@ -11,9 +13,9 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
   templateUrl: './pyramid-annotation-list.component.html',
   styleUrls: ['./pyramid-annotation-list.component.css']
 })
-@NgModule({
-  imports: [MatTableModule, MatTableDataSource, MatTable]
-})
+// @NgModule({
+//   imports: [MatTableModule, MatTableDataSource, MatTable]
+// })
 export class PyramidAnnotationListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
   pyramidAnnotations: Observable<PyramidAnnotation[]>;
@@ -24,8 +26,8 @@ export class PyramidAnnotationListComponent implements OnInit {
   pageSizeOptions: number[] = [10, 25, 50, 100];
   paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filter: string}>;
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   constructor(
     private pyramidAnnotationService: PyramidAnnotationService,
     private modalService: NgbModal

@@ -10,7 +10,7 @@ import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
 import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
-import {MatPaginator} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
 import {Csv} from '../csv';
 
 @Component({
@@ -39,8 +39,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
 
   //@ViewChild('browseBtn') browseBtn: ElementRef;
   // @ViewChild('browseBtn', {static: false}) browseBtn !: ElementRef;
-  @ViewChild('browseBtn', {static: false}) browseBtn: ElementRef;
-  @ViewChild('csvPaginator', {static: false}) csvPaginator: MatPaginator;
+  @ViewChild('browseBtn') browseBtn: ElementRef;
+  @ViewChild('csvPaginator') csvPaginator: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,

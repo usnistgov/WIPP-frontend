@@ -7,7 +7,8 @@ import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
@@ -48,13 +49,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   imageCollectionId = this.route.snapshot.paramMap.get('id');
   sourceCatalogLink = '';
 
-  @ViewChild('browseBtn', {static: false}) browseBtn: ElementRef;
-  @ViewChild('browseDirBtn', {static: false}) browseDirBtn: ElementRef;
-  @ViewChild('dropArea', {static: false}) dropArea: ElementRef;
-  @ViewChild('imagesPaginator', {static: false}) imagesPaginator: MatPaginator;
-  @ViewChild('imagesSort', {static: false}) sort: MatSort;
-  @ViewChild('metadataFilesPaginator', {static: false}) metadataFilesPaginator: MatPaginator;
-  @ViewChild('metadataFilesSort', {static: false}) metadataFilesSort: MatSort;
+  @ViewChild('browseBtn') browseBtn: ElementRef;
+  @ViewChild('browseDirBtn') browseDirBtn: ElementRef;
+  @ViewChild('dropArea') dropArea: ElementRef;
+  @ViewChild('imagesPaginator') imagesPaginator: MatPaginator;
+  @ViewChild('imagesSort') sort: MatSort;
+  @ViewChild('metadataFilesPaginator') metadataFilesPaginator: MatPaginator;
+  @ViewChild('metadataFilesSort') metadataFilesSort: MatSort;
 
   $throttleRefresh: Subject<void> = new Subject<void>();
 
