@@ -7,6 +7,11 @@ export class GenericData {
   description: string;
   owner: string;
   publiclyShared: boolean;
+  locked: boolean;
+  numberOfImportErrors: number;
+  numberImportingGenericFiles: number;
+  numberOfFiles: number;
+  genericFileTotalSize: number;
   _links: any;
 }
 
