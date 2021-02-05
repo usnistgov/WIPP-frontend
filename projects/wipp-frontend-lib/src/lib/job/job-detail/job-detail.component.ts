@@ -3,7 +3,6 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Job} from '../job';
 import {JobService} from '../job.service';
 import {Plugin} from '../../plugin/plugin';
-// import 'rxjs-compat/add/operator/map';
 import {Workflow} from '../../workflow/workflow';
 
 export interface IdHash {

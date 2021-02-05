@@ -19,6 +19,7 @@ export class TensorflowModelTemplateComponent extends DynamicComponent implement
   static key = 'tensorflowmodeltemplatecomponent';
 
   ngOnInit() {
+    this.getTensorflowModelsUiPath();
     if (this.idData) {
       this.tensorflowModelService.getById(this.idData).subscribe(result => {
         this.text = result.name;
@@ -26,7 +27,7 @@ export class TensorflowModelTemplateComponent extends DynamicComponent implement
     }
   }
 
-  getStitchingVectorsUiPath() {
+  getTensorflowModelsUiPath() {
     this.tensorflowModelsUiPath = this.tensorflowModelService.getTensorflowUiPath();
   }
 }
