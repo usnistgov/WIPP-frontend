@@ -37,8 +37,6 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   flowHolder: Flow.IFlow;
   displayedColumnsCsv: string[] = ['index', 'fileName', 'fileSize', 'actions'];
 
-  //@ViewChild('browseBtn') browseBtn: ElementRef;
-  // @ViewChild('browseBtn', {static: false}) browseBtn !: ElementRef;
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('csvPaginator') csvPaginator: MatPaginator;
 
@@ -213,7 +211,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   deleteCollection(): void {
     if (confirm('Are you sure you want to delete the collection ' + this.csvCollection.name + '?')) {
       this.csvCollectionService.deleteCsvCollection(this.csvCollection).subscribe(collection => {
-        this.router.navigate(['csv-collections']);
+        this.router.navigate([this.csvCollectionService.getCsvCollectionUiPath()]);
       });
     }
   }

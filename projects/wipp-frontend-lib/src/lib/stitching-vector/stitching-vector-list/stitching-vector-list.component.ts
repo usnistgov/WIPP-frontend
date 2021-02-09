@@ -14,9 +14,6 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
   templateUrl: './stitching-vector-list.component.html',
   styleUrls: ['./stitching-vector-list.component.css']
 })
-// @NgModule({
-//   imports: [MatTableModule, MatTableDataSource, MatTable]
-// })
 export class StitchingVectorListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
   stitchingVectors: Observable<StitchingVector[]>;

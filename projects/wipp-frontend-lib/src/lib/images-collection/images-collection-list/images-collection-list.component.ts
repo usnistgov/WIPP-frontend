@@ -17,9 +17,6 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
   templateUrl: './images-collection-list.component.html',
   styleUrls: ['./images-collection-list.component.css']
 })
-// @NgModule({
-//   imports: [MatTableModule, MatTableDataSource, MatTable]
-// })
 export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'creationDate', 'imagesTotalSize'];
   imagesCollections: Observable<ImagesCollection[]>;
@@ -150,7 +147,7 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
     modalRef.result.then((result) => {
       this.imagesCollectionService.createImagesCollection(result).subscribe(imagesCollection => {
         const imageCollId = imagesCollection ? imagesCollection.id : null;
-        this.router.navigate(['images-collection', imageCollId]);
+        this.router.navigate([this.imagesCollectionService.getImagesCollectionUiPath(), imageCollId]);
       }, error => {
         const modalRefErr = this.modalService.open(ModalErrorComponent);
         modalRefErr.componentInstance.title = 'Error while creating new Images Collection';

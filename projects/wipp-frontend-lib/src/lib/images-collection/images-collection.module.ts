@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {ImagesCollectionRoutingModule} from './images-collection-routing.module';
 import {ImagesCollectionDetailComponent} from './images-collection-detail/images-collection-detail.component';
 import {ImagesCollectionListComponent} from './images-collection-list/images-collection-list.component';
 import {NgMathPipesModule} from 'angular-pipes';

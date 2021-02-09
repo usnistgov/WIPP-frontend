@@ -13,9 +13,6 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
   templateUrl: './pyramid-annotation-list.component.html',
   styleUrls: ['./pyramid-annotation-list.component.css']
 })
-// @NgModule({
-//   imports: [MatTableModule, MatTableDataSource, MatTable]
-// })
 export class PyramidAnnotationListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
   pyramidAnnotations: Observable<PyramidAnnotation[]>;
@@ -64,6 +61,7 @@ export class PyramidAnnotationListComponent implements OnInit {
 
   ngOnInit() {
     this.getPyramidAnnotations();
+    this.getPyramidAnnotationUiPath();
   }
 
   getPyramidAnnotations(): void {

@@ -10,6 +10,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { GenericDataNewComponent } from './generic-data-new/generic-data-new.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgMathPipesModule } from 'angular-pipes';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -20,12 +24,19 @@ import { RouterModule } from '@angular/router';
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule,
+    FormsModule,
+    NgMathPipesModule
+  ],
+  entryComponents: [
+    GenericDataNewComponent
   ],
   declarations: [
     GenericDataListComponent,
     GenericDataDetailComponent,
-    GenericDataTemplateComponent
+    GenericDataTemplateComponent,
+    GenericDataNewComponent
   ]
 })
 export class GenericDataModule { }

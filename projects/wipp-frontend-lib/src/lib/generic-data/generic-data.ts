@@ -5,6 +5,11 @@ export class GenericData {
   sourceJob: string;
   type: string;
   description: string;
+  locked: boolean;
+  numberOfImportErrors: number;
+  numberImportingGenericFiles: number;
+  numberOfFiles: number;
+  genericFileTotalSize: number;
   _links: any;
 }
 

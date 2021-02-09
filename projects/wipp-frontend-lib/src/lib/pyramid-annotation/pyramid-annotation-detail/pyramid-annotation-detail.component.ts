@@ -21,7 +21,8 @@ export class PyramidAnnotationDetailComponent implements OnInit {
   pageSize = 20;
   pyramidAnnotationId = this.route.snapshot.paramMap.get('id');
 
-  @ViewChild('timeSlicesPaginator') timeSlicesPaginator: MatPaginator;
+  @ViewChild('timeSlicesPaginator', {static: true}) timeSlicesPaginator: MatPaginator;
+
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,

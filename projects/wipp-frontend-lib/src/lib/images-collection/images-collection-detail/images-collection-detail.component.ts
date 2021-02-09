@@ -241,7 +241,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   deleteCollection(): void {
     if (confirm('Are you sure you want to delete the collection ' + this.imagesCollection.name + '?')) {
       this.imagesCollectionService.deleteImagesCollection(this.imagesCollection).subscribe(collection => {
-        this.router.navigate(['images-collections']);
+        this.router.navigate([this.imagesCollectionService.getImagesCollectionUiPath()]);
       });
     }
   }

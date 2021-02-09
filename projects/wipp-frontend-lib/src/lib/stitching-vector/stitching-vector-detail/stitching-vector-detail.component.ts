@@ -26,7 +26,6 @@ export class StitchingVectorDetailComponent implements OnInit {
   stitchingVectorId = this.route.snapshot.paramMap.get('id');
 
   @ViewChild('timeSlicesPaginator', {static: true}) timeSlicesPaginator: MatPaginator;
-  //@ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,
