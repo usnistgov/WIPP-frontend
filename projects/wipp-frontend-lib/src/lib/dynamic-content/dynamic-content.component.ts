@@ -27,7 +27,7 @@ export const entryComponentsMap = {
   'csvCollection': CsvCollectionTemplateComponent,
   'pyramid': PyramidTemplateComponent,
   'pyramidAnnotation': PyramidAnnotationTemplateComponent,
-  'notabook': NotebookTemplateComponent,
+  'notebook': NotebookTemplateComponent,
   'tensorflowModel': TensorflowModelTemplateComponent,
   'tensorboardLogs': TensorboardLogsTemplateComponent,
   'genericData': GenericDataTemplateComponent
@@ -64,7 +64,7 @@ export class DynamicContentComponent implements OnInit, OnDestroy {
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
   ngOnInit() {
-    var factoryClass;
+    let factoryClass;
     for (const [key, value] of Object.entries(entryComponentsMap)) {
       if(this.type === key){
         factoryClass = value;

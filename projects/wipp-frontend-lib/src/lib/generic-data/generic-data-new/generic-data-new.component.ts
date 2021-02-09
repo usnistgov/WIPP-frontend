@@ -29,7 +29,6 @@ export class GenericDataNewComponent implements OnInit {
   }
 
   createCollection() {
-    console.log('createCollection');
     this.genericDataService.createGenericData(this.genericData).subscribe(
       genericData => {
         this.displayAlertMessage('success', 'Success! Redirecting...');

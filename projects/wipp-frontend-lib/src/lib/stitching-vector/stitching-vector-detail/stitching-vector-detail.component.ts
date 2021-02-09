@@ -39,9 +39,6 @@ export class StitchingVectorDetailComponent implements OnInit {
         this.stitchingVector = stitchingVector;
         this.getJob();
       });
-
-    console.log('hello');
-    console.log(this.timeSlicesPaginator);
     this.getTimeSlices();
   }
 

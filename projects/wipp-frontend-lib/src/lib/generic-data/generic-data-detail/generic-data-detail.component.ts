@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {Job} from '../../job/job';
 import {ActivatedRoute, Router} from '@angular/router';
-import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {GenericData} from '../generic-data';
 import {GenericFile} from '../generic-file';
@@ -9,7 +9,7 @@ import {GenericDataService} from '../generic-data.service';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
 import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
-import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
+import {BytesPipe} from 'angular-pipes';
 import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
@@ -17,10 +17,6 @@ import {MatPaginator} from '@angular/material/paginator';
   templateUrl: './generic-data-detail.component.html',
   styleUrls: ['./generic-data-detail.component.css']
 })
-
-// @NgModule({
-//   imports: [NgbModule, NgMathPipesModule, BytesPipe]
-// })
 export class GenericDataDetailComponent implements OnInit, AfterViewInit {
 
   genericData: GenericData = new GenericData();
@@ -136,11 +132,9 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
 
     const self = this;
     this.flowHolder.on('fileAdded', function (file, event) {
-      console.log(file, event);
       if (file.name === '.DS_Store' || file.name === 'thumbs.db') {
         return false;
       }
-
     });
     this.flowHolder.on('fileSuccess', function (file, message) {
       this.removeFile(file);
