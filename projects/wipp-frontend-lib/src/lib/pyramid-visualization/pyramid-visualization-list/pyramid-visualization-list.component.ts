@@ -1,7 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {Visualization} from '../visualization';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {Router} from '@angular/router';
 import {PyramidVisualizationService} from '../pyramid-visualization.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -17,6 +18,7 @@ export class PyramidVisualizationListComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'creationDate'];
   visualizations: Observable<Visualization[]>;
+  visualizationsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -62,6 +64,7 @@ export class PyramidVisualizationListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getPyramidVisualizationsUiPath();
     const paramsObservable = this.paramsChange.asObservable();
     this.visualizations = paramsObservable.pipe(
       switchMap((page) => {
@@ -100,12 +103,15 @@ export class PyramidVisualizationListComponent implements OnInit {
     modalRef.result.then((result) => {
       this.visualizationService.createVisualization(result).subscribe(visualization => {
         const visualizationId = visualization ? visualization.id : null;
-        this.router.navigate(['pyramid-visualizations', visualizationId]);
+        this.router.navigate([this.visualizationsUiPath, visualizationId]);
       });
     }, (reason) => {
       console.log('dismissed');
     });
   }
 
+  getPyramidVisualizationsUiPath() {
+    this.visualizationsUiPath = this.visualizationService.getVisualizationUiPath();
+  }
 
 }

@@ -37,7 +37,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     tensorflowModel: [],
     tensorboardLogs: [],
     csvCollection: [],
-    notebook: []
+    notebook: [],
+    genericData: []
   };
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
@@ -140,7 +141,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             type === 'pyramidAnnotation' ||
             type === 'tensorflowModel' ||
             type === 'csvCollection' ||
-            type === 'notebook') {
+            type === 'notebook' ||
+            type === 'genericData') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
               if (task['dependencies'].indexOf(value.sourceJob) === -1) {
                 task['dependencies'].push(value.sourceJob);
@@ -215,7 +217,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
        this.spinner.show();
       this.workflowService.copyWorkflow(this.workflow, result.name).subscribe(workflow => {
         const workflowId = workflow ? workflow.id : null;
-        this.router.navigate(['../workflows/detail', workflowId]).then(() => {
+        this.router.navigate(['../' + this.workflowService.getWorkflowUiPath() + '/detail', workflowId]).then(() => {
            this.spinner.hide();
           this.refreshPage(); } );
       }, error => {
@@ -272,6 +274,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             case 'tensorflowModel':
             case 'csvCollection':
             case 'notebook':
+            case 'genericData':
               inputSchema['type'] = 'string';
               inputSchema['widget'] = 'search';
               inputSchema['format'] = input.type;
@@ -526,7 +529,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       tensorflowModel: [],
       tensorboardLogs: [],
       csvCollection: [],
-      notebook: []
+      notebook: [],
+      genericData: []
     };
   }
 

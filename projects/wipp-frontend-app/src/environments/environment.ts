@@ -8,6 +8,19 @@ export const environment = {
   production: false,
   version: version,
   apiRootUrl: 'http://localhost:8080/api',
+  uiPaths: {
+    csvCollectionsPath: 'csv-collections',
+    genericDatasPath: 'generic-datas',
+    imagesCollectionsPath: 'images-collections',
+    stitchingVectorsPath: 'stitching-vectors',
+    pyramidsPath: 'pyramids',
+    pyramidAnnotationsPath: 'pyramid-annotations',
+    visualizationsPath: 'pyramid-visualizations',
+    tensorflowModelsPath: 'tensorflow-models',
+    notebooksPath: 'notebooks',
+    workflowsPath: 'workflows',
+    pluginsPath: 'plugins' 
+  },
   enableTracing: true
 };
 

@@ -77,7 +77,7 @@ export class PluginNewComponent implements OnInit {
           this.displayAlertMessage('success', 'Success! Redirecting...');
           const pluginId = plugin ? plugin.id : null;
           setTimeout(() => {
-            this.router.navigate(['plugins', pluginId]);
+            this.router.navigate([this.pluginService.getPluginsUiPath(), pluginId]);
           }, 2000);
         },
         err => {

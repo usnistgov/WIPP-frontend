@@ -17,7 +17,7 @@
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
     <!--<td mat-cell *matCellDef="let row">{{ row.name }}</td>-->
-    <td mat-cell *matCellDef="let row"><a routerLink="/csv-collections/{{row.id}}">{{ row.name }}</a></td>
+    <td mat-cell *matCellDef="let row"><a routerLink="/{{csvCollectionsUiPath}}/{{row.id}}">{{ row.name }}</a></td>
   </ng-container>
 
   <!-- Creation date Column -->

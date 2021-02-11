@@ -49,7 +49,7 @@ export class StitchingVectorNewComponent implements OnInit {
           this.displayAlertMessage('success', 'Success! Redirecting...');
           const stitchingVectorId = stitchingVector.id ? stitchingVector.id : null;
           setTimeout(() => {
-          this.router.navigate(['stitching-vectors', stitchingVectorId]);
+          this.router.navigate([this.stitchingVectorService.getStitchingVectorUiPath(), stitchingVectorId]);
           }, 2000);
         },
         err => {

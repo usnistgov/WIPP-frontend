@@ -6,7 +6,7 @@ import {Job} from '../job/job';
 import {CsvCollection, PaginatedCsvCollections} from './csv-collection';
 import {DataService} from '../data-service';
 import {Csv, PaginatedCsv} from './csv';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-configuration';
 
 @Injectable({
@@ -14,11 +14,12 @@ import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-confi
 })
 export class CsvCollectionService implements DataService<CsvCollection, PaginatedCsvCollections> {
 
-  private csvCollectionUrl = this.apiRootUrl + '/csvCollections';
+  private csvCollectionUrl = this.env.apiRootUrl + '/csvCollections';
   private plotsUiUrl = this.configurationProvider.config.plotsUiUrl;
+  private csvCollectionUiPath = this.env.uiPaths.csvCollectionsPath;
 
   constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     public configurationProvider: WippFrontendLibConfigurationProvider,
     private http: HttpClient) { 
   }
@@ -123,4 +124,8 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
     return this.plotsUiUrl;
   }
 
+  getCsvCollectionUiPath(): string {
+    return this.csvCollectionUiPath;
+  }
+  
 }

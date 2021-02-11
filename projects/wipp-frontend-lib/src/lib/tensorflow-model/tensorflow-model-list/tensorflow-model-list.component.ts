@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {TensorflowModel} from '../tensorflow-model';
 import {TensorflowModelService} from '../tensorflow-model.service';
@@ -13,6 +14,7 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 export class TensorflowModelListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate'];
   tensorflowModels: Observable<TensorflowModel[]>;
+  tensorflowModelsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -55,8 +57,7 @@ export class TensorflowModelListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('Tensrflow model component!!!');
-    console.log(this.tensorflowModels);
+    this.getTensorflowModelsUiPath();
     this.getTensorflowModels();
   }
 
@@ -91,6 +92,10 @@ export class TensorflowModelListComponent implements OnInit {
         );
       })
     );
+  }
+
+  getTensorflowModelsUiPath() {
+    this.tensorflowModelsUiPath = this.tensorflowModelService.getTensorflowUiPath();
   }
 
 }

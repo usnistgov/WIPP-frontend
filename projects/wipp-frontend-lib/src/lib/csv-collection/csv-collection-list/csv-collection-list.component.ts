@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {CsvCollection} from '../csv-collection';
 import {CsvCollectionService} from '../csv-collection.service';
@@ -15,6 +16,7 @@ import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-ne
 export class CsvCollectionListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'creationDate'];
   csvCollections: Observable<CsvCollection[]>;
+  csvCollectionsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -59,6 +61,7 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getCsvCollectionsUiPath();
     this.getCsvCollections();
   }
 
@@ -104,4 +107,7 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
     this.modalService.dismissAll();
   }
 
+  getCsvCollectionsUiPath() {
+    this.csvCollectionsUiPath = this.csvCollectionService.getCsvCollectionUiPath();
+  }
 }

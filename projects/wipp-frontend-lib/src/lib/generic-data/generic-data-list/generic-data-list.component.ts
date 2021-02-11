@@ -1,18 +1,22 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {GenericDataService} from '../generic-data.service';
 import { GenericData } from '../generic-data';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GenericDataNewComponent } from '../generic-data-new/generic-data-new.component';
 
 @Component({
   selector: 'app-generic-data-list',
   templateUrl: './generic-data-list.component.html',
   styleUrls: ['./generic-data-list.component.css'],
 })
-export class GenericDataListComponent implements OnInit {
+export class GenericDataListComponent implements OnInit , OnDestroy{
   displayedColumns: string[] = ['name', 'creationDate'];
   genericDatas: Observable<GenericData[]>;
+  genericDatasUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -23,13 +27,14 @@ export class GenericDataListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private genericDataService: GenericDataService) {
-    this.paramsChange = new BehaviorSubject({
-      index: 0,
-      size: this.pageSize,
-      sort: 'creationDate,desc',
-      filter: ''
-    });
+    private genericDataService: GenericDataService,
+    private modalService: NgbModal) {
+      this.paramsChange = new BehaviorSubject({
+        index: 0,
+        size: this.pageSize,
+        sort: 'creationDate,desc',
+        filter: ''
+      });
   }
 
   sortChanged(sort) {
@@ -55,7 +60,7 @@ export class GenericDataListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.genericDatas);
+    this.getGenericDatasUiPath();
     this.getGenericDatas();
   }
 
@@ -90,6 +95,19 @@ export class GenericDataListComponent implements OnInit {
         );
       })
     );
+  }
+
+  getGenericDatasUiPath() {
+    this.genericDatasUiPath = this.genericDataService.getGenericDataUiPath();
+  }
+  
+  createNew() {
+    const modalRef = this.modalService.open(GenericDataNewComponent, {size: 'lg'});
+    modalRef.componentInstance.modalReference = modalRef;
+  }
+
+  ngOnDestroy() {
+    this.modalService.dismissAll();
   }
 
 }

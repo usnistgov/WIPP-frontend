@@ -4,7 +4,7 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {StitchingVectorService} from '../stitching-vector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVector} from '../stitching-vector';
-import {MatPaginator} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
 import {ActivatedRoute} from '@angular/router';
 import {Job} from '../../job/job';
 import {merge, of as observableOf} from 'rxjs';
@@ -25,7 +25,7 @@ export class StitchingVectorDetailComponent implements OnInit {
   job: Job = null;
   stitchingVectorId = this.route.snapshot.paramMap.get('id');
 
-  @ViewChild('timeSlicesPaginator') timeSlicesPaginator: MatPaginator;
+  @ViewChild('timeSlicesPaginator', {static: true}) timeSlicesPaginator: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,

@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Notebook, PaginatedNotebooks} from './notebook';
 import {map} from 'rxjs/operators';
 import {DataService} from '../data-service';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 
 
 @Injectable({
@@ -12,10 +12,11 @@ import { API_ROOT_URL } from '../injection-token';
 })
 export class NotebookService implements DataService<Notebook, PaginatedNotebooks> {
 
-  private notebooksUrl = this.apiRootUrl + '/notebooks';
+  private notebooksUrl = this.env.apiRootUrl + '/notebooks';
+  private notebooksUiPath = this.env.uiPaths.notebooksPath;
 
   constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     private http: HttpClient) {
   }
 
@@ -65,6 +66,10 @@ export class NotebookService implements DataService<Notebook, PaginatedNotebooks
         result.data = result._embedded.notebooks;
         return result;
       }));
+  }
+
+  getNotebooksUiPath(): string {
+    return this.notebooksUiPath;
   }
 
 }

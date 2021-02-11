@@ -1,8 +1,10 @@
 import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
-import {MatTableModule, MatTableDataSource, MatPaginator, MatSort} from '@angular/material';
-import {MatTable} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatTable } from '@angular/material/table';
 import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -15,12 +17,11 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
   templateUrl: './images-collection-list.component.html',
   styleUrls: ['./images-collection-list.component.css']
 })
-@NgModule({
-  imports: [MatTableModule, MatTableDataSource, MatTable]
-})
 export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'creationDate', 'imagesTotalSize'];
   imagesCollections: Observable<ImagesCollection[]>;
+  imagesCollectionsUiPath: string;
+
   resultsLength = 0;
   pageSize = 10;
   isLoadingResults = true;
@@ -87,6 +88,7 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getImagesCollectionsUiPath();
     const paramsObservable = this.paramsChange.asObservable();
     this.imagesCollections = paramsObservable.pipe(
       switchMap((page) => {
@@ -145,7 +147,7 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
     modalRef.result.then((result) => {
       this.imagesCollectionService.createImagesCollection(result).subscribe(imagesCollection => {
         const imageCollId = imagesCollection ? imagesCollection.id : null;
-        this.router.navigate(['images-collection', imageCollId]);
+        this.router.navigate([this.imagesCollectionService.getImagesCollectionUiPath(), imageCollId]);
       }, error => {
         const modalRefErr = this.modalService.open(ModalErrorComponent);
         modalRefErr.componentInstance.title = 'Error while creating new Images Collection';
@@ -158,5 +160,9 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  getImagesCollectionsUiPath() {
+    this.imagesCollectionsUiPath = this.imagesCollectionService.getImagesCollectionUiPath();
   }
 }

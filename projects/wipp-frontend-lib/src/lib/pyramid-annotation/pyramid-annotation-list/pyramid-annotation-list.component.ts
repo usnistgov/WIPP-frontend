@@ -1,6 +1,8 @@
 import {Component, NgModule, OnInit, ViewChild} from '@angular/core';
 import {PyramidAnnotation} from '../pyramid-annotation';
-import {MatPaginator, MatSort, MatTable, MatTableDataSource, MatTableModule} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {PyramidAnnotationService} from '../pyramid-annotation.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {catchError, map, switchMap} from 'rxjs/operators';
@@ -11,12 +13,10 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
   templateUrl: './pyramid-annotation-list.component.html',
   styleUrls: ['./pyramid-annotation-list.component.css']
 })
-@NgModule({
-  imports: [MatTableModule, MatTableDataSource, MatTable]
-})
 export class PyramidAnnotationListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
   pyramidAnnotations: Observable<PyramidAnnotation[]>;
+  pyramidAnnotationsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -61,6 +61,7 @@ export class PyramidAnnotationListComponent implements OnInit {
 
   ngOnInit() {
     this.getPyramidAnnotations();
+    this.getPyramidAnnotationUiPath();
   }
 
   getPyramidAnnotations(): void {
@@ -94,6 +95,10 @@ export class PyramidAnnotationListComponent implements OnInit {
         );
       })
     );
+  }
+
+  getPyramidAnnotationUiPath() {
+    this.pyramidAnnotationsUiPath = this.pyramidAnnotationService.getPyramidAnnotationUiPath();
   }
 }
 

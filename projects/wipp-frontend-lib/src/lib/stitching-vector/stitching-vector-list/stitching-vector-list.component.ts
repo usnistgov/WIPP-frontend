@@ -1,5 +1,7 @@
 import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTable, MatTableDataSource, MatTableModule} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {StitchingVector} from '../stitching-vector';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVectorNewComponent} from '../stitching-vector-new/stitching-vector-new.component';
@@ -12,12 +14,10 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
   templateUrl: './stitching-vector-list.component.html',
   styleUrls: ['./stitching-vector-list.component.css']
 })
-@NgModule({
-  imports: [MatTableModule, MatTableDataSource, MatTable]
-})
 export class StitchingVectorListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
   stitchingVectors: Observable<StitchingVector[]>;
+  stitchingVectorsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -61,7 +61,12 @@ export class StitchingVectorListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getStitchingVectorsUiPath();
     this.getStitchingVectors();
+  }
+
+  getStitchingVectorsUiPath() {
+    this.stitchingVectorsUiPath = this.stitchingVectorService.getStitchingVectorUiPath();
   }
 
   getStitchingVectors(): void {

@@ -2,7 +2,7 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
-@import '~@qontu/ngx-inline-editor/themes/bootstrap.css';
+/* @import '~@qontu/ngx-inline-editor/themes/bootstrap.css'; */
 
 html, body { height: 100%; }
 body { margin: 0; font-family: 'Roboto', sans-serif; }
@@ -62,11 +62,11 @@ dd {
   margin-bottom: 0;
 }
 
-a.c-inline-editor {
+/* a.c-inline-editor {
   line-height: 0;
   margin-left: 0px;
   margin-right: 0px;
-}
+} */
 
 .top15 {
   margin-top: 15px;

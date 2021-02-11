@@ -1,6 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {Notebook} from '../notebook';
 import {NotebookService} from '../notebook.service';
@@ -14,6 +15,7 @@ import {NotebookService} from '../notebook.service';
 export class NotebookListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'creationDate'];
   notebooks: Observable<Notebook[]>;
+  notebooksUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -36,6 +38,7 @@ export class NotebookListComponent implements OnInit {
   }
 
     ngOnInit() {
+    this.getNotebooksUiPath();
     const paramsObservable = this.paramsChange.asObservable();
     this.notebooks = paramsObservable.pipe(
       switchMap((page) => {
@@ -90,8 +93,8 @@ export class NotebookListComponent implements OnInit {
     });
   }
 
-
-
-
-
+  getNotebooksUiPath() {
+    this.notebooksUiPath = this.notebookService.getNotebooksUiPath();
+  }
+  
 }

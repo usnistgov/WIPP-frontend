@@ -7,10 +7,10 @@ import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {ImagesCollectionService} from '../images-collection.service';
 import {ImagesCollection} from '../images-collection';
 import {Image} from '../image';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import {MetadataFile} from '../metadata-file';
-import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import {Job} from '../../job/job';
 import urljoin from 'url-join';
@@ -21,9 +21,6 @@ import urljoin from 'url-join';
   styleUrls: ['./images-collection-detail.component.css']
 })
 
-@NgModule({
-  imports: [NgbModule, NgMathPipesModule, BytesPipe, InlineEditorModule]
-})
 export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   flowHolder: Flow.IFlow;
@@ -133,9 +130,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // fixme: temporary fix while waiting for 1.0.0 release of ngx-inline-editor
-    const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
-    faRemoveElt.classList.remove('fa-remove');
-    faRemoveElt.classList.add('fa-times');
+    // const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
+    // faRemoveElt.classList.remove('fa-remove');
+    // faRemoveElt.classList.add('fa-times');
 
     this.refresh().subscribe(imagesCollection => {
       if (!imagesCollection.locked) {
@@ -244,7 +241,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   deleteCollection(): void {
     if (confirm('Are you sure you want to delete the collection ' + this.imagesCollection.name + '?')) {
       this.imagesCollectionService.deleteImagesCollection(this.imagesCollection).subscribe(collection => {
-        this.router.navigate(['images-collections']);
+        this.router.navigate([this.imagesCollectionService.getImagesCollectionUiPath()]);
       });
     }
   }

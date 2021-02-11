@@ -6,22 +6,28 @@ import {TensorflowModelService} from '../tensorflow-model.service';
 @Component({
   selector: 'app-stitching-vector-template',
   template:
-    '<a routerLink="/tensorflow-models/{{idData}}">{{text}}</a>'
+    '<a routerLink="/{{tensorflowModelsUiPath}}/{{idData}}">{{text}}</a>'
 })
 export class TensorflowModelTemplateComponent extends DynamicComponent implements OnInit {
 
-    constructor(
-    private tensorflowModelService: TensorflowModelService) {
-    super();
-}
+  tensorflowModelsUiPath: string;
 
-static key = 'tensorflowmodeltemplatecomponent';
+  constructor(private tensorflowModelService: TensorflowModelService) {
+    super();
+  }
+
+  static key = 'tensorflowmodeltemplatecomponent';
 
   ngOnInit() {
-      if (this.idData) {
+    this.getTensorflowModelsUiPath();
+    if (this.idData) {
       this.tensorflowModelService.getById(this.idData).subscribe(result => {
         this.text = result.name;
       });
     }
+  }
+
+  getTensorflowModelsUiPath() {
+    this.tensorflowModelsUiPath = this.tensorflowModelService.getTensorflowUiPath();
   }
 }

@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PaginatedWorkflows, Workflow} from './workflow';
 import {Job, PaginatedJobs} from '../job/job';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-configuration';
 
 const httpOptions = {
@@ -15,14 +15,15 @@ const httpOptions = {
 @Injectable({providedIn: 'root'})
 export class WorkflowService {
   constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     public configurationProvider: WippFrontendLibConfigurationProvider,
     private http: HttpClient) {
     }
 
-  private workflowsUrl = this.apiRootUrl + '/workflows';
-  private jobsUrl = this.apiRootUrl + '/jobs';
+  private workflowsUrl = this.env.apiRootUrl + '/workflows';
+  private jobsUrl = this.env.apiRootUrl + '/jobs';
   private argoUiBaseUrl = this.configurationProvider.config.argoUiBaseUrl;
+  private workflowUiPath = this.env.uiPaths.workflowsPath;
 
   getWorkflows(params): Observable<PaginatedWorkflows> {
     if (params) {
@@ -138,5 +139,9 @@ export class WorkflowService {
 
   getArgoUiBaseUrl(): string {
     return this.argoUiBaseUrl;
+  }
+
+  getWorkflowUiPath(): string {
+    return this.workflowUiPath;
   }
 }

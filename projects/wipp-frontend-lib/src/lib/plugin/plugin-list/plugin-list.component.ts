@@ -2,7 +2,8 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Plugin} from '../plugin';
 import {PluginService} from '../plugin.service';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {SelectionModel} from '@angular/cdk/collections';
@@ -19,6 +20,7 @@ export class PluginListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [ 'name', 'version', 'description'];
   plugins: Observable<Plugin[]>;
   selection = new SelectionModel<Plugin>(false, []);
+  pluginsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -63,6 +65,7 @@ export class PluginListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getPluginsUiPath();
     this.getPlugins();
   }
 
@@ -106,6 +109,10 @@ export class PluginListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  getPluginsUiPath() {
+    this.pluginsUiPath = this.pluginService.getPluginsUiPath();
   }
 
 }

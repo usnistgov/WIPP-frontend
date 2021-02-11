@@ -1,3 +1,3 @@
 import { InjectionToken } from '@angular/core';
 
-export const API_ROOT_URL = new InjectionToken<string>('ApiRootUrl');
+export const ENV = new InjectionToken<any>('env');

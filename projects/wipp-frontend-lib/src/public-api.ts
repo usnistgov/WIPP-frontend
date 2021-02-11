@@ -81,8 +81,7 @@ export * from './lib/pyramid-annotation/pyramid-annotation-template/pyramid-anno
 
 // pyramid visualization
 export * from './lib/pyramid-visualization/pyramid-visualization-detail/pyramid-visualization-detail.component';
-export * from './lib/pyramid-visualization/pyramid-visualization-detail/pyramid-visualization-detail.component';
-export * from './lib/pyramid-visualization/pyramid-visualization-detail/pyramid-visualization-detail.component';
+export * from './lib/pyramid-visualization/pyramid-visualization-list/pyramid-visualization-list.component';
 
 // stitching-vector
 export * from './lib/stitching-vector/stitching-vector-detail/stitching-vector-detail.component';

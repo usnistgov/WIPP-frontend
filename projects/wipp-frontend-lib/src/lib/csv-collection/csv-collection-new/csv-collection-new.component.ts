@@ -15,6 +15,7 @@ export class CsvCollectionNewComponent implements OnInit {
   @Input() modalReference: any;
 
   csvCollection: CsvCollection = new CsvCollection();
+  csvCollectionsUiPath: string;
 
   displayAlert = false;
   alertMessage = '';
@@ -27,6 +28,7 @@ export class CsvCollectionNewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getCsvCollectionsUiPath();
   }
 
   createCollection() {
@@ -35,7 +37,7 @@ export class CsvCollectionNewComponent implements OnInit {
         this.displayAlertMessage('success', 'Success! Redirecting...');
         const csvCollectionId = csvCollection ? csvCollection.id : null;
         setTimeout(() => {
-          this.router.navigate(['csv-collections', csvCollectionId]);
+          this.router.navigate([this.csvCollectionsUiPath, csvCollectionId]);
         }, 2000);
       },
       err => {
@@ -47,5 +49,9 @@ export class CsvCollectionNewComponent implements OnInit {
     this.alertMessage = message;
     this.alertType = type;
     this.displayAlert = true;
+  }
+
+  getCsvCollectionsUiPath() {
+    this.csvCollectionsUiPath = this.csvCollectionService.getCsvCollectionUiPath();
   }
 }

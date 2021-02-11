@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
 import {ActivatedRoute} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {merge, of as observableOf} from 'rxjs';
@@ -21,7 +21,8 @@ export class PyramidAnnotationDetailComponent implements OnInit {
   pageSize = 20;
   pyramidAnnotationId = this.route.snapshot.paramMap.get('id');
 
-  @ViewChild('timeSlicesPaginator') timeSlicesPaginator: MatPaginator;
+  @ViewChild('timeSlicesPaginator', {static: true}) timeSlicesPaginator: MatPaginator;
+
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,

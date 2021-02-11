@@ -10,8 +10,7 @@ import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
 import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
-import {InlineEditorModule} from '@qontu/ngx-inline-editor';
-import {MatPaginator} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
 import {Csv} from '../csv';
 
 @Component({
@@ -20,9 +19,6 @@ import {Csv} from '../csv';
   styleUrls: ['./csv-collection-detail.component.css']
 })
 
-@NgModule({
-  imports: [NgbModule, NgMathPipesModule, BytesPipe, InlineEditorModule]
-})
 export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
 
   csvCollection: CsvCollection = new CsvCollection();
@@ -215,7 +211,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   deleteCollection(): void {
     if (confirm('Are you sure you want to delete the collection ' + this.csvCollection.name + '?')) {
       this.csvCollectionService.deleteCsvCollection(this.csvCollection).subscribe(collection => {
-        this.router.navigate(['csv-collections']);
+        this.router.navigate([this.csvCollectionService.getCsvCollectionUiPath()]);
       });
     }
   }

@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {WorkflowService} from '../workflow.service';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
@@ -17,6 +18,8 @@ export class WorkflowListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'status', 'creationDate', 'endTime'];
   // displayedColumns: string[] = ['name', 'status', 'creationDate', 'startTime', 'endTime'];
   workflows: Observable<Workflow[]>;
+  workflowsUiPath: string;
+
   resultsLength = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [10, 25, 50, 100];
@@ -62,6 +65,7 @@ export class WorkflowListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getWorkflowsUiPath();
     this.getWorkflows();
   }
 
@@ -110,5 +114,9 @@ export class WorkflowListComponent implements OnInit {
     }, (reason) => {
       console.log('dismissed');
     });
+  }
+
+  getWorkflowsUiPath() {
+    this.workflowsUiPath = this.workflowService.getWorkflowUiPath();
   }
 }

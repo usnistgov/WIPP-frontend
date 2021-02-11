@@ -3,17 +3,19 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {PaginatedVisualization, Visualization} from './visualization';
 import {map} from 'rxjs/operators';
-import { API_ROOT_URL } from '../injection-token';
+import { ENV } from '../injection-token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PyramidVisualizationService {
 
-  private visualizationsUrl = this.apiRootUrl + '/visualizations';
+  private visualizationsUrl = this.env.apiRootUrl + '/visualizations';
+  private visualizationsUiPath = this.env.uiPaths.visualizationsPath;
+  private pyramidUiPath = this.env.uiPaths.pyramidsPath;
 
   constructor(
-    @Inject(API_ROOT_URL) private apiRootUrl: string,
+    @Inject(ENV) private env: any,
     private http: HttpClient
   ) { }
 
@@ -73,4 +75,12 @@ export class PyramidVisualizationService {
     return this.http.patch<Visualization>(`${this.visualizationsUrl}/${visualization.id}`, {manifest: manifest}, httpOptions);
   }
 
+  getVisualizationUiPath(): string {
+    return this.visualizationsUiPath;
+  }
+
+  getPyramidUiPath(): string {
+    return this.pyramidUiPath;
+  }
+  
 }
