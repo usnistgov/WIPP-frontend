@@ -1,5 +1,4 @@
 import {AfterContentChecked, AfterContentInit, AfterViewInit, Directive, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
-declare var WDZT: any;
 
 @Directive({
   selector: 'wippWdzt'
