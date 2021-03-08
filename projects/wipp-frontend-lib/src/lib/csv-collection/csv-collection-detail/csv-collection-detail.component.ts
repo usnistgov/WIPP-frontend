@@ -12,6 +12,8 @@ import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import { MatPaginator } from '@angular/material/paginator';
 import {Csv} from '../csv';
+import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { ModalErrorComponent } from '../../modal-error/modal-error.component';
 
 @Component({
   selector: 'app-csv-collection-detail',
@@ -44,7 +46,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private router: Router,
-    private csvCollectionService: CsvCollectionService) {
+    private csvCollectionService: CsvCollectionService,
+    private keycloakService: KeycloakService) {
     this.csvParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
@@ -52,10 +55,15 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.plotsUiLink = urljoin(this.csvCollectionService.getPlotsUiUrl(), 'plots', this.csvCollectionId);
+    if (this.csvCollectionService.getPlotsUiUrl()) {
+      this.plotsUiLink = urljoin(this.csvCollectionService.getPlotsUiUrl(), 'plots', this.csvCollectionId);
+    } else {
+      this.plotsUiLink = null;
+    }
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
-      method: 'octet'
+      method: 'octet',
+      headers: {Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`}
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -65,9 +73,11 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.refresh().subscribe(csvCollection => {
-      if (!csvCollection.locked) {
+      if (this.canEdit() && !csvCollection.locked) {
         this.initFlow();
       }
+    }, error => {
+      this.router.navigate(['/404']);
     });
   }
 
@@ -123,10 +133,22 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
       });
   }
 
+  makePublicCollection(): void {
+    this.csvCollectionService.makePublicCsvCollection(
+      this.csvCollection).subscribe(csvCollection => {
+      this.csvCollection = csvCollection;
+    }, error => {
+      const modalRefErr = this.modalService.open(ModalErrorComponent);
+      modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
+      modalRefErr.componentInstance.message = error.error;
+    });
+  }
+
   initFlow(): void {
     this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': '.csv'});
 
-    const id = '';
+    //const id = '';
+    const id = this.route.snapshot.paramMap.get('id');
     const csvUploadUrl = this.csvCollectionService.getCsvUrl(this.csvCollection);
     this.flowHolder.opts.target = csvUploadUrl;
 
@@ -226,6 +248,15 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     this.csvCollectionService.deleteAllCsvFiles(this.csvCollection).subscribe(result => {
       this.$throttleRefresh.next();
     });
+  }
+
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.csvCollection);
+  }
+
+  openDownload(url: string) {
+    this.csvCollectionService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
   }
 
 }

@@ -99,6 +99,9 @@ export * from './lib/workflow/workflow-list/workflow-list.component';
 export * from './lib/workflow/workflow-new/workflow-new.component';
 export * from './lib/workflow/widgets/search-widget/search-widget.component';
 
+// forbidden-access
+export * from './lib/forbidden-access/forbidden-access.component';
+
 // Exporting services
 export * from './lib/csv-collection/csv-collection.service';
 export * from './lib/images-collection/images-collection.service';
@@ -112,3 +115,5 @@ export * from './lib/pyramid-visualization/pyramid-visualization.service';
 export * from './lib/stitching-vector/stitching-vector.service';
 export * from './lib/tensorflow-model/tensorflow-model.service';
 export * from './lib/workflow/workflow.service';
+export * from './lib/services/keycloack/keycloak.service';
+export * from './lib/services/keycloack/keycloak.interceptor.service';

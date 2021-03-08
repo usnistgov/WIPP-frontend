@@ -127,5 +127,17 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
   getCsvCollectionUiPath(): string {
     return this.csvCollectionUiPath;
   }
+
+  makePublicCsvCollection(csvCollection: CsvCollection): Observable<CsvCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, {publiclyShared: true}, httpOptions);
+  }
+
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
+  }
   
 }

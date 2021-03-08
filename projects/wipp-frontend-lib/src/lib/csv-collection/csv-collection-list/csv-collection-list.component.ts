@@ -7,6 +7,8 @@ import {CsvCollection} from '../csv-collection';
 import {CsvCollectionService} from '../csv-collection.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-new.component';
+import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-csv-collection-list',
@@ -14,7 +16,7 @@ import {CsvCollectionNewComponent} from '../csv-collection-new/csv-collection-ne
   styleUrls: ['./csv-collection-list.component.css']
 })
 export class CsvCollectionListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['name', 'creationDate'];
+  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyShared'];
   csvCollections: Observable<CsvCollection[]>;
   csvCollectionsUiPath: string;
 
@@ -28,6 +30,8 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
 
   constructor(
     private csvCollectionService: CsvCollectionService,
+    private router: Router,
+    private keycloakService: KeycloakService,
     private modalService: NgbModal
   ) {
     this.paramsChange = new BehaviorSubject({
@@ -109,5 +113,9 @@ export class CsvCollectionListComponent implements OnInit, OnDestroy {
 
   getCsvCollectionsUiPath() {
     this.csvCollectionsUiPath = this.csvCollectionService.getCsvCollectionUiPath();
+  }
+
+  canCreate(): boolean {
+    return(this.keycloakService.isLoggedIn());
   }
 }

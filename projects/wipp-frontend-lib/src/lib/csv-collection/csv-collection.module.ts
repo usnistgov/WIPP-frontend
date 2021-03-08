@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import {NgMathPipesModule} from 'angular-pipes';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { RouterModule } from '@angular/router';
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCheckboxModule,
     NgbModule,
     FormsModule,
     NgMathPipesModule,

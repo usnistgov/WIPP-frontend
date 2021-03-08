@@ -3,9 +3,10 @@ import { WippFrontendLibComponent } from './wipp-frontend-lib.component';
 import { ENV } from './injection-token';
 import { PageNotFoundComponent } from './not-found/not-found.component';
 import { DefaultLibConfiguration, LibConfiguration, WippFrontendLibConfigurationProvider } from './wipp-frontend-lib-configuration';
+import { ForbiddenAccessComponent } from './forbidden-access/forbidden-access.component';
 
 @NgModule({
-  declarations: [WippFrontendLibComponent, PageNotFoundComponent],
+  declarations: [WippFrontendLibComponent, PageNotFoundComponent, ForbiddenAccessComponent],
   imports: []
 })
 export class WippFrontendLibModule {

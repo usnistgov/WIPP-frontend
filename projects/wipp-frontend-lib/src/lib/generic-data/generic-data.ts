@@ -3,6 +3,8 @@ export class GenericData {
   name: string;
   creationDate: Date;
   sourceJob: string;
+  owner: string;
+  publiclyShared: boolean;
   type: string;
   description: string;
   locked: boolean;
