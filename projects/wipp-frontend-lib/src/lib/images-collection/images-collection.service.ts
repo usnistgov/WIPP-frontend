@@ -1,12 +1,12 @@
-import {Injectable, Inject} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable, of as observableOf} from 'rxjs';
-import {ImagesCollection, PaginatedImagesCollections} from './images-collection';
-import {map} from 'rxjs/operators';
-import {Image, PaginatedImages} from './image';
-import {MetadataFile, PaginatedMetadataFiles} from './metadata-file';
-import {Job} from '../job/job';
-import {DataService} from '../data-service';
+import { Injectable, Inject } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, of as observableOf } from 'rxjs';
+import { ImagesCollection, PaginatedImagesCollections } from './images-collection';
+import { map } from 'rxjs/operators';
+import { Image, PaginatedImages } from './image';
+import { MetadataFile, PaginatedMetadataFiles } from './metadata-file';
+import { Job } from '../job/job';
+import { DataService } from '../data-service';
 import { ENV } from '../injection-token';
 import { WippFrontendLibConfigurationProvider } from '../wipp-frontend-lib-configuration';
 
@@ -31,7 +31,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
 
   get(params): Observable<PaginatedImagesCollections> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
     if (params) {
@@ -50,7 +50,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
 
   getByNameContainingIgnoreCase(params, name): Observable<PaginatedImagesCollections> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
     let httpParams = new HttpParams().set('name', name);
@@ -70,7 +70,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
 
   getImagesCollectionsByNameContainingIgnoreCaseAndNumberOfImages(params, name, nbOfImgs): Observable<PaginatedImagesCollections> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
     let httpParams = new HttpParams().set('name', name).set('numberOfImages', nbOfImgs);
@@ -90,23 +90,23 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
 
   setImagesCollectionName(imagesCollection: ImagesCollection, name: string): Observable<ImagesCollection> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
-    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {name: name}, httpOptions);
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, { name: name }, httpOptions);
   }
 
   setImagesCollectionNotes(imagesCollection: ImagesCollection, notes: string): Observable<ImagesCollection> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
-    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {notes: notes}, httpOptions);
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, { notes: notes }, httpOptions);
   }
 
   getImages(imagesCollection: ImagesCollection, params): Observable<PaginatedImages> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
     if (params) {
@@ -126,7 +126,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
 
   getMetadataFiles(imagesCollection: ImagesCollection, params): Observable<PaginatedMetadataFiles> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
     if (params) {
@@ -174,10 +174,10 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
 
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
-    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {locked: true}, httpOptions);
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, { locked: true }, httpOptions);
   }
 
   getImagesUrl(imagesCollection: ImagesCollection): string {
@@ -195,7 +195,7 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
     return observableOf(null);
   }
 
-  getSourceCatalogLink(): string { 
+  getSourceCatalogLink(): string {
     return this.catalogUiUrl;
   }
 
@@ -203,4 +203,15 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
     return this.imagesCollectionsUiPath;
   }
 
+  makePublicImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, { publiclyShared: true }, httpOptions);
+  }
+
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
+  }
 }

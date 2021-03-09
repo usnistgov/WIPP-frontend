@@ -4,6 +4,8 @@ export class Notebook {
   creationDate: Date;
   description: string;
   job: string;
+  owner: string;
+  publiclyShared: boolean;
   _links: any;
 }
 

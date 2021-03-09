@@ -41,6 +41,16 @@
       </td>
     </tr>
 
+    <!--  owner line  -->
+    <tr *ngIf="job.owner">
+      <th>
+        <dt>Owner:</dt>
+      </th>
+      <td>
+        <dd class="col-md-8 breakLine">{{job.owner}}</dd>
+      </td>
+    </tr>
+
     <!--  workflow name line  -->
     <tr *ngIf="workflow">
       <th>
@@ -48,7 +58,8 @@
       </th>
       <td>
         <dd class="col-md-8 breakLine">
-          <a routerLink="/{{workflowsPath}}/detail/{{workflow.id}}" (click)="modalReference.dismiss('Cross click')">{{workflow.name}}</a>
+          <a routerLink="/{{workflowsPath}}/detail/{{workflow.id}}"
+            (click)="modalReference.dismiss('Cross click')">{{workflow.name}}</a>
         </dd>
       </td>
     </tr>
@@ -60,7 +71,8 @@
       </th>
       <td>
         <dd class="col-md-8 breakLine">
-          <a routerLink="/{{pluginsPath}}/{{plugin.id}}" (click)="modalReference.dismiss('Cross click')">{{plugin.name}}:{{plugin.version}}</a>
+          <a routerLink="/{{pluginsPath}}/{{plugin.id}}"
+            (click)="modalReference.dismiss('Cross click')">{{plugin.name}}:{{plugin.version}}</a>
         </dd>
       </td>
     </tr>
@@ -132,15 +144,13 @@
         </dd>
       </td>
       <ng-template #flatInput>
-        <app-dynamic-content type="{{input['type']}}"
-                             idData="{{job.parameters[input['name']]}}"
-                             defaultText="{{job.parameters[input['name']]}}">
+        <app-dynamic-content type="{{input['type']}}" idData="{{job.parameters[input['name']]}}"
+          defaultText="{{job.parameters[input['name']]}}">
         </app-dynamic-content>
       </ng-template>
       <ng-template #linkedInput>
-        <app-dynamic-content type="{{input['type']}}"
-                             idData="{{outputHash[inputOrigins[i]]}}"
-                             defaultText="{{inputOrigins[i]}}">
+        <app-dynamic-content type="{{input['type']}}" idData="{{outputHash[inputOrigins[i]]}}"
+          defaultText="{{inputOrigins[i]}}">
         </app-dynamic-content>
       </ng-template>
     </tr>
@@ -167,10 +177,8 @@
       </th>
       <td>
         <dd class="col-md-8 breakLine" (click)="modalReference.dismiss('Cross click')">
-          <app-dynamic-content type="{{output['type']}}"
-                               jobId="{{job.id}}"
-                               idData="{{job.outputParameters[output['name']]}}"
-                               defaultText="{{job.name}}-{{output['name']}}">
+          <app-dynamic-content type="{{output['type']}}" jobId="{{job.id}}"
+            idData="{{job.outputParameters[output['name']]}}" defaultText="{{job.name}}-{{output['name']}}">
           </app-dynamic-content>
         </dd>
       </td>
