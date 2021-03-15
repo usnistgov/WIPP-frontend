@@ -17,7 +17,7 @@
         <dd class="col-md-8">{{imagesCollection.creationDate| date}}</dd>
 
         <dt class="col-md-4">Owner:</dt>
-        <dd class="col-md-8">{{csvCollection.owner}}</dd>
+        <dd class="col-md-8">{{imagesCollection.owner}}</dd>
 
         <dt class="col-md-4">Number of files:</dt>
         <dd class="col-md-8">{{getNbFiles()}}</dd>
@@ -85,7 +85,7 @@
                   [hidden]="!showNotes || editNotes">
             Edit Notes
           </button>
-          <div [hidden]="!editNotes || !showNotes || !canEdit()"></div>
+          <div [hidden]="!editNotes || !showNotes || !canEdit()">
               <button class="btn btn-success btn-block"
                       (click)="saveNotes()"
                       [disabled]="imageCollectionNotes == imagesCollection.notes">
@@ -169,7 +169,7 @@
     </div>
 
     <h5>Folder upload:</h5>
-    <div [hidden]="!flowHolder.supportDirectory  || !canEdit()"></div>
+    <div [hidden]="!flowHolder.supportDirectory  || !canEdit()">
       <div class="col-md-11 ml-md-1">
         <input type="radio" id="regular" name="upload" value="regular"
                [(ngModel)]="uploadOption">
@@ -262,7 +262,7 @@
     </div>
 
 
-    <div class='col-sm-2 text-right' *ngIf="canEdit()"></div>
+    <div class='col-sm-2 text-right' *ngIf="canEdit()">
       <button *ngIf="!imagesCollection.locked" type="button"
               ngbTooltip="Delete all images"
               placement="left"
@@ -438,7 +438,6 @@
   <div class="container-fluid topMarge20">
     <div class="row">
       <div class="col-md-5">
-      </div>
       <div class="col-md-3 text-right topMarge5">
         <span class="goToSpan">
            <mat-form-field class="inputPage">
