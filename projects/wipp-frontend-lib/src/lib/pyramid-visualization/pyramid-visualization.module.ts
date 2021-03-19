@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -22,6 +23,7 @@ import { RouterModule } from '@angular/router';
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCheckboxModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,

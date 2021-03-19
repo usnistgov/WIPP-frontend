@@ -3,11 +3,12 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {Visualization} from '../visualization';
 import {NgbModal, NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {PyramidService} from '../../pyramid/pyramid.service';
 import {PyramidVisualizationService} from '../pyramid-visualization.service';
 import {PyramidVisualizationHelpComponent} from '../pyramid-visualization-help/pyramid-visualization-help.component';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import { KeycloakService } from '../../services/keycloack/keycloak.service';
 
 @Component({
   selector: 'app-pyramid-visualization-detail',
@@ -28,9 +29,11 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
     private pyramidService: PyramidService,
-    private visualizationService: PyramidVisualizationService) {
+    private visualizationService: PyramidVisualizationService,
+    private keycloakService: KeycloakService) {
   }
 
   ngOnInit() {
@@ -39,6 +42,8 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
       .subscribe(visualization => {
         this.visualization = visualization;
         this.loadManifest();
+      }, error => {
+        this.router.navigate(['/404']);
       });
   }
 
@@ -262,5 +267,16 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  makePublicVisualization(): void {
+    this.visualizationService.makePublicVisualization(
+      this.visualization).subscribe(visualization => {
+      this.visualization = visualization;
+    });
+  }
+
+  canEdit() : boolean {
+    return this.keycloakService.canEdit(this.visualization);
   }
 }

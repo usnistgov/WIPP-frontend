@@ -12,7 +12,8 @@ export class KeycloakService {
           // url: environment.keycloak.url,
           // realm: environment.keycloak.realm,
           // clientId: environment.keycloak.clientId
-          url: 'http://localhost:8081/auth',
+          // url: 'http://localhost:8081/auth',
+          url: 'https://keycloak-ci.aws.labshare.org/auth',
           realm: 'WIPP',
           clientId: 'wipp-public-client'
       });

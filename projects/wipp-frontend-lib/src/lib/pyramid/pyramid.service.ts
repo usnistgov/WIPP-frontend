@@ -185,4 +185,12 @@ export class PyramidService implements DataService<Pyramid, PaginatedPyramid> {
     return this.pyramidUiPath;
   }
 
+  makePublicPyramid(pyramid: Pyramid): Observable<Pyramid> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<Pyramid>(`${this.pyramidsUrl}/${pyramid.id}`, {publiclyShared: true}, httpOptions);
+  }
+  
 }

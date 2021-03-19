@@ -15,6 +15,7 @@ import urljoin from 'url-join';
 import {JobService} from '../../job/job.service';
 import {dataMap} from '../../data-service';
 import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
+import { KeycloakService } from '../../services/keycloack/keycloak.service';
 
 
 @Component({
@@ -85,6 +86,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     private pluginService: PluginService,
     private workflowService: WorkflowService,
     private jobService: JobService,
+    private keycloakService: KeycloakService,
     private injector: Injector,
     private router: Router) {
   }
@@ -94,6 +96,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
       this.workflow = workflow;
       this.updateArgoUrl();
+    }, error => {
+      this.router.navigate(['/404']);
     });
     this.pluginService.getAllPluginsOrderedByName()
       .subscribe(plugins => {
@@ -221,7 +225,11 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
            this.spinner.hide();
           this.refreshPage(); } );
       }, error => {
-          this.spinner.hide(); }
+          this.spinner.hide();
+          const modalRefErr = this.modalService.open(ModalErrorComponent);
+          modalRefErr.componentInstance.title = 'Workflow copy failed';
+          modalRefErr.componentInstance.message = error.error;
+      }
           );
     }, (reason) => {
       console.log('dismissed');
@@ -538,6 +546,26 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     if (this.workflow.generatedName) {
       this.argoUiLink = urljoin(this.argoUiBaseUrl, this.workflow.generatedName);
     }
+  }
+
+  makeWorkflowPublic(): void {
+    this.workflowService.makeWorkflowPublic(
+      this.workflow).subscribe(workflow => {
+        this.refreshPage();
+      },
+      error => {
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Unable to set workflow to public';
+        modalRefErr.componentInstance.message = error.error;
+      });
+  }
+
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.workflow);
+  }
+
+  canCreate(): boolean {
+    return(this.keycloakService.isLoggedIn());
   }
 
   ngOnDestroy() {
