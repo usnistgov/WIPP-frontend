@@ -320,8 +320,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             inputSchema['condition'] = ui.condition;
             const conditionElements = ui.condition.split('==');
             if (conditionElements.length === 2) {
-              // condition string must not contain single quotes
               const inputName = conditionElements[0].split('.');
+              // condition string must not contain single quotes
               var conditionElem = conditionElements[1].replace(/\'/g, "");
               if (conditionElem.includes(',')) {                
                 // converting the string containing multiple conditions into an array
@@ -335,6 +335,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
                     : conditionElem[i].replaceAll("'", "").trim();
                 });
               }
+              // check if the condition element string is equals to true or false and then converting it to a boolean 
+              conditionElem = conditionElem === 'true' ? true : conditionElem === 'false' ? false : conditionElem;
               if (inputName.length > 0) {
                 inputSchema['visibleIf'] = {};
                 inputSchema['visibleIf'][inputName[inputName.length - 1]] = conditionElem;
