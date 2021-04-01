@@ -14,8 +14,9 @@
         <dd class="col-md-8">{{genericData.owner}}</dd>
 
         <dt class="col-md-4">Source job: </dt>
-        <dd class="col-md-8" *ngIf="job; else not_applicable">
-          <a (click)="displayJobModal(job.id)"
+        <dd class="col-md-8">
+          <a *ngIf="job; else not_applicable"
+            (click)="displayJobModal(job.id)"
              class="wipp-link"
              ngbTooltip="Show Job"
              placement="left">
