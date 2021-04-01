@@ -32,6 +32,7 @@ export class GenericDataDetailComponent implements OnInit {
     this.genericDataService.getById(this.genericDataId)
       .subscribe(genericData => {
         this.genericData = genericData;
+        this.getJob();
       }, error => {
         this.router.navigate(['/404']);
       });
@@ -50,6 +51,13 @@ export class GenericDataDetailComponent implements OnInit {
 
   canEdit(): boolean {
     return this.keycloakService.canEdit(this.genericData);
+  }
+
+  getJob() {
+    if (this.genericData._links['sourceJob']) {
+      this.genericDataService.getJob(this.genericData._links['sourceJob']['href'])
+        .subscribe(job => this.job = job);
+    }
   }
 
   makeDataPublic(): void {
