@@ -10,6 +10,6 @@ if (environment.production) {
 }
 
 // We bootstrap the App with KeycloakService, to make sure KeycloakService is initialized
-KeycloakService.init()
+KeycloakService.init(environment.keycloak.url, environment.keycloak.realm, environment.keycloak.clientId)
 .then(() => platformBrowserDynamic().bootstrapModule(AppModule))
 .catch(err => console.log(err));

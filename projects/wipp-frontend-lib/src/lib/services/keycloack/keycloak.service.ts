@@ -7,15 +7,12 @@ export class KeycloakService {
 
   static auth: any = {};
 
-  static init(): Promise<any> {
+
+  static init(keycloakUrl, keycloakRealm, keyCloakClientId): Promise<any> {
       const keycloakAuth: Keycloak.KeycloakInstance = Keycloak({
-          // url: environment.keycloak.url,
-          // realm: environment.keycloak.realm,
-          // clientId: environment.keycloak.clientId
-          // url: 'http://localhost:8081/auth',
-          url: 'https://keycloak-ci.aws.labshare.org/auth',
-          realm: 'WIPP',
-          clientId: 'wipp-public-client'
+          url: keycloakUrl,
+          realm: keycloakRealm,
+          clientId: keyCloakClientId
       });
 
       KeycloakService.auth.loggedIn = false;
