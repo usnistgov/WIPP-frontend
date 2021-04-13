@@ -120,5 +120,17 @@ export class GenericDataService implements DataService<GenericData, PaginatedGen
       return this.http.delete(`${this.genericDataUrl}/${genericData.id}/genericFile`);
     }
   }
+
+  makePublicGenericDataCollection(genericData: GenericData): Observable<GenericData> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<GenericData>(`${this.genericDataUrl}/${genericData.id}`, {publiclyShared: true}, httpOptions);
+  }
+
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
+  }
   
 }

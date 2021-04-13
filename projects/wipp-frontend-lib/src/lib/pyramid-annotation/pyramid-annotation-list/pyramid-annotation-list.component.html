@@ -1,8 +1,7 @@
 <h3 class="wipp-title">Pyramid Annotations</h3>
 
-<table mat-table [dataSource]="pyramidAnnotations"
-       (matSortChange)="sortChanged($event)"
-       matSort matSortActive="creationDate" matSortDisableClear matSortDirection="asc">
+<table mat-table [dataSource]="pyramidAnnotations" (matSortChange)="sortChanged($event)" matSort
+  matSortActive="creationDate" matSortDisableClear matSortDirection="asc">
 
   <!-- Name Column -->
   <ng-container matColumnDef="name">
@@ -23,11 +22,27 @@
     <td mat-cell *matCellDef="let row">{{row.numberOfTimeSlices}}</td>
   </ng-container>
 
-    <!-- Add center alignment to th tag -->
+  <!-- Owner Column -->
+  <ng-container matColumnDef="owner">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      Owner
+    </th>
+    <td mat-cell *matCellDef="let row">{{row.owner}}</td>
+  </ng-container>
+
+  <!-- Shared Column -->
+  <ng-container matColumnDef="publiclyShared">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Visibility</th>
+    <td mat-cell *matCellDef="let row">
+      <span *ngIf="!row.publiclyShared" class="fa fa-user-lock" aria-hidden="true"></span>
+      <span *ngIf="row.publiclyShared" class="fa fa-users" aria-hidden="true"></span>
+    </td>
+  </ng-container>
+
+  <!-- Add center alignment to th tag -->
   <!-- [style.text-align]="center" -->
   <ng-container matColumnDef="header-row-filter-name">
-    <th mat-header-cell *matHeaderCellDef
-        [attr.colspan]="1">
+    <th mat-header-cell *matHeaderCellDef [attr.colspan]="1">
       <mat-form-field class="filter" floatLabel="never">
         <mat-label>Search by name</mat-label>
         <input matInput (keyup)="applyFilterByName($event.target.value)">
@@ -35,11 +50,10 @@
     </th>
   </ng-container>
 
-    <!-- Add center alignment to th tag -->
+  <!-- Add center alignment to th tag -->
   <!-- [style.text-align]="center" -->
   <ng-container matColumnDef="header-row-blank">
-    <th mat-header-cell *matHeaderCellDef
-        [attr.colspan]="2"></th>
+    <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"></th>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -47,4 +61,5 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<mat-paginator (page)="pageChanged($event)" [length]="resultsLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+<mat-paginator (page)="pageChanged($event)" [length]="resultsLength" [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions"></mat-paginator>

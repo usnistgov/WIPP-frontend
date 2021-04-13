@@ -8,6 +8,11 @@ export const environment = {
   production: false,
   version: version,
   apiRootUrl: 'http://localhost:8080/api',
+  keycloak: {
+      url: 'http://localhost:8081/auth',
+      realm: 'WIPP',
+      clientId: 'wipp-public-client'
+  },
   uiPaths: {
     csvCollectionsPath: 'csv-collections',
     genericDatasPath: 'generic-datas',

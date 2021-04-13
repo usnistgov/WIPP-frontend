@@ -6,6 +6,8 @@ export class PyramidAnnotation {
   file: File;
   job: string;
   numberOfTimeSlices: any;
+  owner: string;
+  publiclyShared: boolean;
   _links: any;
 }
 

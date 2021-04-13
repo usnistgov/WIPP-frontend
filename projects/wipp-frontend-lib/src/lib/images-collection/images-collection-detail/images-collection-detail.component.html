@@ -16,6 +16,9 @@
         <dt class="col-md-4">Creation date:</dt>
         <dd class="col-md-8">{{imagesCollection.creationDate| date}}</dd>
 
+        <dt class="col-md-4">Owner:</dt>
+        <dd class="col-md-8">{{imagesCollection.owner}}</dd>
+
         <dt class="col-md-4">Number of files:</dt>
         <dd class="col-md-8">{{getNbFiles()}}</dd>
 
@@ -30,14 +33,15 @@
 
         <dt class="col-md-4">Source:</dt>
         <dd class="col-md-8">
-          <span *ngIf="sourceJob; then jobTemplate; else importTemplate"></span>
+          <span *ngIf="imagesCollection.sourceJob; then jobTemplate; else importTemplate"></span>
           <ng-template #jobTemplate>
-            <a (click)="displayJobModal(imagesCollection.sourceJob)"
+            <a *ngIf="sourceJob; else jobNonAvailable" (click)="displayJobModal(imagesCollection.sourceJob)"
                class="wipp-link"
                ngbTooltip="Show Job"
                placement="left">
               {{sourceJob.name}}
             </a>
+            <ng-template #jobNonAvailable>N/A</ng-template>
           </ng-template>
           <ng-template #importTemplate>
             <div *ngIf="imagesCollection.importMethod == 'CATALOG'">
@@ -58,13 +62,19 @@
               aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
           </ng-template>
         </dd>
+
+        <dt class="col-md-4">Visibility:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="imagesCollection.publiclyShared; else privateData">Public</div>
+        </dd>
+        <ng-template #privateData>Private</ng-template>
       </dl>
     </div>
 
     <div class="col-md-5">
       <dl class="row">
         <dt class="col-md-3">
-          <button class="btn btn-block btn-default"
+          <button *ngIf="canEdit()" class="btn btn-block btn-default"
                   (click)="changeShowNotes()">
             <a *ngIf="showNotes; then hide; else show"></a>
           </button>
@@ -75,7 +85,7 @@
                   [hidden]="!showNotes || editNotes">
             Edit Notes
           </button>
-          <div  [hidden]="!editNotes || !showNotes">
+          <div [hidden]="!editNotes || !showNotes || !canEdit()">
               <button class="btn btn-success btn-block"
                       (click)="saveNotes()"
                       [disabled]="imageCollectionNotes == imagesCollection.notes">
@@ -101,14 +111,14 @@
     </div>
 
     <div class="col-md-2 text-right">
-      <a *ngIf="getNbFiles() > 0"
-         [href]="imagesCollection._links.download.href"
-         ngbTooltip="Download as zip"
-         placement="left"
-         class="btn btn-light">
+      <button *ngIf="getNbFiles() > 0"
+        (click)="openDownload(imagesCollection._links.download.href)"
+        ngbTooltip="Download as zip"
+        placement="left"
+        class="btn btn-light">
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
-      </a>
+      </button>
       <!-- TODO: add copy collection -->
       <!--<button type="button" class="btn btn-default"-->
       <!--ng-click="vm.copyCollection();"-->
@@ -116,14 +126,14 @@
       <!--data-tooltip-placement="left">-->
       <!--<span class="glyphicon glyphicon-copy"></span>-->
       <!--</button>-->
-      <button *ngIf="!imagesCollection.locked" type="button"
+      <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
               ngbTooltip="Delete collection"
               placement="left"
               class="btn btn-light" (click)="deleteCollection();">
                   <span class="fa fa-times"
                         aria-hidden="true"></span>
       </button>
-      <button *ngIf="!imagesCollection.locked" type="button"
+      <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
               ngbTooltip="Lock collection"
               placement="left"
               class="btn btn-light" (click)="lockCollection();">
@@ -137,6 +147,13 @@
         <span class="fa fa-lock"
               aria-hidden="true"></span>
       </div>
+      <button *ngIf="!imagesCollection.publiclyShared && canEdit()" type="button"
+              ngbTooltip="Make collection public"
+              placement="left"
+              class="btn btn-light" (click)="makePublicCollection();">
+        <span class="fas fa-users"
+              aria-hidden="true"></span>
+      </button>
     </div>
   </div>
 
@@ -152,7 +169,7 @@
     </div>
 
     <h5>Folder upload:</h5>
-    <div [hidden]="!flowHolder.supportDirectory">
+    <div [hidden]="!flowHolder.supportDirectory  || !canEdit()">
       <div class="col-md-11 ml-md-1">
         <input type="radio" id="regular" name="upload" value="regular"
                [(ngModel)]="uploadOption">
@@ -245,7 +262,7 @@
     </div>
 
 
-    <div class='col-sm-2 text-right'>
+    <div class='col-sm-2 text-right' *ngIf="canEdit()">
       <button *ngIf="!imagesCollection.locked" type="button"
               ngbTooltip="Delete all images"
               placement="left"
@@ -282,28 +299,28 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
       <td mat-cell *matCellDef="let row">{{ row.fileSize | bytes }}</td>
     </ng-container>
-
+    
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let row">
-        <a *ngIf="!row.importing && !row.importError"
-           [href]="row._links.self.href"
+        <button *ngIf="!row.importing && !row.importError"
+          (click)="openDownload(row._links.download.href)"
            ngbTooltip="Download image"
            placement="left"
            class="btn btn-light">
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
-        </a>
-        <a *ngIf="!row.importing && !row.importError"
-           [href]="row._links.ome.href"
+        </button>
+        <button *ngIf="!row.importing && !row.importError"
+           (click)="openDownload(row._links.ome.href)"
            ngbTooltip="Download metadata"
            placement="left"
            class="btn btn-light">
                   <span
                     aria-hidden="true"><i class="fa fa-info-circle"></i></span>
-        </a>
-        <button *ngIf="!imagesCollection.locked" type="button"
+        </button>
+        <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
                 ngbTooltip="Remove from collection"
                 placement="left"
                 class="btn btn-light" (click)="deleteImage(row);">
@@ -355,7 +372,7 @@
     <div class='col-sm-3 text-right'></div>
     <div class='col-sm-3 text-right'></div>
     <div class='col-sm-2 text-right'>
-      <button *ngIf="!imagesCollection.locked" type="button"
+      <button *ngIf="!imagesCollection.locked  && canEdit()" type="button"
               ngbTooltip="Delete all metadata files"
               placement="left"
               class="btn btn-light"
@@ -403,7 +420,7 @@
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
         </a>
-        <button *ngIf="!imagesCollection.locked" type="button"
+        <button *ngIf="!imagesCollection.locked  && canEdit()" type="button"
                 ngbTooltip="Remove from collection"
                 placement="left"
                 class="btn btn-light" (click)="deleteMetadataFile(row);">
@@ -421,7 +438,6 @@
   <div class="container-fluid topMarge20">
     <div class="row">
       <div class="col-md-5">
-      </div>
       <div class="col-md-3 text-right topMarge5">
         <span class="goToSpan">
            <mat-form-field class="inputPage">

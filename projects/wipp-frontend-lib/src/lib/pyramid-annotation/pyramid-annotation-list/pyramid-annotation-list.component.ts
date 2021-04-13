@@ -14,7 +14,7 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
   styleUrls: ['./pyramid-annotation-list.component.css']
 })
 export class PyramidAnnotationListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices'];
+  displayedColumns: string[] = ['name', 'creationDate', 'numberOfTimeSlices', 'owner', 'publiclyShared'];  
   pyramidAnnotations: Observable<PyramidAnnotation[]>;
   pyramidAnnotationsUiPath: string;
 

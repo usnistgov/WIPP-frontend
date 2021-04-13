@@ -1,16 +1,17 @@
-import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ImagesCollectionService} from '../images-collection.service';
-import {ImagesCollection} from '../images-collection';
+import { Component, NgModule, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ImagesCollectionService } from '../images-collection.service';
+import { ImagesCollection } from '../images-collection';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatTable } from '@angular/material/table';
-import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ImagesCollectionNewComponent} from '../images-collection-new/images-collection-new.component';
-import {Router} from '@angular/router';
-import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import { BehaviorSubject, combineLatest, Observable, of as observableOf } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ImagesCollectionNewComponent } from '../images-collection-new/images-collection-new.component';
+import { Router } from '@angular/router';
+import { ModalErrorComponent } from '../../modal-error/modal-error.component';
+import { KeycloakService } from '../../services/keycloack/keycloak.service';
 
 @Component({
   selector: 'app-images-collection-list',
@@ -18,7 +19,7 @@ import {ModalErrorComponent} from '../../modal-error/modal-error.component';
   styleUrls: ['./images-collection-list.component.css']
 })
 export class ImagesCollectionListComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'creationDate', 'imagesTotalSize'];
+  displayedColumns: string[] = ['name', 'numberOfImages', 'locked', 'publiclyShared', 'creationDate', 'imagesTotalSize', 'owner'];
   imagesCollections: Observable<ImagesCollection[]>;
   imagesCollectionsUiPath: string;
 
@@ -26,14 +27,15 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   pageSize = 10;
   isLoadingResults = true;
   pageSizeOptions: number[] = [10, 25, 50, 100];
-  paramsChange: BehaviorSubject<{index: number, size: number, sort: string, filterName: string, filterNbOfImgs: string}>;
+  paramsChange: BehaviorSubject<{ index: number, size: number, sort: string, filterName: string, filterNbOfImgs: string }>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     private imagesCollectionService: ImagesCollectionService,
     private modalService: NgbModal,
-    private router: Router
+    private router: Router,
+    private keycloakService: KeycloakService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -142,7 +144,7 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
   }
 
   createNew() {
-    const modalRef = this.modalService.open(ImagesCollectionNewComponent, {size: 'lg'});
+    const modalRef = this.modalService.open(ImagesCollectionNewComponent, { size: 'lg' });
     modalRef.componentInstance.modalReference = modalRef;
     modalRef.result.then((result) => {
       this.imagesCollectionService.createImagesCollection(result).subscribe(imagesCollection => {
@@ -164,5 +166,9 @@ export class ImagesCollectionListComponent implements OnInit, OnDestroy {
 
   getImagesCollectionsUiPath() {
     this.imagesCollectionsUiPath = this.imagesCollectionService.getImagesCollectionUiPath();
+  }
+
+  canCreate(): boolean {
+    return (this.keycloakService.isLoggedIn());
   }
 }

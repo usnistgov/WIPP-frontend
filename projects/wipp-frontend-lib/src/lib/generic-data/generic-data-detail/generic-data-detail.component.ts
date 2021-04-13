@@ -11,6 +11,8 @@ import * as Flow from '@flowjs/flow.js';
 import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
 import {BytesPipe} from 'angular-pipes';
 import {MatPaginator} from '@angular/material/paginator';
+import { ModalErrorComponent } from '../../modal-error/modal-error.component';
+import { KeycloakService } from '../../services/keycloack/keycloak.service';
 
 @Component({
   selector: 'app-generic-data-detail',
@@ -43,7 +45,8 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private router: Router,
-    private genericDataService: GenericDataService) {
+    private genericDataService: GenericDataService,
+    private keycloakService: KeycloakService ) {
       this.genericFilesParamsChange = new BehaviorSubject({
         index: 0,
         size: this.pageSize,
@@ -53,7 +56,8 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
-      method: 'octet'
+      method: 'octet',
+      headers: {Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`}
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -63,9 +67,11 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.refresh().subscribe(genericData => {
-      if (!genericData.locked) {
+      if (this.canEdit() && !genericData.locked) {
         this.initFlow();
       }
+    }, error => {
+      this.router.navigate(['/404']);
     });
   }
 
@@ -196,5 +202,25 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
     this.genericDataService.deleteAllGenericFiles(this.genericData).subscribe(result => {
       this.$throttleRefresh.next();
     });
+  }
+
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.genericData);
+  }
+  
+  makePublicCollection(): void {
+    this.genericDataService.makePublicGenericDataCollection(
+      this.genericData).subscribe(genericData => {
+      this.genericData = genericData;
+    }, error => {
+      const modalRefErr = this.modalService.open(ModalErrorComponent);
+      modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
+      modalRefErr.componentInstance.message = error.error;
+    });
+  }
+    
+  openDownload(url: string) {
+    this.genericDataService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
   }
 }

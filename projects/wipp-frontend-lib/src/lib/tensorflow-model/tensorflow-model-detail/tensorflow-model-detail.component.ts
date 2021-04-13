@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {Job} from '../../job/job';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {TensorflowModelService} from '../tensorflow-model.service';
 import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import urljoin from 'url-join';
+import { KeycloakService } from '../../services/keycloack/keycloak.service';
 
 @Component({
   selector: 'app-tensorflow-model-detail',
@@ -22,8 +23,10 @@ export class TensorflowModelDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
-    private tensorflowModelService: TensorflowModelService) {
+    private tensorflowModelService: TensorflowModelService,
+    private keycloakService: KeycloakService) {
   }
 
   ngOnInit() {
@@ -32,6 +35,8 @@ export class TensorflowModelDetailComponent implements OnInit {
       .subscribe(tensorflowModel => {
         this.tensorflowModel = tensorflowModel;
         this.getTensorboardLogsAndJob();
+      }, error => {
+        this.router.navigate(['/404']);
       });
   }
 
@@ -57,5 +62,21 @@ export class TensorflowModelDetailComponent implements OnInit {
       , (reason) => {
         console.log('dismissed');
       });
+  }
+
+  makePublicTensorflowModel(): void {
+    this.tensorflowModelService.makePublicTensorflowModel(
+      this.tensorflowModel).subscribe(tensorflowModel => {
+      this.tensorflowModel = tensorflowModel;
+    });
+  }
+
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.tensorflowModel);
+  }
+
+  openDownload(url: string) {
+    this.tensorflowModelService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
   }
 }

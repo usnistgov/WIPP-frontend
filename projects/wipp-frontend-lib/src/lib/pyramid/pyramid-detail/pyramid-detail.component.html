@@ -1,24 +1,43 @@
 <h3 class="wipp-title">Pyramid Detail</h3>
 
-<div class="top20">
+<div>
   <div class="row">
-    <div class="col-md-12"><b>Name: </b> {{pyramid.name}}</div>
-  </div>
+    <div class="col-md-9">
+        <dl class="row">
+          <dt class="col-md-4">Name: </dt>
+          <dd class="col-md-8">{{pyramid.name}}</dd>
 
-  <div class="row">
-    <div class="col-md-12"><b>Creation Date: </b> {{pyramid.creationDate | date}}</div>
-  </div>
+          <dt class="col-md-4">Creation Date: </dt>
+          <dd class="col-md-8">{{pyramid.creationDate | date}}</dd>
+  
+          <dt class="col-md-4">Owner:</dt>
+          <dd class="col-md-8">{{pyramid.owner}}</dd>
 
-
-  <div class="row" *ngIf="job">
-    <div class="col-md-5">
-      <b> Pyramid job: </b>
-      <a (click)="displayJobModal(job.id)"
-         class="wipp-link"
-         ngbTooltip="Show Job"
-         placement="left">
-        {{job.name}}
-      </a>
+          <dt class="col-md-4">Source job: </dt>
+          <dd class="col-md-8" *ngIf="job; else notApplicable">
+            <a (click)="displayJobModal(job.id)"
+                class="wipp-link"
+                ngbTooltip="Show Job"
+                placement="left">
+              {{job.name}}
+            </a>
+          </dd>
+          <ng-template #notApplicable><a class="not_applicable">N/A</a></ng-template>
+          <dt class="col-md-4">Visibility:</dt>
+          <dd class="col-md-8">
+            <div *ngIf="pyramid.publiclyShared; else privateData">Public</div>
+          </dd>
+          <ng-template #privateData>Private</ng-template>
+        </dl>
+      </div>
+      <div class="col-md-3 text-right">
+        <button *ngIf="!pyramid.publiclyShared && canEdit()" type="button"
+                ngbTooltip="Make pyramid public"
+                placement="left"
+                class="btn btn-light" (click)="makePublicPyramid();">
+          <span class="fa fa-users"
+                aria-hidden="true"></span>
+        </button>
     </div>
   </div>
 </div>

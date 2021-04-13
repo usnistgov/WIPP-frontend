@@ -7,6 +7,7 @@ import {GenericDataService} from '../generic-data.service';
 import { GenericData } from '../generic-data';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GenericDataNewComponent } from '../generic-data-new/generic-data-new.component';
+import { KeycloakService } from '../../services/keycloack/keycloak.service';
 
 @Component({
   selector: 'app-generic-data-list',
@@ -14,7 +15,7 @@ import { GenericDataNewComponent } from '../generic-data-new/generic-data-new.co
   styleUrls: ['./generic-data-list.component.css'],
 })
 export class GenericDataListComponent implements OnInit , OnDestroy{
-  displayedColumns: string[] = ['name', 'creationDate'];
+  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyShared'];
   genericDatas: Observable<GenericData[]>;
   genericDatasUiPath: string;
 
@@ -28,6 +29,7 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
 
   constructor(
     private genericDataService: GenericDataService,
+    private keycloakService: KeycloakService,
     private modalService: NgbModal) {
       this.paramsChange = new BehaviorSubject({
         index: 0,
@@ -108,6 +110,10 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  canCreate(): boolean {
+    return(this.keycloakService.isLoggedIn());
   }
 
 }

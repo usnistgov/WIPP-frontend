@@ -8,6 +8,7 @@ import {PyramidVisualizationService} from '../pyramid-visualization.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {PyramidVisualizationNewComponent} from '../pyramid-visualization-new/pyramid-visualization-new.component';
+import { KeycloakService } from '../../services/keycloack/keycloak.service';
 
 @Component({
   selector: 'app-pyramid-visualization-list',
@@ -16,7 +17,7 @@ import {PyramidVisualizationNewComponent} from '../pyramid-visualization-new/pyr
 })
 export class PyramidVisualizationListComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'creationDate'];
+  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyShared'];
   visualizations: Observable<Visualization[]>;
   visualizationsUiPath: string;
 
@@ -31,7 +32,8 @@ export class PyramidVisualizationListComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private visualizationService: PyramidVisualizationService
+    private visualizationService: PyramidVisualizationService,
+    private keycloakService: KeycloakService
   ) {
     this.paramsChange = new BehaviorSubject({
       index: 0,
@@ -112,6 +114,10 @@ export class PyramidVisualizationListComponent implements OnInit {
 
   getPyramidVisualizationsUiPath() {
     this.visualizationsUiPath = this.visualizationService.getVisualizationUiPath();
+  }
+
+  canCreate() : boolean {
+    return(this.keycloakService.isLoggedIn());
   }
 
 }

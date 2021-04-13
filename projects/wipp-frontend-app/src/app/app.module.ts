@@ -6,12 +6,13 @@ import {
   CsvCollectionModule, DynamicContentModule, NotebookModule,
   TensorflowModelModule, PluginModule, PyramidModule, PyramidAnnotationModule,
   PyramidVisualizationModule, StitchingVectorModule, WorkflowModule,
-  WippFrontendLibConfigurationProvider, WippFrontendLibConfiguration
+  WippFrontendLibConfigurationProvider, WippFrontendLibConfiguration,
+  KeycloakInterceptorService, KeycloakService
 } from 'wipp-frontend-lib';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -77,7 +78,13 @@ export class ConfigFromApp implements WippFrontendLibConfigurationProvider {
       useFactory: appInitializerFactory,
       multi: true,
       deps: [AppConfigService]
-    }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: KeycloakInterceptorService,
+      multi: true
+    },
+    KeycloakService
   ],
   bootstrap: [AppComponent]
 })

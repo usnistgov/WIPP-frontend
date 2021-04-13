@@ -11,7 +11,8 @@ import { CsvCollectionDetailComponent, CsvCollectionListComponent,
           NotebookListComponent, NotebookDetailComponent, 
           PluginListComponent, PluginDetailComponent, 
           WorkflowListComponent, WorkflowDetailComponent, 
-          PageNotFoundComponent } from 'wipp-frontend-lib';
+          PageNotFoundComponent, ForbiddenAccessComponent
+         } from 'wipp-frontend-lib';
 import { environment } from '../environments/environment';
 
 
@@ -38,6 +39,7 @@ const appRoutes: Routes = [
     { path: 'plugins/:id', component: PluginDetailComponent },
     { path: 'workflows', component: WorkflowListComponent },
     { path: 'workflows/detail/:id', component: WorkflowDetailComponent },
+    { path: '403', component: ForbiddenAccessComponent },
     { path: '',   redirectTo: '/images-collections', pathMatch: 'full' },
     { path: '**', component: PageNotFoundComponent },
   ];

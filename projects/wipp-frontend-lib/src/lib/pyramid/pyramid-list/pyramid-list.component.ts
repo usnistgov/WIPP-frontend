@@ -12,7 +12,7 @@ import {PyramidService} from '../pyramid.service';
   styleUrls: ['./pyramid-list.component.css']
 })
 export class PyramidListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'creationDate'];
+  displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyShared'];
   pyramids: Observable<Pyramid[]>;
   pyramidsUiPath: string;
 

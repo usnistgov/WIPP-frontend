@@ -1,10 +1,10 @@
-import {Injectable, Inject} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {DataService} from '../data-service';
-import {PaginatedPyramidAnnotation, PyramidAnnotation} from './pyramid-annotation';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {PaginatedTimeSlices} from '../stitching-vector/timeSlice';
+import { Injectable, Inject } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { DataService } from '../data-service';
+import { PaginatedPyramidAnnotation, PyramidAnnotation } from './pyramid-annotation';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { PaginatedTimeSlices } from '../stitching-vector/timeSlice';
 import { ENV } from '../injection-token';
 
 @Injectable({
@@ -12,7 +12,7 @@ import { ENV } from '../injection-token';
 })
 export class PyramidAnnotationService implements DataService<PyramidAnnotation, PaginatedPyramidAnnotation> {
   private pyramidAnnotationsUrl = this.env.apiRootUrl + '/pyramidAnnotations';
-  private pyramidAnnotationUiPath = this.env.uiPaths.pyramidAnnotationsPath;  
+  private pyramidAnnotationUiPath = this.env.uiPaths.pyramidAnnotationsPath;
 
   constructor(
     @Inject(ENV) private env: any,
@@ -21,7 +21,7 @@ export class PyramidAnnotationService implements DataService<PyramidAnnotation, 
 
   get(params): Observable<PaginatedPyramidAnnotation> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
     if (params) {
@@ -64,7 +64,7 @@ export class PyramidAnnotationService implements DataService<PyramidAnnotation, 
 
   getTimeSlices(id: string, params): Observable<PaginatedTimeSlices> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
     };
     if (params) {
@@ -82,5 +82,17 @@ export class PyramidAnnotationService implements DataService<PyramidAnnotation, 
 
   getPyramidAnnotationUiPath(): string {
     return this.pyramidAnnotationUiPath;
+  }
+
+  makePyramidAnnotationPublic(pyramidAnnotation: PyramidAnnotation): Observable<PyramidAnnotation> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      params: {}
+    };
+    return this.http.patch<PyramidAnnotation>(`${this.pyramidAnnotationsUrl}/${pyramidAnnotation.id}`, { publiclyShared: true }, httpOptions);
+  }
+
+  downloadAnnotation(url: string): Observable<any> {
+    return this.http.get(url);
   }
 }

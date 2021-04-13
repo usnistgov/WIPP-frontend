@@ -73,6 +73,7 @@
               "node_modules/prismjs/themes/prism.css"            ],
             "scripts": [
               "node_modules/@wipp/wdzt/build/deps/wdzt-deps.js",
+              "node_modules/keycloak-js/dist/keycloak.js",
               "node_modules/notebookjs/notebook.js"
             ]
           },

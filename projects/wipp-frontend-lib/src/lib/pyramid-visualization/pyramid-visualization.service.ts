@@ -82,5 +82,17 @@ export class PyramidVisualizationService {
   getPyramidUiPath(): string {
     return this.pyramidUiPath;
   }
-  
+
+  makePublicVisualization(visualization: Visualization): Observable<Visualization> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<Visualization>(`${this.visualizationsUrl}/${visualization.id}`, {publiclyShared: true}, httpOptions);
+  }
+
+  startDownload(url: string): Observable<string> {
+    return this.http.get<string>(url);
+  }
+
 }

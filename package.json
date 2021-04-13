@@ -1,6 +1,6 @@
 {
   "name": "wipp-frontend",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve wipp-frontend-app",
@@ -54,7 +54,9 @@
     "tslib": "^1.10.0",
     "url-join": "^4.0.1",
     "z-schema": "^3.24.1",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "file-saver": "^2.0.2",
+    "keycloak-js": "^8.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.13",

@@ -1,6 +1,6 @@
 <h3 class="wipp-title">Pyramid Visualizations</h3>
 
-<div class="row">
+<div *ngIf="canCreate()" class="row">
   <div class="col-md-3">
     <button class="btn btn-primary wipp-btn wipp-btn-new" (click)="createNew();">
       <i class="fas fa-plus-circle">
@@ -26,6 +26,25 @@
     <td mat-cell *matCellDef="let row">{{row.creationDate | date}}</td>
   </ng-container>
 
+  <!-- Owner Column -->
+  <ng-container matColumnDef="owner">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      Owner
+    </th>
+    <td mat-cell *matCellDef="let row">{{row.owner}}</td>
+  </ng-container>
+
+  <!-- Shared Column -->
+  <ng-container matColumnDef="publiclyShared">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Visibility</th>
+    <td mat-cell *matCellDef="let row">
+      <span *ngIf="!row.publiclyShared" class="fa fa-user-lock"
+            aria-hidden="true"></span>
+      <span *ngIf="row.publiclyShared" class="fa fa-users"
+            aria-hidden="true"></span>
+    </td>
+  </ng-container>
+
   <!--Filtering Row-->
   <!-- add [style.text-align]="center" to th -->
   <ng-container matColumnDef="header-row-filter-name">
@@ -41,7 +60,7 @@
     <!-- add [style.text-align]="center" to th -->
   <ng-container matColumnDef="header-row-blank">
     <th mat-header-cell *matHeaderCellDef
-        [attr.colspan]="1"></th>
+        [attr.colspan]="3"></th>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

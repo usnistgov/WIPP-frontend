@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {Notebook} from '../notebook';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotebookService} from '../notebook.service';
 import 'prismjs';
@@ -22,10 +22,6 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
 import {PlatformLocation} from '@angular/common';
 
-// nb variable used to be declared in typing.d.ts
-// When building the library, nb variable was not found. We can declare it here for now
-declare var nb: any;
-
 // Importing as Marked causes  "Cannot call a namespace ('Marked') Error: Cannot call a namespace ('Marked')"
 const marked = markedImported;
 
@@ -42,6 +38,7 @@ export class NotebookDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
     private http: HttpClient,
     private notebookService: NotebookService,
@@ -56,21 +53,20 @@ export class NotebookDetailComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.notebookService.getById(this.notebookId).subscribe(notebook => {
-        this.notebook = notebook;
-      },
-      error => {
-        this.openErrorModal(error);
+      this.notebook = notebook;
+      this.notebookService.getNotebookFile(this.notebookId)
+        .subscribe(notebookJson => {
+            this.notebookJson = notebookJson;
+            this.displayNotebook();
+          },
+          error => {
+            this.openErrorModal(error);
+          }
+        );
+      }, error => {
+        this.router.navigate(['/404']);
       }
     );
-    this.notebookService.getNotebookFile(this.notebookId)
-      .subscribe(notebookJson => {
-          this.notebookJson = notebookJson;
-          this.displayNotebook();
-        },
-        error => {
-          this.openErrorModal(error);
-        }
-      );
   }
 
   displayNotebook() {

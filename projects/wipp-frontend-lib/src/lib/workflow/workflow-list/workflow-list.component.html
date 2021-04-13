@@ -1,6 +1,6 @@
 <h3 class="wipp-title">Workflows</h3>
 
-<div class="row">
+<div *ngIf="canCreate()" class="row">
   <div class="col-md-3">
     <button class="btn btn-primary wipp-btn wipp-btn-new" (click)="createNew();">
       <i class="fas fa-plus-circle">
@@ -44,11 +44,30 @@
     <td mat-cell *matCellDef="let row">{{row.endTime | date}}</td>
   </ng-container>
 
+  <!-- Owner Column -->
+  <ng-container matColumnDef="owner">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      Owner
+    </th>
+    <td mat-cell *matCellDef="let row">{{row.owner}}</td>
+  </ng-container>
+
+  <!-- Shared Column -->
+  <ng-container matColumnDef="publiclyShared">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Visibility</th>
+    <td mat-cell *matCellDef="let row">
+      <span *ngIf="!row.publiclyShared" class="fa fa-user-lock"
+            aria-hidden="true"></span>
+      <span *ngIf="row.publiclyShared" class="fa fa-users"
+            aria-hidden="true"></span>
+    </td>
+  </ng-container>
+
   <!-- Add center alignment to th tag -->
   <!-- [style.text-align]="center" -->  
   <ng-container matColumnDef="header-row-filter-name">
     <th mat-header-cell *matHeaderCellDef
-        [attr.colspan]="1">
+        [attr.colspan]="3">
       <mat-form-field class="filter" floatLabel="never">
         <mat-label>Search by name</mat-label>
         <input matInput (keyup)="applyFilterByName($event.target.value)">
