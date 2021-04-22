@@ -105,4 +105,13 @@ export class KeycloakService {
       }
       return false;
     }
+
+    canDeletePublicData(): boolean {
+      if (this.isLoggedIn()) {
+        if (this.hasRole('admin')) {
+          return true;
+        }
+      }
+      return false;
+    }
 }

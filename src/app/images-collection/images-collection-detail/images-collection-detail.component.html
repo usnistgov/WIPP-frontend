@@ -126,8 +126,9 @@
       <!--data-tooltip-placement="left">-->
       <!--<span class="glyphicon glyphicon-copy"></span>-->
       <!--</button>-->
-      <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
+      <button *ngIf="canEdit()" type="button"
               ngbTooltip="Delete collection"
+              [disabled]="imagesCollection.publiclyShared && !canDeletePublicData()"
               placement="left"
               class="btn btn-light" (click)="deleteCollection();">
                   <span class="fa fa-times"
