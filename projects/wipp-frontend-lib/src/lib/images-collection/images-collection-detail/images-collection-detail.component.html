@@ -5,12 +5,22 @@
       <dl class="row">
         <dt class="col-md-4">Name:</dt>
         <dd class="col-md-8">
-          <!-- <inline-editor type="text" [(ngModel)]="imagesCollection.name"
-                         (onSave)="updateCollectionName($event)" size="20"
-                         name="editableImageCollectionName">
-            {{imagesCollection.name}}
-          </inline-editor> -->
-          {{imagesCollection.name}}
+          <editable 
+            [openBindingEvent]="openBindingEvent"
+            (save)="updateCollectionName()">
+            <ng-template viewMode>{{imagesCollection.name}}</ng-template>
+            <ng-template editMode>
+              <div class="d-flex align-items-baseline">
+                <div class="form-group">
+                  <input             
+                    type="text"
+                    [formControl]="inputButtonsControl"/>
+                </div>
+                <button class="btn btn-success" editableOnSave>Save</button>
+                <button class="btn btn-secondary" editableOnCancel>Cancel</button>
+              </div>
+            </ng-template>
+          </editable>
         </dd>
 
         <dt class="col-md-4">Creation date:</dt>
@@ -437,7 +447,7 @@
 
   <div class="container-fluid topMarge20">
     <div class="row">
-      <div class="col-md-5">
+      <div class="col-md-5"></div>
       <div class="col-md-3 text-right topMarge5">
         <span class="goToSpan">
            <mat-form-field class="inputPage">

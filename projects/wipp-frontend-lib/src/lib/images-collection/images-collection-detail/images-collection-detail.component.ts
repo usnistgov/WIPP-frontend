@@ -16,6 +16,7 @@ import { Job } from '../../job/job';
 import urljoin from 'url-join';
 import { KeycloakService } from '../../services/keycloack/keycloak.service';
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -50,6 +51,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   goToPageMetadataFiles;
   imageCollectionId = this.route.snapshot.paramMap.get('id');
   sourceCatalogLink = '';
+  inputButtonsControl: FormControl = new FormControl(this.imagesCollection.name);
+  openBindingEvent = 'dblclick';
 
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('browseDirBtn') browseDirBtn: ElementRef;
@@ -133,11 +136,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // fixme: temporary fix while waiting for 1.0.0 release of ngx-inline-editor
-    // const faRemoveElt = this.elem.nativeElement.querySelector('.fa-remove');
-    // faRemoveElt.classList.remove('fa-remove');
-    // faRemoveElt.classList.add('fa-times');
-
     this.refresh().subscribe(imagesCollection => {
       if (this.canEdit() && !imagesCollection.locked) {
         this.initFlow();
@@ -223,9 +221,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       imagesCollection.numberOfMetadataFiles;
   }
 
-  updateCollectionName(name: string): void {
+  updateCollectionName(): void {
     this.imagesCollectionService.setImagesCollectionName(
-      this.imagesCollection, name).subscribe(imagesCollection => {
+      this.imagesCollection, this.inputButtonsControl.value).subscribe(imagesCollection => {
         this.imagesCollection = imagesCollection;
       });
   }
