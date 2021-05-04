@@ -324,28 +324,52 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           }
           if (ui.hasOwnProperty('condition')) {
             inputSchema['condition'] = ui.condition;
-            const conditionElements = ui.condition.split('==');
-            if (conditionElements.length === 2) {
-              const inputName = conditionElements[0].split('.');
-              // condition string must not contain single quotes
-              var conditionElem = conditionElements[1].replace(/\'/g, "");
-              if (conditionElem.includes(',')) {                
-                // converting the string containing multiple conditions into an array
-                // ngx-schema-form's schema no longer accepts an array string in the visibleif property 
-                conditionElem = conditionElem.split(",");
-                conditionElem[0] = conditionElem[0].substring(1);
-                conditionElem[conditionElem.length - 1] = conditionElem[conditionElem.length - 1]
-                                                            .substring(0,conditionElem[conditionElem.length - 1].length - 1);
-                conditionElem.forEach((x, i) => {
-                  conditionElem[i] = conditionElem[i].includes('"') ? conditionElem[i].replaceAll('"', "").trim()
-                    : conditionElem[i].replaceAll("'", "").trim();
-                });
-              }
-              // check if the condition element string is equals to true or false and then converting it to a boolean 
-              conditionElem = conditionElem === 'true' ? true : conditionElem === 'false' ? false : conditionElem;
-              if (inputName.length > 0) {
-                inputSchema['visibleIf'] = {};
-                inputSchema['visibleIf'][inputName[inputName.length - 1]] = conditionElem;
+            // case when the condition contains the AND operator
+            if(ui.condition.includes('&&')){
+              inputSchema['visibleIf'] = {};
+              inputSchema['visibleIf']['allOf'] = [];
+              const conditionElements = ui.condition.split('&&');
+              conditionElements.forEach(element => {
+                element = element.replace(/\s/g, '');
+                const conditionElements = element.split('==');
+                if (conditionElements.length === 2) {
+                  const inputName = conditionElements[0].split('.');
+                  // condition string must not contain single quotes
+                  var conditionElem = conditionElements[1].replace(/\'/g, "");
+                  // check if the condition element string is equals to true or false and then converting it to a boolean 
+                  conditionElem = conditionElem === 'true' ? true : conditionElem === 'false' ? false : conditionElem;
+                  if (inputName.length > 0) {
+                    inputSchema['visibleIf']['allOf'].push({
+                      [inputName[inputName.length - 1]]: conditionElem
+                    });
+                  }
+                }
+              });
+            }
+            else {
+              const conditionElements = ui.condition.split('==');
+              if (conditionElements.length === 2) {
+                const inputName = conditionElements[0].split('.');
+                // condition string must not contain single quotes
+                var conditionElem = conditionElements[1].replace(/\'/g, "");
+                if (conditionElem.includes(',')) {                
+                  // converting the string containing multiple conditions into an array
+                  // ngx-schema-form's schema no longer accepts an array string in the visibleif property 
+                  conditionElem = conditionElem.split(",");
+                  conditionElem[0] = conditionElem[0].substring(1);
+                  conditionElem[conditionElem.length - 1] = conditionElem[conditionElem.length - 1]
+                                                              .substring(0,conditionElem[conditionElem.length - 1].length - 1);
+                  conditionElem.forEach((x, i) => {
+                    conditionElem[i] = conditionElem[i].includes('"') ? conditionElem[i].replaceAll('"', "").trim()
+                      : conditionElem[i].replaceAll("'", "").trim();
+                  });
+                }
+                // check if the condition element string is equals to true or false and then converting it to a boolean 
+                conditionElem = conditionElem === 'true' ? true : conditionElem === 'false' ? false : conditionElem;
+                if (inputName.length > 0) {
+                  inputSchema['visibleIf'] = {};
+                  inputSchema['visibleIf'][inputName[inputName.length - 1]] = conditionElem;
+                }
               }
             }
           }
