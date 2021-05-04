@@ -16,6 +16,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ImagesCollectionTemplateComponent} from './images-collection-template/images-collection-template.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { EditableModule } from '@ngneat/edit-in-place';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { RouterModule } from '@angular/router';
     MatInputModule,
     ReactiveFormsModule,
     MatCheckboxModule,
-    HttpClientModule
+    HttpClientModule,
+    EditableModule
   ],
   entryComponents: [ImagesCollectionNewComponent],
   declarations: [
