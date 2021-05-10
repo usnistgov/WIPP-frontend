@@ -20,6 +20,9 @@ export class ImagesCollectionTemplateComponent extends DynamicComponent implemen
   ngOnInit() {
       this.imagesCollectionService.getById(this.idData).subscribe(result => {
         this.text = result.name;
+      },
+      error => {
+        this.text = 'N/A';
       });
   }
 }

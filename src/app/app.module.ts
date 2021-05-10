@@ -29,6 +29,8 @@ import {PyramidVisualizationModule} from './pyramid-visualization/pyramid-visual
 import { ForbiddenAccessComponent } from './forbidden-access/forbidden-access.component';
 import {PyramidAnnotationModule} from './pyramid-annotation/pyramid-annotation.module';
 import { GenericDataModule } from './generic-data/generic-data.module';
+import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
+import {ConfirmDialogModule} from './confirm-dialog/confirm-dialog.module';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,7 @@ import { GenericDataModule } from './generic-data/generic-data.module';
     GenericDataModule,
     PluginModule,
     WorkflowModule,
+    ConfirmDialogModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
@@ -75,7 +78,8 @@ import { GenericDataModule } from './generic-data/generic-data.module';
       useClass: KeycloakInterceptorService,
       multi: true
     },
-    KeycloakService
+    KeycloakService,
+    ConfirmDialogService
   ],
   bootstrap: [AppComponent]
 })

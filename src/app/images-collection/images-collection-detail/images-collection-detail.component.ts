@@ -17,6 +17,7 @@ import urljoin from 'url-join';
 import {AppConfigService} from '../../app-config.service';
 import {KeycloakService} from '../../services/keycloak/keycloak.service';
 import {ModalErrorComponent} from '../../modal-error/modal-error.component';
+import {ConfirmDialogService} from '../../confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -72,7 +73,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private imagesCollectionService: ImagesCollectionService,
     private appConfigService: AppConfigService,
-    private keycloakService: KeycloakService
+    private keycloakService: KeycloakService,
+    private confirmDialogService: ConfirmDialogService
     ) {
     this.imagesParamsChange = new BehaviorSubject({
       index: 0,
@@ -89,6 +91,11 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   canEdit(): boolean {
     return this.keycloakService.canEdit(this.imagesCollection);
   }
+
+  canDeletePublicData(): boolean {
+    return this.keycloakService.canDeletePublicData();
+  }
+
   imagesSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
     this.imagesParamsChange.next({index: 0, size: this.imagesParamsChange.value.size, sort: sort.active + ',' + sort.direction});
@@ -252,13 +259,26 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   makePublicCollection(): void {
-    this.imagesCollectionService.makePublicImagesCollection(
-      this.imagesCollection).subscribe(imagesCollection => {
-      this.imagesCollection = imagesCollection;
-    }, error => {
-      const modalRefErr = this.modalService.open(ModalErrorComponent);
-      modalRefErr.componentInstance.title = 'Error while changing Images Collection visibility to public';
-      modalRefErr.componentInstance.message = error.error;
+    const title = 'Make public';
+    const message = 'Are you sure you want to make this collection public? ' +
+      'This action cannot be undone.';
+    const warnings: string[] = [];
+    warnings.push('Once public, all users will be able to see and use the collection.');
+    warnings.push('Once public, the collection cannot be deleted except by an admin user.');
+    const modalRefConfirm = this.confirmDialogService.createConfirmModal(
+      title, message, warnings
+    );
+    modalRefConfirm.result.then((confirm) => {
+      if (confirm) {
+        this.imagesCollectionService.makePublicImagesCollection(
+          this.imagesCollection).subscribe(imagesCollection => {
+          this.imagesCollection = imagesCollection;
+        }, error => {
+          const modalRefErr = this.modalService.open(ModalErrorComponent);
+          modalRefErr.componentInstance.title = 'Unable to make public';
+          modalRefErr.componentInstance.message = error.error;
+        });
+      }
     });
   }
 
@@ -270,11 +290,27 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   deleteCollection(): void {
-    if (confirm('Are you sure you want to delete the collection ' + this.imagesCollection.name + '?')) {
-      this.imagesCollectionService.deleteImagesCollection(this.imagesCollection).subscribe(collection => {
-        this.router.navigate(['images-collections']);
-      });
+    const title = 'Delete collection';
+    const message = 'Are you sure you want to delete the collection ' +
+      this.imagesCollection.name + '? ' +
+      'This action cannot be undone.';
+    const warnings: string[] = [];
+    if (this.imagesCollection.locked) {
+      warnings.push('This collection is locked.');
     }
+    if (this.imagesCollection.publiclyShared) {
+      warnings.push('This collection is public, multiple users may be impacted.');
+    }
+    const modalRefConfirm = this.confirmDialogService.createConfirmModal(
+      title, message, warnings
+    );
+    modalRefConfirm.result.then((confirm) => {
+      if (confirm) {
+        this.imagesCollectionService.deleteImagesCollection(this.imagesCollection).subscribe(collection => {
+          this.router.navigate(['images-collections']);
+        });
+      }
+    });
   }
 
   deleteImage(image: Image): void {
