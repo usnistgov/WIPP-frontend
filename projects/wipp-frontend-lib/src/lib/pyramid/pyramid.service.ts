@@ -192,5 +192,4 @@ export class PyramidService implements DataService<Pyramid, PaginatedPyramid> {
     };
     return this.http.patch<Pyramid>(`${this.pyramidsUrl}/${pyramid.id}`, {publiclyShared: true}, httpOptions);
   }
-  
 }

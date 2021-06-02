@@ -12,7 +12,7 @@ import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
 import {BytesPipe} from 'angular-pipes';
 import {MatPaginator} from '@angular/material/paginator';
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-generic-data-detail',

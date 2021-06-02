@@ -15,7 +15,7 @@ import urljoin from 'url-join';
 import {JobService} from '../../job/job.service';
 import {dataMap} from '../../data-service';
 import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 
 @Component({

@@ -7,7 +7,7 @@ import {GenericDataService} from '../generic-data.service';
 import { GenericData } from '../generic-data';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GenericDataNewComponent } from '../generic-data-new/generic-data-new.component';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-generic-data-list',

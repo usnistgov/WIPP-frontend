@@ -25,6 +25,9 @@
 
         <dt class="col-md-4">Creation date:</dt>
         <dd class="col-md-8">{{imagesCollection.creationDate| date}}</dd>
+        
+        <dt class="col-md-4">Owner:</dt>
+        <dd class="col-md-8">{{imagesCollection.owner}}</dd>
 
         <dt class="col-md-4">Owner:</dt>
         <dd class="col-md-8">{{imagesCollection.owner}}</dd>
@@ -90,7 +93,7 @@
           </button>
           <ng-template #show> Show Notes</ng-template>
           <ng-template #hide> Hide Notes</ng-template>
-          <button class="btn btn-block btn-default"
+          <button *ngIf="canEdit()" class="btn btn-block btn-default"
                   (click)="changeEditNotes()"
                   [hidden]="!showNotes || editNotes">
             Edit Notes
@@ -136,8 +139,9 @@
       <!--data-tooltip-placement="left">-->
       <!--<span class="glyphicon glyphicon-copy"></span>-->
       <!--</button>-->
-      <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
+      <button *ngIf="canEdit()" type="button"
               ngbTooltip="Delete collection"
+              [disabled]="imagesCollection.publiclyShared && !canDeletePublicData()"
               placement="left"
               class="btn btn-light" (click)="deleteCollection();">
                   <span class="fa fa-times"

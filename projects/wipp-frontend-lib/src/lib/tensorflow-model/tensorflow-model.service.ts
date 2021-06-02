@@ -102,5 +102,4 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
   startDownload(url: string): Observable<string> {
     return this.http.get<string>(url);
   }
-
 }

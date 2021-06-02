@@ -6,6 +6,7 @@ import {
   CsvCollectionModule, DynamicContentModule, NotebookModule,
   TensorflowModelModule, PluginModule, PyramidModule, PyramidAnnotationModule,
   PyramidVisualizationModule, StitchingVectorModule, WorkflowModule,
+  ConfirmDialogModule, ConfirmDialogService,
   WippFrontendLibConfigurationProvider, WippFrontendLibConfiguration,
   KeycloakInterceptorService, KeycloakService
 } from 'wipp-frontend-lib';
@@ -60,6 +61,7 @@ export class ConfigFromApp implements WippFrontendLibConfigurationProvider {
     GenericDataModule,
     PluginModule,
     WorkflowModule,
+    ConfirmDialogModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
@@ -84,7 +86,8 @@ export class ConfigFromApp implements WippFrontendLibConfigurationProvider {
       useClass: KeycloakInterceptorService,
       multi: true
     },
-    KeycloakService
+    KeycloakService,    
+    ConfirmDialogService
   ],
   bootstrap: [AppComponent]
 })

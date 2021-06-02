@@ -23,6 +23,9 @@ export class ImagesCollectionTemplateComponent extends DynamicComponent implemen
     this.getImagesCollectionsUiPath();
     this.imagesCollectionService.getById(this.idData).subscribe(result => {
       this.text = result.name;
+    },
+    error => {
+      this.text = 'N/A';
     });
   }
 

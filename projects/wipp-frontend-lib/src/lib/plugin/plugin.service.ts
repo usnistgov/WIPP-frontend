@@ -105,12 +105,12 @@ export class PluginService {
     return this.httpExternal.get<JSON>(url);
   }
 
-  getPluginsUiPath(): string {
-    return this.pluginsUiPath;
-  }
-
   deletePlugin(plugin: Plugin) {
     return this.http.delete<Plugin>(plugin._links.self.href);
+  }
+
+  getPluginsUiPath(): string {
+    return this.pluginsUiPath;
   }
   
 }

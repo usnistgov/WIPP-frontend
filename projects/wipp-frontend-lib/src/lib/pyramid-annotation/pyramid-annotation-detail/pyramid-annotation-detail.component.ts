@@ -7,8 +7,8 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { PyramidAnnotation } from '../pyramid-annotation';
 import { PyramidAnnotationService } from '../pyramid-annotation.service';
 import { TimeSlice } from '../timeSlice';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
-import {saveAs} from 'file-saver';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-pyramid-annotation-detail',

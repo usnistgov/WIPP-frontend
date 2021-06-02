@@ -9,7 +9,7 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PluginNewComponent} from '../plugin-new/plugin-new.component';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
 
 @Component({
@@ -109,16 +109,16 @@ export class PluginListComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.modalReference = modalRef;
   }
 
+  canCreate(): boolean {
+    return this.keycloakService.hasRole('admin');
+  }
+
   ngOnDestroy() {
     this.modalService.dismissAll();
   }
 
   getPluginsUiPath() {
     this.pluginsUiPath = this.pluginService.getPluginsUiPath();
-  }
-
-  canCreate(): boolean {
-    return this.keycloakService.hasRole('admin');
   }
   
 }

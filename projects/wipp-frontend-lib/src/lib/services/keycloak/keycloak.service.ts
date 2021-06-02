@@ -24,7 +24,7 @@ export class KeycloakService {
                   // We initialize some attributes
                   KeycloakService.auth.loggedIn = false;
                   KeycloakService.auth.authz = keycloakAuth;
-                  KeycloakService.auth.profileUrl = KeycloakService.auth.authz.authServerUrl + '/realms/' + 'WIPP' + '/account';
+                  KeycloakService.auth.profileUrl = KeycloakService.auth.authz.authServerUrl + '/realms/' + keycloakRealm + '/account';
                   resolve('promise resolve');
               })
               .error(() => {
@@ -95,6 +95,15 @@ export class KeycloakService {
   canEdit(resource: any): boolean {
     if (this.isLoggedIn()) {
       if (this.hasRole('admin') || (resource.hasOwnProperty('owner') && this.getUsername() === resource['owner'])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  canDeletePublicData(): boolean {
+    if (this.isLoggedIn()) {
+      if (this.hasRole('admin')) {
         return true;
       }
     }

@@ -139,5 +139,4 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
   startDownload(url: string): Observable<string> {
     return this.http.get<string>(url);
   }
-  
 }

@@ -33,13 +33,12 @@ import { RouterModule } from '@angular/router';
   entryComponents: [
     PyramidVisualizationNewComponent,
     PyramidVisualizationHelpComponent
-  ]
-  ,
+  ],
   declarations: [
     PyramidVisualizationListComponent,
     PyramidVisualizationDetailComponent,
     PyramidVisualizationNewComponent,
-    PyramidVisualizationHelpComponent],
-
+    PyramidVisualizationHelpComponent
+  ],
 })
 export class PyramidVisualizationModule { }

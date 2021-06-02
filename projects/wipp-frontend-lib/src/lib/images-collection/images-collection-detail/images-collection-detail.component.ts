@@ -14,9 +14,10 @@ import { MetadataFile } from '../metadata-file';
 import { JobDetailComponent } from '../../job/job-detail/job-detail.component';
 import { Job } from '../../job/job';
 import urljoin from 'url-join';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
 import { FormControl } from '@angular/forms';
+import { ConfirmDialogService } from '../../confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -70,7 +71,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private elem: ElementRef,
     private modalService: NgbModal,
     private imagesCollectionService: ImagesCollectionService,
-    private keycloakService: KeycloakService) {
+    private keycloakService: KeycloakService,
+    private confirmDialogService: ConfirmDialogService
+    ) {
     this.imagesParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSizeImages,
@@ -81,6 +84,14 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       size: this.pageSizeMetadataFiles,
       sort: ''
     });
+  }
+
+  canEdit(): boolean {
+    return this.keycloakService.canEdit(this.imagesCollection);
+  }
+
+  canDeletePublicData(): boolean {
+    return this.keycloakService.canDeletePublicData();
   }
 
   imagesSortChanged(sort) {
@@ -124,10 +135,13 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const self = this;
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',
-      headers: { Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}` }
+      headers: function(file, chunk, isTest) {
+        return {Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}`};
+      }
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -235,6 +249,30 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
       });
   }
 
+  makePublicCollection(): void {
+    const title = 'Make public';
+    const message = 'Are you sure you want to make this collection public? ' +
+      'This action cannot be undone.';
+    const warnings: string[] = [];
+    warnings.push('Once public, all users will be able to see and use the collection.');
+    warnings.push('Once public, the collection cannot be deleted except by an admin user.');
+    const modalRefConfirm = this.confirmDialogService.createConfirmModal(
+      title, message, warnings
+    );
+    modalRefConfirm.result.then((confirm) => {
+      if (confirm) {
+        this.imagesCollectionService.makePublicImagesCollection(
+          this.imagesCollection).subscribe(imagesCollection => {
+          this.imagesCollection = imagesCollection;
+        }, error => {
+          const modalRefErr = this.modalService.open(ModalErrorComponent);
+          modalRefErr.componentInstance.title = 'Unable to make public';
+          modalRefErr.componentInstance.message = error.error;
+        });
+      }
+    });
+  }
+
   lockCollection(): void {
     this.imagesCollectionService.lockImagesCollection(
       this.imagesCollection).subscribe(imagesCollection => {
@@ -243,11 +281,27 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   deleteCollection(): void {
-    if (confirm('Are you sure you want to delete the collection ' + this.imagesCollection.name + '?')) {
-      this.imagesCollectionService.deleteImagesCollection(this.imagesCollection).subscribe(collection => {
-        this.router.navigate([this.imagesCollectionService.getImagesCollectionUiPath()]);
-      });
+    const title = 'Delete collection';
+    const message = 'Are you sure you want to delete the collection ' +
+      this.imagesCollection.name + '? ' +
+      'This action cannot be undone.';
+    const warnings: string[] = [];
+    if (this.imagesCollection.locked) {
+      warnings.push('This collection is locked.');
     }
+    if (this.imagesCollection.publiclyShared) {
+      warnings.push('This collection is public, multiple users may be impacted.');
+    }
+    const modalRefConfirm = this.confirmDialogService.createConfirmModal(
+      title, message, warnings
+    );
+    modalRefConfirm.result.then((confirm) => {
+      if (confirm) {
+        this.imagesCollectionService.deleteImagesCollection(this.imagesCollection).subscribe(collection => {
+          this.router.navigate([this.imagesCollectionService.getImagesCollectionUiPath()]);
+        });
+      }
+    });
   }
 
   deleteImage(image: Image): void {
@@ -393,21 +447,6 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   clearNotes() {
     this.imageCollectionNotes = this.imagesCollection.notes;
     this.editNotes = false;
-  }
-
-  canEdit(): boolean {
-    return this.keycloakService.canEdit(this.imagesCollection);
-  }
-
-  makePublicCollection(): void {
-    this.imagesCollectionService.makePublicImagesCollection(
-      this.imagesCollection).subscribe(imagesCollection => {
-        this.imagesCollection = imagesCollection;
-      }, error => {
-        const modalRefErr = this.modalService.open(ModalErrorComponent);
-        modalRefErr.componentInstance.title = 'Error while changing Images Collection visibility to public';
-        modalRefErr.componentInstance.message = error.error;
-      });
   }
 
   openDownload(url: string) {

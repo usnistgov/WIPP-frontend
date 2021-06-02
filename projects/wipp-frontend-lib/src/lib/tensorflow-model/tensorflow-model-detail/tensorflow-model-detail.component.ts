@@ -6,7 +6,7 @@ import {TensorflowModelService} from '../tensorflow-model.service';
 import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import urljoin from 'url-join';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-tensorflow-model-detail',
@@ -63,7 +63,7 @@ export class TensorflowModelDetailComponent implements OnInit {
         console.log('dismissed');
       });
   }
-
+  
   makePublicTensorflowModel(): void {
     this.tensorflowModelService.makePublicTensorflowModel(
       this.tensorflowModel).subscribe(tensorflowModel => {

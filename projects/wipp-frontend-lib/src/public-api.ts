@@ -11,6 +11,7 @@ export * from './lib/wipp-frontend-lib.module';
 export * from './lib/injection-token';
 
 // Exporting modules
+export * from './lib/confirm-dialog/confirm-dialog.module';
 export * from './lib/csv-collection/csv-collection.module';
 export * from './lib/images-collection/images-collection.module';
 export * from './lib/dynamic-content/dynamic-content.module';
@@ -102,7 +103,11 @@ export * from './lib/workflow/widgets/search-widget/search-widget.component';
 // forbidden-access
 export * from './lib/forbidden-access/forbidden-access.component';
 
+// confirm-dialog
+export * from './lib/confirm-dialog/confirm-dialog.component';
+
 // Exporting services
+export * from './lib/confirm-dialog/confirm-dialog.service';
 export * from './lib/csv-collection/csv-collection.service';
 export * from './lib/images-collection/images-collection.service';
 export * from './lib/generic-data/generic-data.service';
@@ -115,5 +120,5 @@ export * from './lib/pyramid-visualization/pyramid-visualization.service';
 export * from './lib/stitching-vector/stitching-vector.service';
 export * from './lib/tensorflow-model/tensorflow-model.service';
 export * from './lib/workflow/workflow.service';
-export * from './lib/services/keycloack/keycloak.service';
-export * from './lib/services/keycloack/keycloak.interceptor.service';
+export * from './lib/services/keycloak/keycloak.service';
+export * from './lib/services/keycloak/keycloak.interceptor.service';

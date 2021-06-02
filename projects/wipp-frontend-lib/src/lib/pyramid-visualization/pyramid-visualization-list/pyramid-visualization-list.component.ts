@@ -8,7 +8,8 @@ import {PyramidVisualizationService} from '../pyramid-visualization.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {PyramidVisualizationNewComponent} from '../pyramid-visualization-new/pyramid-visualization-new.component';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service'
+
 
 @Component({
   selector: 'app-pyramid-visualization-list',
