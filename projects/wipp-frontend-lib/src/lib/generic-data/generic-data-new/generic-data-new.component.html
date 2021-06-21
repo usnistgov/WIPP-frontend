@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">
+    <span class="glyphicon glyphicon-star"></span> New Generic data collection
+  </h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <ngb-alert *ngIf="displayAlert" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>
+  <form name="genericDataDialog">
+    <div class="form-group">
+      <label for="name">Name: </label>
+      <span style="color: #e32"> * </span>
+      <input type="text" [(ngModel)]="genericData.name" id="name" class="form-control" name="name" autofocus
+             required>
+      <small class="form-text text-muted">Enter the Generic data collection name.</small>
+      <span class="asterisk_input"></span>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-danger" (click)="activeModal.dismiss('Cross click')" >
+    <i class="fas fa-times-circle" style="margin-right: 10px">
+      <p class="footerButton">Cancel</p>
+    </i>
+  </button>
+  <button type="button" class="btn btn-success" (click)="createCollection()"
+          [disabled]="!genericData.name">
+    <i class="fas fa-save" style="margin-right: 10px">
+      <p class="footerButton">Save</p>
+    </i>
+  </button>
+</div>

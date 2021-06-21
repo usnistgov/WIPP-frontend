@@ -1,0 +1,74 @@
+.upload-drop-zone {
+  color: #ccc;
+  border-color: #ccc;
+  border-style: dashed;
+  min-height: 100px;
+  display: flex;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
+}
+.drop {
+  color: #222;
+  border-color: #222;
+  border-style: dashed;
+  min-height: 100px;
+  display: flex;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
+}
+
+.goToButton {
+  border-color: #bfbfbf;
+  margin-left: 20px;
+  border-radius: 25px;
+  background-color: transparent;
+}
+
+.goToSpan {
+  color: rgba(0, 0, 0, 0.54);
+  font-family: Roboto, Helvetica Neue, sans-serif;
+  font-size: 12px;
+}
+
+.goToTxt {
+  display: inline;
+  font-size: 12px;
+}
+
+.btnTxt {
+  display: inline;
+  font-size: 12px;
+}
+
+.arrowIcon {
+  font-size: 2.00em;
+  color: #999999;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.inputPage {
+  width: 70px;
+  font-size: 12px;
+}
+
+.topMarge5 {
+  margin-top: 5px;
+}
+
+.topMarge20 {
+  margin-top: 20px;
+}
+
+.wideTxtArea {
+  width: 100%;
+  height: 150px;
+}
+
+.form-group {
+  width: fit-content;
+}
+
+button {
+  margin: 5px;
+}
