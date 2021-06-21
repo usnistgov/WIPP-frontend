@@ -17,7 +17,7 @@ sed -i \
 
 sed -i \
   -e "s|@KEYCLOAK_URL_VALUE@|${KEYCLOAK_URL}|g" \
-  /var/www/frontend/main.*.js
+  /var/www/frontend/main*.js
 
 # Update external tools URLs in frontend conf
 sed -i \
