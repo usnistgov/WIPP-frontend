@@ -16,15 +16,25 @@ import {JobService} from '../../job/job.service';
 import {dataMap} from '../../data-service';
 import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
 import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { animate, transition, trigger } from '@angular/animations';
 
 
 @Component({
   selector: 'app-workflow-detail',
   templateUrl: './workflow-detail.component.html',
-  styleUrls: ['./workflow-detail.component.css']
+  styleUrls: ['./workflow-detail.component.css'],
+  animations: [
+    trigger('direction', [
+      transition('left <=> right', [
+        animate('.2s 0s ease-out'),
+      ])
+    ])
+  ]
 })
 
 export class WorkflowDetailComponent implements OnInit, OnDestroy {
+
+  @Input() public arrowState: boolean = false;
 
   workflow: Workflow = new Workflow();
 
@@ -300,6 +310,18 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               });
               inputSchema['default'] = input.options.values[0];
               break;
+            case 'radio':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'radio';
+              inputSchema['oneOf'] = [];
+              input.options.values.forEach(value => {
+                inputSchema['oneOf'].push({
+                  'enum': [value],
+                  'description': value
+                });
+              });
+              inputSchema['default'] = input.options.values[0];
+              break;
             case 'array':
               inputSchema['type'] = 'array';
               inputSchema['format'] = 'array';
@@ -310,6 +332,16 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             case 'float':
               inputSchema['type'] = 'string';
               inputSchema['widget'] = 'integer';
+              break;
+            case 'range':
+              inputSchema['type'] = 'number';
+              inputSchema['widget'] = 'range';
+              console.log('range------********');
+              console.log(input);
+              console.log('inputSchema--####');
+              console.log(inputSchema);
+              inputSchema['minimum'] = input.options.minimum;
+              inputSchema['maximum'] = input.options.maximum;
               break;
             default:
               inputSchema['type'] = input.type;
@@ -395,6 +427,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           if (ui.hasOwnProperty('default')) {
             inputSchema['default'] = ui.default;
           }
+          // console.log('in the end');
+          // console.log(inputSchema);
           plugin.properties.inputs.properties[input.name] = inputSchema;
         });
         // field sets - arrange fields by groups
@@ -611,5 +645,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  get direction(): 'left' | 'right' {
+    return this.arrowState ? 'left' : 'right';
   }
 }

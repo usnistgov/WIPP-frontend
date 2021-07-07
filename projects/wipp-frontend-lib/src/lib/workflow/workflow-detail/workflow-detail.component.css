@@ -40,7 +40,7 @@ text {
 }
 
 .wf-dag {
-  border: dotted 2px lightgray ;
+  border: none 2px lightgray ;
   min-height: 500px;
   height: 90%;
   overflow: hidden;
@@ -56,4 +56,36 @@ text {
   display: inline;
   font-family: 'Roboto', sans-serif ;
   font-weight: normal
+}
+
+.alg{
+  text-align: right;
+}
+
+.flt-right {
+  width: 500px;
+  height: 100px;
+  float: right;
+}
+
+.mycontent-right {
+  border-right: 1px;
+  width: 150px;
+}
+
+.mycontent-left {
+  border-right: 1px ridge white;
+  width: 150px;
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  width: 50px;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  padding: 40px;
 }

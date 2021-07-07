@@ -1,52 +1,55 @@
-<div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">
-    <span class="glyphicon glyphicon-star"></span> New images collection
-  </h4>
-  <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body">
-  <form name="imagesCollectionDialog">
-    <div class="form-group">
-      <label for="name">Name</label>
-      <span style="color: #e32"> * </span>
-      <input type="text" [(ngModel)]="imagesCollection.name" id="name" class="form-control" name="name" autofocus
-             required>
-      <small class="form-text text-muted">Enter the collection name.</small>
-    </div>
-
-    <mat-checkbox [(ngModel)]="usePattern" name="false">Filter images upon upload using a filename pattern</mat-checkbox>
-    <span class="text-danger" *ngIf="!usePattern && imagesCollection.pattern">Warning: pattern is not empty, but this option is not checked</span>
-
-    <div class="row" *ngIf="usePattern">
-      <div class="col-sm-8">
-        <input type="text" [(ngModel)]="imagesCollection.pattern" id="pattern" class="form-control" name="pattern"
-               autofocus
-               required>
-        <small class="form-text text-muted">Enter the filename pattern.</small>
+<div class="wipp-text">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      <span class="glyphicon glyphicon-star"></span> New images collection
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form name="imagesCollectionDialog">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <span style="color: #e32"> * </span>
+        <input type="text" [(ngModel)]="imagesCollection.name" id="name" class="form-control" name="name" autofocus
+          required>
+        <small class="form-text text-muted">Enter the collection name.</small>
       </div>
-      <div class="col-sm-4">
-        <button type="button" class="btn btn-outline-secondary" placement="right-top"
-                [ngbPopover]="popContent" popoverTitle="Regex cheatsheet">
-          Regex cheatsheet
-        </button>
+
+      <mat-checkbox [(ngModel)]="usePattern" name="false">Filter images upon upload using a filename pattern
+      </mat-checkbox>
+      <span class="text-danger" *ngIf="!usePattern && imagesCollection.pattern">Warning: pattern is not empty, but this
+        option is not checked</span>
+
+      <div class="row" *ngIf="usePattern">
+        <div class="col-sm-8">
+          <input type="text" [(ngModel)]="imagesCollection.pattern" id="pattern" class="form-control" name="pattern"
+            autofocus required>
+          <small class="form-text text-muted">Enter the filename pattern.</small>
+        </div>
+        <div class="col-sm-4">
+          <button type="button" class="btn btn-outline-secondary" placement="right-top" [ngbPopover]="popContent"
+            popoverTitle="Regex cheatsheet">
+            Regex cheatsheet
+          </button>
+        </div>
       </div>
-    </div>
-  </form>
-</div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-danger" (click)="cancel()">
-    <i class="fas fa-times-circle" style="margin-right: 10px">
-      <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Cancel</p>
-    </i>
-  </button>
-  <button type="button" class="btn btn-success" (click)="save()"
-          [disabled]="!imagesCollection.name">
-    <i class="fas fa-save" style="margin-right: 10px">
-      <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Save</p>
-    </i>
-  </button>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="cancel()">
+      <i class="fas fa-times-circle" style="margin-right: 10px">
+        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Cancel
+        </p>
+      </i>
+    </button>
+    <button type="button" class="btn btn-success" (click)="save()" [disabled]="!imagesCollection.name">
+      <i class="fas fa-save" style="margin-right: 10px">
+        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Save</p>
+      </i>
+    </button>
+  </div>
 </div>
 
 <ng-template #popContent>
@@ -121,6 +124,7 @@
       </tr>
     </table>
 
-    <a target="blank" href="http://en.wikipedia.org/wiki/Regular_expression">Wikipedia page about regular expressions</a>
+    <a target="blank" href="http://en.wikipedia.org/wiki/Regular_expression">Wikipedia page about regular
+      expressions</a>
   </div>
 </ng-template>

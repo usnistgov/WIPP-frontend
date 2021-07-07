@@ -75,3 +75,19 @@ dd {
 .top20 {
   margin-top: 20px;
 }
+
+/* .wipp-text {
+  background-color: #f8f9fa;
+  color: black
+} */
+
+.wipp-text {
+  background-color: black;
+  color: #f8f9fa
+}
+
+.wf-background{
+  width: 200px;
+  height: 160px;
+  background: url('http://i.stack.imgur.com/GySvQ.png');
+}
