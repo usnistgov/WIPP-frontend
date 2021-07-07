@@ -294,6 +294,18 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               });
               inputSchema['default'] = input.options.values[0];
               break;
+            case 'radio':
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'radio';
+              inputSchema['oneOf'] = [];
+              input.options.values.forEach(value => {
+                inputSchema['oneOf'].push({
+                  'enum': [value],
+                  'description': value
+                });
+              });
+              inputSchema['default'] = input.options.values[0];
+              break;
             case 'array':
               inputSchema['type'] = 'array';
               inputSchema['format'] = 'array';
