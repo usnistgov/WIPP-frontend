@@ -22,6 +22,7 @@ import {DynamicContentModule} from '../dynamic-content/dynamic-content.module';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { WorkflowSidenavMenuComponent } from './workflow-sidenav-menu/workflow-sidenav-menu.component';
 
 @NgModule({
   imports: [
@@ -48,9 +49,8 @@ import { RouterModule } from '@angular/router';
     WorkflowDetailComponent,
     SearchWidgetComponent,
     JobDetailComponent,
-    WorkflowNewComponent],
-
-
+    WorkflowNewComponent
+  ],
   providers: [{
     provide: WidgetRegistry,
     useClass: WidgetsRegistry

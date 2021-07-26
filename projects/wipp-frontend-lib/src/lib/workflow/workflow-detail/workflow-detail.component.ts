@@ -333,16 +333,16 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               inputSchema['type'] = 'string';
               inputSchema['widget'] = 'integer';
               break;
-            case 'range':
-              inputSchema['type'] = 'number';
-              inputSchema['widget'] = 'range';
-              console.log('range------********');
-              console.log(input);
-              console.log('inputSchema--####');
-              console.log(inputSchema);
-              inputSchema['minimum'] = input.options.minimum;
-              inputSchema['maximum'] = input.options.maximum;
-              break;
+            // case 'range':
+            //   inputSchema['type'] = 'number';
+            //   inputSchema['widget'] = 'range';
+            //   console.log('range------********');
+            //   console.log(input);
+            //   console.log('inputSchema--####');
+            //   console.log(inputSchema);
+            //   inputSchema['minimum'] = input.options.minimum;
+            //   inputSchema['maximum'] = input.options.maximum;
+            //   break;
             default:
               inputSchema['type'] = input.type;
           }
