@@ -54,10 +54,11 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const self = this;
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',
-      headers: {Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`}
+      headers: {Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}`}
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),

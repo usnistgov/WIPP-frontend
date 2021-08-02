@@ -14,14 +14,12 @@ export class AppComponent {
   version = environment.version;
   isNavbarCollapsed = true;
   jupyterNotebooksLink = '';
-  plotsUiLink = '';
   onlineHelpLink = 'https://github.com/usnistgov/WIPP/tree/master/user-guide';
   apiDocsLink = environment.apiRootUrl + '/swagger-ui/index.html';
   displayApiDocsLink = !environment.production;
 
   constructor(private appConfigService: AppConfigService, private keycloak: KeycloakService) {
     this.jupyterNotebooksLink = this.appConfigService.getConfig().jupyterNotebooksUrl;
-    this.plotsUiLink = this.appConfigService.getConfig().plotsUiUrl;
   }
 
   isLoggedIn() {

@@ -25,9 +25,6 @@
 
         <dt class="col-md-4">Creation date:</dt>
         <dd class="col-md-8">{{imagesCollection.creationDate| date}}</dd>
-        
-        <dt class="col-md-4">Owner:</dt>
-        <dd class="col-md-8">{{imagesCollection.owner}}</dd>
 
         <dt class="col-md-4">Owner:</dt>
         <dd class="col-md-8">{{imagesCollection.owner}}</dd>
@@ -386,7 +383,7 @@
     <div class='col-sm-3 text-right'></div>
     <div class='col-sm-3 text-right'></div>
     <div class='col-sm-2 text-right'>
-      <button *ngIf="!imagesCollection.locked  && canEdit()" type="button"
+      <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
               ngbTooltip="Delete all metadata files"
               placement="left"
               class="btn btn-light"

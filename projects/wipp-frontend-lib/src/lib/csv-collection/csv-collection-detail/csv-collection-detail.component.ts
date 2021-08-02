@@ -55,6 +55,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const self = this;
     if (this.csvCollectionService.getPlotsUiUrl()) {
       this.plotsUiLink = urljoin(this.csvCollectionService.getPlotsUiUrl(), 'plots', this.csvCollectionId);
     } else {
@@ -64,7 +65,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
       uploadMethod: 'POST',
       method: 'octet',
       headers: function(file, chunk, isTest) {
-        return {Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`};
+        return {Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}`};
       }
     });
     this.$throttleRefresh.pipe(

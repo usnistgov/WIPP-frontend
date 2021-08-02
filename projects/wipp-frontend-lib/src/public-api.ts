@@ -38,12 +38,11 @@ export * from './lib/csv-collection/csv-collection-template/csv-collection-templ
 export * from './lib/dynamic-content/dynamic-content.component';
 export * from './lib/dynamic-content/unknown-dynamic.component';
 
-// not-found
-export * from './lib/not-found/not-found.component';
-
 // generic data
 export * from './lib/generic-data/generic-data-detail/generic-data-detail.component';
 export * from './lib/generic-data/generic-data-list/generic-data-list.component';
+export * from './lib/generic-data/generic-data-new/generic-data-new.component';
+export * from './lib/generic-data/generic-data-template/generic-data-template.component';
 
 // images-collection
 export * from './lib/images-collection/images-collection-detail/images-collection-detail.component';
@@ -83,11 +82,14 @@ export * from './lib/pyramid-annotation/pyramid-annotation-template/pyramid-anno
 // pyramid visualization
 export * from './lib/pyramid-visualization/pyramid-visualization-detail/pyramid-visualization-detail.component';
 export * from './lib/pyramid-visualization/pyramid-visualization-list/pyramid-visualization-list.component';
+export * from './lib/pyramid-visualization/pyramid-visualization-help/pyramid-visualization-help.component';
+export * from './lib/pyramid-visualization/pyramid-visualization-new/pyramid-visualization-new.component';
 
 // stitching-vector
 export * from './lib/stitching-vector/stitching-vector-detail/stitching-vector-detail.component';
 export * from './lib/stitching-vector/stitching-vector-list/stitching-vector-list.component';
 export * from './lib/stitching-vector/stitching-vector-new/stitching-vector-new.component';
+export * from './lib/stitching-vector/stitching-vector-template/stitching-vector-template.component';
 
 // tensorflow-model
 export * from './lib/tensorflow-model/tensorflow-model-detail/tensorflow-model-detail.component';

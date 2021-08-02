@@ -65,7 +65,6 @@ export class GenericDataService implements DataService<GenericData, PaginatedGen
   }
 
   createGenericData(genericData: GenericData): Observable<GenericData> {
-    console.log('createGenericDataService');
     return this.http.post<GenericData>(this.genericDataUrl, genericData);
   }
 

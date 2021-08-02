@@ -15,7 +15,7 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
 
   private tensorflowModelUrl = this.env.apiRootUrl + '/tensorflowModels';
   private tensorboardLogsUrl = this.env.apiRootUrl + '/tensorboardLogs';
-  private tensorboardConfigUrl = this.configurationProvider.config.tensorboardUrl;
+  private tensorboardUrl = this.configurationProvider.config.tensorboardUrl;
   private tensorflowModelUiPath = this.env.uiPaths.tensorflowModelsUiPath;
 
   constructor(
@@ -83,8 +83,8 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
       }));
   }
 
-  getTensorboardConfigUrl(): string {
-    return this.tensorboardConfigUrl;
+  getTensorboardUrl(): string {
+    return this.tensorboardUrl;
   }
 
   getTensorflowUiPath(): string {

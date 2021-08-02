@@ -20,7 +20,7 @@ export class TensorboardLogsTemplateComponent extends DynamicComponent implement
   ngOnInit() {
       this.tensorflowModelService.getTensorboardLogsByJob(this.jobId).subscribe(result => {
         this.text = result.name;
-        this.tensorboardLink = urljoin(this.tensorflowModelService.getTensorboardConfigUrl(), 
+        this.tensorboardLink = urljoin(this.tensorflowModelService.getTensorboardUrl(), 
           '#scalars&regexInput=' + result.name);
       });
   }
