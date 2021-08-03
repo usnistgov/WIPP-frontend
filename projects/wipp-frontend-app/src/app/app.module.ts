@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, Injectable, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import {
-  WippFrontendLibModule, GenericDataModule, ImagesCollectionModule,
+  WippFrontendLibModule, GenericDataCollectionModule, ImagesCollectionModule,
   CsvCollectionModule, DynamicContentModule, NotebookModule,
   TensorflowModelModule, PluginModule, PyramidModule, PyramidAnnotationModule,
   PyramidVisualizationModule, StitchingVectorModule, WorkflowModule,
@@ -58,7 +58,7 @@ export class ConfigFromApp implements WippFrontendLibConfigurationProvider {
     TensorflowModelModule,
     CsvCollectionModule,
     NotebookModule,
-    GenericDataModule,
+    GenericDataCollectionModule,
     PluginModule,
     WorkflowModule,
     ConfirmDialogModule,

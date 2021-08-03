@@ -3,9 +3,9 @@ import {Job} from '../../job/job';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {GenericData} from '../generic-data';
+import {GenericDataCollection} from '../generic-data-collection';
 import {GenericFile} from '../generic-file';
-import {GenericDataService} from '../generic-data.service';
+import {GenericDataCollectionService} from '../generic-data-collection.service';
 import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
 import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
@@ -15,13 +15,13 @@ import { ModalErrorComponent } from '../../modal-error/modal-error.component';
 import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
 @Component({
-  selector: 'app-generic-data-detail',
-  templateUrl: './generic-data-detail.component.html',
-  styleUrls: ['./generic-data-detail.component.css']
+  selector: 'app-generic-data-collection-detail',
+  templateUrl: './generic-data-collection-detail.component.html',
+  styleUrls: ['./generic-data-collection-detail.component.css']
 })
-export class GenericDataDetailComponent implements OnInit, AfterViewInit {
+export class GenericDataCollectionDetailComponent implements OnInit, AfterViewInit {
 
-  genericData: GenericData = new GenericData();
+  genericDataCollection: GenericDataCollection = new GenericDataCollection();
   job: Job = null;
   genericDataId = this.route.snapshot.paramMap.get('id');
   uploadOption = 'regular';
@@ -45,7 +45,7 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private router: Router,
-    private genericDataService: GenericDataService,
+    private genericDataCollectionService: GenericDataCollectionService,
     private keycloakService: KeycloakService ) {
       this.genericFilesParamsChange = new BehaviorSubject({
         index: 0,
@@ -67,8 +67,8 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.refresh().subscribe(genericData => {
-      if (this.canEdit() && !genericData.locked) {
+    this.refresh().subscribe(genericDataCollection => {
+      if (this.canEdit() && !genericDataCollection.locked) {
         this.initFlow();
       }
     }, error => {
@@ -77,15 +77,15 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   }
 
   refresh() {
-    return this.getGenericData().pipe(
-      map(genericData => {
-        this.genericData = genericData;
+    return this.getGenericDataCollection().pipe(
+      map(genericDataCollection => {
+        this.genericDataCollection = genericDataCollection;
         this.getGenericFiles();
-        if (this.genericData.numberImportingGenericFiles !== 0) {
+        if (this.genericDataCollection.numberImportingGenericFiles !== 0) {
           this.$throttleRefresh.next();
         }
         this.getJob();
-        return genericData;
+        return genericDataCollection;
       }));
   }
 
@@ -99,8 +99,8 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
     this.pageSize = page.pageSize;
   }
 
-  getGenericData() {
-    return this.genericDataService.getById(this.genericDataId);
+  getGenericDataCollection() {
+    return this.genericDataCollectionService.getById(this.genericDataId);
   }
 
   hasFilesNotComplete(files) {
@@ -112,8 +112,8 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   }
 
   getJob() {
-    if (this.genericData._links['sourceJob']) {
-      this.genericDataService.getJob(this.genericData._links['sourceJob']['href']).subscribe(job => this.job = job);
+    if (this.genericDataCollection._links['sourceJob']) {
+      this.genericDataCollectionService.getJob(this.genericDataCollection._links['sourceJob']['href']).subscribe(job => this.job = job);
     }
   }
 
@@ -134,7 +134,7 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
     this.flowHolder.assignDrop(this.dropArea.nativeElement);
 
     const id = '';
-    const genericFileUploadUrl = this.genericDataService.getGenericFileUrl(this.genericData);
+    const genericFileUploadUrl = this.genericDataCollectionService.getGenericFileUrl(this.genericDataCollection);
     this.flowHolder.opts.target = genericFileUploadUrl;
 
     const self = this;
@@ -165,7 +165,7 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
           size: page.size,
           sort: page.sort
         };
-        return this.genericDataService.getGenericFiles(this.genericData, params).pipe(
+        return this.genericDataCollectionService.getGenericFiles(this.genericDataCollection, params).pipe(
           map((paginatedResult) => {
             this.resultsLengthGenericFiles = paginatedResult.page.totalElements;
             return paginatedResult.data;
@@ -179,40 +179,40 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   }
 
   lockCollection(): void {
-    this.genericDataService.lockGenericDataCollection(
-      this.genericData).subscribe(genericData => {
-      this.genericData = genericData;
+    this.genericDataCollectionService.lockGenericDataCollection(
+      this.genericDataCollection).subscribe(genericData => {
+      this.genericDataCollection = genericData;
     });
   }
 
   deleteCollection(): void {
-    if (confirm('Are you sure you want to delete the collection ' + this.genericData.name + '?')) {
-      this.genericDataService.deleteGenericDataCollection(this.genericData).subscribe(collection => {
-        this.router.navigate(['generic-datas']);
+    if (confirm('Are you sure you want to delete the collection ' + this.genericDataCollection.name + '?')) {
+      this.genericDataCollectionService.deleteGenericDataCollection(this.genericDataCollection).subscribe(collection => {
+        this.router.navigate(['generic-data-collections']);
       });
     }
   }
 
   deleteGenericFile(genericFile: GenericFile): void {
-    this.genericDataService.deleteGenericFile(genericFile).subscribe(result => {
+    this.genericDataCollectionService.deleteGenericFile(genericFile).subscribe(result => {
       this.$throttleRefresh.next();
     });
   }
 
   deleteAllGenericFiles(): void {
-    this.genericDataService.deleteAllGenericFiles(this.genericData).subscribe(result => {
+    this.genericDataCollectionService.deleteAllGenericFiles(this.genericDataCollection).subscribe(result => {
       this.$throttleRefresh.next();
     });
   }
 
   canEdit(): boolean {
-    return this.keycloakService.canEdit(this.genericData);
+    return this.keycloakService.canEdit(this.genericDataCollection);
   }
   
   makePublicCollection(): void {
-    this.genericDataService.makePublicGenericDataCollection(
-      this.genericData).subscribe(genericData => {
-      this.genericData = genericData;
+    this.genericDataCollectionService.makePublicGenericDataCollection(
+      this.genericDataCollection).subscribe(genericData => {
+      this.genericDataCollection = genericData;
     }, error => {
       const modalRefErr = this.modalService.open(ModalErrorComponent);
       modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
@@ -221,7 +221,7 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   }
     
   openDownload(url: string) {
-    this.genericDataService.startDownload(url).subscribe(downloadUrl =>
+    this.genericDataCollectionService.startDownload(url).subscribe(downloadUrl =>
       window.location.href = downloadUrl['url']);
   }
 }

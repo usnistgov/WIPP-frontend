@@ -15,7 +15,7 @@ export * from './lib/confirm-dialog/confirm-dialog.module';
 export * from './lib/csv-collection/csv-collection.module';
 export * from './lib/images-collection/images-collection.module';
 export * from './lib/dynamic-content/dynamic-content.module';
-export * from './lib/generic-data/generic-data.module';
+export * from './lib/generic-data-collection/generic-data-collection.module';
 export * from './lib/job/job.module';
 export * from './lib/notebook/notebook.module';
 export * from './lib/plugin/plugin.module';
@@ -38,11 +38,11 @@ export * from './lib/csv-collection/csv-collection-template/csv-collection-templ
 export * from './lib/dynamic-content/dynamic-content.component';
 export * from './lib/dynamic-content/unknown-dynamic.component';
 
-// generic data
-export * from './lib/generic-data/generic-data-detail/generic-data-detail.component';
-export * from './lib/generic-data/generic-data-list/generic-data-list.component';
-export * from './lib/generic-data/generic-data-new/generic-data-new.component';
-export * from './lib/generic-data/generic-data-template/generic-data-template.component';
+// generic-data-collection
+export * from './lib/generic-data-collection/generic-data-collection-detail/generic-data-collection-detail.component';
+export * from './lib/generic-data-collection/generic-data-collection-list/generic-data-collection-list.component';
+export * from './lib/generic-data-collection/generic-data-collection-new/generic-data-collection-new.component';
+export * from './lib/generic-data-collection/generic-data-collection-template/generic-data-collection-template.component';
 
 // images-collection
 export * from './lib/images-collection/images-collection-detail/images-collection-detail.component';
@@ -112,7 +112,7 @@ export * from './lib/confirm-dialog/confirm-dialog.component';
 export * from './lib/confirm-dialog/confirm-dialog.service';
 export * from './lib/csv-collection/csv-collection.service';
 export * from './lib/images-collection/images-collection.service';
-export * from './lib/generic-data/generic-data.service';
+export * from './lib/generic-data-collection/generic-data-collection.service';
 export * from './lib/job/job.service';
 export * from './lib/notebook/notebook.service';
 export * from './lib/plugin/plugin.service';

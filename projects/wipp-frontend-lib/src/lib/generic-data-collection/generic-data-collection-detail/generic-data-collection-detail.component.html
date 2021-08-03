@@ -5,13 +5,13 @@
     <div class="col-md-9">
       <dl class="row">
         <dt class="col-md-4">Name: </dt>
-        <dd class="col-md-8">{{genericData.name}}</dd>
+        <dd class="col-md-8">{{genericDataCollection.name}}</dd>
 
         <dt class="col-md-4">Creation Date: </dt>
-        <dd class="col-md-8">{{genericData.creationDate | date}}</dd>
+        <dd class="col-md-8">{{genericDataCollection.creationDate | date}}</dd>
 
         <dt class="col-md-4">Owner:</dt>
-        <dd class="col-md-8">{{genericData.owner}}</dd>
+        <dd class="col-md-8">{{genericDataCollection.owner}}</dd>
 
         <dt class="col-md-4">Source job: </dt>
         <dd class="col-md-8" *ngIf="job; else not_applicable">
@@ -25,18 +25,18 @@
 
         <dt class="col-md-4">Visibility:</dt>
         <dd class="col-md-8">
-          <div *ngIf="genericData.publiclyShared; else privateData">Public</div>
+          <div *ngIf="genericDataCollection.publiclyShared; else privateData">Public</div>
         </dd>
         <ng-template #privateData>Private</ng-template>
 
         <dt class="col-md-4">Type: </dt>
-        <dd class="col-md-8" *ngIf="genericData.type; else not_applicable">
-          {{genericData.type}}
+        <dd class="col-md-8" *ngIf="genericDataCollection.type; else not_applicable">
+          {{genericDataCollection.type}}
         </dd>
 
         <dt class="col-md-4">Description: </dt>
-        <dd class="col-md-8" *ngIf="genericData.description; else not_applicable">
-          {{genericData.description}}
+        <dd class="col-md-8" *ngIf="genericDataCollection.description; else not_applicable">
+          {{genericDataCollection.description}}
         </dd>
         <ng-template #not_applicable>
           <div class='col-md-8'>N/A</div>
@@ -45,14 +45,14 @@
     </div>
 
     <div class="col-md-3 text-right">
-      <button *ngIf="!genericData.locked && !genericData.sourceJob" type="button"
+      <button *ngIf="!genericDataCollection.locked && !genericDataCollection.sourceJob" type="button"
               ngbTooltip="Delete collection"
               placement="left"
               class="btn btn-light" (click)="deleteCollection();">
                   <span class="fa fa-times"
                         aria-hidden="true"></span>
       </button>
-      <a *ngIf="!genericData.locked && !genericData.sourceJob">
+      <a *ngIf="!genericDataCollection.locked && !genericDataCollection.sourceJob">
           <button  type="button"
                   ngbTooltip="Lock collection"
                   placement="left"
@@ -61,7 +61,7 @@
                     aria-hidden="true"></span>
           </button>
       </a>
-      <a *ngIf="genericData.locked || genericData.sourceJob"
+      <a *ngIf="genericDataCollection.locked || genericDataCollection.sourceJob"
                ngbTooltip="Collection locked"
                placement="left"
                class="btn btn-light">
@@ -70,14 +70,14 @@
       </a>
       
       <button
-          (click)="openDownload(genericData._links.download.href)"
+          (click)="openDownload(genericDataCollection._links.download.href)"
           ngbTooltip="Download as zip"
           placement="left"
           class="btn btn-light">
           <span aria-hidden="true"><i class="fa fa-download"></i></span>
       </button>   
       
-      <button *ngIf="!genericData.publiclyShared && canEdit()" type="button"
+      <button *ngIf="!genericDataCollection.publiclyShared && canEdit()" type="button"
               ngbTooltip="Make data public"
               placement="left"
               class="btn btn-light" (click)="makePublicCollection();">
@@ -88,7 +88,7 @@
   </div>
 </div>
 
-<div class="row top-bottomMarge50" *ngIf="!(genericData.locked || genericData.sourceJob)">
+<div class="row top-bottomMarge50" *ngIf="!(genericDataCollection.locked || genericDataCollection.sourceJob)">
   <div class="col-md-4">
     <button class="btn btn-light btn-block" #browseBtn>
       Add files to collection
@@ -148,10 +148,10 @@
 <h4>Generic Files</h4>
 <div class="row">
       <div class='col-sm-8'>
-Total size: {{genericData.genericFileTotalSize| bytes}}
+        Total size: {{genericDataCollection.genericFileTotalSize| bytes}}
       </div>
   <div class='col-sm-4 text-right'>
-      <button *ngIf="!genericData.locked && !genericData.sourceJob" type="button"
+      <button *ngIf="!genericDataCollection.locked && !genericDataCollection.sourceJob" type="button"
               ngbTooltip="Delete all generic files"
               placement="left"
               class="btn btn-light"
@@ -199,7 +199,7 @@ Total size: {{genericData.genericFileTotalSize| bytes}}
                 <span
                   aria-hidden="true"><i class="fa fa-download"></i></span>
       </a>
-      <button *ngIf="!genericData.locked && !genericData.sourceJob" type="button"
+      <button *ngIf="!genericDataCollection.locked && !genericDataCollection.sourceJob" type="button"
             ngbTooltip="Remove from collection"
             placement="left"
             class="btn btn-light" (click)="deleteGenericFile(row);">

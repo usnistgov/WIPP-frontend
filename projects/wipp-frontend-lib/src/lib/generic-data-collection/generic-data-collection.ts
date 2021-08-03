@@ -1,4 +1,4 @@
-export class GenericData {
+export class GenericDataCollection {
   id: string;
   name: string;
   creationDate: Date;
@@ -15,8 +15,8 @@ export class GenericData {
   _links: any;
 }
 
-export interface PaginatedGenericDatas {
+export interface PaginatedGenericDataCollections {
   page: any;
-  data: GenericData[];
+  data: GenericDataCollection[];
   _links: any;
 }

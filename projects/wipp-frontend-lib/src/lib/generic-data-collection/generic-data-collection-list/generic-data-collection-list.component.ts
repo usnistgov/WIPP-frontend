@@ -3,21 +3,21 @@ import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {GenericDataService} from '../generic-data.service';
-import { GenericData } from '../generic-data';
+import {GenericDataCollectionService} from '../generic-data-collection.service';
+import {GenericDataCollection} from '../generic-data-collection';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GenericDataNewComponent } from '../generic-data-new/generic-data-new.component';
+import {GenericDataCollectionNewComponent} from '../generic-data-collection-new/generic-data-collection-new.component';
 import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
 @Component({
-  selector: 'app-generic-data-list',
-  templateUrl: './generic-data-list.component.html',
-  styleUrls: ['./generic-data-list.component.css'],
+  selector: 'app-generic-data-collection-list',
+  templateUrl: './generic-data-collection-list.component.html',
+  styleUrls: ['./generic-data-collection-list.component.css'],
 })
-export class GenericDataListComponent implements OnInit , OnDestroy{
+export class GenericDataCollectionListComponent implements OnInit , OnDestroy{
   displayedColumns: string[] = ['name', 'creationDate', 'owner', 'publiclyShared'];
-  genericDatas: Observable<GenericData[]>;
-  genericDatasUiPath: string;
+  genericDataCollections: Observable<GenericDataCollection[]>;
+  genericDataCollectionsUiPath: string;
 
   resultsLength = 0;
   pageSize = 10;
@@ -28,7 +28,7 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private genericDataService: GenericDataService,
+    private genericDataCollectionService: GenericDataCollectionService,
     private keycloakService: KeycloakService,
     private modalService: NgbModal) {
       this.paramsChange = new BehaviorSubject({
@@ -62,13 +62,13 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
   }
 
   ngOnInit() {
-    this.getGenericDatasUiPath();
-    this.getGenericDatas();
+    this.getGenericDataCollectionsUiPath();
+    this.getGenericDataCollections();
   }
 
-  getGenericDatas(): void {
+  getGenericDataCollections(): void {
     const paramsObservable = this.paramsChange.asObservable();
-    this.genericDatas = paramsObservable.pipe(
+    this.genericDataCollections = paramsObservable.pipe(
       switchMap((page) => {
         const params = {
           pageIndex: page.index,
@@ -76,7 +76,7 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
           sort: page.sort
         };
         if (page.filter) {
-          return this.genericDataService.getByNameContainingIgnoreCase(params, page.filter).pipe(
+          return this.genericDataCollectionService.getByNameContainingIgnoreCase(params, page.filter).pipe(
             map((paginatedResult) => {
               this.resultsLength = paginatedResult.page.totalElements;
               return paginatedResult.data;
@@ -86,7 +86,7 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
             })
           );
         }
-        return this.genericDataService.get(params).pipe(
+        return this.genericDataCollectionService.get(params).pipe(
           map((paginatedResult) => {
             this.resultsLength = paginatedResult.page.totalElements;
             return paginatedResult.data;
@@ -99,12 +99,12 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
     );
   }
 
-  getGenericDatasUiPath() {
-    this.genericDatasUiPath = this.genericDataService.getGenericDataUiPath();
+  getGenericDataCollectionsUiPath() {
+    this.genericDataCollectionsUiPath = this.genericDataCollectionService.getGenericDataCollectionUiPath();
   }
   
   createNew() {
-    const modalRef = this.modalService.open(GenericDataNewComponent, {size: 'lg'});
+    const modalRef = this.modalService.open(GenericDataCollectionNewComponent, {size: 'lg'});
     modalRef.componentInstance.modalReference = modalRef;
   }
 
