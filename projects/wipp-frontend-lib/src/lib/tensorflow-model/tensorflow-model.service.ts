@@ -16,7 +16,7 @@ export class TensorflowModelService implements DataService<TensorflowModel, Pagi
   private tensorflowModelUrl = this.env.apiRootUrl + '/tensorflowModels';
   private tensorboardLogsUrl = this.env.apiRootUrl + '/tensorboardLogs';
   private tensorboardUrl = this.configurationProvider.config.tensorboardUrl;
-  private tensorflowModelUiPath = this.env.uiPaths.tensorflowModelsUiPath;
+  private tensorflowModelUiPath = this.env.uiPaths.tensorflowModelsPath;
 
   constructor(
     @Inject(ENV) private env: any,
