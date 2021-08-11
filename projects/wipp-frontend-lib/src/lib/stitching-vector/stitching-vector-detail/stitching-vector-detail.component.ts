@@ -1,14 +1,14 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {StitchingVectorService} from '../stitching-vector.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {StitchingVector} from '../stitching-vector';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { JobDetailComponent } from '../../job/job-detail/job-detail.component';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { StitchingVectorService } from '../stitching-vector.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { StitchingVector } from '../stitching-vector';
 import { MatPaginator } from '@angular/material/paginator';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Job} from '../../job/job';
-import {merge, of as observableOf} from 'rxjs';
-import {TimeSlice} from '../timeSlice';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Job } from '../../job/job';
+import { merge, Observable, of as observableOf } from 'rxjs';
+import { TimeSlice } from '../timeSlice';
 import { KeycloakService } from '../../services/keycloack/keycloak.service';
 
 @Component({
@@ -24,9 +24,9 @@ export class StitchingVectorDetailComponent implements OnInit {
   resultsLength = 0;
   pageSize = 20;
   job: Job = null;
-  stitchingVectorId = this.route.snapshot.paramMap.get('id');
+  stitchingVectorId: Observable<string>;
 
-  @ViewChild('timeSlicesPaginator', {static: true}) timeSlicesPaginator: MatPaginator;
+  @ViewChild('timeSlicesPaginator', { static: true }) timeSlicesPaginator: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,10 +34,13 @@ export class StitchingVectorDetailComponent implements OnInit {
     private modalService: NgbModal,
     private stitchingVectorService: StitchingVectorService,
     private keycloakService: KeycloakService) {
+    this.stitchingVectorId = this.route.params.pipe(
+      map(data => data.id)
+    );
   }
 
   ngOnInit() {
-    this.stitchingVectorService.getById(this.stitchingVectorId)
+    this.getStitchingVector()
       .subscribe(stitchingVector => {
         this.stitchingVector = stitchingVector;
         this.getTimeSlices();
@@ -45,6 +48,12 @@ export class StitchingVectorDetailComponent implements OnInit {
       }, error => {
         this.router.navigate(['/404']);
       });
+  }
+
+  getStitchingVector() {
+    return this.stitchingVectorId.pipe(
+      switchMap(id => this.stitchingVectorService.getById(id))
+    );
   }
 
   getTimeSlices(): void {
@@ -56,7 +65,9 @@ export class StitchingVectorDetailComponent implements OnInit {
             pageIndex: this.timeSlicesPaginator.pageIndex,
             size: this.pageSize
           };
-          return this.stitchingVectorService.getTimeSlices(this.stitchingVectorId, params);
+          return this.stitchingVectorId.pipe(
+            switchMap(id => this.stitchingVectorService.getTimeSlices(id, params))
+          );
         }),
         map(paginatedResult => {
           this.resultsLength = paginatedResult.page.totalElements;
@@ -79,7 +90,7 @@ export class StitchingVectorDetailComponent implements OnInit {
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {
-      }
+    }
       , (reason) => {
         console.log('dismissed');
       });
@@ -88,8 +99,8 @@ export class StitchingVectorDetailComponent implements OnInit {
   makePublicStitchingVector(): void {
     this.stitchingVectorService.makePublicStitchingVector(
       this.stitchingVector).subscribe(imagesCollection => {
-      this.stitchingVector = imagesCollection;
-    });
+        this.stitchingVector = imagesCollection;
+      });
   }
 
   canEdit(): boolean {

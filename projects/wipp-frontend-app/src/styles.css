@@ -2,7 +2,6 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
-/* @import '~@qontu/ngx-inline-editor/themes/bootstrap.css'; */
 
 html, body { height: 100%; }
 body { margin: 0; font-family: 'Roboto', sans-serif; }
@@ -62,12 +61,6 @@ dd {
   margin-bottom: 0;
 }
 
-/* a.c-inline-editor {
-  line-height: 0;
-  margin-left: 0px;
-  margin-right: 0px;
-} */
-
 .top15 {
   margin-top: 15px;
 }
@@ -76,18 +69,12 @@ dd {
   margin-top: 20px;
 }
 
-/* .wipp-text {
-  background-color: #f8f9fa;
-  color: black
-} */
-
 .wipp-text {
-  background-color: black;
-  color: #f8f9fa
+  color: black
 }
 
 .wf-background{
   width: 200px;
   height: 160px;
-  background: url('http://i.stack.imgur.com/GySvQ.png');
+  background: url('./assets/img/grid-wf.png'); 
 }

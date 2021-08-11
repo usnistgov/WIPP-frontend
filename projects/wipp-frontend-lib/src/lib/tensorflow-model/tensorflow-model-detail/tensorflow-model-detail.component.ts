@@ -7,6 +7,8 @@ import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import urljoin from 'url-join';
 import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tensorflow-model-detail',
@@ -19,25 +21,33 @@ export class TensorflowModelDetailComponent implements OnInit {
   tensorboardLogs: TensorboardLogs = null;
   tensorboardLink = '';
   job: Job = null;
-  tensorflowModelId = this.route.snapshot.paramMap.get('id');
-
+  tensorflowModelId: Observable<string>;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
     private tensorflowModelService: TensorflowModelService,
     private keycloakService: KeycloakService) {
+      this.tensorflowModelId = this.route.params.pipe(
+        map(data => data.id)
+      );
   }
 
   ngOnInit() {
     this.tensorboardLink = urljoin(this.tensorflowModelService.getTensorboardConfigUrl(), '#scalars&regexInput=');
-    this.tensorflowModelService.getById(this.tensorflowModelId)
-      .subscribe(tensorflowModel => {
+    this.getTensorflowModel()  
+        .subscribe(tensorflowModel => {
         this.tensorflowModel = tensorflowModel;
         this.getTensorboardLogsAndJob();
       }, error => {
         this.router.navigate(['/404']);
       });
+  }
+
+  getTensorflowModel() {
+    return this.tensorflowModelId.pipe(
+      switchMap(id => this.tensorflowModelService.getById(id))
+    );
   }
 
   getTensorboardLogsAndJob() {

@@ -124,27 +124,6 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
       }));
   }
 
-  getImagesById(imagesCollectionId: string, params): Observable<PaginatedImages> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      params: {}
-    };
-    if (params) {
-      const page = params.pageIndex ? params.pageIndex : null;
-      const size = params.size ? params.size : null;
-      const sort = params.sort ? params.sort : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
-      httpOptions.params = httpParams;
-    }
-    return this.http.get<any>(`${this.imagesCollectionsUrl}/${imagesCollectionId}/images`, httpOptions).pipe(
-      map((result: any) => {
-        console.log('Everything I dooooo......');
-        console.log(result); // <--it's an object
-        result.data = result._embedded.images;
-        return result;
-      }));
-  }
-
   getMetadataFiles(imagesCollection: ImagesCollection, params): Observable<PaginatedMetadataFiles> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

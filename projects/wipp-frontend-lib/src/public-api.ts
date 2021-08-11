@@ -118,4 +118,3 @@ export * from './lib/tensorflow-model/tensorflow-model.service';
 export * from './lib/workflow/workflow.service';
 export * from './lib/services/keycloack/keycloak.service';
 export * from './lib/services/keycloack/keycloak.interceptor.service';
-export * from './lib/services/theme/theme.service';

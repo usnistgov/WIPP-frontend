@@ -58,10 +58,6 @@ text {
   font-weight: normal
 }
 
-.alg{
-  text-align: right;
-}
-
 .flt-right {
   width: 500px;
   height: 100px;
@@ -74,21 +70,9 @@ text {
 }
 
 .mycontent-left {
-  border-right: 1px ridge white;
+  border-right: 1px ridge black;
   width: 150px;
 }
-
-/* .example-sidenav-content {
-  display: flex;
-  height: 100%;
-  width: 50px;
-  align-items: center;
-  justify-content: center;
-}
-
-.example-sidenav {
-  padding: 40px;
-} */
 
 html {
   height: 100%;

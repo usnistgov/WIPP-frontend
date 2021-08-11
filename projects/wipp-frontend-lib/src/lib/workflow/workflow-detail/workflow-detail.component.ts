@@ -12,29 +12,19 @@ import { FormProperty, PropertyGroup } from 'ngx-schema-form/lib/model/formprope
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import urljoin from 'url-join';
-import {JobService} from '../../job/job.service';
-import {dataMap} from '../../data-service';
-import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
+import { JobService } from '../../job/job.service';
+import { dataMap } from '../../data-service';
+import { WorkflowNewComponent } from '../workflow-new/workflow-new.component';
 import { KeycloakService } from '../../services/keycloack/keycloak.service';
-import { animate, transition, trigger } from '@angular/animations';
 
 
 @Component({
   selector: 'app-workflow-detail',
   templateUrl: './workflow-detail.component.html',
-  styleUrls: ['./workflow-detail.component.css'],
-  animations: [
-    trigger('direction', [
-      transition('left <=> right', [
-        animate('.2s 0s ease-out'),
-      ])
-    ])
-  ]
+  styleUrls: ['./workflow-detail.component.css']
 })
 
 export class WorkflowDetailComponent implements OnInit, OnDestroy {
-
-  @Input() public arrowState: boolean = false;
 
   workflow: Workflow = new Workflow();
 
@@ -333,16 +323,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               inputSchema['type'] = 'string';
               inputSchema['widget'] = 'integer';
               break;
-            // case 'range':
-            //   inputSchema['type'] = 'number';
-            //   inputSchema['widget'] = 'range';
-            //   console.log('range------********');
-            //   console.log(input);
-            //   console.log('inputSchema--####');
-            //   console.log(inputSchema);
-            //   inputSchema['minimum'] = input.options.minimum;
-            //   inputSchema['maximum'] = input.options.maximum;
-            //   break;
             default:
               inputSchema['type'] = input.type;
           }
@@ -427,8 +407,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           if (ui.hasOwnProperty('default')) {
             inputSchema['default'] = ui.default;
           }
-          // console.log('in the end');
-          // console.log(inputSchema);
           plugin.properties.inputs.properties[input.name] = inputSchema;
         });
         // field sets - arrange fields by groups
@@ -647,7 +625,4 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.modalService.dismissAll();
   }
 
-  get direction(): 'left' | 'right' {
-    return this.arrowState ? 'left' : 'right';
-  }
 }

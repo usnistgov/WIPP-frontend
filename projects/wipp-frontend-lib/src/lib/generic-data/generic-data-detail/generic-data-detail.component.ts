@@ -1,16 +1,16 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {Job} from '../../job/job';
-import {ActivatedRoute, Router} from '@angular/router';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {GenericData} from '../generic-data';
-import {GenericFile} from '../generic-file';
-import {GenericDataService} from '../generic-data.service';
-import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
+import { Job } from '../../job/job';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { JobDetailComponent } from '../../job/job-detail/job-detail.component';
+import { GenericData } from '../generic-data';
+import { GenericFile } from '../generic-file';
+import { GenericDataService } from '../generic-data.service';
+import { BehaviorSubject, Observable, of as observableOf, Subject } from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
-import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
-import {BytesPipe} from 'angular-pipes';
-import {MatPaginator} from '@angular/material/paginator';
+import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
+import { BytesPipe } from 'angular-pipes';
+import { MatPaginator } from '@angular/material/paginator';
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
 import { KeycloakService } from '../../services/keycloack/keycloak.service';
 
@@ -23,7 +23,7 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
 
   genericData: GenericData = new GenericData();
   job: Job = null;
-  genericDataId = this.route.snapshot.paramMap.get('id');
+  genericDataId: Observable<string>;
   uploadOption = 'regular';
   genericFiles: Observable<GenericFile[]>;
   resultsLengthGenericFiles = 0;
@@ -46,18 +46,22 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private router: Router,
     private genericDataService: GenericDataService,
-    private keycloakService: KeycloakService ) {
-      this.genericFilesParamsChange = new BehaviorSubject({
-        index: 0,
-        size: this.pageSize,
-        sort: ''});
+    private keycloakService: KeycloakService) {
+    this.genericDataId = this.route.params.pipe(
+      map(data => data.id)
+    );
+    this.genericFilesParamsChange = new BehaviorSubject({
+      index: 0,
+      size: this.pageSize,
+      sort: ''
+    });
   }
 
   ngOnInit() {
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',
-      headers: {Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`}
+      headers: { Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}` }
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -90,16 +94,18 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
 
   genericFilesSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
-    this.genericFilesParamsChange.next({index: 0, size: this.genericFilesParamsChange.value.size, sort: sort.active + ',' + sort.direction});
+    this.genericFilesParamsChange.next({ index: 0, size: this.genericFilesParamsChange.value.size, sort: sort.active + ',' + sort.direction });
   }
 
   genericFilesPageChanged(page) {
-    this.genericFilesParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.genericFilesParamsChange.value.sort});
+    this.genericFilesParamsChange.next({ index: page.pageIndex, size: page.pageSize, sort: this.genericFilesParamsChange.value.sort });
     this.pageSize = page.pageSize;
   }
 
   getGenericData() {
-    return this.genericDataService.getById(this.genericDataId);
+    return this.genericDataId.pipe(
+      switchMap(id => this.genericDataService.getById(id))
+    );
   }
 
   hasFilesNotComplete(files) {
@@ -121,14 +127,14 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {
-      }
+    }
       , (reason) => {
         console.log('dismissed');
       });
   }
 
   initFlow(): void {
-    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': ''});
+    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, { 'accept': '' });
     this.flowHolder.assignBrowse([this.browseDirBtn.nativeElement], true, false);
     this.flowHolder.assignDrop(this.dropArea.nativeElement);
 
@@ -180,8 +186,8 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   lockCollection(): void {
     this.genericDataService.lockGenericDataCollection(
       this.genericData).subscribe(genericData => {
-      this.genericData = genericData;
-    });
+        this.genericData = genericData;
+      });
   }
 
   deleteCollection(): void {
@@ -207,18 +213,18 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   canEdit(): boolean {
     return this.keycloakService.canEdit(this.genericData);
   }
-  
+
   makePublicCollection(): void {
     this.genericDataService.makePublicGenericDataCollection(
       this.genericData).subscribe(genericData => {
-      this.genericData = genericData;
-    }, error => {
-      const modalRefErr = this.modalService.open(ModalErrorComponent);
-      modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
-      modalRefErr.componentInstance.message = error.error;
-    });
+        this.genericData = genericData;
+      }, error => {
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
+        modalRefErr.componentInstance.message = error.error;
+      });
   }
-    
+
   openDownload(url: string) {
     this.genericDataService.startDownload(url).subscribe(downloadUrl =>
       window.location.href = downloadUrl['url']);

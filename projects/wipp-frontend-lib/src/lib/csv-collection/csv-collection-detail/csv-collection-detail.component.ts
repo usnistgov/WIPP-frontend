@@ -1,17 +1,17 @@
-import {AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
-import {Job} from '../../job/job';
-import {ActivatedRoute, Router} from '@angular/router';
-import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {CsvCollectionService} from '../csv-collection.service';
-import {CsvCollection} from '../csv-collection';
+import { AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild } from '@angular/core';
+import { Job } from '../../job/job';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { JobDetailComponent } from '../../job/job-detail/job-detail.component';
+import { CsvCollectionService } from '../csv-collection.service';
+import { CsvCollection } from '../csv-collection';
 import urljoin from 'url-join';
-import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
+import { BehaviorSubject, Observable, of as observableOf, Subject } from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
-import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
-import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
+import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
+import { BytesPipe, NgMathPipesModule } from 'angular-pipes';
 import { MatPaginator } from '@angular/material/paginator';
-import {Csv} from '../csv';
+import { Csv } from '../csv';
 import { KeycloakService } from '../../services/keycloack/keycloak.service';
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
 
@@ -25,7 +25,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
 
   csvCollection: CsvCollection = new CsvCollection();
   job: Job = null;
-  csvCollectionId = this.route.snapshot.paramMap.get('id');
+  csvCollectionId: Observable<string>;
   plotsUiLink = '';
   uploadOption = 'regular';
   csv: Observable<Csv[]>;
@@ -48,22 +48,30 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     private router: Router,
     private csvCollectionService: CsvCollectionService,
     private keycloakService: KeycloakService) {
+    this.csvCollectionId = this.route.params.pipe(
+      map(data => data.id)
+    );
     this.csvParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
-      sort: ''});
+      sort: ''
+    });
   }
 
   ngOnInit() {
     if (this.csvCollectionService.getPlotsUiUrl()) {
-      this.plotsUiLink = urljoin(this.csvCollectionService.getPlotsUiUrl(), 'plots', this.csvCollectionId);
+      this.csvCollectionId.pipe(
+        switchMap(id =>
+          this.plotsUiLink = urljoin(this.csvCollectionService.getPlotsUiUrl(), 'plots', id)
+        )
+      );
     } else {
       this.plotsUiLink = null;
     }
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',
-      headers: {Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}`}
+      headers: { Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}` }
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -96,16 +104,18 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
 
   csvSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
-    this.csvParamsChange.next({index: 0, size: this.csvParamsChange.value.size, sort: sort.active + ',' + sort.direction});
+    this.csvParamsChange.next({ index: 0, size: this.csvParamsChange.value.size, sort: sort.active + ',' + sort.direction });
   }
 
   csvPageChanged(page) {
-    this.csvParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.csvParamsChange.value.sort});
+    this.csvParamsChange.next({ index: page.pageIndex, size: page.pageSize, sort: this.csvParamsChange.value.sort });
     this.pageSize = page.pageSize;
   }
 
   getCsvCollection() {
-    return this.csvCollectionService.getById(this.csvCollectionId);
+    return this.csvCollectionId.pipe(
+      switchMap(id => this.csvCollectionService.getById(id))
+    );
   }
 
   hasFilesNotComplete(files) {
@@ -127,7 +137,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {
-      }
+    }
       , (reason) => {
         console.log('dismissed');
       });
@@ -136,16 +146,16 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   makePublicCollection(): void {
     this.csvCollectionService.makePublicCsvCollection(
       this.csvCollection).subscribe(csvCollection => {
-      this.csvCollection = csvCollection;
-    }, error => {
-      const modalRefErr = this.modalService.open(ModalErrorComponent);
-      modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
-      modalRefErr.componentInstance.message = error.error;
-    });
+        this.csvCollection = csvCollection;
+      }, error => {
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
+        modalRefErr.componentInstance.message = error.error;
+      });
   }
 
   initFlow(): void {
-    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': '.csv'});
+    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, { 'accept': '.csv' });
 
     //const id = '';
     const id = this.route.snapshot.paramMap.get('id');
@@ -226,8 +236,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   lockCollection(): void {
     this.csvCollectionService.lockCsvCollection(
       this.csvCollection).subscribe(csvCollection => {
-      this.csvCollection = csvCollection;
-    });
+        this.csvCollection = csvCollection;
+      });
   }
 
   deleteCollection(): void {
