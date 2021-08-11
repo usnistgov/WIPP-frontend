@@ -11,10 +11,11 @@ export * from './lib/wipp-frontend-lib.module';
 export * from './lib/injection-token';
 
 // Exporting modules
+export * from './lib/confirm-dialog/confirm-dialog.module';
 export * from './lib/csv-collection/csv-collection.module';
 export * from './lib/images-collection/images-collection.module';
 export * from './lib/dynamic-content/dynamic-content.module';
-export * from './lib/generic-data/generic-data.module';
+export * from './lib/generic-data-collection/generic-data-collection.module';
 export * from './lib/job/job.module';
 export * from './lib/notebook/notebook.module';
 export * from './lib/plugin/plugin.module';
@@ -37,12 +38,11 @@ export * from './lib/csv-collection/csv-collection-template/csv-collection-templ
 export * from './lib/dynamic-content/dynamic-content.component';
 export * from './lib/dynamic-content/unknown-dynamic.component';
 
-// not-found
-export * from './lib/not-found/not-found.component';
-
-// generic data
-export * from './lib/generic-data/generic-data-detail/generic-data-detail.component';
-export * from './lib/generic-data/generic-data-list/generic-data-list.component';
+// generic-data-collection
+export * from './lib/generic-data-collection/generic-data-collection-detail/generic-data-collection-detail.component';
+export * from './lib/generic-data-collection/generic-data-collection-list/generic-data-collection-list.component';
+export * from './lib/generic-data-collection/generic-data-collection-new/generic-data-collection-new.component';
+export * from './lib/generic-data-collection/generic-data-collection-template/generic-data-collection-template.component';
 
 // images-collection
 export * from './lib/images-collection/images-collection-detail/images-collection-detail.component';
@@ -83,11 +83,14 @@ export * from './lib/pyramid-annotation/pyramid-annotation-template/pyramid-anno
 // pyramid visualization
 export * from './lib/pyramid-visualization/pyramid-visualization-detail/pyramid-visualization-detail.component';
 export * from './lib/pyramid-visualization/pyramid-visualization-list/pyramid-visualization-list.component';
+export * from './lib/pyramid-visualization/pyramid-visualization-help/pyramid-visualization-help.component';
+export * from './lib/pyramid-visualization/pyramid-visualization-new/pyramid-visualization-new.component';
 
 // stitching-vector
 export * from './lib/stitching-vector/stitching-vector-detail/stitching-vector-detail.component';
 export * from './lib/stitching-vector/stitching-vector-list/stitching-vector-list.component';
 export * from './lib/stitching-vector/stitching-vector-new/stitching-vector-new.component';
+export * from './lib/stitching-vector/stitching-vector-template/stitching-vector-template.component';
 
 // tensorflow-model
 export * from './lib/tensorflow-model/tensorflow-model-detail/tensorflow-model-detail.component';
@@ -103,10 +106,14 @@ export * from './lib/workflow/widgets/search-widget/search-widget.component';
 // forbidden-access
 export * from './lib/forbidden-access/forbidden-access.component';
 
+// confirm-dialog
+export * from './lib/confirm-dialog/confirm-dialog.component';
+
 // Exporting services
+export * from './lib/confirm-dialog/confirm-dialog.service';
 export * from './lib/csv-collection/csv-collection.service';
 export * from './lib/images-collection/images-collection.service';
-export * from './lib/generic-data/generic-data.service';
+export * from './lib/generic-data-collection/generic-data-collection.service';
 export * from './lib/job/job.service';
 export * from './lib/notebook/notebook.service';
 export * from './lib/plugin/plugin.service';
@@ -116,5 +123,5 @@ export * from './lib/pyramid-visualization/pyramid-visualization.service';
 export * from './lib/stitching-vector/stitching-vector.service';
 export * from './lib/tensorflow-model/tensorflow-model.service';
 export * from './lib/workflow/workflow.service';
-export * from './lib/services/keycloack/keycloak.service';
-export * from './lib/services/keycloack/keycloak.interceptor.service';
+export * from './lib/services/keycloak/keycloak.service';
+export * from './lib/services/keycloak/keycloak.interceptor.service';

@@ -15,7 +15,7 @@ import urljoin from 'url-join';
 import { JobService } from '../../job/job.service';
 import { dataMap } from '../../data-service';
 import { WorkflowNewComponent } from '../workflow-new/workflow-new.component';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
 
 @Component({
@@ -39,7 +39,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     tensorboardLogs: [],
     csvCollection: [],
     notebook: [],
-    genericData: []
+    genericDataCollection: []
   };
   jobs: Job[] = [];
   workflowId = this.route.snapshot.paramMap.get('id');
@@ -146,7 +146,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             type === 'tensorflowModel' ||
             type === 'csvCollection' ||
             type === 'notebook' ||
-            type === 'genericData') {
+            type === 'genericDataCollection') {
             if (value.hasOwnProperty('virtual') && value.virtual === true && value.hasOwnProperty('sourceJob')) {
               if (task['dependencies'].indexOf(value.sourceJob) === -1) {
                 task['dependencies'].push(value.sourceJob);
@@ -282,7 +282,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             case 'tensorflowModel':
             case 'csvCollection':
             case 'notebook':
-            case 'genericData':
+            case 'genericDataCollection':
               inputSchema['type'] = 'string';
               inputSchema['widget'] = 'search';
               inputSchema['format'] = input.type;
@@ -591,7 +591,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       tensorboardLogs: [],
       csvCollection: [],
       notebook: [],
-      genericData: []
+      genericDataCollection: []
     };
   }
 

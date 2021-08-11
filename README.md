@@ -82,7 +82,7 @@ The library exports a list of modules and components which could be reused by a 
 - `TensorflowModelModule`
 - `CsvCollectionModule`
 - `NotebookModule`
-- `GenericDataModule`
+- `GenericDataCollectionModule`
 - `PluginModule`
 - `WorkflowModule`
 - `WippFrontendModule`

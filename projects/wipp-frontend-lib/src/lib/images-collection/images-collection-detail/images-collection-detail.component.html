@@ -79,7 +79,9 @@
           </button>
           <ng-template #show> Show Notes</ng-template>
           <ng-template #hide> Hide Notes</ng-template>
-          <button class="btn btn-block btn-default" (click)="changeEditNotes()" [hidden]="!showNotes || editNotes">
+          <button *ngIf="canEdit()" class="btn btn-block btn-default"
+                  (click)="changeEditNotes()"
+                  [hidden]="!showNotes || editNotes">
             Edit Notes
           </button>
           <div [hidden]="!editNotes || !showNotes || !canEdit()">
@@ -112,9 +114,13 @@
       <!--data-tooltip-placement="left">-->
       <!--<span class="glyphicon glyphicon-copy"></span>-->
       <!--</button>-->
-      <button *ngIf="!imagesCollection.locked && canEdit()" type="button" ngbTooltip="Delete collection"
-        placement="left" class="btn btn-light" (click)="deleteCollection();">
-        <span class="fa fa-times" aria-hidden="true"></span>
+      <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
+              ngbTooltip="Delete collection"
+              [disabled]="imagesCollection.publiclyShared && !canDeletePublicData()"
+              placement="left"
+              class="btn btn-light" (click)="deleteCollection();">
+                  <span class="fa fa-times"
+                        aria-hidden="true"></span>
       </button>
       <button *ngIf="!imagesCollection.locked && canEdit()" type="button" ngbTooltip="Lock collection"
         placement="left" class="btn btn-light" (click)="lockCollection();">
@@ -322,9 +328,13 @@
     <div class='col-sm-3 text-right'></div>
     <div class='col-sm-3 text-right'></div>
     <div class='col-sm-2 text-right'>
-      <button *ngIf="!imagesCollection.locked  && canEdit()" type="button" ngbTooltip="Delete all metadata files"
-        placement="left" class="btn btn-light" (click)="deleteAllMetadataFiles()">
-        <span class="fa fa-times" aria-hidden="true"></span>
+      <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
+              ngbTooltip="Delete all metadata files"
+              placement="left"
+              class="btn btn-light"
+              (click)="deleteAllMetadataFiles()">
+                <span class="fa fa-times"
+                      aria-hidden="true"></span>
       </button>
     </div>
   </div>

@@ -6,7 +6,8 @@ import {TensorflowModelService} from './tensorflow-model/tensorflow-model.servic
 import {PyramidService} from './pyramid/pyramid.service';
 import {PyramidAnnotationService} from './pyramid-annotation/pyramid-annotation.service';
 import {Observable} from 'rxjs';
-import { GenericDataService } from './generic-data/generic-data.service';
+import {GenericDataCollectionService} from './generic-data-collection/generic-data-collection.service';
+
 
 
 export interface DataService<T, U> {
@@ -23,7 +24,7 @@ export const dataMap = new Map<string, any>([
   ['notebook', NotebookService],
   ['tensorflowModel', TensorflowModelService],
   ['pyramid', PyramidService],
-  ['genericData', GenericDataService]
+  ['genericDataCollection', GenericDataCollectionService]
 ]);
 
 

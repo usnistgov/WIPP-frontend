@@ -10,6 +10,7 @@ import {TensorboardLogsTemplateComponent} from '../tensorflow-model/tensorflow-m
 import {CsvCollectionTemplateComponent} from '../csv-collection/csv-collection-template/csv-collection-template.component';
 import {NotebookTemplateComponent} from '../notebook/notebook-template/notebook-template.component';
 import {PyramidAnnotationTemplateComponent} from '../pyramid-annotation/pyramid-annotation-template/pyramid-annotation-template.component';
+import {GenericDataCollectionTemplateComponent} from '../generic-data-collection/generic-data-collection-template/generic-data-collection-template.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {PyramidAnnotationTemplateComponent} from '../pyramid-annotation/pyramid-
     TensorflowModelTemplateComponent,
     TensorboardLogsTemplateComponent,
     CsvCollectionTemplateComponent,
-    NotebookTemplateComponent
+    NotebookTemplateComponent,
+    GenericDataCollectionTemplateComponent
   ],
   exports: [
     DynamicContentComponent,

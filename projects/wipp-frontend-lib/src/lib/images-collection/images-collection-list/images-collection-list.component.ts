@@ -11,7 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ImagesCollectionNewComponent } from '../images-collection-new/images-collection-new.component';
 import { Router } from '@angular/router';
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-images-collection-list',

@@ -8,7 +8,7 @@ import { PyramidService } from '../../pyramid/pyramid.service';
 import { PyramidVisualizationService } from '../pyramid-visualization.service';
 import { PyramidVisualizationHelpComponent } from '../pyramid-visualization-help/pyramid-visualization-help.component';
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-pyramid-visualization-detail',

@@ -61,6 +61,15 @@
           <p>Raw Manifest</p>
         </i>
       </button>
+      <button type="button" *ngIf="canEdit()"
+              ngbTooltip="Delete plugin"
+              placement="left"
+              class="btn btn-light wipp-btn"
+              (click)="deletePlugin();">
+        <i class="fas fa-times">
+          <p>Delete</p>
+        </i>
+      </button>
     </div>
   </div>
 

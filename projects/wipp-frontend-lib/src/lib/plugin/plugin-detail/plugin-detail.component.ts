@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Plugin} from '../plugin';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 
 @Component({
@@ -45,8 +45,8 @@ export class PluginDetailComponent implements OnInit, OnDestroy {
       .subscribe(plugin => {
         this.plugin = plugin;
         this.curateManifest();
-        }, error => {
-          this.router.navigate(['/404']);
+      }, error => {
+        this.router.navigate(['/404']);
       });
   }
 
@@ -67,20 +67,20 @@ export class PluginDetailComponent implements OnInit, OnDestroy {
     this.modalService.open(content, {'size': 'lg'});
   }
 
-  ngOnDestroy() {
-    this.modalService.dismissAll();
-  }
-
   canEdit() {
     return (this.keycloakService.isLoggedIn() && this.keycloakService.hasRole('admin'));
   }
-    
+
   deletePlugin(): void {
     if (confirm('Are you sure you want to delete the plugin ' + this.plugin.name + ' v' + this.plugin.version + '?')) {
       this.pluginService.deletePlugin(this.plugin).subscribe(plugin => {
         this.router.navigate(['plugins']);
       });
     }
+  }
+
+  ngOnDestroy() {
+    this.modalService.dismissAll();
   }
   
 }

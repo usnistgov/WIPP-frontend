@@ -11,7 +11,7 @@ import {
 import {UnknownDynamicComponent} from './unknown-dynamic.component';
 import {DynamicComponent} from './dynamic.component';
 import {ImagesCollectionTemplateComponent} from '../images-collection/images-collection-template/images-collection-template.component'
-import {GenericDataTemplateComponent} from '../generic-data/generic-data-template/generic-data-template.component';
+import {GenericDataCollectionTemplateComponent} from '../generic-data-collection/generic-data-collection-template/generic-data-collection-template.component';
 import {CsvCollectionTemplateComponent} from '../csv-collection/csv-collection-template/csv-collection-template.component';
 import {PyramidTemplateComponent} from '../pyramid/pyramid-template/pyramid-template.component';
 import {PyramidAnnotationTemplateComponent} from '../pyramid-annotation/pyramid-annotation-template/pyramid-annotation-template.component';
@@ -30,7 +30,7 @@ export const entryComponentsMap = {
   'notebook': NotebookTemplateComponent,
   'tensorflowModel': TensorflowModelTemplateComponent,
   'tensorboardLogs': TensorboardLogsTemplateComponent,
-  'genericData': GenericDataTemplateComponent
+  'genericDataCollection': GenericDataCollectionTemplateComponent
 };
 
 @Component({

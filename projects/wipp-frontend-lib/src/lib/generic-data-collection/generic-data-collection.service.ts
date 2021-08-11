@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import {DataService} from '../data-service';
-import {GenericData, PaginatedGenericDatas} from './generic-data';
+import {GenericDataCollection, PaginatedGenericDataCollections} from './generic-data-collection';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -11,21 +11,21 @@ import { GenericFile, PaginatedGenericFiles } from './generic-file';
 @Injectable({
   providedIn: 'root'
 })
-export class GenericDataService implements DataService<GenericData, PaginatedGenericDatas> {
+export class GenericDataCollectionService implements DataService<GenericDataCollection, PaginatedGenericDataCollections> {
 
-  private genericDataUrl = this.env.apiRootUrl + '/genericDatas';
-  private genericDataUiPath = this.env.uiPaths.genericDatasPath;
+  private genericDataCollectionUrl = this.env.apiRootUrl + '/genericDatas';
+  private genericDataCollectionUiPath = this.env.uiPaths.genericDataCollectionsPath;
 
   constructor(
     @Inject(ENV) private env: any,
     private http: HttpClient) { 
   }
 
-  getById(id: string): Observable<GenericData> {
-    return this.http.get<GenericData>(`${this.genericDataUrl}/${id}`);
+  getById(id: string): Observable<GenericDataCollection> {
+    return this.http.get<GenericDataCollection>(`${this.genericDataCollectionUrl}/${id}`);
   }
 
-  get(params): Observable<PaginatedGenericDatas> {
+  get(params): Observable<PaginatedGenericDataCollections> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -37,14 +37,14 @@ export class GenericDataService implements DataService<GenericData, PaginatedGen
       const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
-    return this.http.get<any>(this.genericDataUrl, httpOptions).pipe(
+    return this.http.get<any>(this.genericDataCollectionUrl, httpOptions).pipe(
       map((result: any) => {
         result.data = result._embedded.genericDatas;
         return result;
       }));
   }
 
-  getByNameContainingIgnoreCase(params, name): Observable<PaginatedGenericDatas> {
+  getByNameContainingIgnoreCase(params, name): Observable<PaginatedGenericDataCollections> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -57,26 +57,26 @@ export class GenericDataService implements DataService<GenericData, PaginatedGen
       httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
     }
     httpOptions.params = httpParams;
-    return this.http.get<any>(this.genericDataUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
+    return this.http.get<any>(this.genericDataCollectionUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
         result.data = result._embedded.genericDatas;
         return result;
       }));
   }
 
-  createGenericData(genericData: GenericData): Observable<GenericData> {
-    console.log('createGenericDataService');
-    return this.http.post<GenericData>(this.genericDataUrl, genericData);
+  createGenericDataCollection(genericDataCollection: GenericDataCollection): Observable<GenericDataCollection> {
+    return this.http.post<GenericDataCollection>(this.genericDataCollectionUrl, genericDataCollection);
   }
 
   getJob(jobUrl: string): Observable<Job> {
     return this.http.get<Job>(jobUrl);
   }
 
-  getGenericDataUiPath(): string {
-    return this.genericDataUiPath;
+  getGenericDataCollectionUiPath(): string {
+    return this.genericDataCollectionUiPath;
   }
-  getGenericFiles(genericData: GenericData, params): Observable<PaginatedGenericFiles> {
+
+  getGenericFiles(genericDataCollection: GenericDataCollection, params): Observable<PaginatedGenericFiles> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       params: {}
@@ -88,45 +88,45 @@ export class GenericDataService implements DataService<GenericData, PaginatedGen
       const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
       httpOptions.params = httpParams;
     }
-    return this.http.get<GenericFile>(`${this.genericDataUrl}/${genericData.id}/genericFile`, httpOptions).pipe(
+    return this.http.get<GenericFile>(`${this.genericDataCollectionUrl}/${genericDataCollection.id}/genericFile`, httpOptions).pipe(
       map((result: any) => {
         result.data = result._embedded.genericFiles;
         return result;
       }));
   }
 
-    getGenericFileUrl(genericData: GenericData): string {
-      return `${this.genericDataUrl}/${genericData.id}/genericFile`;
+  getGenericFileUrl(genericDataCollection: GenericDataCollection): string {
+      return `${this.genericDataCollectionUrl}/${genericDataCollection.id}/genericFile`;
   }
 
-  lockGenericDataCollection(genericData: GenericData): Observable<GenericData> {
+  lockGenericDataCollection(genericDataCollection: GenericDataCollection): Observable<GenericDataCollection> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    return this.http.patch<GenericData>(`${this.genericDataUrl}/${genericData.id}`, {locked: true}, httpOptions);
+    return this.http.patch<GenericDataCollection>(`${this.genericDataCollectionUrl}/${genericDataCollection.id}`, {locked: true}, httpOptions);
   }
 
-  deleteGenericDataCollection(genericData: GenericData) {
-    return this.http.delete<GenericData>(genericData._links.self.href);
+  deleteGenericDataCollection(genericDataCollection: GenericDataCollection) {
+    return this.http.delete<GenericDataCollection>(genericDataCollection._links.self.href);
   }
 
   deleteGenericFile(genericFile: GenericFile) {
     return this.http.delete<GenericFile>(genericFile._links.self.href);
   }
 
-  deleteAllGenericFiles(genericData: GenericData) {
-    if (genericData.numberOfFiles > 0) {
-      return this.http.delete(`${this.genericDataUrl}/${genericData.id}/genericFile`);
+  deleteAllGenericFiles(genericDataCollection: GenericDataCollection) {
+    if (genericDataCollection.numberOfFiles > 0) {
+      return this.http.delete(`${this.genericDataCollectionUrl}/${genericDataCollection.id}/genericFile`);
     }
   }
 
-  makePublicGenericDataCollection(genericData: GenericData): Observable<GenericData> {
+  makePublicGenericDataCollection(genericDataCollection: GenericDataCollection): Observable<GenericDataCollection> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       params: {}
     };
-    return this.http.patch<GenericData>(`${this.genericDataUrl}/${genericData.id}`, {publiclyShared: true}, httpOptions);
+    return this.http.patch<GenericDataCollection>(`${this.genericDataCollectionUrl}/${genericDataCollection.id}`, {publiclyShared: true}, httpOptions);
   }
 
   startDownload(url: string): Observable<string> {

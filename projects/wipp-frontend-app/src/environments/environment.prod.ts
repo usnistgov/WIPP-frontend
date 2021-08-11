@@ -11,7 +11,7 @@ export const environment = {
   },
   uiPaths: {
     csvCollectionsPath: 'csv-collections',
-    genericDatasPath: 'generic-datas',
+    genericDataCollectionsPath: 'generic-data-collections',
     imagesCollectionsPath: 'images-collections',
     stitchingVectorsPath: 'stitching-vectors',
     pyramidsPath: 'pyramids',

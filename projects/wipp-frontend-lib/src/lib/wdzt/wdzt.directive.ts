@@ -1,5 +1,5 @@
 import {AfterContentChecked, AfterContentInit, AfterViewInit, Directive, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
-import { KeycloakService } from '../services/keycloack/keycloak.service';
+import {KeycloakService} from '../services/keycloak/keycloak.service';
 
 @Directive({
   selector: 'wippWdzt'

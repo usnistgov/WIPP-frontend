@@ -172,6 +172,14 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
     }
   }
 
+  makePublicImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      params: {}
+    };
+    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, {publiclyShared: true}, httpOptions);
+  }
+
   lockImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -201,14 +209,6 @@ export class ImagesCollectionService implements DataService<ImagesCollection, Pa
 
   getImagesCollectionUiPath(): string {
     return this.imagesCollectionsUiPath;
-  }
-
-  makePublicImagesCollection(imagesCollection: ImagesCollection): Observable<ImagesCollection> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      params: {}
-    };
-    return this.http.patch<ImagesCollection>(`${this.imagesCollectionsUrl}/${imagesCollection.id}`, { publiclyShared: true }, httpOptions);
   }
 
   startDownload(url: string): Observable<string> {

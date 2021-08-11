@@ -7,28 +7,27 @@
         <dt class="col-md-4">Name: </dt>
         <dd class="col-md-8">{{pyramidAnnotation.name}}</dd>
 
-        <dt class="col-md-4">Creation Date: </dt>
-        <dd class="col-md-8">{{pyramidAnnotation.creationDate | date}}</dd>
+      <dt class="col-md-4">Creation Date: </dt>
+      <dd class="col-md-8">{{pyramidAnnotation.creationDate | date}}</dd>
 
-        <dt class="col-md-4">Owner:</dt>
-        <dd class="col-md-8">{{pyramidAnnotation.owner}}</dd>
+      <dt class="col-md-4">Owner:</dt>
+      <dd class="col-md-8">{{pyramidAnnotation.owner}}</dd>
 
-        <dt class="col-md-4">Visibility:</dt>
-        <dd class="col-md-8">
-          <div *ngIf="pyramidAnnotation.publiclyShared; else privateData">Public</div>
-        </dd>
-        <ng-template #privateData>Private</ng-template>
-      </dl>
-    </div>
-    <div class="col-md-3 text-right">
-      <button *ngIf="!pyramidAnnotation.publiclyShared && canEdit()" type="button"
-              ngbTooltip="Make pyramid public"
-              placement="left"
-              class="btn btn-light" (click)="makePyramidAnnotationPublic();">
-        <span class="fa fa-users"
-              aria-hidden="true"></span>
-      </button>
-    </div>
+      <dt class="col-md-4">Visibility:</dt>
+      <dd class="col-md-8">
+        <div *ngIf="pyramidAnnotation.publiclyShared; else privateData">Public</div>
+      </dd>
+      <ng-template #privateData>Private</ng-template>
+    </dl>
+  </div>
+  <div class="col-md-3 text-right">
+    <button *ngIf="!pyramidAnnotation.publiclyShared && canEdit()" type="button"
+            ngbTooltip="Make pyramid public"
+            placement="left"
+            class="btn btn-light" (click)="makePyramidAnnotationPublic();">
+      <span class="fa fa-users"
+            aria-hidden="true"></span>
+    </button>
   </div>
 </div>
 

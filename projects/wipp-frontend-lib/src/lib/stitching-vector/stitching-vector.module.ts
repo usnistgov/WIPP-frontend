@@ -10,13 +10,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import {FormsModule} from '@angular/forms';
-// import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {StitchingVectorNewComponent} from './stitching-vector-new/stitching-vector-new.component';
 import {StitchingVectorListComponent} from './stitching-vector-list/stitching-vector-list.component';
 import {StitchingVectorDetailComponent} from './stitching-vector-detail/stitching-vector-detail.component';
-import {
-  StitchingVectorTemplateComponent
-} from './stitching-vector-template/stitching-vector-template.component';
+import {StitchingVectorTemplateComponent} from './stitching-vector-template/stitching-vector-template.component';
 import {ModalErrorComponent} from '../modal-error/modal-error.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -35,7 +32,6 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    // InlineEditorModule,
     MatCheckboxModule,
     HttpClientModule
   ],

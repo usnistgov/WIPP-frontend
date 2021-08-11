@@ -8,7 +8,7 @@ import {Workflow} from '../workflow';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-workflow-list',

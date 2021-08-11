@@ -1,9 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, from } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { KeycloakService } from './keycloak.service';
+
+// This service is responsible for intercepting requests
 
 @Injectable()
 export class KeycloakInterceptorService implements HttpInterceptor {

@@ -6,7 +6,7 @@ import {TensorflowModelService} from '../tensorflow-model.service';
 import {TensorboardLogs, TensorflowModel} from '../tensorflow-model';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
 import urljoin from 'url-join';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -34,7 +34,7 @@ export class TensorflowModelDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.tensorboardLink = urljoin(this.tensorflowModelService.getTensorboardConfigUrl(), '#scalars&regexInput=');
+    this.tensorboardLink = urljoin(this.tensorflowModelService.getTensorboardUrl(), '#scalars&regexInput=');
     this.getTensorflowModel()  
         .subscribe(tensorflowModel => {
         this.tensorflowModel = tensorflowModel;
@@ -73,7 +73,7 @@ export class TensorflowModelDetailComponent implements OnInit {
         console.log('dismissed');
       });
   }
-
+  
   makePublicTensorflowModel(): void {
     this.tensorflowModelService.makePublicTensorflowModel(
       this.tensorflowModel).subscribe(tensorflowModel => {

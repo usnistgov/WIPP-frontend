@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { JobDetailComponent } from '../../job/job-detail/job-detail.component';
 import { Pyramid } from '../pyramid';
 import { PyramidService } from '../pyramid.service';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 

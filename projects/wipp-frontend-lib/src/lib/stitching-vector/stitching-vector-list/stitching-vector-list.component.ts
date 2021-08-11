@@ -8,7 +8,7 @@ import {StitchingVectorNewComponent} from '../stitching-vector-new/stitching-vec
 import {StitchingVectorService} from '../stitching-vector.service';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of as observableOf} from 'rxjs';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import {KeycloakService} from '../../services/keycloak/keycloak.service'
 
 @Component({
   selector: 'app-stitching-vector-list',

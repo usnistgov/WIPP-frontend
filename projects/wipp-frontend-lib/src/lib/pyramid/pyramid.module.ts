@@ -10,7 +10,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import {FormsModule} from '@angular/forms';
-// import {InlineEditorModule} from '@qontu/ngx-inline-editor';
 import {PyramidListComponent} from './pyramid-list/pyramid-list.component';
 import {PyramidDetailComponent} from './pyramid-detail/pyramid-detail.component';
 import {WdztModule} from '../wdzt/wdzt.module';
@@ -31,7 +30,6 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    // InlineEditorModule,
     MatCheckboxModule,
     WdztModule,
     HttpClientModule

@@ -12,7 +12,7 @@ import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
 import { BytesPipe, NgMathPipesModule } from 'angular-pipes';
 import { MatPaginator } from '@angular/material/paginator';
 import { Csv } from '../csv';
-import { KeycloakService } from '../../services/keycloack/keycloak.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
 
 @Component({
@@ -59,6 +59,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const self = this;
     if (this.csvCollectionService.getPlotsUiUrl()) {
       this.csvCollectionId.pipe(
         switchMap(id =>
@@ -71,7 +72,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',
-      headers: { Authorization: `Bearer ${this.keycloakService.getKeycloakAuth().token}` }
+      headers: { Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}` }
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -153,7 +154,6 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit {
         modalRefErr.componentInstance.message = error.error;
       });
   }
-
   initFlow(): void {
     this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, { 'accept': '.csv' });
 

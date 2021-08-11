@@ -2,10 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, Injectable, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import {
-  WippFrontendLibModule, GenericDataModule, ImagesCollectionModule,
+  WippFrontendLibModule, GenericDataCollectionModule, ImagesCollectionModule,
   CsvCollectionModule, DynamicContentModule, NotebookModule,
   TensorflowModelModule, PluginModule, PyramidModule, PyramidAnnotationModule,
   PyramidVisualizationModule, StitchingVectorModule, WorkflowModule,
+  ConfirmDialogModule, ConfirmDialogService,
   WippFrontendLibConfigurationProvider, WippFrontendLibConfiguration,
   KeycloakInterceptorService, KeycloakService
 } from 'wipp-frontend-lib';
@@ -57,9 +58,10 @@ export class ConfigFromApp implements WippFrontendLibConfigurationProvider {
     TensorflowModelModule,
     CsvCollectionModule,
     NotebookModule,
-    GenericDataModule,
+    GenericDataCollectionModule,
     PluginModule,
     WorkflowModule,
+    ConfirmDialogModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatInputModule,
@@ -84,7 +86,8 @@ export class ConfigFromApp implements WippFrontendLibConfigurationProvider {
       useClass: KeycloakInterceptorService,
       multi: true
     },
-    KeycloakService
+    KeycloakService,    
+    ConfirmDialogService
   ],
   bootstrap: [AppComponent]
 })
