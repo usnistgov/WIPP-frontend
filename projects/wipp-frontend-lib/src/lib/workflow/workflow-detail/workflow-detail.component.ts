@@ -29,6 +29,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   workflow: Workflow = new Workflow();
 
   selectedSchema = null;
+  schemaValidators = null;
   pluginList = [];
   jobOutputs = {
     collection: [],
@@ -407,6 +408,42 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           if (ui.hasOwnProperty('default')) {
             inputSchema['default'] = ui.default;
           }
+          if (ui.hasOwnProperty('validator')) {
+            const validatorCondition = ui.validator.condition;
+            const thenAction = ui.validator.then.action;
+            const targetPropName = ui.validator.then.input;
+            const targetVal = ui.validator.then.value;
+            let elseAction = "";
+
+            if (ui.validator.hasOwnProperty('else')) {
+              elseAction = ui.validator.else.action;
+            }
+
+            // set else action in case it is not exisiting in the schema
+            if (elseAction == "") {
+              if (thenAction == "add") {
+                elseAction = "remove";
+              } else if (thenAction == "remove") {
+                elseAction = "add";
+              }
+            }
+
+            // advanced validation with ngx-schema-form 
+            this.schemaValidators = {
+              "/inputs": (value, property, form) => {
+                const parent: PropertyGroup = property.findRoot();
+                const inputProperties = parent.schema.properties.inputs.properties;
+                const targetProp = inputProperties[targetPropName];
+                let builtCondition = this.buildCondition(validatorCondition, value);
+
+                if (builtCondition) {
+                  this.runAction(targetProp, targetVal, 1, thenAction);
+                } else {
+                  this.runAction(targetProp, targetVal, 1, elseAction);
+                }
+              }
+            };
+          }
           plugin.properties.inputs.properties[input.name] = inputSchema;
         });
         // field sets - arrange fields by groups
@@ -623,5 +660,82 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  removePropFromOneOf(property, val) {
+    property.oneOf = property.oneOf.filter(
+      item => -1 == item.enum.indexOf(val)
+    );
+  }
+
+  addPropToOneOf(prop, val, index) {
+    if (prop) {
+      for (const element of prop.oneOf) {
+        if (element.description == val) {
+          return null;
+        }
+      }
+      prop.oneOf.splice(index, 0, {
+        enum: [val],
+        description: val
+      });
+    }
+  }
+
+  // choose which action to run and either add or remove property
+  runAction(prop, val, index, action) {
+    if (action == "remove") {
+      this.removePropFromOneOf(prop, val);
+    } else if (action == "add") {
+      this.addPropToOneOf(prop, val, index);
+    }
+  }
+
+  // check if validator contains multiple conditions or a single condition
+  containsMultipleConditions(arr): boolean {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].hasOwnProperty('operator')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // build condition from validator in json schema
+  buildCondition(condition, schemaVal): boolean {
+    let builtCondition;
+    if (this.containsMultipleConditions(condition)) {
+      let operator = condition.filter(item => item.operator)[0].operator;
+      let subConditions = condition.filter(function (item) {
+        return !item.operator;
+      });
+
+      for (var i = 0; i < subConditions.length; i++) {
+        let currentBuiltCondition = this.buildSingleCondition(subConditions[i].input, subConditions[i].value, subConditions[i].eval, schemaVal);
+        if (builtCondition == null) {
+          builtCondition = currentBuiltCondition;
+        } 
+        if (operator == "OR") {
+          builtCondition = builtCondition || currentBuiltCondition;
+        } else if (operator == "AND") {
+          builtCondition = builtCondition && currentBuiltCondition;
+        }
+      }
+    } else {
+      // single condition 
+      let inputProp = condition[0].input;
+      let propVal = condition[0].value;
+      let propEval = condition[0].eval;
+      builtCondition = this.buildSingleCondition(inputProp, propVal, propEval, schemaVal);
+    }
+    return builtCondition;
+  }
+
+  buildSingleCondition(input, val, propEval, schemaVal): boolean {
+    if (propEval == "==") {
+      return (val == schemaVal[input]);
+    } else if (propEval == "!==") {
+      return (val !== schemaVal[input]);
+    }
   }
 }
