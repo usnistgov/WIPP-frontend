@@ -188,7 +188,7 @@
         <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}</option>
       </select>
     </div>
-    <sf-form [hidden]="!selectedSchema.isSchemaValid" [schema]="selectedSchema" [validators]="schemaValidators"
+    <sf-form [hidden]="!selectedSchema.isSchemaValid" [schema]="selectedSchema" [validators]="selectedSchema.validator"
       [bindings]="selectedSchema.fieldBindings" [model]="jobModel" #jsonForm>
     </sf-form>
     <div [hidden]="selectedSchema.isSchemaValid" class="alert alert-danger">

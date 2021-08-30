@@ -29,7 +29,6 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   workflow: Workflow = new Workflow();
 
   selectedSchema = null;
-  schemaValidators = null;
   pluginList = [];
   jobOutputs = {
     collection: [],
@@ -264,6 +263,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       try {
         // default field bindings - none
         plugin.fieldBindings = {};
+        // default validator - none
+        plugin.validator = {};
         // TODO: validation of plugin ui description
         plugin.inputs.forEach(input => {
           const inputSchema = {};
@@ -429,7 +430,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             }
 
             // advanced validation with ngx-schema-form 
-            this.schemaValidators = {
+            plugin.validator = {
               "/inputs": (value, property, form) => {
                 const parent: PropertyGroup = property.findRoot();
                 const inputProperties = parent.schema.properties.inputs.properties;
