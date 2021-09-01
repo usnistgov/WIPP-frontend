@@ -49,6 +49,7 @@ export * from './lib/images-collection/images-collection-detail/images-collectio
 export * from './lib/images-collection/images-collection-list/images-collection-list.component';
 export * from './lib/images-collection/images-collection-new/images-collection-new.component';
 export * from './lib/images-collection/images-collection-template/images-collection-template.component';
+export * from './lib/images-collection/images-collection';
 
 // job
 export * from './lib/job/job-detail/job-detail.component';

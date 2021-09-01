@@ -1,11 +1,12 @@
-<div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">
-    <span class="glyphicon glyphicon-star"></span> New Generic data collection
-  </h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+<div class="wipp-modal">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      <span class="glyphicon glyphicon-star"></span> New Generic data collection
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 
 <div class="modal-body">
   <ngb-alert *ngIf="displayAlert" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>

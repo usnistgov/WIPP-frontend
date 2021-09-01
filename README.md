@@ -1,7 +1,7 @@
 # WIPP Frontend
 
 The main WIPP UI application, for uploading images, creating image processing workflows and much more.  
-Developped in Angular 7.
+Developped in Angular 9.
 
 ## Install dependencies
 

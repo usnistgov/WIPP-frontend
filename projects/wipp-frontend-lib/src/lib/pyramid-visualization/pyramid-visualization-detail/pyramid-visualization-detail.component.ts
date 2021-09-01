@@ -1,14 +1,14 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {forkJoin, Observable, of} from 'rxjs';
-import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
-import {Visualization} from '../visualization';
-import {NgbModal, NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {ActivatedRoute, Router} from '@angular/router';
-import {PyramidService} from '../../pyramid/pyramid.service';
-import {PyramidVisualizationService} from '../pyramid-visualization.service';
-import {PyramidVisualizationHelpComponent} from '../pyramid-visualization-help/pyramid-visualization-help.component';
-import {ModalErrorComponent} from '../../modal-error/modal-error.component';
-import {KeycloakService} from '../../services/keycloak/keycloak.service'
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { forkJoin, Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { Visualization } from '../visualization';
+import { NgbModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PyramidService } from '../../pyramid/pyramid.service';
+import { PyramidVisualizationService } from '../pyramid-visualization.service';
+import { PyramidVisualizationHelpComponent } from '../pyramid-visualization-help/pyramid-visualization-help.component';
+import { ModalErrorComponent } from '../../modal-error/modal-error.component';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-pyramid-visualization-detail',
@@ -17,7 +17,7 @@ import {KeycloakService} from '../../services/keycloak/keycloak.service'
 })
 export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
 
-  visualizationId = this.route.snapshot.paramMap.get('id');
+  visualizationId: Observable<string>;
   visualization: Visualization = new Visualization();
   pyramidUiPath: string;
   manifest: any = null;
@@ -34,17 +34,26 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
     private pyramidService: PyramidService,
     private visualizationService: PyramidVisualizationService,
     private keycloakService: KeycloakService) {
+    this.visualizationId = this.route.params.pipe(
+      map(data => data.id)
+    );
   }
 
   ngOnInit() {
     this.getPyramidUiPath();
-    this.visualizationService.getVisualization(this.visualizationId)
+    this.getVisualization()
       .subscribe(visualization => {
         this.visualization = visualization;
         this.loadManifest();
       }, error => {
         this.router.navigate(['/404']);
       });
+  }
+
+  getVisualization() {
+    return this.visualizationId.pipe(
+      switchMap(id => this.visualizationService.getVisualization(id))
+    );
   }
 
   getPyramidUiPath() {
@@ -91,16 +100,16 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
       };
       this.visualizationService.setVisualizationManifest(
         this.visualization, this.manifest).subscribe(result => {
-        this.savedStatus = 'saved';
-      }, error => {
-        this.savedStatus = 'error';
-        const modalRefErr = this.modalService.open(ModalErrorComponent);
-        modalRefErr.componentInstance.title = 'Cannot save configuration.';
-        modalRefErr.componentInstance.message =
-          'The configuration can not be saved on the server.<br>' +
-          'Your recent modifications won\'t be available when you leave ' +
-          'this page and come back later.';
-      });
+          this.savedStatus = 'saved';
+        }, error => {
+          this.savedStatus = 'error';
+          const modalRefErr = this.modalService.open(ModalErrorComponent);
+          modalRefErr.componentInstance.title = 'Cannot save configuration.';
+          modalRefErr.componentInstance.message =
+            'The configuration can not be saved on the server.<br>' +
+            'Your recent modifications won\'t be available when you leave ' +
+            'this page and come back later.';
+        });
     });
   }
 
@@ -263,7 +272,7 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
     distinctUntilChanged(),
     switchMap(term => this.filter(term))
   )
-  formatter = (x: {name: string}) => x.name;
+  formatter = (x: { name: string }) => x.name;
 
   ngOnDestroy() {
     this.modalService.dismissAll();
@@ -272,11 +281,11 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
   makePublicVisualization(): void {
     this.visualizationService.makePublicVisualization(
       this.visualization).subscribe(visualization => {
-      this.visualization = visualization;
-    });
+        this.visualization = visualization;
+      });
   }
 
-  canEdit() : boolean {
+  canEdit(): boolean {
     return this.keycloakService.canEdit(this.visualization);
   }
 }
