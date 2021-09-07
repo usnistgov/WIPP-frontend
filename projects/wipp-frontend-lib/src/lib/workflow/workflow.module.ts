@@ -6,18 +6,18 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { WorkflowDetailComponent } from './workflow-detail/workflow-detail.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {SchemaFormModule, WidgetRegistry} from 'ngx-schema-form';
-import {SearchWidgetComponent} from './widgets/search-widget/search-widget.component';
-import {WidgetsRegistry} from './widgets/widgets-registry';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SchemaFormModule, WidgetRegistry } from 'ngx-schema-form';
+import { SearchWidgetComponent } from './widgets/search-widget/search-widget.component';
+import { WidgetsRegistry } from './widgets/widgets-registry';
 import { WorkflowNewComponent } from './workflow-new/workflow-new.component';
-import {JobDetailComponent} from '../job/job-detail/job-detail.component';
-import {NgxGraphModule} from '@swimlane/ngx-graph';
-import {DynamicComponent} from '../dynamic-content/dynamic.component';
-import {DynamicContentComponent} from '../dynamic-content/dynamic-content.component';
-import {DynamicContentModule} from '../dynamic-content/dynamic-content.module';
-import {NgxSpinnerModule} from 'ngx-spinner';
+import { JobDetailComponent } from '../job/job-detail/job-detail.component';
+import { NgxGraphModule } from '@swimlane/ngx-graph';
+import { DynamicComponent } from '../dynamic-content/dynamic.component';
+import { DynamicContentComponent } from '../dynamic-content/dynamic-content.component';
+import { DynamicContentModule } from '../dynamic-content/dynamic-content.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
@@ -44,9 +44,8 @@ import { RouterModule } from '@angular/router';
     WorkflowDetailComponent,
     SearchWidgetComponent,
     JobDetailComponent,
-    WorkflowNewComponent],
-
-
+    WorkflowNewComponent
+  ],
   providers: [{
     provide: WidgetRegistry,
     useClass: WidgetsRegistry

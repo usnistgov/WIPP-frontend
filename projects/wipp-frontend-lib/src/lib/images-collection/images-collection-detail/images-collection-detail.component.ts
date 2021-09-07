@@ -50,7 +50,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   pageSizeMetadataFiles = 10;
   goToPageImages;
   goToPageMetadataFiles;
-  imageCollectionId = this.route.snapshot.paramMap.get('id');
+  imageCollectionId: Observable<string>;
   sourceCatalogLink = '';
   inputButtonsControl: FormControl = new FormControl(this.imagesCollection.name);
   openBindingEvent = 'dblclick';
@@ -72,8 +72,10 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private imagesCollectionService: ImagesCollectionService,
     private keycloakService: KeycloakService,
-    private confirmDialogService: ConfirmDialogService
-    ) {
+    private confirmDialogService: ConfirmDialogService) {
+    this.imageCollectionId = this.route.params.pipe(
+      map(data => data.id)
+    );
     this.imagesParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSizeImages,
@@ -179,7 +181,9 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   }
 
   getImagesCollection() {
-    return this.imagesCollectionService.getById(this.imageCollectionId);
+    return this.imageCollectionId.pipe(
+      switchMap(id => this.imagesCollectionService.getById(id))
+    );
   }
 
   getImages(): void {

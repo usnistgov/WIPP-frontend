@@ -1,16 +1,16 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {Job} from '../../job/job';
-import {ActivatedRoute, Router} from '@angular/router';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {GenericDataCollection} from '../generic-data-collection';
-import {GenericFile} from '../generic-file';
-import {GenericDataCollectionService} from '../generic-data-collection.service';
-import {BehaviorSubject, Observable, of as observableOf, Subject} from 'rxjs';
+import { Job } from '../../job/job';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { JobDetailComponent } from '../../job/job-detail/job-detail.component';
+import { GenericDataCollection } from '../generic-data-collection';
+import { GenericFile } from '../generic-file';
+import { GenericDataCollectionService } from '../generic-data-collection.service';
+import { BehaviorSubject, Observable, of as observableOf, Subject } from 'rxjs';
 import * as Flow from '@flowjs/flow.js';
-import {auditTime, catchError, map, switchMap} from 'rxjs/operators';
-import {BytesPipe} from 'angular-pipes';
-import {MatPaginator} from '@angular/material/paginator';
+import { auditTime, catchError, map, switchMap } from 'rxjs/operators';
+import { BytesPipe } from 'angular-pipes';
+import { MatPaginator } from '@angular/material/paginator';
 import { ModalErrorComponent } from '../../modal-error/modal-error.component';
 import { KeycloakService } from '../../services/keycloak/keycloak.service';
 
@@ -23,7 +23,7 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
 
   genericDataCollection: GenericDataCollection = new GenericDataCollection();
   job: Job = null;
-  genericDataId = this.route.snapshot.paramMap.get('id');
+  genericDataId: Observable<string>;
   uploadOption = 'regular';
   genericFiles: Observable<GenericFile[]>;
   resultsLengthGenericFiles = 0;
@@ -46,11 +46,12 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
     private modalService: NgbModal,
     private router: Router,
     private genericDataCollectionService: GenericDataCollectionService,
-    private keycloakService: KeycloakService ) {
-      this.genericFilesParamsChange = new BehaviorSubject({
-        index: 0,
-        size: this.pageSize,
-        sort: ''});
+    private keycloakService: KeycloakService) {
+    this.genericFilesParamsChange = new BehaviorSubject({
+      index: 0,
+      size: this.pageSize,
+      sort: ''
+    });
   }
 
   ngOnInit() {
@@ -58,7 +59,7 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',
-      headers: {Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}`}
+      headers: { Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}` }
     });
     this.$throttleRefresh.pipe(
       auditTime(1000),
@@ -91,16 +92,18 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
 
   genericFilesSortChanged(sort) {
     // If the user changes the sort order, reset back to the first page.
-    this.genericFilesParamsChange.next({index: 0, size: this.genericFilesParamsChange.value.size, sort: sort.active + ',' + sort.direction});
+    this.genericFilesParamsChange.next({ index: 0, size: this.genericFilesParamsChange.value.size, sort: sort.active + ',' + sort.direction });
   }
 
   genericFilesPageChanged(page) {
-    this.genericFilesParamsChange.next({index: page.pageIndex, size: page.pageSize, sort: this.genericFilesParamsChange.value.sort});
+    this.genericFilesParamsChange.next({ index: page.pageIndex, size: page.pageSize, sort: this.genericFilesParamsChange.value.sort });
     this.pageSize = page.pageSize;
   }
 
   getGenericDataCollection() {
-    return this.genericDataCollectionService.getById(this.genericDataId);
+    return this.genericDataId.pipe(
+      switchMap(id => this.genericDataCollectionService.getById(id))
+    );
   }
 
   hasFilesNotComplete(files) {
@@ -122,14 +125,14 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {
-      }
+    }
       , (reason) => {
         console.log('dismissed');
       });
   }
 
   initFlow(): void {
-    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': ''});
+    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, { 'accept': '' });
     this.flowHolder.assignBrowse([this.browseDirBtn.nativeElement], true, false);
     this.flowHolder.assignDrop(this.dropArea.nativeElement);
 
@@ -181,8 +184,8 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
   lockCollection(): void {
     this.genericDataCollectionService.lockGenericDataCollection(
       this.genericDataCollection).subscribe(genericData => {
-      this.genericDataCollection = genericData;
-    });
+        this.genericDataCollection = genericData;
+      });
   }
 
   deleteCollection(): void {
@@ -208,18 +211,18 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
   canEdit(): boolean {
     return this.keycloakService.canEdit(this.genericDataCollection);
   }
-  
+
   makePublicCollection(): void {
     this.genericDataCollectionService.makePublicGenericDataCollection(
       this.genericDataCollection).subscribe(genericData => {
-      this.genericDataCollection = genericData;
-    }, error => {
-      const modalRefErr = this.modalService.open(ModalErrorComponent);
-      modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
-      modalRefErr.componentInstance.message = error.error;
-    });
+        this.genericDataCollection = genericData;
+      }, error => {
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';
+        modalRefErr.componentInstance.message = error.error;
+      });
   }
-    
+
   openDownload(url: string) {
     this.genericDataCollectionService.startDownload(url).subscribe(downloadUrl =>
       window.location.href = downloadUrl['url']);

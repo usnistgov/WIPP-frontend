@@ -1,11 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {Job} from '../../job/job';
-import {ActivatedRoute, Router} from '@angular/router';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {Pyramid} from '../pyramid';
-import {PyramidService} from '../pyramid.service';
-import {KeycloakService} from '../../services/keycloak/keycloak.service';
+import { Component, OnInit } from '@angular/core';
+import { Job } from '../../job/job';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { JobDetailComponent } from '../../job/job-detail/job-detail.component';
+import { Pyramid } from '../pyramid';
+import { PyramidService } from '../pyramid.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-pyramid-detail',
@@ -16,7 +18,7 @@ export class PyramidDetailComponent implements OnInit {
   pyramid: Pyramid = new Pyramid();
   job: Job = null;
   manifest: any = null;
-  pyramidId = this.route.snapshot.paramMap.get('id');
+  pyramidId: Observable<string>;
 
   constructor(
     private route: ActivatedRoute,
@@ -24,10 +26,13 @@ export class PyramidDetailComponent implements OnInit {
     private modalService: NgbModal,
     private pyramidService: PyramidService,
     private keycloakService: KeycloakService) {
+    this.pyramidId = this.route.params.pipe(
+      map(data => data.id)
+    );
   }
 
   ngOnInit() {
-    this.pyramidService.getById(this.pyramidId)
+    this.getPyramid()
       .subscribe(pyramid => {
         this.pyramid = pyramid;
         this.getJob();
@@ -35,6 +40,12 @@ export class PyramidDetailComponent implements OnInit {
       }, error => {
         this.router.navigate(['/404']);
       });
+  }
+
+  getPyramid() {
+    return this.pyramidId.pipe(
+      switchMap(id => this.pyramidService.getById(id))
+    );
   }
 
   getJob() {
@@ -48,11 +59,11 @@ export class PyramidDetailComponent implements OnInit {
   }
 
   displayJobModal(jobId: string) {
-    const modalRef = this.modalService.open(JobDetailComponent, {'size': 'lg'});
+    const modalRef = this.modalService.open(JobDetailComponent, { 'size': 'lg' });
     modalRef.componentInstance.modalReference = modalRef;
     (modalRef.componentInstance as JobDetailComponent).jobId = jobId;
     modalRef.result.then((result) => {
-      }
+    }
       , (reason) => {
         console.log('dismissed');
       });
@@ -61,10 +72,10 @@ export class PyramidDetailComponent implements OnInit {
   makePublicPyramid(): void {
     this.pyramidService.makePublicPyramid(
       this.pyramid).subscribe(pyramid => {
-      this.pyramid = pyramid;
-    });
+        this.pyramid = pyramid;
+      });
   }
-    
+
   canEdit(): boolean {
     return this.keycloakService.canEdit(this.pyramid);
   }

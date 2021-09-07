@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { merge, of as observableOf } from 'rxjs';
+import { merge, Observable, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { PyramidAnnotation } from '../pyramid-annotation';
 import { PyramidAnnotationService } from '../pyramid-annotation.service';
@@ -21,7 +21,7 @@ export class PyramidAnnotationDetailComponent implements OnInit {
   displayedColumnsTimeSlices: string[] = ['sliceNumber', 'actions'];
   resultsLength = 0;
   pageSize = 20;
-  pyramidAnnotationId = this.route.snapshot.paramMap.get('id');
+  pyramidAnnotationId: Observable<string>;
 
   @ViewChild('timeSlicesPaginator', { static: true }) timeSlicesPaginator: MatPaginator;
 
@@ -30,15 +30,23 @@ export class PyramidAnnotationDetailComponent implements OnInit {
     private modalService: NgbModal,
     private pyramidAnnotationService: PyramidAnnotationService,
     private keycloakService: KeycloakService) {
+    this.pyramidAnnotationId = this.route.params.pipe(
+      map(data => data.id)
+    );
   }
 
   ngOnInit() {
-    console.log(this.pyramidAnnotationId);
-    this.pyramidAnnotationService.getById(this.pyramidAnnotationId)
+    this.getPyramidAnnotation()
       .subscribe(pyramidAnnotation => {
         this.pyramidAnnotation = pyramidAnnotation;
       });
     this.getTimeSlices();
+  }
+
+  getPyramidAnnotation() {
+    return this.pyramidAnnotationId.pipe(
+      switchMap(id => this.pyramidAnnotationService.getById(id))
+    );
   }
 
   getTimeSlices(): void {
@@ -50,7 +58,9 @@ export class PyramidAnnotationDetailComponent implements OnInit {
             pageIndex: this.timeSlicesPaginator.pageIndex,
             size: this.pageSize
           };
-          return this.pyramidAnnotationService.getTimeSlices(this.pyramidAnnotationId, params);
+          return this.pyramidAnnotationId.pipe(
+            switchMap(id => this.pyramidAnnotationService.getTimeSlices(id, params))
+          );
         }),
         map(paginatedResult => {
           this.resultsLength = paginatedResult.page.totalElements;
@@ -67,7 +77,7 @@ export class PyramidAnnotationDetailComponent implements OnInit {
       const blob = new Blob([JSON.stringify(annotation)], { type: 'tex/plain' });
       saveAs(blob, filename);
     });
-  }ß
+  }
 
   makePyramidAnnotationPublic(): void {
     this.pyramidAnnotationService.makePyramidAnnotationPublic(

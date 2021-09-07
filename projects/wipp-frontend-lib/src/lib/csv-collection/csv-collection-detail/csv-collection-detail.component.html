@@ -1,130 +1,133 @@
 <h3 class="wipp-title">CSV Collection Detail</h3>
 
-<div>
-  <div class="row">
-    <div class="col-md-9">
-      <dl class="row">
-        <dt class="col-md-4">Name: </dt>
-        <dd class="col-md-8">{{csvCollection.name}}</dd>
+<div class="wipp-text">
+  <div>
+    <div class="row">
+      <div class="col-md-9">
+        <dl class="row">
+          <dt class="col-md-4">Name: </dt>
+          <dd class="col-md-8">{{csvCollection.name}}</dd>
 
-        <dt class="col-md-4">Creation Date: </dt>
-        <dd class="col-md-8">{{csvCollection.creationDate | date}}</dd>
+          <dt class="col-md-4">Creation Date: </dt>
+          <dd class="col-md-8">{{csvCollection.creationDate | date}}</dd>
 
-        <dt class="col-md-4">Owner:</dt>
-        <dd class="col-md-8">{{csvCollection.owner}}</dd>
+          <dt class="col-md-4">Owner:</dt>
+          <dd class="col-md-8">{{csvCollection.owner}}</dd>
 
-        <dt class="col-md-4">Source job: </dt>
-        <dd class="col-md-8">
-          <div *ngIf="csvCollection.sourceJob; else notApplicable">
-            <a *ngIf="job; else jobNonAvailable" (click)="displayJobModal(job.id)" class="wipp-link"
-              ngbTooltip="Show Job" placement="left">
-              {{job.name}}
-            </a>
-          </div>
-          <ng-template #jobNonAvailable>N/A</ng-template>
-          <ng-template #notApplicable>Uploaded</ng-template>
-        </dd>
+          <dt class="col-md-4">Source job: </dt>
+          <dd class="col-md-8">
+            <div *ngIf="csvCollection.sourceJob; else notApplicable">
+              <a *ngIf="job; else jobNonAvailable" (click)="displayJobModal(job.id)" class="wipp-link"
+                ngbTooltip="Show Job" placement="left">
+                {{job.name}}
+              </a>
+            </div>
+            <ng-template #jobNonAvailable>N/A</ng-template>
+            <ng-template #notApplicable>Uploaded</ng-template>
+          </dd>
 
-        <dt class="col-md-4">Visibility: </dt>
-        <dd class="col-md-8">
-          <div *ngIf="csvCollection.publiclyShared; else privateData">Public</div>
-        </dd>
-        <ng-template #privateData>Private</ng-template>
-      </dl>
+          <dt class="col-md-4">Visibility: </dt>
+          <dd class="col-md-8">
+            <div *ngIf="csvCollection.publiclyShared; else privateData">Public</div>
+          </dd>
+          <ng-template #privateData>Private</ng-template>
+        </dl>
+      </div>
+
+      <div class="col-md-3 text-right">
+        <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()" type="button"
+          ngbTooltip="Delete collection" placement="left" class="btn btn-light" (click)="deleteCollection();">
+          <span class="fa fa-times" aria-hidden="true"></span>
+        </button>
+        <a *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()">
+          <button type="button" ngbTooltip="Lock collection" placement="left" class="btn btn-light"
+            (click)="lockCollection();">
+            <span class="fa fa-lock-open" aria-hidden="true"></span>
+          </button>
+        </a>
+        <a *ngIf="csvCollection.locked || csvCollection.sourceJob" ngbTooltip="Collection locked" placement="left"
+          class="btn btn-light">
+          <span class="fa fa-lock" aria-hidden="true"></span>
+        </a>
+        <a *ngIf="plotsUiLink" [href]="plotsUiLink" target="_blank" [ngbTooltip]="plotTipContent" placement="left"
+          class="btn btn-light">
+          <span aria-hidden="true"><i class="fa fa-chart-area"></i></span>
+        </a>
+
+        <button (click)="openDownload(csvCollection?._links?.download?.href)" ngbTooltip="Download as zip"
+          placement="left" class="btn btn-light">
+          <span aria-hidden="true"><i class="fa fa-download"></i></span>
+        </button>
+        <button *ngIf="!csvCollection.publiclyShared && canEdit()" type="button" ngbTooltip="Make collection public"
+          placement="left" class="btn btn-light" (click)="makePublicCollection();">
+          <span class="fa fa-user-lock" aria-hidden="true"></span>
+        </button>
+
+        <ng-template #plotTipContent>Visualize in Plots UI
+          <span aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
+        </ng-template>
+      </div>
     </div>
+  </div>
 
-    <div class="col-md-3 text-right">
-      <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()" type="button"
-        ngbTooltip="Delete collection" placement="left" class="btn btn-light" (click)="deleteCollection();">
+
+  <div class="row top-bottomMarge50" *ngIf="!(csvCollection.locked || csvCollection.sourceJob)">
+    <div class="col-md-6">
+      <button class="btn btn-light btn-block" #browseBtn>
+        Add files to collection
+      </button>
+    </div>
+  </div>
+
+  <div class="top-bottomMarge50" [hidden]="!hasFilesNotComplete(flowHolder.files)">
+    <h4>Transfers</h4>
+    <div class="row">
+      <div class="col-sm-3">
+        Number of files: {{flowHolder.files.length}}
+      </div>
+    </div>
+    <table class="table table-hover table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>File name</th>
+          <th>Size</th>
+          <th>Progress</th>
+          <th>Error</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of flowHolder.files | slice:0:10; let index=index">
+          <td class="vert-align">{{index + 1}}</td>
+          <td class="vert-align">{{file.name}}</td>
+          <td class="vert-align">{{file.size | bytes}}</td>
+          <td *ngIf='!file.error'>
+            <ngb-progressbar max="1" value="{{file.progress()}}">
+            </ngb-progressbar>
+          </td>
+          <td *ngIf='file.error'>
+            {{file.errorMessage|| "Unknown upload error."}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <h4>CSV Files</h4>
+  <div class="row">
+    <div class='col-sm-8'>
+      Total size: {{csvCollection.csvTotalSize| bytes}}
+    </div>
+    <div class='col-sm-4 text-right'>
+      <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()" type="button" ngbTooltip="Delete all CSV files"
+        placement="left" class="btn btn-light" (click)="deleteAllCsvFiles()">
         <span class="fa fa-times" aria-hidden="true"></span>
       </button>
-      <a *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()">
-        <button type="button" ngbTooltip="Lock collection" placement="left" class="btn btn-light"
-          (click)="lockCollection();">
-          <span class="fa fa-lock-open" aria-hidden="true"></span>
-        </button>
-      </a>
-      <a *ngIf="csvCollection.locked || csvCollection.sourceJob" ngbTooltip="Collection locked" placement="left"
-        class="btn btn-light">
-        <span class="fa fa-lock" aria-hidden="true"></span>
-      </a>
-      <a *ngIf="plotsUiLink" [href]="plotsUiLink" target="_blank" [ngbTooltip]="plotTipContent" placement="left"
-        class="btn btn-light">
-        <span aria-hidden="true"><i class="fa fa-chart-area"></i></span>
-      </a>
-
-      <button (click)="openDownload(csvCollection?._links?.download?.href)" ngbTooltip="Download as zip"
-        placement="left" class="btn btn-light">
-        <span aria-hidden="true"><i class="fa fa-download"></i></span>
-      </button>
-      <button *ngIf="!csvCollection.publiclyShared && canEdit()" type="button" ngbTooltip="Make collection public"
-        placement="left" class="btn btn-light" (click)="makePublicCollection();">
-        <span class="fa fa-user-lock" aria-hidden="true"></span>
-      </button>
-
-      <ng-template #plotTipContent>Visualize in Plots UI
-        <span aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
-      </ng-template>
     </div>
   </div>
 </div>
 
-
-<div class="row top-bottomMarge50" *ngIf="!(csvCollection.locked || csvCollection.sourceJob)">
-  <div class="col-md-6">
-    <button class="btn btn-light btn-block" #browseBtn>
-      Add files to collection
-    </button>
-  </div>
-</div>
-
-<div class="top-bottomMarge50" [hidden]="!hasFilesNotComplete(flowHolder.files)">
-  <h4>Transfers</h4>
-  <div class="row">
-    <div class="col-sm-3">
-      Number of files: {{flowHolder.files.length}}
-    </div>
-  </div>
-  <table class="table table-hover table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>File name</th>
-        <th>Size</th>
-        <th>Progress</th>
-        <th>Error</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let file of flowHolder.files | slice:0:10; let index=index">
-        <td class="vert-align">{{index + 1}}</td>
-        <td class="vert-align">{{file.name}}</td>
-        <td class="vert-align">{{file.size | bytes}}</td>
-        <td *ngIf='!file.error'>
-          <ngb-progressbar max="1" value="{{file.progress()}}">
-          </ngb-progressbar>
-        </td>
-        <td *ngIf='file.error'>
-          {{file.errorMessage|| "Unknown upload error."}}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-
-<h4>CSV Files</h4>
-<div class="row">
-  <div class='col-sm-8'>
-    Total size: {{csvCollection.csvTotalSize| bytes}}
-  </div>
-  <div class='col-sm-4 text-right'>
-    <button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()" type="button" ngbTooltip="Delete all CSV files"
-      placement="left" class="btn btn-light" (click)="deleteAllCsvFiles()">
-      <span class="fa fa-times" aria-hidden="true"></span>
-    </button>
-  </div>
-</div>
 <table mat-table [dataSource]="csv" (matSortChange)="csvSortChanged($event)" matSort matSortActive="fileName"
   matSortDisableClear matSortDirection="asc">
 

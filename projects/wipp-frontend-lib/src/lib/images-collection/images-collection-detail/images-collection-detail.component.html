@@ -1,20 +1,16 @@
 <h3 class="wipp-title">Collection detail</h3>
-<div>
+<div class="wipp-text">
   <div class="row">
     <div class="col-md-5">
       <dl class="row">
         <dt class="col-md-4">Name:</dt>
         <dd class="col-md-8">
-          <editable 
-            [openBindingEvent]="openBindingEvent"
-            (save)="updateCollectionName()">
+          <editable [openBindingEvent]="openBindingEvent" (save)="updateCollectionName()">
             <ng-template viewMode>{{imagesCollection.name}}</ng-template>
             <ng-template editMode>
               <div class="d-flex align-items-baseline">
                 <div class="form-group">
-                  <input             
-                    type="text"
-                    [formControl]="inputButtonsControl"/>
+                  <input type="text" [formControl]="inputButtonsControl" />
                 </div>
                 <button class="btn btn-success" editableOnSave>Save</button>
                 <button class="btn btn-secondary" editableOnCancel>Cancel</button>
@@ -46,19 +42,14 @@
           <span *ngIf="imagesCollection.sourceJob; then jobTemplate; else importTemplate"></span>
           <ng-template #jobTemplate>
             <a *ngIf="sourceJob; else jobNonAvailable" (click)="displayJobModal(imagesCollection.sourceJob)"
-               class="wipp-link"
-               ngbTooltip="Show Job"
-               placement="left">
+              class="wipp-link" ngbTooltip="Show Job" placement="left">
               {{sourceJob.name}}
             </a>
             <ng-template #jobNonAvailable>N/A</ng-template>
           </ng-template>
           <ng-template #importTemplate>
             <div *ngIf="imagesCollection.importMethod == 'CATALOG'">
-              <a [href]="sourceCatalogLink"
-                 target="_blank"
-                 [ngbTooltip]="catalogTipContent"
-                 placement="left">
+              <a [href]="sourceCatalogLink" target="_blank" [ngbTooltip]="catalogTipContent" placement="left">
                 Catalog
               </a>
             </div>
@@ -68,8 +59,7 @@
           </ng-template>
 
           <ng-template #catalogTipContent>Go to Catalog
-            <span
-              aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
+            <span aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
           </ng-template>
         </dd>
 
@@ -84,8 +74,7 @@
     <div class="col-md-5">
       <dl class="row">
         <dt class="col-md-3">
-          <button *ngIf="canEdit()" class="btn btn-block btn-default"
-                  (click)="changeShowNotes()">
+          <button *ngIf="canEdit()" class="btn btn-block btn-default" (click)="changeShowNotes()">
             <a *ngIf="showNotes; then hide; else show"></a>
           </button>
           <ng-template #show> Show Notes</ng-template>
@@ -96,38 +85,27 @@
             Edit Notes
           </button>
           <div [hidden]="!editNotes || !showNotes || !canEdit()">
-              <button class="btn btn-success btn-block"
-                      (click)="saveNotes()"
-                      [disabled]="imageCollectionNotes == imagesCollection.notes">
-                Save
-              </button>
-              <button class="btn btn-danger btn-block"
-                      (click)="clearNotes()"
-                      [hidden]="!editNotes">
-                Cancel
-              </button>
+            <button class="btn btn-success btn-block" (click)="saveNotes()"
+              [disabled]="imageCollectionNotes == imagesCollection.notes">
+              Save
+            </button>
+            <button class="btn btn-danger btn-block" (click)="clearNotes()" [hidden]="!editNotes">
+              Cancel
+            </button>
           </div>
         </dt>
 
         <dd class="col-md-9">
-             <textarea class="wideTxtArea"
-                       [hidden]="!showNotes"
-                       [disabled]="!editNotes"
-                       type="text"
-                       [(ngModel)]="imageCollectionNotes"
-                       name="imageCollectionNotes"></textarea>
+          <textarea class="wideTxtArea" [hidden]="!showNotes" [disabled]="!editNotes" type="text"
+            [(ngModel)]="imageCollectionNotes" name="imageCollectionNotes"></textarea>
         </dd>
       </dl>
     </div>
 
     <div class="col-md-2 text-right">
-      <button *ngIf="getNbFiles() > 0"
-        (click)="openDownload(imagesCollection._links.download.href)"
-        ngbTooltip="Download as zip"
-        placement="left"
-        class="btn btn-light">
-                  <span
-                    aria-hidden="true"><i class="fa fa-download"></i></span>
+      <button *ngIf="getNbFiles() > 0" (click)="openDownload(imagesCollection._links.download.href)"
+        ngbTooltip="Download as zip" placement="left" class="btn btn-light">
+        <span aria-hidden="true"><i class="fa fa-download"></i></span>
       </button>
       <!-- TODO: add copy collection -->
       <!--<button type="button" class="btn btn-default"-->
@@ -136,7 +114,7 @@
       <!--data-tooltip-placement="left">-->
       <!--<span class="glyphicon glyphicon-copy"></span>-->
       <!--</button>-->
-      <button *ngIf="canEdit()" type="button"
+      <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
               ngbTooltip="Delete collection"
               [disabled]="imagesCollection.publiclyShared && !canDeletePublicData()"
               placement="left"
@@ -144,26 +122,16 @@
                   <span class="fa fa-times"
                         aria-hidden="true"></span>
       </button>
-      <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
-              ngbTooltip="Lock collection"
-              placement="left"
-              class="btn btn-light" (click)="lockCollection();">
-        <span class="fa fa-lock-open"
-              aria-hidden="true"></span>
+      <button *ngIf="!imagesCollection.locked && canEdit()" type="button" ngbTooltip="Lock collection"
+        placement="left" class="btn btn-light" (click)="lockCollection();">
+        <span class="fa fa-lock-open" aria-hidden="true"></span>
       </button>
-      <div *ngIf="imagesCollection.locked"
-           ngbTooltip="Collection locked"
-           placement="left"
-           class="btn btn-light">
-        <span class="fa fa-lock"
-              aria-hidden="true"></span>
+      <div *ngIf="imagesCollection.locked" ngbTooltip="Collection locked" placement="left" class="btn btn-light">
+        <span class="fa fa-lock" aria-hidden="true"></span>
       </div>
-      <button *ngIf="!imagesCollection.publiclyShared && canEdit()" type="button"
-              ngbTooltip="Make collection public"
-              placement="left"
-              class="btn btn-light" (click)="makePublicCollection();">
-        <span class="fas fa-users"
-              aria-hidden="true"></span>
+      <button *ngIf="!imagesCollection.publiclyShared && canEdit()" type="button" ngbTooltip="Make collection public"
+        placement="left" class="btn btn-light" (click)="makePublicCollection();">
+        <span class="fas fa-users" aria-hidden="true"></span>
       </button>
     </div>
   </div>
@@ -182,31 +150,25 @@
     <h5>Folder upload:</h5>
     <div [hidden]="!flowHolder.supportDirectory  || !canEdit()">
       <div class="col-md-11 ml-md-1">
-        <input type="radio" id="regular" name="upload" value="regular"
-               [(ngModel)]="uploadOption">
+        <input type="radio" id="regular" name="upload" value="regular" [(ngModel)]="uploadOption">
         Upload images from folder and sub-folders (do not prefix images names with folders relative path)
-        <br/>
-        <input type="radio" id="includeSubsInPath"
-               name="upload" value="includeSubsInPath"
-               [(ngModel)]="uploadOption">
+        <br />
+        <input type="radio" id="includeSubsInPath" name="upload" value="includeSubsInPath" [(ngModel)]="uploadOption">
         Upload images from folder and sub-folders (prefix images names with folders relative path)
-        <br/>
-        <input type="radio" id="ignoreSubFolders"
-               name="upload" value="ignoreSubs"
-               [(ngModel)]="uploadOption">
+        <br />
+        <input type="radio" id="ignoreSubFolders" name="upload" value="ignoreSubs" [(ngModel)]="uploadOption">
         Ignore sub-folders
-        <br/>
+        <br />
       </div>
     </div>
-    <br/>
+    <br />
 
     <div class="row">
       <div class="col-md-4">
         <button class="btn btn-light btn-block" #browseBtn>
           Add files to collection
         </button>
-        <button class="btn btn-light btn-block" #browseDirBtn
-                [hidden]="!flowHolder.supportDirectory">
+        <button class="btn btn-light btn-block" #browseDirBtn [hidden]="!flowHolder.supportDirectory">
           Add folder to collection
         </button>
       </div>
@@ -216,8 +178,8 @@
       <div class="col-md-7">
         <div class="upload-drop-zone" #dropArea>
           Drag And Drop the files <span [hidden]="!flowHolder.supportDirectory">
-                      &nbsp;or a folder&nbsp;
-                  </span>
+            &nbsp;or a folder&nbsp;
+          </span>
           here.
         </div>
       </div>
@@ -232,27 +194,27 @@
     </div>
     <table class="table table-hover table-bordered table-striped">
       <thead>
-      <tr>
-        <th>#</th>
-        <th>File name</th>
-        <th>Size</th>
-        <th>Progress</th>
-        <th>Error</th>
-      </tr>
+        <tr>
+          <th>#</th>
+          <th>File name</th>
+          <th>Size</th>
+          <th>Progress</th>
+          <th>Error</th>
+        </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let file of flowHolder.files | slice:0:10; let index=index">
-        <td class="vert-align">{{index + 1}}</td>
-        <td class="vert-align">{{file.name}}</td>
-        <td class="vert-align">{{file.size | bytes}}</td>
-        <td *ngIf='!file.error'>
-          <ngb-progressbar max="1" value="{{file.progress()}}">
-          </ngb-progressbar>
-        </td>
-        <td *ngIf='file.error'>
-          {{file.errorMesage|| "Unknown upload error."}}
-        </td>
-      </tr>
+        <tr *ngFor="let file of flowHolder.files | slice:0:10; let index=index">
+          <td class="vert-align">{{index + 1}}</td>
+          <td class="vert-align">{{file.name}}</td>
+          <td class="vert-align">{{file.size | bytes}}</td>
+          <td *ngIf='!file.error'>
+            <ngb-progressbar max="1" value="{{file.progress()}}">
+            </ngb-progressbar>
+          </td>
+          <td *ngIf='file.error'>
+            {{file.errorMesage|| "Unknown upload error."}}
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -274,19 +236,15 @@
 
 
     <div class='col-sm-2 text-right' *ngIf="canEdit()">
-      <button *ngIf="!imagesCollection.locked" type="button"
-              ngbTooltip="Delete all images"
-              placement="left"
-              class="btn btn-light"
-              (click)="deleteAllImages()">
-                <span class="fa fa-times"
-                      aria-hidden="true"></span>
+      <button *ngIf="!imagesCollection.locked" type="button" ngbTooltip="Delete all images" placement="left"
+        class="btn btn-light" (click)="deleteAllImages()">
+        <span class="fa fa-times" aria-hidden="true"></span>
       </button>
     </div>
   </div>
 
-  <table mat-table [dataSource]="images" (matSortChange)="imagesSortChanged($event)" #imagesSort
-         matSort matSortActive="fileName" matSortDisableClear matSortDirection="asc">
+  <table mat-table [dataSource]="images" (matSortChange)="imagesSortChanged($event)" #imagesSort matSort
+    matSortActive="fileName" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
@@ -310,33 +268,22 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
       <td mat-cell *matCellDef="let row">{{ row.fileSize | bytes }}</td>
     </ng-container>
-    
+
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let row">
-        <button *ngIf="!row.importing && !row.importError"
-          (click)="openDownload(row._links.download.href)"
-           ngbTooltip="Download image"
-           placement="left"
-           class="btn btn-light">
-                  <span
-                    aria-hidden="true"><i class="fa fa-download"></i></span>
+        <button *ngIf="!row.importing && !row.importError" (click)="openDownload(row._links.download.href)"
+          ngbTooltip="Download image" placement="left" class="btn btn-light">
+          <span aria-hidden="true"><i class="fa fa-download"></i></span>
         </button>
-        <button *ngIf="!row.importing && !row.importError"
-           (click)="openDownload(row._links.ome.href)"
-           ngbTooltip="Download metadata"
-           placement="left"
-           class="btn btn-light">
-                  <span
-                    aria-hidden="true"><i class="fa fa-info-circle"></i></span>
+        <button *ngIf="!row.importing && !row.importError" (click)="openDownload(row._links.ome.href)"
+          ngbTooltip="Download metadata" placement="left" class="btn btn-light">
+          <span aria-hidden="true"><i class="fa fa-info-circle"></i></span>
         </button>
-        <button *ngIf="!imagesCollection.locked && canEdit()" type="button"
-                ngbTooltip="Remove from collection"
-                placement="left"
-                class="btn btn-light" (click)="deleteImage(row);">
-                  <span class="fa fa-times"
-                        aria-hidden="true"></span>
+        <button *ngIf="!imagesCollection.locked && canEdit()" type="button" ngbTooltip="Remove from collection"
+          placement="left" class="btn btn-light" (click)="deleteImage(row);">
+          <span class="fa fa-times" aria-hidden="true"></span>
         </button>
       </td>
     </ng-container>
@@ -351,22 +298,20 @@
       </div>
       <div class="col-md-3 text-right topMarge5">
         <span class="goToSpan">
-           <mat-form-field class="inputPage">
-              <input matInput [(ngModel)]="goToPageImages" placeholder="Go to page">
-            </mat-form-field>
-          <button class="btn-xs goToButton"
-                  (click)="goToPageImage()"
-                  [disabled]="goToPageImages<1 ||
-                 goToPageImages>= imagesCollection.numberOfImages/pageSizeImages+1 ||
-                 !goToPageImages">
-          <span class="goToTxt">Go</span>
-          <i class="fas fa-angle-right arrowIcon"></i>
-        </button>
+          <mat-form-field class="inputPage">
+            <input matInput [(ngModel)]="goToPageImages" placeholder="Go to page">
+          </mat-form-field>
+          <button class="btn-xs goToButton" (click)="goToPageImage()" [disabled]="goToPageImages<1 ||
+                goToPageImages>= imagesCollection.numberOfImages/pageSizeImages+1 ||
+                !goToPageImages">
+            <span class="goToTxt">Go</span>
+            <i class="fas fa-angle-right arrowIcon"></i>
+          </button>
         </span>
       </div>
       <div class="col-md-4">
         <mat-paginator (page)="imagesPageChanged($event)" [length]="resultsLengthImages" [pageSize]="pageSizeImages"
-                       [pageSizeOptions]="pageSizeOptions" #imagesPaginator></mat-paginator>
+          [pageSizeOptions]="pageSizeOptions" #imagesPaginator></mat-paginator>
       </div>
     </div>
   </div>
@@ -395,7 +340,7 @@
   </div>
 
   <table mat-table [dataSource]="metadataFiles" (matSortChange)="metadataSortChanged($event)" #metadataFilesSort
-         matSort matSortActive="name" matSortDisableClear matSortDirection="asc">
+    matSort matSortActive="name" matSortDisableClear matSortDirection="asc">
 
     <!-- # Column -->
     <ng-container matColumnDef="index">
@@ -424,19 +369,12 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let row">
-        <a [href]="row._links.self.href"
-           ngbTooltip="Download file"
-           placement="left"
-           class="btn btn-light">
-                  <span
-                    aria-hidden="true"><i class="fa fa-download"></i></span>
+        <a [href]="row._links.self.href" ngbTooltip="Download file" placement="left" class="btn btn-light">
+          <span aria-hidden="true"><i class="fa fa-download"></i></span>
         </a>
-        <button *ngIf="!imagesCollection.locked  && canEdit()" type="button"
-                ngbTooltip="Remove from collection"
-                placement="left"
-                class="btn btn-light" (click)="deleteMetadataFile(row);">
-                  <span class="fa fa-times"
-                        aria-hidden="true"></span>
+        <button *ngIf="!imagesCollection.locked  && canEdit()" type="button" ngbTooltip="Remove from collection"
+          placement="left" class="btn btn-light" (click)="deleteMetadataFile(row);">
+          <span class="fa fa-times" aria-hidden="true"></span>
         </button>
       </td>
     </ng-container>
@@ -451,24 +389,22 @@
       <div class="col-md-5"></div>
       <div class="col-md-3 text-right topMarge5">
         <span class="goToSpan">
-           <mat-form-field class="inputPage">
-              <input matInput [(ngModel)]="goToPageMetadataFiles" placeholder="Go to page">
-            </mat-form-field>
-          <button class="btn-xs goToButton"
-                  (click)="goToPageMetadata()"
-                  [disabled]="goToPageMetadataFiles<1 ||
-                 goToPageMetadataFiles> imagesCollection.numberOfMetadataFiles/pageSizeMetadataFiles+1 ||
-                  !goToPageMetadataFiles">
-          <span class="goToTxt">Go</span>
-          <i class="fas fa-angle-right arrowIcon"></i>
+          <mat-form-field class="inputPage">
+            <input matInput [(ngModel)]="goToPageMetadataFiles" placeholder="Go to page">
+          </mat-form-field>
+          <button class="btn-xs goToButton" (click)="goToPageMetadata()" [disabled]="goToPageMetadataFiles<1 ||
+                goToPageMetadataFiles> imagesCollection.numberOfMetadataFiles/pageSizeMetadataFiles+1 ||
+                !goToPageMetadataFiles">
+            <span class="goToTxt">Go</span>
+            <i class="fas fa-angle-right arrowIcon"></i>
           </button>
         </span>
       </div>
 
       <div class="col-md-4">
         <mat-paginator (page)="metadataPageChanged($event)" [length]="resultsLengthMetadataFiles"
-                       [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions"
-                       #metadataFilesPaginator></mat-paginator>
+          [pageSize]="pageSizeMetadataFiles" [pageSizeOptions]="pageSizeOptions" #metadataFilesPaginator>
+        </mat-paginator>
       </div>
 
     </div>

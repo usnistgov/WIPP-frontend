@@ -68,3 +68,13 @@ dd {
 .top20 {
   margin-top: 20px;
 }
+
+.wipp-text {
+  color: black
+}
+
+.wf-background{
+  width: 200px;
+  height: 160px;
+  background: url('./assets/img/grid-wf.png'); 
+}
