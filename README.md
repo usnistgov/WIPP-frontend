@@ -72,8 +72,6 @@ We are following the [Gitflow branching model](https://nvie.com/posts/a-successf
 The library exports a list of modules and components which could be reused by a third party app/library. The list of modules that can be imported:
 
 - `DynamicContentModule`
-- `BrowserModule`
-- `HttpClientModule`
 - `ImagesCollectionModule`
 - `StitchingVectorModule`
 - `PyramidAnnotationModule`

@@ -226,10 +226,10 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           this.refreshPage();
         });
       }, error => {
-          this.spinner.hide();
-          const modalRefErr = this.modalService.open(ModalErrorComponent);
-          modalRefErr.componentInstance.title = 'Workflow copy failed';
-          modalRefErr.componentInstance.message = error.error;
+        this.spinner.hide();
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Workflow copy failed';
+        modalRefErr.componentInstance.message = error.error;
       });
     }, (reason) => {
       console.log('dismissed');
@@ -339,7 +339,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           if (ui.hasOwnProperty('condition')) {
             inputSchema['condition'] = ui.condition;
             // case when the condition contains the AND operator
-            if(ui.condition.includes('&&')){
+            if (ui.condition.includes('&&')) {
               inputSchema['visibleIf'] = {};
               inputSchema['visibleIf']['allOf'] = [];
               const conditionElements = ui.condition.split('&&');
@@ -366,13 +366,13 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
                 const inputName = conditionElements[0].split('.');
                 // condition string must not contain single quotes
                 var conditionElem = conditionElements[1].replace(/\'/g, "");
-                if (conditionElem.includes(',')) {                
+                if (conditionElem.includes(',')) {
                   // converting the string containing multiple conditions into an array
                   // ngx-schema-form's schema no longer accepts an array string in the visibleif property 
                   conditionElem = conditionElem.split(",");
                   conditionElem[0] = conditionElem[0].substring(1);
                   conditionElem[conditionElem.length - 1] = conditionElem[conditionElem.length - 1]
-                                                              .substring(0,conditionElem[conditionElem.length - 1].length - 1);
+                    .substring(0, conditionElem[conditionElem.length - 1].length - 1);
                   conditionElem.forEach((x, i) => {
                     conditionElem[i] = conditionElem[i].includes('"') ? conditionElem[i].replaceAll('"', "").trim()
                       : conditionElem[i].replaceAll("'", "").trim();
@@ -410,37 +410,41 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
             inputSchema['default'] = ui.default;
           }
           if (ui.hasOwnProperty('validator')) {
-            const validatorCondition = ui.validator.condition;
-            const thenAction = ui.validator.then.action;
-            const targetPropName = ui.validator.then.input;
-            const targetVal = ui.validator.then.value;
-            let elseAction = "";
-
-            if (ui.validator.hasOwnProperty('else')) {
-              elseAction = ui.validator.else.action;
-            }
-
-            // set else action in case it is not exisiting in the schema
-            if (elseAction == "") {
-              if (thenAction == "add") {
-                elseAction = "remove";
-              } else if (thenAction == "remove") {
-                elseAction = "add";
-              }
-            }
+            const validatorProp = ui.validator;
 
             // advanced validation with ngx-schema-form 
             plugin.validator = {
               "/inputs": (value, property, form) => {
                 const parent: PropertyGroup = property.findRoot();
                 const inputProperties = parent.schema.properties.inputs.properties;
-                const targetProp = inputProperties[targetPropName];
-                let builtCondition = this.buildCondition(validatorCondition, value);
+                for (const validatorObj of validatorProp) {
+                  let validatorCond = validatorObj.condition;
+                  let builtCondition = this.buildCondition(validatorCond, value);
+                  for (const thenStatement of validatorObj.then) {
+                    const thenAction = thenStatement.action;
+                    const targetVal = thenStatement.value;
+                    const targetProp = inputProperties[thenStatement.input];
+                    let elseAction = "";
 
-                if (builtCondition) {
-                  this.runAction(targetProp, targetVal, 1, thenAction);
-                } else {
-                  this.runAction(targetProp, targetVal, 1, elseAction);
+                    if (validatorObj.hasOwnProperty('else')) {
+                      elseAction = validatorObj.else.action;
+                    }
+
+                    // set else action in case it is not exisiting in the schema
+                    if (elseAction == "") {
+                      if (thenAction == "add") {
+                        elseAction = "remove";
+                      } else if (thenAction == "remove") {
+                        elseAction = "add";
+                      }
+                    }
+
+                    if (builtCondition) {
+                      this.runAction(targetProp, targetVal, 1, thenAction);
+                    } else {
+                      this.runAction(targetProp, targetVal, 1, elseAction);
+                    }
+                  }
                 }
               }
             };
@@ -644,11 +648,11 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       this.workflow).subscribe(workflow => {
         this.refreshPage();
       },
-      error => {
-        const modalRefErr = this.modalService.open(ModalErrorComponent);
-        modalRefErr.componentInstance.title = 'Unable to set workflow to public';
-        modalRefErr.componentInstance.message = error.error;
-      });
+        error => {
+          const modalRefErr = this.modalService.open(ModalErrorComponent);
+          modalRefErr.componentInstance.title = 'Unable to set workflow to public';
+          modalRefErr.componentInstance.message = error.error;
+        });
   }
 
   canEdit(): boolean {
@@ -656,7 +660,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   }
 
   canCreate(): boolean {
-    return(this.keycloakService.isLoggedIn());
+    return (this.keycloakService.isLoggedIn());
   }
 
   ngOnDestroy() {
@@ -715,7 +719,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         let currentBuiltCondition = this.buildSingleCondition(subConditions[i].input, subConditions[i].value, subConditions[i].eval, schemaVal);
         if (builtCondition == null) {
           builtCondition = currentBuiltCondition;
-        } 
+        }
         if (operator == "OR") {
           builtCondition = builtCondition || currentBuiltCondition;
         } else if (operator == "AND") {
