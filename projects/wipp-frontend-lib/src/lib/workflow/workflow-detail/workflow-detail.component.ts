@@ -264,7 +264,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         // default field bindings - none
         plugin.fieldBindings = {};
         // default validator - none
-        plugin.validator = {};
+        plugin.schemaValidator = {};
         // TODO: validation of plugin ui description
         plugin.inputs.forEach(input => {
           const inputSchema = {};
@@ -409,48 +409,43 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           if (ui.hasOwnProperty('default')) {
             inputSchema['default'] = ui.default;
           }
-          if (ui.hasOwnProperty('validator')) {
-            const validatorProp = ui.validator;
+          plugin.properties.inputs.properties[input.name] = inputSchema;
+        });
 
-            // advanced validation with ngx-schema-form 
-            plugin.validator = {
-              "/inputs": (value, property, form) => {
-                const parent: PropertyGroup = property.findRoot();
-                const inputProperties = parent.schema.properties.inputs.properties;
-                for (const validatorObj of validatorProp) {
-                  let validatorCond = validatorObj.condition;
-                  let builtCondition = this.buildCondition(validatorCond, value);
+        // advanced validation with ngx-schema-form 
+        if (plugin.validators) {
+          plugin.schemaValidator = {
+            "/inputs": (value, property, form) => {
+              const parent: PropertyGroup = property.findRoot();
+              const inputProperties = parent.schema.properties.inputs.properties;
+              // resetting values of every enum or radio property to original values
+              plugin.inputs.forEach(input => {
+                if (input.type == 'enum' || input.type == 'radio') {
+                  inputProperties[input.name]['oneOf']= [];
+                  input.options.values.forEach(value => {
+                    inputProperties[input.name]['oneOf'].push({
+                      'enum': [value],
+                      'description': value
+                    });
+                  });
+                }
+              });
+              // loop over validators objects
+              for (const validatorObj of plugin.validators) {
+                let validatorCond = validatorObj.condition;
+                let builtCondition = this.buildCondition(validatorCond, value);
+                if (builtCondition) {
                   for (const thenStatement of validatorObj.then) {
                     const thenAction = thenStatement.action;
-                    const targetVal = thenStatement.value;
+                    const targetValues = thenStatement.values;
                     const targetProp = inputProperties[thenStatement.input];
-                    let elseAction = "";
-
-                    if (validatorObj.hasOwnProperty('else')) {
-                      elseAction = validatorObj.else.action;
-                    }
-
-                    // set else action in case it is not exisiting in the schema
-                    if (elseAction == "") {
-                      if (thenAction == "add") {
-                        elseAction = "remove";
-                      } else if (thenAction == "remove") {
-                        elseAction = "add";
-                      }
-                    }
-
-                    if (builtCondition) {
-                      this.runAction(targetProp, targetVal, 1, thenAction);
-                    } else {
-                      this.runAction(targetProp, targetVal, 1, elseAction);
-                    }
+                    this.runAction(targetProp, targetValues, thenAction);
                   }
                 }
               }
-            };
+            }
           }
-          plugin.properties.inputs.properties[input.name] = inputSchema;
-        });
+        }
         // field sets - arrange fields by groups
         const fieldsetsList = plugin.ui.find(v => v.key === 'fieldsets');
         if (fieldsetsList) {
@@ -667,32 +662,24 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.modalService.dismissAll();
   }
 
-  removePropFromOneOf(property, val) {
-    property.oneOf = property.oneOf.filter(
-      item => -1 == item.enum.indexOf(val)
+  removeValuesFromOneOf(property, values) {
+    property.oneOf = property.oneOf.filter(x =>
+      !values.includes(x.enum[0])
     );
   }
 
-  addPropToOneOf(prop, val, index) {
-    if (prop) {
-      for (const element of prop.oneOf) {
-        if (element.description == val) {
-          return null;
-        }
-      }
-      prop.oneOf.splice(index, 0, {
-        enum: [val],
-        description: val
-      });
-    }
+  addValuesToOneOf(prop, values) {
+    prop.oneOf = prop.oneOf.filter(x =>
+      values.includes(x.enum[0])
+    );
   }
 
-  // choose which action to run and either add or remove property
-  runAction(prop, val, index, action) {
-    if (action == "remove") {
-      this.removePropFromOneOf(prop, val);
-    } else if (action == "add") {
-      this.addPropToOneOf(prop, val, index);
+  // choose which action to run and either show or hide values
+  runAction(prop, values, action) {
+    if (action == "hide") {
+      this.removeValuesFromOneOf(prop, values);
+    } else if (action == "show") {
+      this.addValuesToOneOf(prop, values);
     }
   }
 
@@ -706,7 +693,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  // build condition from validator in json schema
+  // build condition from validator condition object in json schema
   buildCondition(condition, schemaVal): boolean {
     let builtCondition;
     if (this.containsMultipleConditions(condition)) {
@@ -720,9 +707,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
         if (builtCondition == null) {
           builtCondition = currentBuiltCondition;
         }
-        if (operator == "OR") {
+        if (operator == "OR" || "||") {
           builtCondition = builtCondition || currentBuiltCondition;
-        } else if (operator == "AND") {
+        } else if (operator == "AND" || "&&") {
           builtCondition = builtCondition && currentBuiltCondition;
         }
       }
