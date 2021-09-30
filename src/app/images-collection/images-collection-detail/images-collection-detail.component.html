@@ -68,13 +68,13 @@
           <div *ngIf="!imagesCollection.format">
             N/A
           </div>
-          <div *ngIf="imagesCollection.format == 'OMETIFF'">
+          <div *ngIf="imagesCollection.format == ImagesCollectionFormat.OMETIFF">
             OME-TIFF
           </div>
-          <div *ngIf="imagesCollection.format == 'OMEZARR'">
+          <div *ngIf="imagesCollection.format == ImagesCollectionFormat.OMEZARR">
             OME-ZARR
           </div>
-          <div *ngIf="imagesCollection.format == 'RAW'">
+          <div *ngIf="imagesCollection.format == ImagesCollectionFormat.RAW">
             RAW
           </div>
         </dd>

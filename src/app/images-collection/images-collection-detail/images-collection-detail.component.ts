@@ -5,7 +5,7 @@ import * as Flow from '@flowjs/flow.js';
 import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BytesPipe, NgMathPipesModule} from 'angular-pipes';
 import {ImagesCollectionService} from '../images-collection.service';
-import {ImagesCollection} from '../images-collection';
+import {ImagesCollection, ImagesCollectionFormat} from '../images-collection';
 import {Image} from '../image';
 import {MatPaginator, MatSort} from '@angular/material';
 import {BehaviorSubject, from, Observable, of as observableOf, Subject} from 'rxjs';
@@ -38,6 +38,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   showNotes = false;
   editNotes = false;
   imageCollectionNotes;
+
+  ImagesCollectionFormat = ImagesCollectionFormat;
 
   displayedColumnsImages: string[] = ['index', 'fileName', 'fileSize', 'actions'];
   displayedColumnsMetadata: string[] = ['index', 'fileName', 'fileSize', 'actions'];
