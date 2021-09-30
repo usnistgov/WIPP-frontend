@@ -5,6 +5,7 @@ export class ImagesCollection {
   sourceJob: string;
   sourceCatalog: string;
   importMethod: string;
+  format: ImagesCollectionFormat;
   locked: boolean;
   numberOfImages: number;
   imagesTotalSize: number;
@@ -23,4 +24,10 @@ export interface PaginatedImagesCollections {
   page: any;
   data: ImagesCollection[];
   _links: any;
+}
+
+export enum ImagesCollectionFormat {
+  OMETIFF = 'OME-TIFF',
+  OMEZARR = 'OME-ZARR',
+  RAW = 'RAW'
 }

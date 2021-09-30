@@ -15,7 +15,20 @@
              required>
       <small class="form-text text-muted">Enter the collection name.</small>
     </div>
-
+    <div class="form-group">
+      <label for="format">Conversion format</label>
+      <span style="color: #e32"> * </span>
+      <mat-radio-group
+        id="format"
+        class="format-radio-group"
+        name="format"
+        [(ngModel)]="imagesCollection.format">
+        <mat-radio-button *ngFor="let format of ImagesCollectionFormat | keyvalue" [value]="format.key">
+          {{format.value}}
+        </mat-radio-button>
+      </mat-radio-group>
+      <!--<small class="form-text text-muted">Select the format images will be converted to.</small>-->
+    </div>
     <mat-checkbox [(ngModel)]="usePattern" name="false">Filter images upon upload using a filename pattern</mat-checkbox>
     <span class="text-danger" *ngIf="!usePattern && imagesCollection.pattern">Warning: pattern is not empty, but this option is not checked</span>
 

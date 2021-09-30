@@ -63,6 +63,22 @@
           </ng-template>
         </dd>
 
+        <dt class="col-md-4">Format:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="!imagesCollection.format">
+            N/A
+          </div>
+          <div *ngIf="imagesCollection.format == 'OMETIFF'">
+            OME-TIFF
+          </div>
+          <div *ngIf="imagesCollection.format == 'OMEZARR'">
+            OME-ZARR
+          </div>
+          <div *ngIf="imagesCollection.format == 'RAW'">
+            RAW
+          </div>
+        </dd>
+
         <dt class="col-md-4">Visibility:</dt>
         <dd class="col-md-8">
           <div *ngIf="imagesCollection.publiclyShared; else privateData">Public</div>
