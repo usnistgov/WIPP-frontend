@@ -264,7 +264,7 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
     this.modalService.dismissAll();
   }
 
-  makePrivateVisualization(): void {
+  makePublicVisualization(): void {
     this.visualizationService.makePublicVisualization(
       this.visualization).subscribe(visualization => {
       this.visualization = visualization;
@@ -273,5 +273,10 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
 
   canEdit() : boolean {
     return this.keycloakService.canEdit(this.visualization);
+  }
+
+  openDownload(url: string) {
+    this.visualizationService.startDownload(url).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']);
   }
 }

@@ -1,27 +1,27 @@
 <h3 class="wipp-title">Pyramid Visualization</h3>
 
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-md-3">
     <strong>Name:</strong> {{ visualization.name }}
   </div>
 
-  <div class="col-md-4">
+  <div class="col-md-3">
     <strong>Creation date:</strong> {{ visualization.creationDate | date }}
   </div>
 
-  <div class="col-md-4">
+  <div class="col-md-3">
     <strong>Owner:</strong> {{ visualization.owner }}
   </div>
 
-  <div class="col-md-4 text-right">
+  <div class="col-md-3 text-right">
     <!--TODO: add download link (metadata not handled in pyramid building yet) -->
-    <!--<a [href]="visualization?._links?.download?.href"-->
-    <!--ngbTooltip="Download as zip"-->
-    <!--placement="left"-->
-    <!--class="btn btn-light">-->
-    <!--<span-->
-    <!--aria-hidden="true"><i class="fa fa-download"></i></span>-->
-    <!--</a>-->
+    <button
+       (click)="openDownload(visualization._links.download.href)"
+      ngbTooltip="Download as zip"
+      placement="left"
+      class="btn btn-light">
+      <span aria-hidden="true"><i class="fa fa-download"></i></span>
+    </button>
     <button *ngIf="canEdit()" type="button" class="btn wip-icon-btn-default btn-sm"
             ngbTooltip="Hide/Show configs"
             placement="left"
