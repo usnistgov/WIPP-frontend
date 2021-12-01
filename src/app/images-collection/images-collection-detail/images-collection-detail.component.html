@@ -329,7 +329,8 @@
                   <span
                     aria-hidden="true"><i class="fa fa-download"></i></span>
         </button>
-        <button *ngIf="!row.importing && !row.importError"
+        <button *ngIf="!row.importing && !row.importError &&
+        (!imagesCollection.format || imagesCollection.format == ImagesCollectionFormat.OMETIFF)"
            (click)="openDownload(row._links.ome.href)"
            ngbTooltip="Download metadata"
            placement="left"
