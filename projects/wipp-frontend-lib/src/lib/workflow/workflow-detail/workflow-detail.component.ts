@@ -226,10 +226,10 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           this.refreshPage();
         });
       }, error => {
-          this.spinner.hide();
-          const modalRefErr = this.modalService.open(ModalErrorComponent);
-          modalRefErr.componentInstance.title = 'Workflow copy failed';
-          modalRefErr.componentInstance.message = error.error;
+        this.spinner.hide();
+        const modalRefErr = this.modalService.open(ModalErrorComponent);
+        modalRefErr.componentInstance.title = 'Workflow copy failed';
+        modalRefErr.componentInstance.message = error.error;
       });
     }, (reason) => {
       console.log('dismissed');
@@ -263,6 +263,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       try {
         // default field bindings - none
         plugin.fieldBindings = {};
+        // default validator - none
+        plugin.schemaValidator = {};
         // TODO: validation of plugin ui description
         plugin.inputs.forEach(input => {
           const inputSchema = {};
@@ -337,7 +339,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           if (ui.hasOwnProperty('condition')) {
             inputSchema['condition'] = ui.condition;
             // case when the condition contains the AND operator
-            if(ui.condition.includes('&&')){
+            if (ui.condition.includes('&&')) {
               inputSchema['visibleIf'] = {};
               inputSchema['visibleIf']['allOf'] = [];
               const conditionElements = ui.condition.split('&&');
@@ -364,13 +366,13 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
                 const inputName = conditionElements[0].split('.');
                 // condition string must not contain single quotes
                 var conditionElem = conditionElements[1].replace(/\'/g, "");
-                if (conditionElem.includes(',')) {                
+                if (conditionElem.includes(',')) {
                   // converting the string containing multiple conditions into an array
                   // ngx-schema-form's schema no longer accepts an array string in the visibleif property 
                   conditionElem = conditionElem.split(",");
                   conditionElem[0] = conditionElem[0].substring(1);
                   conditionElem[conditionElem.length - 1] = conditionElem[conditionElem.length - 1]
-                                                              .substring(0,conditionElem[conditionElem.length - 1].length - 1);
+                    .substring(0, conditionElem[conditionElem.length - 1].length - 1);
                   conditionElem.forEach((x, i) => {
                     conditionElem[i] = conditionElem[i].includes('"') ? conditionElem[i].replaceAll('"', "").trim()
                       : conditionElem[i].replaceAll("'", "").trim();
@@ -409,6 +411,41 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           }
           plugin.properties.inputs.properties[input.name] = inputSchema;
         });
+
+        // advanced validation with ngx-schema-form 
+        if (plugin.validators) {
+          plugin.schemaValidator = {
+            "/inputs": (value, property, form) => {
+              const parent: PropertyGroup = property.findRoot();
+              const inputProperties = parent.schema.properties.inputs.properties;
+              // resetting values of every enum or radio property to original values
+              plugin.inputs.forEach(input => {
+                if (input.type == 'enum' || input.type == 'radio') {
+                  inputProperties[input.name]['oneOf']= [];
+                  input.options.values.forEach(value => {
+                    inputProperties[input.name]['oneOf'].push({
+                      'enum': [value],
+                      'description': value
+                    });
+                  });
+                }
+              });
+              // loop over validators objects
+              for (const validatorObj of plugin.validators) {
+                let validatorCond = validatorObj.condition;
+                let builtCondition = this.buildCondition(validatorCond, value);
+                if (builtCondition) {
+                  for (const thenStatement of validatorObj.then) {
+                    const thenAction = thenStatement.action;
+                    const targetValues = thenStatement.values;
+                    const targetProp = inputProperties[thenStatement.input];
+                    this.runAction(targetProp, targetValues, thenAction);
+                  }
+                }
+              }
+            }
+          }
+        }
         // field sets - arrange fields by groups
         const fieldsetsList = plugin.ui.find(v => v.key === 'fieldsets');
         if (fieldsetsList) {
@@ -606,11 +643,11 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       this.workflow).subscribe(workflow => {
         this.refreshPage();
       },
-      error => {
-        const modalRefErr = this.modalService.open(ModalErrorComponent);
-        modalRefErr.componentInstance.title = 'Unable to set workflow to public';
-        modalRefErr.componentInstance.message = error.error;
-      });
+        error => {
+          const modalRefErr = this.modalService.open(ModalErrorComponent);
+          modalRefErr.componentInstance.title = 'Unable to set workflow to public';
+          modalRefErr.componentInstance.message = error.error;
+        });
   }
 
   canEdit(): boolean {
@@ -618,11 +655,79 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   }
 
   canCreate(): boolean {
-    return(this.keycloakService.isLoggedIn());
+    return (this.keycloakService.isLoggedIn());
   }
 
   ngOnDestroy() {
     this.modalService.dismissAll();
   }
 
+  removeValuesFromOneOf(property, values) {
+    property.oneOf = property.oneOf.filter(x =>
+      !values.includes(x.enum[0])
+    );
+  }
+
+  addValuesToOneOf(prop, values) {
+    prop.oneOf = prop.oneOf.filter(x =>
+      values.includes(x.enum[0])
+    );
+  }
+
+  // choose which action to run and either show or hide values
+  runAction(prop, values, action) {
+    if (action == "hide") {
+      this.removeValuesFromOneOf(prop, values);
+    } else if (action == "show") {
+      this.addValuesToOneOf(prop, values);
+    }
+  }
+
+  // check if validator contains multiple conditions or a single condition
+  containsMultipleConditions(arr): boolean {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].hasOwnProperty('operator')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // build condition from validator condition object in json schema
+  buildCondition(condition, schemaVal): boolean {
+    let builtCondition;
+    if (this.containsMultipleConditions(condition)) {
+      let operator = condition.filter(item => item.operator)[0].operator;
+      let subConditions = condition.filter(function (item) {
+        return !item.operator;
+      });
+
+      for (var i = 0; i < subConditions.length; i++) {
+        let currentBuiltCondition = this.buildSingleCondition(subConditions[i].input, subConditions[i].value, subConditions[i].eval, schemaVal);
+        if (builtCondition == null) {
+          builtCondition = currentBuiltCondition;
+        }
+        if (operator == "OR" || "||") {
+          builtCondition = builtCondition || currentBuiltCondition;
+        } else if (operator == "AND" || "&&") {
+          builtCondition = builtCondition && currentBuiltCondition;
+        }
+      }
+    } else {
+      // single condition 
+      let inputProp = condition[0].input;
+      let propVal = condition[0].value;
+      let propEval = condition[0].eval;
+      builtCondition = this.buildSingleCondition(inputProp, propVal, propEval, schemaVal);
+    }
+    return builtCondition;
+  }
+
+  buildSingleCondition(input, val, propEval, schemaVal): boolean {
+    if (propEval == "==") {
+      return (val == schemaVal[input]);
+    } else if (propEval == "!==") {
+      return (val !== schemaVal[input]);
+    }
+  }
 }
