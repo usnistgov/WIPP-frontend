@@ -106,3 +106,31 @@ ul {
   flex-grow: 1;  /* ensures that the container will take up the full height of the parent container */
   overflow-y: auto;  /* adds scroll to this container */
 }
+
+/* .sidenav-content {
+    display: flex;
+    height: 100%;
+    width: 40px;
+    align-items: center;
+    justify-content: center;
+} */
+
+.sidenav {
+    padding: 5px;
+    min-width: 400px;
+}
+
+.box {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+}
+.box>*:first-child {
+  width: 97%
+}
+.box .selected {
+  align-self: center;
+  width: 3%
+}
+
+
