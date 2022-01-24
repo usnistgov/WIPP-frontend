@@ -160,14 +160,12 @@
     </div>
 
     <div class="selected">
-      <!-- [@direction]="direction" -->
       <button
         mat-icon-button
-        aria-label="Menu button"
-        (click)="drawer.toggle()"
+        [@direction]="direction"
+        (click)="drawer.toggle(); arrowState = !arrowState"
       >
-        <!-- <mat-icon>keyboard_arrow_{{ direction }}</mat-icon> -->
-        <mat-icon>keyboard_arrow_left</mat-icon>
+        <mat-icon>keyboard_arrow_{{ direction }}</mat-icon>
       </button>
     </div>
 

@@ -16,15 +16,17 @@ import { JobService } from '../../job/job.service';
 import { dataMap } from '../../data-service';
 import { WorkflowNewComponent } from '../workflow-new/workflow-new.component';
 import { KeycloakService } from '../../services/keycloak/keycloak.service';
-
+import {animate, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-workflow-detail',
   templateUrl: './workflow-detail.component.html',
-  styleUrls: ['./workflow-detail.component.css']
+  styleUrls: ['./workflow-detail.component.css'],
+  animations: [trigger('direction', [transition('right <=> left', [animate('.2s 0s ease-out')])])]
 })
 
 export class WorkflowDetailComponent implements OnInit, OnDestroy {
+  @Input() public arrowState = false;
 
   workflow: Workflow = new Workflow();
 
@@ -623,6 +625,13 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.dismissAll();
+  }
+
+  /**
+   * Gets the direction of the arrow used to toggle the right menu
+   */
+  public get direction(): 'right' | 'left' {
+    return this.arrowState ? 'right' : 'left';
   }
 
 }

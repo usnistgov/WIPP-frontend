@@ -40,7 +40,7 @@ text {
 }
 
 .wf-dag {
-  border: none 2px lightgray ;
+  border: dotted 2px lightgray ;
   min-height: 500px;
   height: 90%;
   overflow: hidden;
@@ -124,13 +124,16 @@ ul {
   display: flex;
   align-items: flex-start;
   height: 100%;
+  padding: 5px;
 }
 .box>*:first-child {
   width: 97%
 }
 .box .selected {
+  margin-left: auto;
   align-self: center;
-  width: 3%
+  justify-content: center;
+  width: 2%
 }
 
 
