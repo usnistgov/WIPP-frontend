@@ -23,7 +23,7 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
 
   genericDataCollection: GenericDataCollection = new GenericDataCollection();
   job: Job = null;
-  genericDataId: Observable<string>;
+  genericDataCollectionId: Observable<string>;
   uploadOption = 'regular';
   genericFiles: Observable<GenericFile[]>;
   resultsLengthGenericFiles = 0;
@@ -47,6 +47,9 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
     private router: Router,
     private genericDataCollectionService: GenericDataCollectionService,
     private keycloakService: KeycloakService) {
+    this.genericDataCollectionId = this.route.params.pipe(
+      map(data => data.id)
+    );
     this.genericFilesParamsChange = new BehaviorSubject({
       index: 0,
       size: this.pageSize,
@@ -101,7 +104,7 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
   }
 
   getGenericDataCollection() {
-    return this.genericDataId.pipe(
+    return this.genericDataCollectionId.pipe(
       switchMap(id => this.genericDataCollectionService.getById(id))
     );
   }
@@ -214,8 +217,8 @@ export class GenericDataCollectionDetailComponent implements OnInit, AfterViewIn
 
   makePublicCollection(): void {
     this.genericDataCollectionService.makePublicGenericDataCollection(
-      this.genericDataCollection).subscribe(genericData => {
-        this.genericDataCollection = genericData;
+      this.genericDataCollection).subscribe(genericDataCollection => {
+        this.genericDataCollection = genericDataCollection;
       }, error => {
         const modalRefErr = this.modalService.open(ModalErrorComponent);
         modalRefErr.componentInstance.title = 'Error while changing Collection visibility to public';

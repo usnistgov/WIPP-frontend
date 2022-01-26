@@ -13,7 +13,7 @@ import { GenericFile, PaginatedGenericFiles } from './generic-file';
 })
 export class GenericDataCollectionService implements DataService<GenericDataCollection, PaginatedGenericDataCollections> {
 
-  private genericDataCollectionUrl = this.env.apiRootUrl + '/genericDatas';
+  private genericDataCollectionUrl = this.env.apiRootUrl + '/genericDataCollections';
   private genericDataCollectionUiPath = this.env.uiPaths.genericDataCollectionsPath;
 
   constructor(
@@ -39,7 +39,7 @@ export class GenericDataCollectionService implements DataService<GenericDataColl
     }
     return this.http.get<any>(this.genericDataCollectionUrl, httpOptions).pipe(
       map((result: any) => {
-        result.data = result._embedded.genericDatas;
+        result.data = result._embedded.genericDataCollections;
         return result;
       }));
   }
@@ -59,7 +59,7 @@ export class GenericDataCollectionService implements DataService<GenericDataColl
     httpOptions.params = httpParams;
     return this.http.get<any>(this.genericDataCollectionUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
       map((result: any) => {
-        result.data = result._embedded.genericDatas;
+        result.data = result._embedded.genericDataCollections;
         return result;
       }));
   }
