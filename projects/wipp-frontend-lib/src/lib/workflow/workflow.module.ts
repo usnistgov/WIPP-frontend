@@ -7,6 +7,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { WorkflowDetailComponent } from './workflow-detail/workflow-detail.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -33,6 +34,7 @@ import { RouterModule } from '@angular/router';
     MatInputModule,
     MatIconModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     FormsModule,
     ReactiveFormsModule,
     DynamicContentModule,

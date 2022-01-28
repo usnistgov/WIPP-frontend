@@ -5,9 +5,16 @@
 
   <div class="box">
     <div>
-      <h3 class="wipp-title">Workflow detail</h3>
       <div class="wipp-text">
         <div class="row">
+          <div class="col d-flex justify-content-start">
+            <h3 class="wipp-title">Workflow detail</h3>
+          </div>
+            <div class="col d-flex justify-content-end">
+            <mat-slide-toggle [(ngModel)]="wfMenuChecked" [color]="color" >Activate tasks menu</mat-slide-toggle>
+          </div>
+        </div>
+        <div class="row top-buffer">
           <div class="mycontent-left">
             <dt class="col-md-12">Name: </dt>
             <dd class="col-md-12">{{workflow.name}}</dd>
@@ -36,12 +43,13 @@
             <ng-template #privateData>Private</ng-template>
           </div>
 
-          <div class="col align-self-end">
+          <div class="col d-flex justify-content-end">
             <button *ngIf="workflow.status === 'CREATED'" class="btn btn-outline-success wipp-btn wf-btn-submit"
               [disabled]="jobs.length < 1" (click)="submitWorkflow()">
-              <i class="fas fa-arrow-alt-circle-right">
-                <p>Submit workflow</p>
-              </i>
+              <i class="fas fa-arrow-alt-circle-right"></i>
+                <p style="display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
+                  Submit workflow
+                </p>
             </button>
             <button *ngIf="workflow.generatedName" class="btn btn-outline-success wipp-btn wf-btn-submit">
               <i class="fas fa-sitemap"> </i>
@@ -73,7 +81,7 @@
           <div class="wf-tasks">
             <h4>Workflow tasks</h4>
             <div class="row">
-              <div class="col-md-2">
+              <div *ngIf="!wfMenuChecked" class="col-md-2">
                 <button class="btn  btn-outline-success wipp-btn wf-btn-graph" (click)="open(addStepModal)"
                   [disabled]="! workflow.name || workflow.status!='CREATED' || ! selectedSchema">
                   <i class="fas fa-plus-circle">
@@ -159,7 +167,7 @@
       </div>
     </div>
 
-    <div class="selected">
+    <div *ngIf="wfMenuChecked" class="selected">
       <button
         mat-icon-button
         [@direction]="direction"

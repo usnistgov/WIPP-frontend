@@ -17,6 +17,7 @@ import { dataMap } from '../../data-service';
 import { WorkflowNewComponent } from '../workflow-new/workflow-new.component';
 import { KeycloakService } from '../../services/keycloak/keycloak.service';
 import {animate, transition, trigger} from '@angular/animations';
+import {ThemePalette} from '@angular/material/core';
 
 @Component({
   selector: 'app-workflow-detail',
@@ -27,6 +28,8 @@ import {animate, transition, trigger} from '@angular/animations';
 
 export class WorkflowDetailComponent implements OnInit, OnDestroy {
   @Input() public arrowState = false;
+  wfMenuChecked = true;
+  color: ThemePalette = 'primary';
 
   workflow: Workflow = new Workflow();
 

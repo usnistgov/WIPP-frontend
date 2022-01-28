@@ -71,7 +71,7 @@ text {
 
 .mycontent-left {
   border-right: 1px ridge black;
-  width: 150px;
+  width: fit-content;
 }
 
 html {
@@ -136,4 +136,4 @@ ul {
   width: 2%
 }
 
-
+.top-buffer { margin-top:10px; }
