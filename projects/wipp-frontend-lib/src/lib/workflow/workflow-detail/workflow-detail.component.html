@@ -1,6 +1,62 @@
 <mat-drawer-container class="example-container" autosize>
   <mat-drawer #drawer class="sidenav" mode="side" position="end">
-    hello world
+    <p>
+      <mat-toolbar color="primary">
+        <mat-toolbar-row>
+          <span>Workflow Tasks</span>
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </p>
+    <!-- <button class="btn btn-outline-success wipp-btn wf-btn-graph" (click)="open(addStepModal)"
+      [disabled]="! workflow.name || workflow.status!='CREATED' || ! selectedSchema">
+      <i class="fas fa-plus-circle">
+        <p>Add task</p>
+      </i>
+    </button> -->
+
+    
+    <!-- <p>
+      <button type="button" class="btn btn-outline-primary" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+        aria-controls="collapseExample">
+        Toggle
+      </button>
+    </p>
+
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+      <div class="card">
+        <div class="card-body">
+          You can collapse this card by clicking Toggle
+        </div>
+      </div>
+    </div> -->
+
+
+
+    <!-- <p>
+      <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+              [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+        Collapse Toggle
+      </button>
+    </p> -->
+
+    <!-- Working example -->
+    <button class="btn btn-outline-success wipp-btn wf-btn-graph" (click)="isCollapsed = !isCollapsed"
+      [disabled]="! workflow.name || workflow.status!='CREATED' || ! selectedSchema" [attr.aria-expanded]="!isCollapsed" 
+      aria-controls="collapseExample">
+      <i class="fas fa-plus-circle">
+        <p>Add task</p>
+      </i>
+    </button>    
+
+    <div id="collapseExample" [ngbCollapse]="!isCollapsed">
+      <div class="card">
+        <div class="card-body">
+          <ng-container *ngTemplateOutlet="addStepModal"></ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- <ng-container *ngTemplateOutlet="addStepModal"></ng-container> -->
   </mat-drawer>
 
   <div class="box">
@@ -181,13 +237,19 @@
 
 </mat-drawer-container>
 
+
+
+<!-- Wrap everything in the modal template into a new component-->
+<!-- Pass the close and dismiss as output parameters into the new component-->
 <ng-template #addStepModal let-c="close" let-d="dismiss">
 <div class="wipp-modal">
-  <div class="modal-header">
-    <h4 class="modal-title">New Task</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d()">
-      <span aria-hidden="true">&times;</span>
-    </button>
+  <div *ngIf="!wfMenuChecked">
+    <div class="modal-header">
+      <h4 class="modal-title">New Task</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   </div>
   <div class="modal-body">
     <div class="form-group">

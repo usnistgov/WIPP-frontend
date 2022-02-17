@@ -28,8 +28,9 @@ import {ThemePalette} from '@angular/material/core';
 
 export class WorkflowDetailComponent implements OnInit, OnDestroy {
   @Input() public arrowState = false;
-  wfMenuChecked = true;
-  color: ThemePalette = 'primary';
+  public wfMenuChecked = true;
+  public isCollapsed = false;
+  public color: ThemePalette = 'primary';
 
   workflow: Workflow = new Workflow();
 
@@ -120,7 +121,10 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   }
 
   open(content) {
+    console.log("open****");
     this.modalService.open(content, { 'size': 'lg' }).result.then((result) => {
+      console.log("result------");
+      console.log(result);
       const task = {};
 
       // configure job

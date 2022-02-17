@@ -1,0 +1,34 @@
+<!-- <div class="wipp-modal">
+    <div *ngIf="!wfMenuChecked">
+      <div class="modal-header">
+        <h4 class="modal-title">New Task</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissClicked()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="pluginName">Plugin:</label>
+        <select [disabled]="editMode" id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
+          <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}
+          </option>
+        </select>
+      </div>
+      <sf-form [hidden]="!selectedSchema.isSchemaValid" [schema]="selectedSchema"
+        [bindings]="selectedSchema.fieldBindings" [model]="jobModel" #jsonForm>
+      </sf-form>
+      <div [hidden]="selectedSchema.isSchemaValid" class="alert alert-danger">
+        Unable to generate form for {{ selectedSchema.name }} {{ selectedSchema.version }}, plugin manifest is
+        invalid.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-dark" (click)="closeClicked(jsonForm.rootProperty.value)">
+        <i class="fas fa-plus-circle" style="margin-right: 10px">
+          <p class="wf-addTask-text">
+            {{editMode ? 'Edit task' : 'Add task' }}</p>
+        </i>
+      </button>
+    </div>
+</div> -->
