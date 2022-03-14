@@ -1,5 +1,5 @@
-<mat-drawer-container class="example-container" autosize>
-  <mat-drawer #drawer class="sidenav" mode="side" position="end">
+<mat-sidenav-container class="sidenav-container" autosize>
+  <mat-sidenav #sidenav class="sidenav" mode="side" position="end">
     <p>
       <mat-toolbar color="primary">
         <mat-toolbar-row>
@@ -7,277 +7,308 @@
         </mat-toolbar-row>
       </mat-toolbar>
     </p>
-    <!-- <button class="btn btn-outline-success wipp-btn wf-btn-graph" (click)="open(addStepModal)"
-      [disabled]="! workflow.name || workflow.status!='CREATED' || ! selectedSchema">
-      <i class="fas fa-plus-circle">
-        <p>Add task</p>
-      </i>
-    </button> -->
 
-    
-    <!-- <p>
-      <button type="button" class="btn btn-outline-primary" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+    <div *ngFor="let job of jobs">
+      <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                <path [ngStyle]="{'fill': getJobColor(job)}" d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z"/>
+              </svg>
+              <div style="margin-left: 10px">{{job.name}}</div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div *ngIf="workflow.status === 'CREATED'">
+            <div class="task-buttons">
+              <!-- Edit task button -->
+              <button type="submit" class="btn btn-outline-dark" (click)="openEditInMenu(addStepModal, job.id)">
+                <i class="fas fa-edit" style="margin-right: 10px">
+                  <p class="wf-addTask-text">
+                    Edit
+                  </p>
+                </i>
+              </button>
+
+              <!-- Copy task button -->
+              <button type="submit" class="btn btn-outline-dark" (click)="openCopyInMenu(addStepModal, job.id)">
+                <i class="fas fa-copy" style="margin-right: 10px">
+                  <p class="wf-addTask-text">
+                    Copy
+                  </p>
+                </i>
+              </button>
+              
+              <!-- Delete task button -->
+              <button type="submit" class="btn btn-outline-danger" (click)="deleteJob(addStepModal, job.id)">
+                <i class="fas fa-copy" style="margin-right: 10px">
+                  <p class="wf-addTask-text">
+                    Delete
+                  </p>
+                </i>
+              </button>
+            </div>
+
+            <!-- Edit/Copy task modal in menu-->
+            <div class="top-buffer" [ngbCollapse]="!editModeInMenu && !copyMode">
+              <div class="card">
+                <div class="card-body">
+                  <ng-container *ngTemplateOutlet="addStepModal"></ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!editModeInMenu && !copyMode">
+            <app-job-detail [wfJobId]="job.id"></app-job-detail>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <!-- Add task button in menu -->
+    <div style="display: flex; justify-content: center;">
+      <button class="btn btn-outline-success wipp-btn wf-btn-graph top-buffer" (click)="addTaskInMenu()"
+        [disabled]="!workflow.name || workflow.status!='CREATED' || !selectedSchema" [attr.aria-expanded]="!isCollapsed"
         aria-controls="collapseExample">
-        Toggle
+        <i class="fas fa-plus-circle">
+          <p>Add task</p>
+        </i>
       </button>
-    </p>
+    </div>
 
-    <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-      <div class="card">
-        <div class="card-body">
-          You can collapse this card by clicking Toggle
-        </div>
-      </div>
-    </div> -->
-
-
-
-    <!-- <p>
-      <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
-              [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
-        Collapse Toggle
-      </button>
-    </p> -->
-
-    <!-- Working example -->
-    <button class="btn btn-outline-success wipp-btn wf-btn-graph" (click)="isCollapsed = !isCollapsed"
-      [disabled]="! workflow.name || workflow.status!='CREATED' || ! selectedSchema" [attr.aria-expanded]="!isCollapsed" 
-      aria-controls="collapseExample">
-      <i class="fas fa-plus-circle">
-        <p>Add task</p>
-      </i>
-    </button>    
-
-    <div id="collapseExample" [ngbCollapse]="!isCollapsed">
+    <!-- Add task modal in menu-->
+    <div id="collapsibleTask" [ngbCollapse]="!isCollapsed">
       <div class="card">
         <div class="card-body">
           <ng-container *ngTemplateOutlet="addStepModal"></ng-container>
         </div>
       </div>
     </div>
+  </mat-sidenav>
 
-    <!-- <ng-container *ngTemplateOutlet="addStepModal"></ng-container> -->
-  </mat-drawer>
+  <mat-sidenav-content>
 
-  <div class="box">
-    <div>
-      <div class="wipp-text">
-        <div class="row">
-          <div class="col d-flex justify-content-start">
-            <h3 class="wipp-title">Workflow detail</h3>
-          </div>
+    <div class="box">
+      <div>
+        <div class="wipp-text">
+          <div class="row">
+            <div class="col d-flex justify-content-start">
+              <h3 class="wipp-title">Workflow detail</h3>
+            </div>
             <div class="col d-flex justify-content-end">
-            <mat-slide-toggle [(ngModel)]="wfMenuChecked" [color]="color" >Activate tasks menu</mat-slide-toggle>
+              <mat-slide-toggle [(ngModel)]="wfMenuChecked" [color]="color">Activate tasks menu</mat-slide-toggle>
+            </div>
           </div>
-        </div>
-        <div class="row top-buffer">
-          <div class="mycontent-left">
-            <dt class="col-md-12">Name: </dt>
-            <dd class="col-md-12">{{workflow.name}}</dd>
-          </div>
-          <div class="mycontent-left">
-            <dt class="col-md-12">Creation Date: </dt>
-            <dd class="col-md-12">{{workflow.creationDate | date}}</dd>
-          </div>
-          <div class="mycontent-left">
-            <dt class="col-md-12">Owner:</dt>
-            <dd class="col-md-12">{{workflow.owner}}</dd>
-          </div>
-          <div class="mycontent-left">
-            <dt class="col-md-12">Status:</dt>
-            <dd class="col-md-12">{{workflow.status}}
-              <span *ngIf="workflow.status === 'ERROR' && workflow.errorMessage" ngbTooltip={{workflow.errorMessage}}
-                placement="right" aria-hidden="true"><i class="far fa-question-circle"></i>
-              </span>
-            </dd>
-          </div>
-          <div class="mycontent-right">
-            <dt class="col-md-12">Visibility:</dt>
-            <dd class="col-md-12">
-              <div *ngIf="workflow.publiclyShared; else privateData">Public</div>
-            </dd>
-            <ng-template #privateData>Private</ng-template>
-          </div>
+          <div class="row top-buffer">
+            <div class="mycontent-left">
+              <dt class="col-md-12">Name: </dt>
+              <dd class="col-md-12">{{workflow.name}}</dd>
+            </div>
+            <div class="mycontent-left">
+              <dt class="col-md-12">Creation Date: </dt>
+              <dd class="col-md-12">{{workflow.creationDate | date}}</dd>
+            </div>
+            <div class="mycontent-left">
+              <dt class="col-md-12">Owner:</dt>
+              <dd class="col-md-12">{{workflow.owner}}</dd>
+            </div>
+            <div class="mycontent-left">
+              <dt class="col-md-12">Status:</dt>
+              <dd class="col-md-12">{{workflow.status}}
+                <span *ngIf="workflow.status === 'ERROR' && workflow.errorMessage" ngbTooltip={{workflow.errorMessage}}
+                  placement="right" aria-hidden="true"><i class="far fa-question-circle"></i>
+                </span>
+              </dd>
+            </div>
+            <div class="mycontent-right">
+              <dt class="col-md-12">Visibility:</dt>
+              <dd class="col-md-12">
+                <div *ngIf="workflow.publiclyShared; else privateData">Public</div>
+              </dd>
+              <ng-template #privateData>Private</ng-template>
+            </div>
 
-          <div class="col d-flex justify-content-end">
-            <button *ngIf="workflow.status === 'CREATED'" class="btn btn-outline-success wipp-btn wf-btn-submit"
-              [disabled]="jobs.length < 1" (click)="submitWorkflow()">
-              <i class="fas fa-arrow-alt-circle-right"></i>
+            <div class="col d-flex justify-content-end">
+              <button *ngIf="workflow.status === 'CREATED'" class="btn btn-outline-success wipp-btn wf-btn-submit"
+                [disabled]="jobs.length < 1" (click)="submitWorkflow()">
+                <i class="fas fa-arrow-alt-circle-right"></i>
                 <p style="display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
                   Submit workflow
                 </p>
-            </button>
-            <button *ngIf="workflow.generatedName" class="btn btn-outline-success wipp-btn wf-btn-submit">
-              <i class="fas fa-sitemap"> </i>
-              <a class="nav-link" href={{argoUiLink}} target="_blank"
-                style="color:inherit; text-decoration: none; display: inline" [ngbTooltip]="argoUiTipContent">
-                <p style=" display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
-                  Monitor in Argo
-                </p>
-              </a>
-            </button>
+              </button>
+              <button *ngIf="workflow.generatedName" class="btn btn-outline-success wipp-btn wf-btn-submit">
+                <i class="fas fa-sitemap"> </i>
+                <a class="nav-link" href={{argoUiLink}} target="_blank"
+                  style="color:inherit; text-decoration: none; display: inline" [ngbTooltip]="argoUiTipContent">
+                  <p style=" display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">
+                    Monitor in Argo
+                  </p>
+                </a>
+              </button>
 
-            <button *ngIf="canCreate()" class="btn btn-outline-success wipp-btn wf-btn-submit" type="button"
-              (click)="copyWorkflow()">
-              <i class="fas fa-copy">
-                <p>Copy workflow</p>
-              </i>
-            </button>
-            <button *ngIf="!workflow.publiclyShared && workflow.status === 'SUCCEEDED' && canEdit()" type="button"
-              ngbTooltip="Make workflow public" placement="left" class="btn btn-light" (click)="makeWorkflowPublic();">
-              <span class="fa fa-users" aria-hidden="true"></span>
-            </button>
+              <button *ngIf="canCreate()" class="btn btn-outline-success wipp-btn wf-btn-submit" type="button"
+                (click)="copyWorkflow()">
+                <i class="fas fa-copy">
+                  <p>Copy workflow</p>
+                </i>
+              </button>
+              <button *ngIf="!workflow.publiclyShared && workflow.status === 'SUCCEEDED' && canEdit()" type="button"
+                ngbTooltip="Make workflow public" placement="left" class="btn btn-light"
+                (click)="makeWorkflowPublic();">
+                <span class="fa fa-users" aria-hidden="true"></span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        <ngx-spinner></ngx-spinner>
+          <ngx-spinner></ngx-spinner>
 
-        <div class="top20">
+          <div class="top20">
 
-          <div class="wf-tasks">
-            <h4>Workflow tasks</h4>
-            <div class="row">
-              <div *ngIf="!wfMenuChecked" class="col-md-2">
-                <button class="btn  btn-outline-success wipp-btn wf-btn-graph" (click)="open(addStepModal)"
-                  [disabled]="! workflow.name || workflow.status!='CREATED' || ! selectedSchema">
-                  <i class="fas fa-plus-circle">
-                    <p>Add task</p>
-                  </i>
-                </button>
-              </div>
-              <div class="col-md-12 wf-dag wf-background">
-                <!-- <div class="form-inline"> -->
-                <div class="flt-right">
-                  <div class="form-row">
-                    <div class="col">
-                      <label class="d-inline-block">Orientation:</label>
-                      <select class="form-control" [(ngModel)]="layoutSettings.orientation" (change)="updateGraph();">
-                        <option *ngFor="let orient of orientationOptions" [ngValue]="orient.value">{{ orient.label }}
-                        </option>
-                      </select>
-                    </div>
-
-                    <div class="col">
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="customSwitches"
-                          [(ngModel)]="enableZoom">
-                        <label class="custom-control-label" for="customSwitches">Enable zoom</label>
-                      </div>
-                    </div>
-
-                  </div>
+            <div class="wf-tasks">
+              <h4>Workflow tasks</h4>
+              <div class="row">
+                <div *ngIf="!wfMenuChecked" class="col-md-2">
+                  <button class="btn  btn-outline-success wipp-btn wf-btn-graph" (click)="open(addStepModal)"
+                    [disabled]="! workflow.name || workflow.status!='CREATED' || ! selectedSchema">
+                    <i class="fas fa-plus-circle">
+                      <p>Add task</p>
+                    </i>
+                  </button>
                 </div>
-                <!-- </div> -->
-                <ngx-graph *ngIf="jobs.length > 0" class="chart-container"
-                  [ngStyle]="{'pointer-events':enableZoom === true ? 'all' : 'none' }" [links]=links [nodes]=nodes
-                  [update$]="update$" [layoutSettings]="layoutSettings" [enableZoom]="enableZoom"
-                  [draggingEnabled]="false" [panningEnabled]="enableZoom" [autoCenter]="!enableZoom"
-                  [autoZoom]="!enableZoom" [panOnZoom]="true" [animate]="true">
-                  <ng-template #nodeTemplate let-node>
-                    <svg:g class="node" (click)="displayJobModal(node.id)">
-                      <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
-                        [attr.fill]="node.data.color" />
-                      <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
-                        {{node.label}}
-                      </svg:text>
-                    </svg:g>
+                <div class="col-md-12 wf-dag wf-background">
+                  <!-- <div class="form-inline"> -->
+                  <div class="flt-right">
+                    <div class="form-row">
+                      <div class="col">
+                        <label class="d-inline-block">Orientation:</label>
+                        <select class="form-control" [(ngModel)]="layoutSettings.orientation" (change)="updateGraph();">
+                          <option *ngFor="let orient of orientationOptions" [ngValue]="orient.value">{{ orient.label }}
+                          </option>
+                        </select>
+                      </div>
 
-                    <svg:g class="node" *ngIf="workflow.status === 'CREATED'" (click)="openCopy(addStepModal, node.id)">
-                      <svg:rect [attr.x]="node.dimension.width + 18" [attr.width]="20"
-                        [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
-                      <svg [attr.x]="node.dimension.width + 20" [attr.y]="node.dimension.height / 2 - 6" width="14"
-                        height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M1696 384q40 0 68 28t28 68v1216q0 40-28 68t-68 28h-960q-40 0-68-28t-28-68v-288h-544q-40 0-68-28t-28-68v-672q0-40 20-88t48-76l408-408q28-28 76-48t88-20h416q40 0 68 28t28 68v328q68-40 128-40h416zm-544 213l-299 299h299v-299zm-640-384l-299 299h299v-299zm196 647l316-316v-416h-384v416q0 40-28 68t-68 28h-416v640h512v-256q0-40 20-88t48-76zm956 804v-1152h-384v416q0 40-28 68t-68 28h-416v640h896z" />
-                      </svg>
-                    </svg:g>
-                    <svg:g class="node" *ngIf="workflow.status === 'CREATED'" (click)="openEdit(addStepModal, node.id)">
-                      <svg:rect [attr.x]="node.dimension.width -1 " [attr.width]="20"
-                        [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
-                      <svg [attr.x]="node.dimension.width " [attr.y]="node.dimension.height / 2 - 6" width="14"
-                        height="14" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M888 1184l116-116-152-152-116 116v56h96v96h56zm440-720q-16-16-33 1l-350 350q-17 17-1 33t33-1l350-350q17-17 1-33zm80 594v190q0 119-84.5 203.5t-203.5 84.5h-832q-119 0-203.5-84.5t-84.5-203.5v-832q0-119 84.5-203.5t203.5-84.5h832q63 0 117 25 15 7 18 23 3 17-9 29l-49 49q-14 14-32 8-23-6-45-6h-832q-66 0-113 47t-47 113v832q0 66 47 113t113 47h832q66 0 113-47t47-113v-126q0-13 9-22l64-64q15-15 35-7t20 29zm-96-738l288 288-672 672h-288v-288zm444 132l-92 92-288-288 92-92q28-28 68-28t68 28l152 152q28 28 28 68t-28 68z" />
-                      </svg>
-                    </svg:g>
+                      <div class="col">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" id="customSwitches"
+                            [(ngModel)]="enableZoom">
+                          <label class="custom-control-label" for="customSwitches">Enable zoom</label>
+                        </div>
+                      </div>
 
-                    <svg:g class="node" *ngIf="workflow.status === 'CREATED'"
-                      (click)="deleteJob(addStepModal, node.id)">
-                      <svg:rect [attr.x]="node.dimension.width + 37 " [attr.width]="20"
-                        [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
+                    </div>
+                  </div>
+                  <!-- </div> -->
+                  <ngx-graph *ngIf="jobs.length > 0" class="chart-container"
+                    [ngStyle]="{'pointer-events':enableZoom === true ? 'all' : 'none' }" [links]=links [nodes]=nodes
+                    [update$]="update$" [layoutSettings]="layoutSettings" [enableZoom]="enableZoom"
+                    [draggingEnabled]="false" [panningEnabled]="enableZoom" [autoCenter]="!enableZoom"
+                    [autoZoom]="!enableZoom" [panOnZoom]="true" [animate]="true">
+                    <ng-template #nodeTemplate let-node>
+                      <svg:g class="node" (click)="displayJobModal(node.id)">
+                        <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+                          [attr.fill]="getColor(node)" />
+                        <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
+                          {{node.label}}
+                        </svg:text>
+                      </svg:g>
 
-                      <svg [attr.x]="node.dimension.width + 40 " [attr.y]="node.dimension.height / 2 - 6" width="14"
-                        height="14" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z" />
-                      </svg>
-                    </svg:g>
-                  </ng-template>
+                      <svg:g class="node" *ngIf="workflow.status === 'CREATED'"
+                        (click)="openCopyTaskModal(addStepModal, node.id)">
+                        <svg:rect [attr.x]="node.dimension.width + 18" [attr.width]="20"
+                          [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
+                        <svg [attr.x]="node.dimension.width + 20" [attr.y]="node.dimension.height / 2 - 6" width="14"
+                          height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M1696 384q40 0 68 28t28 68v1216q0 40-28 68t-68 28h-960q-40 0-68-28t-28-68v-288h-544q-40 0-68-28t-28-68v-672q0-40 20-88t48-76l408-408q28-28 76-48t88-20h416q40 0 68 28t28 68v328q68-40 128-40h416zm-544 213l-299 299h299v-299zm-640-384l-299 299h299v-299zm196 647l316-316v-416h-384v416q0 40-28 68t-68 28h-416v640h512v-256q0-40 20-88t48-76zm956 804v-1152h-384v416q0 40-28 68t-68 28h-416v640h896z" />
+                        </svg>
+                      </svg:g>
+                      <svg:g class="node" *ngIf="workflow.status === 'CREATED'"
+                        (click)="openEdit(addStepModal, node.id)">
+                        <svg:rect [attr.x]="node.dimension.width -1 " [attr.width]="20"
+                          [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
+                        <svg [attr.x]="node.dimension.width " [attr.y]="node.dimension.height / 2 - 6" width="14"
+                          height="14" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M888 1184l116-116-152-152-116 116v56h96v96h56zm440-720q-16-16-33 1l-350 350q-17 17-1 33t33-1l350-350q17-17 1-33zm80 594v190q0 119-84.5 203.5t-203.5 84.5h-832q-119 0-203.5-84.5t-84.5-203.5v-832q0-119 84.5-203.5t203.5-84.5h832q63 0 117 25 15 7 18 23 3 17-9 29l-49 49q-14 14-32 8-23-6-45-6h-832q-66 0-113 47t-47 113v832q0 66 47 113t113 47h832q66 0 113-47t47-113v-126q0-13 9-22l64-64q15-15 35-7t20 29zm-96-738l288 288-672 672h-288v-288zm444 132l-92 92-288-288 92-92q28-28 68-28t68 28l152 152q28 28 28 68t-28 68z" />
+                        </svg>
+                      </svg:g>
 
-                </ngx-graph>
+                      <svg:g class="node" *ngIf="workflow.status === 'CREATED'"
+                        (click)="deleteJob(addStepModal, node.id)">
+                        <svg:rect [attr.x]="node.dimension.width + 37 " [attr.width]="20"
+                          [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
 
+                        <svg [attr.x]="node.dimension.width + 40 " [attr.y]="node.dimension.height / 2 - 6" width="14"
+                          height="14" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z" />
+                        </svg>
+                      </svg:g>
+                    </ng-template>
+
+                  </ngx-graph>
+
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div *ngIf="wfMenuChecked" class="selected">
+        <button mat-icon-button [@direction]="direction" (click)="sidenav.toggle(); arrowState = !arrowState">
+          <mat-icon>keyboard_arrow_{{ direction }}</mat-icon>
+        </button>
+      </div>
+
     </div>
+  </mat-sidenav-content>
 
-    <div *ngIf="wfMenuChecked" class="selected">
-      <button
-        mat-icon-button
-        [@direction]="direction"
-        (click)="drawer.toggle(); arrowState = !arrowState"
-      >
-        <mat-icon>keyboard_arrow_{{ direction }}</mat-icon>
-      </button>
-    </div>
-
-  </div>
-
-</mat-drawer-container>
+</mat-sidenav-container>
 
 
 
 <!-- Wrap everything in the modal template into a new component-->
 <!-- Pass the close and dismiss as output parameters into the new component-->
 <ng-template #addStepModal let-c="close" let-d="dismiss">
-<div class="wipp-modal">
-  <div *ngIf="!wfMenuChecked">
-    <div class="modal-header">
-      <h4 class="modal-title">New Task</h4>
-      <button type="button" class="close" aria-label="Close" (click)="d()">
-        <span aria-hidden="true">&times;</span>
+  <div class="wipp-modal">
+    <div *ngIf="!wfMenuChecked">
+      <div class="modal-header">
+        <h4 class="modal-title">New Task</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="pluginName">Plugin:</label>
+        <select [disabled]="editMode" id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
+          <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}
+          </option>
+        </select>
+      </div>
+      <sf-form [hidden]="!selectedSchema.isSchemaValid" [schema]="selectedSchema"
+        [bindings]="selectedSchema.fieldBindings" [model]="jobModel" #jsonForm>
+      </sf-form>
+      <div [hidden]="selectedSchema.isSchemaValid" class="alert alert-danger">
+        Unable to generate form for {{ selectedSchema.name }} {{ selectedSchema.version }}, plugin manifest is
+        invalid.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-dark" (click)="closeTask(jsonForm.rootProperty.value)">
+        <i class="fas fa-plus-circle" style="margin-right: 10px">
+          <p class="wf-addTask-text">
+            {{editMode ? 'Edit task' : 'Add task' }}</p>
+        </i>
       </button>
     </div>
   </div>
-  <div class="modal-body">
-    <div class="form-group">
-      <label for="pluginName">Plugin:</label>
-      <select [disabled]="editMode" id="pluginName" class="form-control" #pluginName [(ngModel)]="selectedSchema">
-        <option *ngFor="let plugin of pluginList" [ngValue]="plugin">{{ plugin.name }} {{ plugin.version }}
-        </option>
-      </select>
-    </div>
-    <sf-form [hidden]="!selectedSchema.isSchemaValid" [schema]="selectedSchema"
-      [bindings]="selectedSchema.fieldBindings" [model]="jobModel" #jsonForm>
-    </sf-form>
-    <div [hidden]="selectedSchema.isSchemaValid" class="alert alert-danger">
-      Unable to generate form for {{ selectedSchema.name }} {{ selectedSchema.version }}, plugin manifest is
-      invalid.
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="submit" class="btn btn-outline-dark" (click)="c(jsonForm.rootProperty.value)">
-      <i class="fas fa-plus-circle" style="margin-right: 10px">
-        <p class="wf-addTask-text">
-          {{editMode ? 'Edit task' : 'Add task' }}</p>
-      </i>
-    </button>
-  </div>
-</div>
 </ng-template>
 
 <ng-template #argoUiTipContent> See in Argo dashboard
-<span aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
+  <span aria-hidden="true"><i class="fas fa-external-link-alt"></i></span>
 </ng-template>

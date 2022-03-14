@@ -3,9 +3,11 @@
     <h4 class="modal-title" id="modal-basic-title">
       <span class="glyphicon glyphicon-star"></span> Job detail
     </h4>
-    <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <div *ngIf="!wfJobId">
+      <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   </div>
 
   <!-- Job details Table -->

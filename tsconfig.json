@@ -21,10 +21,8 @@
     ],
     "paths": {
       "wipp-frontend-lib": [
-        "dist/wipp-frontend-lib"
-      ],
-      "wipp-frontend-lib/*": [
-        "dist/wipp-frontend-lib/*"
+        "dist/wipp-frontend-lib",
+        "projects/wipp-frontend-lib/src"
       ]
     }
   }

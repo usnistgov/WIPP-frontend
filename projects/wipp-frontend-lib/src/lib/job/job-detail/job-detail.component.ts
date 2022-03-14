@@ -18,6 +18,7 @@ export interface IdHash {
 export class JobDetailComponent implements OnInit {
 
   @Input() modalReference: any;
+  @Input() wfJobId: string;
 
   jobId: string;
   job: Job;
@@ -41,6 +42,7 @@ export class JobDetailComponent implements OnInit {
   }
 
   getJob() {
+    this.jobId = (this.jobId) ? this.jobId : this.wfJobId;
     this.jobService.getJob(this.jobId).subscribe(job => {
         this.job = job;
         this.getPlugin();

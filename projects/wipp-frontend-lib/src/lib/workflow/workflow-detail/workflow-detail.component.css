@@ -107,17 +107,9 @@ ul {
   overflow-y: auto;  /* adds scroll to this container */
 }
 
-/* .sidenav-content {
-    display: flex;
-    height: 100%;
-    width: 40px;
-    align-items: center;
-    justify-content: center;
-} */
-
 .sidenav {
     padding: 5px;
-    min-width: 400px;
+    min-width: 600px;
 }
 
 .box {
@@ -137,3 +129,8 @@ ul {
 }
 
 .top-buffer { margin-top:10px; }
+
+.task-buttons {
+  display: flex;
+  justify-content: space-between;
+}

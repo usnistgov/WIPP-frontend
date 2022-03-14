@@ -9,9 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatExpansionModule} from '@angular/material/expansion';
 import { WorkflowDetailComponent } from './workflow-detail/workflow-detail.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SchemaFormModule, WidgetRegistry } from 'ngx-schema-form';
 import { SearchWidgetComponent } from './widgets/search-widget/search-widget.component';
 import { WidgetsRegistry } from './widgets/widgets-registry';
@@ -37,6 +38,7 @@ import { RouterModule } from '@angular/router';
     MatSidenavModule,
     MatSlideToggleModule,
     MatToolbarModule,
+    MatExpansionModule,
     FormsModule,
     ReactiveFormsModule,
     DynamicContentModule,
@@ -54,9 +56,12 @@ import { RouterModule } from '@angular/router';
     JobDetailComponent,
     WorkflowNewComponent
   ],
-  providers: [{
-    provide: WidgetRegistry,
-    useClass: WidgetsRegistry
-  }],
+  providers: [
+    NgbActiveModal,
+    {
+      provide: WidgetRegistry,
+      useClass: WidgetsRegistry
+    }
+  ],
 })
 export class WorkflowModule { }
