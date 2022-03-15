@@ -290,7 +290,7 @@
           </option>
         </select>
       </div>
-      <sf-form [hidden]="!selectedSchema.isSchemaValid" [schema]="selectedSchema"
+      <sf-form [hidden]="!selectedSchema.isSchemaValid" [schema]="selectedSchema" [validators]="selectedSchema.schemaValidator"
         [bindings]="selectedSchema.fieldBindings" [model]="jobModel" #jsonForm>
       </sf-form>
       <div [hidden]="selectedSchema.isSchemaValid" class="alert alert-danger">

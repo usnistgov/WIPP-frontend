@@ -14,6 +14,7 @@ export class Plugin {
   inputs: JSON[];
   outputs: JSON[];
   ui: JSON[];
+  validators: JSON[];
   _links: any;
 }
 

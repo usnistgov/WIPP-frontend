@@ -1,6 +1,6 @@
 {
   "name": "wipp-frontend-lib",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "peerDependencies": {
     "@angular/animations": "^9.1.13",
     "@angular/cdk": "^9.2.4",
