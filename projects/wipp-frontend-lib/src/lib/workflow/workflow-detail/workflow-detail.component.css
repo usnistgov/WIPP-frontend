@@ -134,3 +134,20 @@ ul {
   display: flex;
   justify-content: space-between;
 }
+
+.wf-bckgrd { 
+  position: relative; 
+
+}
+
+.wf-bckgrd::after {
+  content: "";
+  background: url('./assets/img/grid-wf.png');
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.3;
+  z-index: -1;
+}

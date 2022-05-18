@@ -177,23 +177,26 @@
                     </i>
                   </button>
                 </div>
-                <div class="col-md-12 wf-dag wf-background">
+                <div class="col-md-12 wf-dag wf-bckgrd">
                   <!-- <div class="form-inline"> -->
                   <div class="flt-right">
                     <div class="form-row">
-                      <div class="col">
+                      <div class="col-md-auto d-flex align-items-center justify-content-center">
                         <label class="d-inline-block">Orientation:</label>
+                      </div>
+
+                      <div class="col d-flex align-items-center justify-content-center">
                         <select class="form-control" [(ngModel)]="layoutSettings.orientation" (change)="updateGraph();">
                           <option *ngFor="let orient of orientationOptions" [ngValue]="orient.value">{{ orient.label }}
                           </option>
                         </select>
                       </div>
 
-                      <div class="col">
+                      <div class="col d-flex align-items-center justify-content-center">
                         <div class="custom-control custom-switch">
+                          <label class="custom-control-label" for="customSwitches">Enable zoom</label>
                           <input type="checkbox" class="custom-control-input" id="customSwitches"
                             [(ngModel)]="enableZoom">
-                          <label class="custom-control-label" for="customSwitches">Enable zoom</label>
                         </div>
                       </div>
 
