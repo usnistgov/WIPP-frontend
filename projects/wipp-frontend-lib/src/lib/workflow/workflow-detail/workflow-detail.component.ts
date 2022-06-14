@@ -31,7 +31,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   public wfMenuChecked = true;
   public isCollapsed = false;
   public panelOpenState = false;
-  public color: ThemePalette = 'primary';
+  public color: ThemePalette = 'accent';
   modalReference: NgbModalRef;
 
   workflow: Workflow = new Workflow();
