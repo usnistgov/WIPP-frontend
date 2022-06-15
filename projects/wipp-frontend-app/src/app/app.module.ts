@@ -20,6 +20,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppConfigService } from './app-config.service';
@@ -69,6 +70,7 @@ export class ConfigFromApp implements WippFrontendLibConfigurationProvider {
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
+    MatSidenavModule,
     FormsModule,
     MatCheckboxModule,
     NgbModule

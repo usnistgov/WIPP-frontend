@@ -40,7 +40,7 @@ text {
 }
 
 .wf-dag {
-  border: none 2px lightgray ;
+  border: dotted 2px lightgray ;
   min-height: 500px;
   height: 90%;
   overflow: hidden;
@@ -71,7 +71,7 @@ text {
 
 .mycontent-left {
   border-right: 1px ridge black;
-  width: 150px;
+  width: fit-content;
 }
 
 html {
@@ -105,4 +105,49 @@ ul {
 .bottom {
   flex-grow: 1;  /* ensures that the container will take up the full height of the parent container */
   overflow-y: auto;  /* adds scroll to this container */
+}
+
+.sidenav {
+    padding: 5px;
+    min-width: 600px;
+}
+
+.box {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+  padding: 5px;
+}
+.box>*:first-child {
+  width: 97%
+}
+.box .selected {
+  margin-left: auto;
+  align-self: center;
+  justify-content: center;
+  width: 2%
+}
+
+.top-buffer { margin-top:10px; }
+
+.task-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wf-bckgrd { 
+  position: relative; 
+
+}
+
+.wf-bckgrd::after {
+  content: "";
+  background: url('./assets/img/grid-wf.png');
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.3;
+  z-index: -1;
 }
