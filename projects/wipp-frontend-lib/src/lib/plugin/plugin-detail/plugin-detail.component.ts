@@ -74,7 +74,7 @@ export class PluginDetailComponent implements OnInit, OnDestroy {
   deletePlugin(): void {
     if (confirm('Are you sure you want to delete the plugin ' + this.plugin.name + ' v' + this.plugin.version + '?')) {
       this.pluginService.deletePlugin(this.plugin).subscribe(plugin => {
-        this.router.navigate(['plugins']);
+        this.router.navigate([this.pluginService.getPluginsUiPath()]);
       });
     }
   }
