@@ -1,0 +1,27 @@
+<div class="wipp-modal">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <span class="glyphicon glyphicon-star"></span> Visualization name
+    </h4>
+  </div>
+  <div class="modal-body">
+    <form name="visualizationDialog">
+      <div class="form-group">
+        <label class="control-label" for="name">Name:</label>
+        <input type="text" class="form-control" name="name" id="name" [(ngModel)]="visualization.name" autofocus
+          required>
+        <small class="form-text text-muted">Enter the visualization name.</small>
+      </div>
+      <mat-checkbox [(ngModel)]="visualization.publiclyShared" name="true">Public visualization</mat-checkbox>
+      <br *ngIf="!visualization.publiclyShared">
+      <span class="text-danger" *ngIf="!visualization.publiclyShared">This visualization will only be available to
+        you.</span><br>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-success" (click)="save()" [disabled]="">
+      Save
+    </button>
+  </div>
+</div>

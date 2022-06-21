@@ -1,0 +1,130 @@
+<div class="wipp-modal">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      <span class="glyphicon glyphicon-star"></span> New images collection
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form name="imagesCollectionDialog">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <span style="color: #e32"> * </span>
+        <input type="text" [(ngModel)]="imagesCollection.name" id="name" class="form-control" name="name" autofocus
+          required>
+        <small class="form-text text-muted">Enter the collection name.</small>
+      </div>
+
+      <mat-checkbox [(ngModel)]="usePattern" name="false">Filter images upon upload using a filename pattern
+      </mat-checkbox>
+      <span class="text-danger" *ngIf="!usePattern && imagesCollection.pattern">Warning: pattern is not empty, but this
+        option is not checked</span>
+
+      <div class="row" *ngIf="usePattern">
+        <div class="col-sm-8">
+          <input type="text" [(ngModel)]="imagesCollection.pattern" id="pattern" class="form-control" name="pattern"
+            autofocus required>
+          <small class="form-text text-muted">Enter the filename pattern.</small>
+        </div>
+        <div class="col-sm-4">
+          <button type="button" class="btn btn-outline-secondary" placement="right-top" [ngbPopover]="popContent"
+            popoverTitle="Regex cheatsheet">
+            Regex cheatsheet
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="cancel()">
+      <i class="fas fa-times-circle" style="margin-right: 10px">
+        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Cancel
+        </p>
+      </i>
+    </button>
+    <button type="button" class="btn btn-success" (click)="save()" [disabled]="!imagesCollection.name">
+      <i class="fas fa-save" style="margin-right: 10px">
+        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Save</p>
+      </i>
+    </button>
+  </div>
+</div>
+
+<ng-template #popContent>
+  <div>
+    <table class="table">
+      <tr>
+        <th colspan="2">Character classes</th>
+      </tr>
+      <tr>
+        <td>.</td>
+        <td>any character except newline</td>
+      </tr>
+      <tr>
+        <td>\w \d \s</td>
+        <td>word, digit, whitespace</td>
+      </tr>
+      <tr>
+        <td>\W \D \S</td>
+        <td>not word, digit, whitespace</td>
+      </tr>
+      <tr>
+        <td>[abc]</td>
+        <td>any of a, b, or c</td>
+      </tr>
+      <tr>
+        <td>[^abc]</td>
+        <td>not a, b, or c</td>
+      </tr>
+      <tr>
+        <td>[a-g]</td>
+        <td>character between a & g</td>
+      </tr>
+
+      <tr>
+        <th colspan="2">Quantifiers and Alternation</th>
+      </tr>
+      <tr>
+        <td>a* a+ a?</td>
+        <td>0 or more 'a', 1 or more 'a', 0 or 1 'a'</td>
+      </tr>
+      <tr>
+        <td>a{{ '{' }}5{{ '}' }} a{{ '{' }}2,{{ '}' }}</td>
+        <td>exactly five, two or more</td>
+      </tr>
+      <tr>
+        <td>a{{ '{' }}1,3{{ '}' }}</td>
+        <td>between one & three</td>
+      </tr>
+      <tr>
+        <td>a+? a{{ '{' }}2,{{ '}' }}?</td>
+        <td>match as few as possible</td>
+      </tr>
+      <tr>
+        <td>ab|cd</td>
+        <td>match ab or cd</td>
+      </tr>
+
+      <tr>
+        <th colspan="2">Escaped characters</th>
+      </tr>
+      <tr>
+        <td>\. \* \\</td>
+        <td>escaped special characters</td>
+      </tr>
+
+      <tr>
+        <th colspan="2">Anchors</th>
+      </tr>
+      <tr>
+        <td>^abc$</td>
+        <td>start / end of the string</td>
+      </tr>
+    </table>
+
+    <a target="blank" href="http://en.wikipedia.org/wiki/Regular_expression">Wikipedia page about regular
+      expressions</a>
+  </div>
+</ng-template>

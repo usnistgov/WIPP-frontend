@@ -1,0 +1,51 @@
+<div class="wipp-modal">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      <span class="glyphicon glyphicon-star"></span>
+      <p *ngIf="!isCopy; else copy"> New workflow</p>
+      <ng-template #copy>
+        <p> Copy workflow</p>
+      </ng-template>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form name="workflowDialog" #nameForm="ngForm">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" [(ngModel)]="workflow.name" id="name" class="form-control" name="name" #name="ngModel"
+          required pattern=[a-zA-Z0-9][-a-zA-Z0-9]* minlength="1" maxlength="70">
+        <small class="form-text text-muted">Enter the workflow name.</small>
+        <div *ngIf="name.errors && (name.dirty || name.touched)" class="alert alert-danger">
+          <div [hidden]="!name.errors.required">
+            Name is required
+          </div>
+          <div [hidden]="!name.errors.minlength">
+            Name must be at least 1 characters long
+          </div>
+          <div [hidden]="!name.errors.maxlength">
+            Name cannot be more than 70 characters long
+          </div>
+          <div [hidden]="!name.errors.pattern">
+            Name must consist of alpha-numeric characters or '-', and must start with an alpha-numeric character
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="cancel()">
+      <i class="fas fa-times-circle" style="margin-right: 10px">
+        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Cancel
+        </p>
+      </i>
+    </button>
+    <button type="button" class="btn btn-success" (click)="save()" [disabled]="!nameForm.form.valid">
+      <i class="fas fa-save" style="margin-right: 10px">
+        <p style="margin-left: 10px; display: inline; font-family: 'Roboto', sans-serif ; font-weight: normal">Save</p>
+      </i>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,118 @@
+<header>
+  <div id="logo">
+    <img src="assets/img/logo-wipp.png">
+  </div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-home">
+        <p>WIPP</p>
+      </i>
+    </a>
+
+    <button class="navbar-toggler navbar-toggler-right" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed"
+      data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown" routerLinkActive="active" ngbDropdown>
+          <a class="nav-link dropdown-toggle" id="dataDropdown" routerLinkActive="active" ngbDropdownToggle>
+            <i class="fas fa-database">
+              <p>Data</p>
+            </i>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dataDropdown" ngbDropdownMenu>
+            <a class="dropdown-item" routerLink="/images-collections" ngbDropdownItem>Images collections</a>
+            <a class="dropdown-item" routerLink="/stitching-vectors" ngbDropdownItem>Stitching vectors</a>
+            <a class="dropdown-item" routerLink="/pyramids" ngbDropdownItem>Pyramids</a>
+            <a class="dropdown-item" routerLink="/pyramid-annotations" ngbDropdownItem>Pyramid annotations</a>
+            <a class="dropdown-item" routerLink="/pyramid-visualizations" ngbDropdownItem>Pyramid visualizations</a>
+            <a class="dropdown-item" routerLink="/tensorflow-models" ngbDropdownItem>Tensorflow models</a>
+            <a class="dropdown-item" routerLink="/csv-collections" ngbDropdownItem>CSV collections</a>
+            <a class="dropdown-item" routerLink="/notebooks" ngbDropdownItem *ngIf="jupyterNotebooksLink">Notebooks</a>
+            <a class="dropdown-item" routerLink="/generic-data-collections" ngbDropdownItem>Generic Data Collections</a>
+          </div>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/plugins">
+            <i class="fas fa-cube">
+              <p>Plugins</p>
+            </i>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/workflows">
+            <i class="fas fa-share-alt ">
+              <p>Workflows</p>
+            </i>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" *ngIf="jupyterNotebooksLink">
+          <a class="nav-link" href={{jupyterNotebooksLink}} target="_blank">
+            <i class="fab fa-python">
+              <p>Notebooks</p>
+            </i>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown" routerLinkActive="active" ngbDropdown>
+          <a class="nav-link dropdown-toggle" id="helpDropdown" routerLinkActive="active" ngbDropdownToggle>
+            <i class="fas fa-question-circle">
+              <p>Help</p>
+            </i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="helpDropdown" ngbDropdownMenu>
+            <a class="dropdown-item" href={{onlineHelpLink}} ngbDropdownItem>User guide</a>
+            <a class="dropdown-item" href={{apiDocsLink}} ngbDropdownItem *ngIf="displayApiDocsLink">API docs</a>
+            <a class="dropdown-item-text"><small>Version {{version}}</small></a>
+          </div>
+        </li>
+        <li *ngIf="!isLoggedIn()" class="nav-item navbar-right">
+          <a class="nav-link" (click)="login()" style="cursor: pointer;" target="_blank">
+            <i class="fas fa-sign-in-alt">
+              <p>Login</p>
+            </i>
+          </a>
+        </li>
+        <li *ngIf="isLoggedIn()" class="nav-item navbar-right" routerLinkActive="active">
+          <a class="nav-link" (click)="profile()" target="_blank" style="cursor: pointer;">
+            <i class="fas fa-user">
+              <p>{{displayUserInfo()}}</p>
+            </i>
+          </a>
+        </li>
+        <li *ngIf="isLoggedIn()" class="nav-item navbar-right">
+          <a class="nav-link" (click)="logout()" target="_blank" style="cursor: pointer;">
+            <i class="fas fa-sign-out-alt">
+              <p>Logout</p>
+            </i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<div class="container-fluid main-container">
+  <router-outlet></router-outlet>
+</div>
+
+<footer class="bg-light">
+  <p><small>
+      WIPP v{{version}} - <a href="https://www.nist.gov/disclaimer">Disclaimer</a>
+      - Logo
+      <span [ngbTooltip]="wippLogoCredits" triggers="click:blur" placement="auto" aria-hidden="true"><i
+          class="far fa-question-circle"></i>
+      </span>
+    </small></p>
+</footer>
+
+<ng-template #wippLogoCredits>
+  WIPP logo made with <a href="http://logomakr.com" title="Logo Maker">Logo Maker</a> using Science graphic by
+  <a href="http://www.flaticon.com/authors/freepik">Freepik</a> from
+  <a href="http://www.flaticon.com/">Flaticon</a>, licensed under
+  <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>.
+</ng-template>

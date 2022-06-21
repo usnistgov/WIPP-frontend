@@ -1,0 +1,39 @@
+<div class="wipp-modal">
+  <div class="modal-header">
+    <h4 class="modal-title">New plugin</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modalReference.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ngb-alert *ngIf="displayAlert" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <input #browsePlugin type="file" (change)="onFileSelected($event)" name="browsePlugin" class="col-md-12"
+            id="browsePlugin" accept=".json, .txt">
+          <div>
+            <button id="getJsonBtn" (click)="getByUrl(linkPlugin.value); linkPlugin.value=''"
+              [disabled]="!linkPlugin.checkValidity()">Get JSON
+            </button>
+            <input #linkPlugin (change)="browsePlugin.value=null;" type="url" required id="linkPlugin" name="linkPlugin"
+              placeholder="Enter the URL of the JSON plugin manifest" class="top5 width80">
+          </div>
+          <textarea #pluginDescriptorText (change)="browsePlugin.value=null;" [(ngModel)]="pluginJSON"
+            id="pluginDescriptorText" class="form-control top5" rows="10"
+            placeholder="Or copy your JSON file content here">  </textarea>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-danger" (click)="clearAll()"><a>clear form</a></button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" id="registerBtn" (click)="postPlugin(pluginDescriptorText.value)"
+      [disabled]="pluginDescriptorText.value.length<2">
+      <i class="fas fa-save right10">
+        <p id="registerText">Register plugin</p>
+      </i></button>
+  </div>
+</div>

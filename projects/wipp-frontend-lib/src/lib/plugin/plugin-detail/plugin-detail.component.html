@@ -1,0 +1,151 @@
+<h3 class="wipp-title">Plugin detail</h3>
+
+<div class="wipp-text">
+  <div class="row">
+    <div class="col-md-9">
+      <dl class="row">
+        <dt class="col-md-4">Name:</dt>
+        <dd class="col-md-8">{{plugin.name}}</dd>
+
+        <dt class="col-md-4">Title:</dt>
+        <dd class="col-md-8">{{plugin.title}}</dd>
+
+        <dt class="col-md-4">Version:</dt>
+        <dd class="col-md-8">{{plugin.version}}</dd>
+
+        <dt class="col-md-4">Author:</dt>
+        <dd class="col-md-8">{{plugin.author || "N/A"}}</dd>
+
+        <dt class="col-md-4">Institution:</dt>
+        <dd class="col-md-8">{{plugin.institution || "N/A"}}</dd>
+
+        <dt class="col-md-4">Repository:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="plugin.repository; else notApplicable">
+            <a href={{plugin.repository}}>
+              {{plugin.repository}}
+            </a>
+          </div>
+        </dd>
+
+        <dt class="col-md-4">Website:</dt>
+        <dd class="col-md-8">
+          <div *ngIf="plugin.website; else notApplicable">
+            <a href={{plugin.website}}>
+              {{plugin.website}}
+            </a>
+          </div>
+        </dd>
+
+        <dt class="col-md-4">Citation:</dt>
+        <dd class="col-md-8">{{plugin.citation || "N/A"}}</dd>
+
+        <dt class="col-md-4">Description:</dt>
+        <dd class="col-md-8">{{plugin.description}}</dd>
+
+        <dt class="col-md-4">Docker image:</dt>
+        <dd class="col-md-8">{{plugin.containerId}}</dd>
+
+        <dt class="col-md-4">Creation date:</dt>
+        <dd class="col-md-8">{{plugin.creationDate| date}}</dd>
+
+      </dl>
+    </div>
+    <div class="col-md-3 text-right">
+      <button type="button"
+              ngbTooltip="Display JSON Manifest"
+              placement="left"
+              class="btn btn-light wipp-btn"
+              (click)="displayManifest(showManifestModal)">
+        <i class="fas fa-file-code">
+          <p>Raw Manifest</p>
+        </i>
+      </button>
+      <button type="button" *ngIf="canEdit()"
+              ngbTooltip="Delete plugin"
+              placement="left"
+              class="btn btn-light wipp-btn"
+              (click)="deletePlugin();">
+        <i class="fas fa-times">
+          <p>Delete</p>
+        </i>
+      </button>
+    </div>
+  </div>
+
+  <h4>Inputs</h4>
+
+  <table mat-table
+         [dataSource]="plugin.inputs" multiTemplateDataRows>
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayInputs">
+      <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+      <td mat-cell *matCellDef="let input"> {{input[column]}} </td>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let input" [attr.colspan]="columnsToDisplayInputs.length">
+        <div class="input-detail row"
+             [@detailExpand]="input == expandedInput ? 'expanded' : 'collapsed'">
+          <div class="input-description-title col-md-1">
+            UI:
+          </div>
+          <div class="input-description col-md-6">
+            <ngx-json-viewer [json]="getInputUi(input.name) || {}"></ngx-json-viewer>
+          </div>
+          <div class="input-description-title col-md-1">
+            Options:
+          </div>
+          <div class="input-description col-md-4">
+            <ngx-json-viewer *ngIf="input.options" [json]="input.options" [expanded]="true"></ngx-json-viewer>
+            <span *ngIf="!input.options">N/A</span>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayInputs"></tr>
+    <tr mat-row *matRowDef="let input; columns: columnsToDisplayInputs;"
+        class="input-row"
+        [class.expanded-row]="expandedInput === input"
+        (click)="expandedInput = expandedInput === input ? null : input">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+  </table>
+
+  <h4>Outputs</h4>
+
+  <table mat-table
+         [dataSource]="plugin.outputs">
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayOutputs">
+      <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+      <td mat-cell *matCellDef="let output"> {{output[column]}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayOutputs"></tr>
+    <tr mat-row *matRowDef="let output; columns: columnsToDisplayOutputs;"></tr>
+  </table>
+
+</div>
+
+<ng-template #showManifestModal let-c="close" let-d="dismiss" class="manifest-modal">
+  <div class="modal-header">
+    <h4 class="modal-title">Plugin Manifest</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body manifest-modal">
+    <div>
+      <pre>{{ manifest | json }}</pre>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark"
+            ngbAutofocus (click)="d()">
+      Close
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #notApplicable>N/A</ng-template>

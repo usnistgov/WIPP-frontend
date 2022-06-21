@@ -2,6 +2,7 @@ FROM nginx:1.17-alpine
 MAINTAINER National Institute of Standards and Technology
 
 ARG WIPP_FRONTEND="WIPP-frontend"
+ARG WIPP_FRONTEND_APP="wipp-frontend-app"
 
 COPY VERSION /VERSION
 
@@ -10,8 +11,8 @@ WORKDIR /var/www/
 
 # Copy WIPP frontend application
 COPY ${WIPP_FRONTEND}.tar.gz .
-RUN tar -xvzf ${WIPP_FRONTEND}.tar.gz \
-  && mv ${WIPP_FRONTEND} frontend
+RUN tar -xvzf ${WIPP_FRONTEND}.tar.gz\
+ && mv ${WIPP_FRONTEND_APP} frontend
 
 # Copy WIPP frontend config
 COPY config.json frontend/assets/config/config.json

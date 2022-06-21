@@ -1,0 +1,51 @@
+<div class="wipp-modal">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      <span class="glyphicon glyphicon-star"></span> New stitching vector
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <ngb-alert *ngIf="displayAlert" [type]='alertType' (close)="displayAlert = false">{{alertMessage}}</ngb-alert>
+    <form name="stitchingVectorDialog">
+      <div class="form-group">
+
+        <label for="name">Name: </label>
+        <span style="color: #e32"> * </span>
+        <input type="text" [(ngModel)]="stitchingVector.name" id="name" class="form-control" name="name" autofocus
+          required>
+        <small class="form-text text-muted">Enter the vector name.</small>
+
+        <label for="name">Message:</label>
+        <input type="text" [(ngModel)]="stitchingVector.note" id="note" class="form-control" name="note" autofocus
+          required>
+        <small class="form-text text-muted">Enter the stitching vector message.</small>
+        <div style="height: 30px"></div>
+
+        <label for="name">Stitching Vector File (5 MB max):</label>
+        <span style="color: #e32"> * </span>
+        <input #file type="file" (change)="onFileSelected($event)" name="file" class="col-md-12" id="file"
+          accept="text/plain" autofocus required>
+        <span class="asterisk_input"></span>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <!--<button type="button" class="btn btn-outline-dark" (click)="cancel()">-->
+    <button type="button" class="btn btn-danger" (click)="activeModal.dismiss('Cross click')">
+      <i class="fas fa-times-circle" style="margin-right: 10px">
+        <p class="footerButton">Cancel</p>
+      </i>
+    </button>
+    <button type="button" class="btn btn-success" (click)="upload()"
+      [disabled]="!stitchingVector.name || !stitchingVector.file">
+      <i class="fas fa-save" style="margin-right: 10px">
+        <p class="footerButton">Save</p>
+      </i>
+    </button>
+  </div>
+</div>
