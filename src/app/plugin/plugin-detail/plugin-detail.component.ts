@@ -68,7 +68,8 @@ export class PluginDetailComponent implements OnInit, OnDestroy {
   }
 
   canEdit() {
-    return (this.keycloakService.isLoggedIn() && this.keycloakService.hasRole('admin'));
+    return (this.keycloakService.isLoggedIn()
+      && (this.keycloakService.hasRole('admin') || this.keycloakService.hasRole('developer')));
   }
 
   deletePlugin(): void {
