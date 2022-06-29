@@ -107,7 +107,7 @@ export class PluginListComponent implements OnInit, OnDestroy {
   }
 
   canCreate(): boolean {
-    return this.keycloakService.hasRole('admin');
+    return (this.keycloakService.hasRole('admin') || this.keycloakService.hasRole('developer'));
   }
 
   ngOnDestroy() {

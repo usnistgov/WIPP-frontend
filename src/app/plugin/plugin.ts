@@ -10,6 +10,7 @@ export class Plugin {
   citation: string;
   creationDate: Date;
   containerId: string;
+  baseCommand: string;
   title: string;
   inputs: JSON[];
   outputs: JSON[];
