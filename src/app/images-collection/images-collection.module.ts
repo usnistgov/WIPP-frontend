@@ -11,7 +11,7 @@ import {
   MatSortModule,
   MatTableModule,
   MatCheckboxModule,
-  MatLabel, MatFormFieldModule, MatInputModule
+  MatLabel, MatFormFieldModule, MatInputModule, MatRadioModule
 } from '@angular/material';
 import { ImagesCollectionNewComponent } from './images-collection-new/images-collection-new.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -33,6 +33,7 @@ import {
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatRadioModule,
     ReactiveFormsModule,
     InlineEditorModule,
     MatCheckboxModule

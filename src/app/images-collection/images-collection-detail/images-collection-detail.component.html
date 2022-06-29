@@ -55,6 +55,9 @@
             <div *ngIf="!imagesCollection.importMethod || imagesCollection.importMethod == 'UPLOADED'">
               Uploaded
             </div>
+            <div *ngIf="imagesCollection.importMethod == 'BACKEND_IMPORT'">
+              Backend import from local folder
+            </div>
           </ng-template>
 
           <ng-template #catalogTipContent>Go to Catalog
@@ -158,7 +161,7 @@
     </div>
   </div>
 
-  <div *ngIf="!imagesCollection.locked">
+  <div *ngIf="!imagesCollection.locked && !(imagesCollection.importMethod=='BACKEND_IMPORT')">
     <h4>Upload Options</h4>
     <div class="row">
       <div class="col-md-9">

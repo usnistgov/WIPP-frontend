@@ -3,5 +3,6 @@
   "jupyterNotebooksUrl": "JUPYTERHUB_URL",
   "plotsUiUrl": "VISIONUI_URL",
   "argoUiBaseUrl": "ARGOUIBASE_URL",
-  "catalogUiUrl": "CATALOGUI_URL"
+  "catalogUiUrl": "CATALOGUI_URL",
+  "displayLocalImportOption": "DISPLAY_LOCAL_IMPORT_OPTION"
 }
