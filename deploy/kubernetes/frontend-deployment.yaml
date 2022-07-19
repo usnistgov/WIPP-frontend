@@ -26,6 +26,8 @@ spec:
           value: VISION_URL_VALUE
         - name: CATALOGUI_URL
           value: CATALOG_URL_VALUE
+        - name: DISPLAY_LOCAL_IMPORT_OPTION
+            value: DISPLAY_LOCAL_IMPORT_OPTION_VALUE
         ports:
         - containerPort: 80
       restartPolicy: Always

@@ -16,7 +16,31 @@
       <small class="form-text text-muted">Enter the collection name.</small>
     </div>
 
-    <mat-checkbox [(ngModel)]="usePattern" name="false">Filter images upon upload using a filename pattern</mat-checkbox>
+    <div class="form-group">
+      <label for="importMethod">Import method</label>
+      <span style="color: #e32"> * </span>
+      <mat-radio-group
+        id="importMethod"
+        class="options-radio-group"
+        name="format"
+        [(ngModel)]="imagesCollection.importMethod">
+        <mat-radio-button [value]="ImagesCollectionImportMethod.UPLOADED">
+          Browser upload <span placement="right" ngbTooltip="Upload images via web browser">
+          <i class="fas fa-question-circle"></i></span>
+        </mat-radio-button>
+        <mat-radio-button *ngIf="displayLocalImportOption" [value]="ImagesCollectionImportMethod.BACKEND_IMPORT">
+          Backend import <i>(beta) </i> <span placement="right" ngbTooltip="Import images from a folder local to the server">
+          <i class="fas fa-question-circle"></i></span>
+        </mat-radio-button>
+        <input *ngIf="imagesCollection.importMethod==ImagesCollectionImportMethod.BACKEND_IMPORT" type="text"
+               class="form-control" [(ngModel)]="imagesCollection.sourceBackendImport" name="sourceBackendimport"
+               placeholder="Enter the name of the folder to import">
+      </mat-radio-group>
+    </div>
+
+    <mat-checkbox *ngIf="imagesCollection.importMethod==ImagesCollectionImportMethod.UPLOADED"
+                  [(ngModel)]="usePattern" name="false">Filter images upon upload using a filename pattern
+    </mat-checkbox>
     <span class="text-danger" *ngIf="!usePattern && imagesCollection.pattern">Warning: pattern is not empty, but this option is not checked</span>
 
     <div class="row" *ngIf="usePattern">

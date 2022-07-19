@@ -19,13 +19,14 @@ sed -i \
     -e "s|@KEYCLOAK_URL_VALUE@|${KEYCLOAK_URL}|g" \
     /var/www/frontend/main.*.js
 
-# Update external tools URLs in frontend conf
+# Update external tools URLs and options in frontend conf
 sed -i \
   -e 's|TENSORBOARD_URL|'"${TENSORBOARD_URL}"'|' \
   -e 's|JUPYTERHUB_URL|'"${JUPYTERHUB_URL}"'|' \
   -e 's|VISIONUI_URL|'"${VISIONUI_URL}"'|' \
   -e 's|CATALOGUI_URL|'"${CATALOGUI_URL}"'|' \
   -e 's|ARGOUIBASE_URL|'"${ARGOUIBASE_URL}"'|' \
+  -e 's|DISPLAY_LOCAL_IMPORT_OPTION|'"${DISPLAY_LOCAL_IMPORT_OPTION}"'|' \
   /var/www/frontend/assets/config/config.json
 
 nginx -g 'daemon off;'

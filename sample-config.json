@@ -3,5 +3,6 @@
   "tensorboardUrl": "/not-found",
   "jupyterNotebooksUrl": "/not-found",
   "plotsUiUrl": "/not-found",
-  "catalogUiUrl": "/not-found"
+  "catalogUiUrl": "/not-found",
+  "displayLocalImportOption": false
 }
