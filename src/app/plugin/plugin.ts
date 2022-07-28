@@ -15,7 +15,23 @@ export class Plugin {
   inputs: JSON[];
   outputs: JSON[];
   ui: JSON[];
+  resourceRequirements?: PluginResourceRequirements;
   _links: any;
+}
+
+export interface PluginResourceRequirements {
+  ramMin?: number;
+  coresMin?: number;
+  cpuAVX?: boolean;
+  cpuAVX2?: boolean;
+  gpu?: boolean;
+  cudaRequirements?: PluginResourceCudaRequirements;
+
+}
+
+export interface PluginResourceCudaRequirements {
+  deviceMemoryMin?: number;
+  cudaComputeCapability?: string | string[];
 }
 
 export interface PaginatedPlugins {

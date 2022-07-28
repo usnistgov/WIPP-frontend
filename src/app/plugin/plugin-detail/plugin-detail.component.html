@@ -129,6 +129,51 @@
     <tr mat-row *matRowDef="let output; columns: columnsToDisplayOutputs;"></tr>
   </table>
 
+  <h4>Hardware Requirements</h4>
+
+  <table class="mat-table" >
+    <tr class="mat-header-row">
+      <th class="mat-header-cell">Name</th>
+      <th class="mat-header-cell">Description</th>
+      <th class="mat-header-cell">Value</th>
+    </tr>
+    <tr class="mat-row">
+      <td class="mat-cell">ramMin</td>
+      <td class="mat-cell">Minimum RAM in mebibytes (Mi)</td>
+      <td class="mat-cell">{{plugin.resourceRequirements?.ramMin || "N/A"}}</td>
+    </tr>
+    <tr class="mat-row">
+      <td class="mat-cell">coresMin</td>
+      <td class="mat-cell">Minimum number of CPU cores</td>
+      <td class="mat-cell">{{plugin.resourceRequirements?.coresMin || "N/A"}}</td>
+    </tr>
+    <tr class="mat-row">
+      <td class="mat-cell">cpuAVX</td>
+      <td class="mat-cell">Advanced Vector Extensions (AVX) CPU capability required</td>
+      <td class="mat-cell">{{plugin.resourceRequirements?.cpuAVX}}</td>
+    </tr>
+    <tr class="mat-row">
+      <td class="mat-cell">cpuAVX2</td>
+      <td class="mat-cell">Advanced Vector Extensions 2 (AVX2) CPU capability required</td>
+      <td class="mat-cell">{{plugin.resourceRequirements?.cpuAVX2}}</td>
+    </tr>
+    <tr class="mat-row">
+      <td class="mat-cell">gpu</td>
+      <td class="mat-cell">GPU/accelerator required</td>
+      <td class="mat-cell">{{plugin.resourceRequirements?.gpu}}</td>
+    </tr>
+    <tr class="mat-row">
+      <td class="mat-cell">cudaRequirements.deviceMemoryMin</td>
+      <td class="mat-cell">GPU Cuda-related requirements - deviceMemoryMin</td>
+      <td class="mat-cell">{{plugin.resourceRequirements?.cudaRequirements?.deviceMemoryMin || "N/A"}}</td>
+    </tr>
+    <tr class="mat-row">
+      <td class="mat-cell">cudaRequirements.cudaComputeCapability</td>
+      <td class="mat-cell">GPU Cuda-related requirements - cudaComputeCapability</td>
+      <td class="mat-cell">{{plugin.resourceRequirements?.cudaRequirements?.cudaComputeCapability || "N/A"}}</td>
+    </tr>
+  </table>
+
 </div>
 
 <ng-template #showManifestModal let-c="close" let-d="dismiss" class="manifest-modal">
