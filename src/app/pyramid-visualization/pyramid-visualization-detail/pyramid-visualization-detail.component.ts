@@ -264,7 +264,7 @@ export class PyramidVisualizationDetailComponent implements OnInit, OnDestroy {
     this.modalService.dismissAll();
   }
 
-  makePrivateVisualization(): void {
+  makePublicVisualization(): void {
     this.visualizationService.makePublicVisualization(
       this.visualization).subscribe(visualization => {
       this.visualization = visualization;

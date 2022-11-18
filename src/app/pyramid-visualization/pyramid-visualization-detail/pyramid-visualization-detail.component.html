@@ -1,19 +1,19 @@
 <h3 class="wipp-title">Pyramid Visualization</h3>
 
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-md-3">
     <strong>Name:</strong> {{ visualization.name }}
   </div>
 
-  <div class="col-md-4">
+  <div class="col-md-3">
     <strong>Creation date:</strong> {{ visualization.creationDate | date }}
   </div>
 
-  <div class="col-md-4">
+  <div class="col-md-3">
     <strong>Owner:</strong> {{ visualization.owner }}
   </div>
 
-  <div class="col-md-4 text-right">
+  <div class="col-md-3 text-right">
     <!--TODO: add download link (metadata not handled in pyramid building yet) -->
     <!--<a [href]="visualization?._links?.download?.href"-->
     <!--ngbTooltip="Download as zip"-->
@@ -22,7 +22,7 @@
     <!--<span-->
     <!--aria-hidden="true"><i class="fa fa-download"></i></span>-->
     <!--</a>-->
-    <button *ngIf="canEdit()" type="button" class="btn wip-icon-btn-default btn-sm"
+    <button type="button" class="btn wip-icon-btn-default btn-sm"
             ngbTooltip="Hide/Show configs"
             placement="left"
             [class.active]="showSettings"
@@ -53,7 +53,7 @@
       </button>
     </th>
     <th class="vert-align">Layer group label</th>
-    <th class="wip-icon-button-column text-center vert-align">
+    <th class="wip-icon-button-column text-center vert-align" *ngIf="canEdit()">
                 <span *ngIf="savedStatus === 'saved'"
                       aria-hidden="true"
                       ngbTooltip="Configuration saved on the server"
@@ -83,7 +83,7 @@
         </button>
       </td>
       <td class="vert-align">{{layersGroup.label}}</td>
-      <td class="vert-align">
+      <td class="vert-align" *ngIf="canEdit()">
         <button type="button" class="btn wip-icon-btn-default btn-sm"
                 ngbTooltip="Delete group"
                 (click)="removeGroup(layersGroup)">
@@ -104,7 +104,7 @@
             <th class="table-column-40p vert-align">Pyramid</th>
             <!--TODO: add ppm info (metadata not handled in pyramid building yet) -->
             <!--<th class="vert-align">Pixels / meter</th>-->
-            <th class="wip-icon-button-column vert-align"></th>
+            <th class="wip-icon-button-column vert-align" *ngIf="canEdit()"></th>
           </tr>
           </thead>
           <tbody>
@@ -117,7 +117,7 @@
             </td>
             <!--TODO: add ppm info (metadata not handled in pyramid building yet) -->
             <!--<td class="vert-align">{{layer.ppm}}</td>-->
-            <td class="vert-align">
+            <td class="vert-align" *ngIf="canEdit()">
               <button type="button" class="btn wip-icon-btn-default btn-sm"
                       ngbTooltip="Delete layer"
                       (click)="removeLayer(layersGroup, layer)">
@@ -125,7 +125,7 @@
               </button>
             </td>
           </tr>
-          <tr>
+          <tr *ngIf="canEdit()">
             <td class="vert-align">
               <input type="text" class="form-control"
                      [(ngModel)]="layersGroup.newLayer.label">
@@ -163,7 +163,7 @@
       </td>
     </tr>
   </ng-container>
-  <tr>
+  <tr *ngIf="canEdit()">
     <td class="vert-align"></td>
     <td class="vert-align">
       <input type="text" class="form-control"
