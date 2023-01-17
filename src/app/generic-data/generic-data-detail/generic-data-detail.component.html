@@ -48,6 +48,29 @@
     </div>
 
     <div class="col-md-3 text-right">
+      <button *ngIf="canEdit() && !genericData.locked && !genericData.sourceJob" type="button"
+              ngbTooltip="Delete collection"
+              placement="left"
+              class="btn btn-light" (click)="deleteCollection();">
+                  <span class="fa fa-times"
+                        aria-hidden="true"></span>
+      </button>
+      <a *ngIf="!genericData.locked && !genericData.sourceJob">
+        <button  type="button"
+                 ngbTooltip="Lock collection"
+                 placement="left"
+                 class="btn btn-light" (click)="lockCollection();">
+              <span class="fa fa-lock-open"
+                    aria-hidden="true"></span>
+        </button>
+      </a>
+      <a *ngIf="genericData.locked || genericData.sourceJob"
+         ngbTooltip="Collection locked"
+         placement="left"
+         class="btn btn-light">
+            <span class="fa fa-lock"
+                  aria-hidden="true"></span>
+      </a>
       <button
         (click)="openDownload(genericData._links.download.href)"
         ngbTooltip="Download as zip"
@@ -63,6 +86,120 @@
         <span class="fa fa-users"
               aria-hidden="true"></span>
       </button>
+    </div>
+  </div>
+</div>
+
+<div class="row top-bottomMarge50" *ngIf="!(genericData.locked || genericData.sourceJob)">
+  <div class="col-md-6">
+    <button class="btn btn-light btn-block" #browseBtn>
+      Add files to collection
+    </button>
+  </div>
+</div>
+
+<div class="top-bottomMarge50" [hidden]="!hasFilesNotComplete(flowHolder.files)">
+  <h4>Transfers</h4>
+  <div class="row">
+    <div class="col-sm-3">
+      Number of files: {{flowHolder.files.length}}
+    </div>
+  </div>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>File name</th>
+      <th>Size</th>
+      <th>Progress</th>
+      <th>Error</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let file of flowHolder.files | slice:0:10; let index=index">
+      <td class="vert-align">{{index + 1}}</td>
+      <td class="vert-align">{{file.name}}</td>
+      <td class="vert-align">{{file.size | bytes}}</td>
+      <td *ngIf='!file.error'>
+        <ngb-progressbar max="1" value="{{file.progress()}}">
+        </ngb-progressbar>
+      </td>
+      <td *ngIf='file.error'>
+        {{file.errorMessage|| "Unknown upload error."}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<h4>Generic Files</h4>
+<div class="row">
+  <div class='col-sm-8'>
+    Total size: {{genericData.genericFileTotalSize| bytes}}
+  </div>
+  <div class='col-sm-4 text-right'>
+    <button *ngIf="!genericData.locked && !genericData.sourceJob" type="button"
+            ngbTooltip="Delete all generic files"
+            placement="left"
+            class="btn btn-light"
+            (click)="deleteAllGenericFiles()">
+                <span class="fa fa-times"
+                      aria-hidden="true"></span>
+    </button>
+  </div>
+</div>
+<table mat-table [dataSource]="genericFiles" (matSortChange)="genericFilesSortChanged($event)"
+       matSort matSortActive="fileName" matSortDisableClear matSortDirection="asc">
+
+  <!-- # Column -->
+  <ng-container matColumnDef="index">
+    <th mat-header-cell *matHeaderCellDef>#</th>
+    <td mat-cell *matCellDef="let id=index">
+      {{ (pageSize * genericFilesPaginator.pageIndex) + id + 1 }}
+    </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="fileName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+    <td mat-cell *matCellDef="let row">
+      {{ row.fileName }}
+      <span [hidden]="!row.importError"><br>{{row.importError}}</span>
+    </td>
+  </ng-container>
+
+  <!-- FileSize Column -->
+  <ng-container matColumnDef="fileSize">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
+    <td mat-cell *matCellDef="let row">{{ row.fileSize | bytes }}</td>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
+    <td mat-cell *matCellDef="let row">
+      <button *ngIf="!genericData.locked && !genericData.sourceJob" type="button"
+              ngbTooltip="Remove from collection"
+              placement="left"
+              class="btn btn-light" (click)="deleteGenericFile(row);">
+                  <span class="fa fa-times"
+                        aria-hidden="true"></span>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumnsGenericFiles"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumnsGenericFiles;"></tr>
+</table>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8"></div>
+    <div class="col-md-4">
+      <mat-paginator (page)="genericFilesPageChanged($event)" [length]="resultsLengthGenericFiles" [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions" #genericFilesPaginator>
+      </mat-paginator>
     </div>
   </div>
 </div>

@@ -6,6 +6,8 @@ import {GenericDataService} from '../generic-data.service';
 import { GenericData } from '../generic-data';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GenericDataNewComponent } from '../generic-data-new/generic-data-new.component';
+import {Router} from '@angular/router';
+import {KeycloakService} from '../../services/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-generic-data-list',
@@ -26,7 +28,8 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
 
   constructor(
     private genericDataService: GenericDataService,
-    private modalService: NgbModal) {
+    private modalService: NgbModal,
+    private keycloakService: KeycloakService) {
       this.paramsChange = new BehaviorSubject({
         index: 0,
         size: this.pageSize,
@@ -58,7 +61,6 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
   }
 
   ngOnInit() {
-    console.log(this.genericDatas);
     this.getGenericDatas();
   }
 
@@ -98,6 +100,10 @@ export class GenericDataListComponent implements OnInit , OnDestroy{
   createNew() {
     const modalRef = this.modalService.open(GenericDataNewComponent, {size: 'lg'});
     modalRef.componentInstance.modalReference = modalRef;
+  }
+
+  canCreate() : boolean {
+    return(this.keycloakService.isLoggedIn());
   }
 
   ngOnDestroy() {

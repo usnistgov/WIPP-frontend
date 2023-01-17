@@ -46,8 +46,8 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private elem: ElementRef,
     private modalService: NgbModal,
-    private router: Router,
     private appConfigService: AppConfigService,
     private keycloakService: KeycloakService,
     private genericDataService: GenericDataService) {
@@ -58,6 +58,7 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const self = this;
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',
@@ -114,12 +115,6 @@ export class GenericDataDetailComponent implements OnInit, AfterViewInit {
 
   transferNotCompleteFilter(flowFile) {
     return !flowFile.isComplete() || flowFile.error;
-  }
-
-  getJob() {
-    if (this.genericData._links['sourceJob']) {
-      this.genericDataService.getJob(this.genericData._links['sourceJob']['href']).subscribe(job => this.job = job);
-    }
   }
 
   displayJobModal(jobId: string) {
