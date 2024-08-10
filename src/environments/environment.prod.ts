@@ -9,5 +9,6 @@ export const environment = {
     realm: 'WIPP',
     clientId: 'wipp-public-client'
   },
-  iipRootUrl: '@IIP_URL_VALUE@'
+  iipRootUrl: '@IIP_URL_VALUE@',
+  annotationApiRootUrl: '@ANNOTATION_API_URL_VALUE@'
 };

@@ -62,6 +62,11 @@ export class AppComponent implements OnInit {
             routerLink: '/tensorflow-models'
           },
           {
+            label: 'Image annotations',
+            icon: 'pi pi-pen-to-square',
+            routerLink: '/image-annotations'
+          },
+          {
             label: 'CSV collections',
             icon: 'pi pi-file-excel',
             routerLink: '/csv-collections'

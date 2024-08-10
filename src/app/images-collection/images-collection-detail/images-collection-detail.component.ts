@@ -19,6 +19,7 @@ import OpenSeadragon from 'openseadragon';
 import {MessageService, SelectItem} from 'primeng/api';
 import {environment} from '../../../environments/environment';
 import {DialogService} from 'primeng/dynamicdialog';
+import {ImageAnnotationsService} from '../../image-annotations/image-annotations.service';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -92,6 +93,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     private imagesCollectionService: ImagesCollectionService,
+    private imageAnnotationsService: ImageAnnotationsService,
     private appConfigService: AppConfigService,
     private keycloakService: KeycloakService,
     private confirmDialogService: ConfirmDialogService,
@@ -540,6 +542,12 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.imagesCollectionService.getMetadataFiles(this.imagesCollection, params).subscribe(val =>
       this.metadataFiles2 = val.data
     );
+  }
+
+  annotate() {
+    this.imageAnnotationsService.setupAnnotationProjectAndTask(this.imagesCollection).subscribe( result => {
+      this.messageService.add({ severity: 'info', summary: 'Annotate', detail: "Not yet implemented" });
+    });
   }
 
   ngOnDestroy() {

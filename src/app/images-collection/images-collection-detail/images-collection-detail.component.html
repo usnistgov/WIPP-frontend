@@ -39,6 +39,13 @@
             [outlined]="true"
             (click)="makePublicCollection();">
     </p-button>
+    <p-button icon="pi pi-pen-to-square" *ngIf="!imagesCollection.publiclyShared && canEdit()" type="button"
+              pTooltip="Create image annotations"
+              label="Annotate"
+              tooltipPosition="left"
+              [outlined]="true"
+              (click)="annotate();">
+    </p-button>
   </div>
 </h1>
 

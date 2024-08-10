@@ -12,7 +12,8 @@ export const environment = {
     realm: 'WIPP',
     clientId: 'wipp-public-client'
   },
-  iipRootUrl: 'http://localhost:8082/fcgi-bin/iipsrv.fcgi'
+  iipRootUrl: 'http://localhost:8082/fcgi-bin/iipsrv.fcgi',
+  annotationApiRootUrl: 'http://localhost:8083' // TODO: fix port
 };
 
 /*

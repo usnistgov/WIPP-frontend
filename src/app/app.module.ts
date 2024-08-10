@@ -31,6 +31,7 @@ import {AutoFocusModule} from 'primeng/autofocus';
 import {RouteReuseStrategy, RouterModule} from '@angular/router';
 import {AppRouteReuseStrategy} from './app-route-reuse-strategy';
 import {MenuModule} from 'primeng/menu';
+import {ImageAnnotationsModule} from './image-annotations/image-annotations.module';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import {MenuModule} from 'primeng/menu';
     PluginModule,
     WorkflowModule,
     ConfirmDialogModule,
+    ImageAnnotationsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,

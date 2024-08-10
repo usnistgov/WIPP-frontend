@@ -1,0 +1,62 @@
+<h1>Image annotations</h1>
+<div class="card">
+  <p-table #dt
+           [value]="imageAnnotationsCollections"
+           [lazy]="true"
+           (onLazyLoad)="loadData($event)"
+           dataKey="id"
+           [tableStyle]="{ 'min-width': '75rem' }"
+           [paginator]="true"
+           [rows]="10"
+           [rowsPerPageOptions]="[10, 25, 50]"
+           [totalRecords]="resultsLength"
+           selectionMode="single"
+           [showCurrentPageReport]="true"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+           [globalFilterFields]="['name']"
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        <p-button
+          label="New"
+          icon="pi pi-plus"
+          pTooltip="Not yet implemented"
+          disabled="true" />
+        <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  type="text"
+                  (input)="dt.filterGlobal($event.target.value, 'contains')"
+                  placeholder="Search..." />
+            </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">
+          Name <p-sortIcon field="name" />
+        </th>
+        <th pSortableColumn="creationDate">
+          Creation date <p-sortIcon field="creationDate" />
+        </th>
+        <th pSortableColumn="publiclyShared">
+          Visibility <p-sortIcon field="publiclyShared" />
+        </th>
+        <th pSortableColumn="owner">
+          Owner <p-sortIcon field="owner" />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-annotColl>
+      <tr routerLink="/image-annotations/{{annotColl.id}}" class="p-selectable-row">
+        <td>{{ annotColl.name }}</td>
+        <td>{{ annotColl.creationDate | date }}</td>
+        <td><i [class]="annotColl.publiclyShared ? 'pi pi-globe' : 'pi pi-user'"></i></td>
+        <td>{{ annotColl.owner }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<p-toast position="top-center" [life]="5000"/>
+
