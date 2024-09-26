@@ -3,6 +3,7 @@ export class ImageAnnotationsCollection {
   name: string;
   creationDate: Date;
   sourceJob: string;
+  imagesCollectionId: string;
   owner: string;
   publiclyShared: boolean;
   taskId: string;

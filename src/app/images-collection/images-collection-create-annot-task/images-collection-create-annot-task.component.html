@@ -1,0 +1,97 @@
+<form xmlns="http://www.w3.org/1999/html">
+  <div class="flex flex-column gap-2">
+    <label for="name" class="font-semibold">Annotation task name<span style="color: #ee3322"> * </span></label>
+    <input pInputText [(ngModel)]="imageAnnotationsCollection.name" id="name" name="name" class="flex-auto" autocomplete="off" />
+    <span class="p-text-secondary block mb-3">Enter the task name (this will be the name of the task in CVAT).</span>
+  </div>
+  <div  class="flex flex-column gap-2 mb-3">
+    <label for="labels" class="font-semibold">Labels<span style="color: #e32"> * </span></label>
+    <p-button label="Add label" icon="pi pi-plus" severity="secondary" outlined="true" *ngIf="labelAddDisplay"
+              (onClick)="labelAddDisplay = false"/>
+    <div class="formgroup-inline gap-2" *ngIf="!labelAddDisplay">
+      <p-inputGroup class="w-8">
+        <input pInputText [(ngModel)]="labelName" id="labelName" name="labelName" autocomplete="off" placeholder="Label name"/>
+        <p-inputGroupAddon>
+          <p-colorPicker id="labelColor" name="labelColor"
+                         [(ngModel)]="labelColor" pTooltip="Change label color"/>
+        </p-inputGroupAddon>
+        <input pInputText [(ngModel)]="labelColor" id="labelColorText" name="labelColor" autocomplete="off" style="width: 1rem;"/>
+      </p-inputGroup>
+      <p-button label="Cancel" severity="secondary" (onClick)="resetLabelForm()" />
+      <p-button label="Save" (onClick)="addLabel()" [disabled]="!labelName || !labelColor" type="submit"/>
+    </div>
+    <div class="card flex align-items-center gap-2 flex-wrap">
+      <p-chip *ngFor="let label of labels;" [label]="label.name" [removable]="true" (onRemove)="removeLabel(label)"
+              [style]="{'background-color': label.color}"/>
+    </div>
+  </div>
+  <div  class="flex flex-column gap-2 mb-3" *ngIf="imagesCollection">
+    <label for="selectImages" class="font-semibold">Select images<span style="color: #e32"> * </span></label>
+    <p-table [value]="availableImages" [lazy]="true" id="selectImages"
+             [(selection)]="selectedImages"
+             (onLazyLoad)="loadImages($event)"
+             dataKey="fileName"
+             [tableStyle]="{ 'min-width': '75rem' }"
+             [paginator]="true"
+             [showCurrentPageReport]="true"
+             [rows]="5"
+             [totalRecords]="resultsLengthImages">>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-checkbox id="allImagesSelected" name="allImagesSelected"
+                        [binary]="true"
+                        [(ngModel)]="allImagesSelected"
+                        pTooltip="Use all images"/>
+          </th>
+          <th pSortableColumn="fileName">
+            Name <p-sortIcon field="fileName" />
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-image>
+        <tr class="p-selectable-row">
+          <td>
+            <p-tableCheckbox [value]="image" [disabled]="allImagesSelected"/>
+          </td>
+          <td>
+            {{ image.fileName }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <p-fieldset legend="Advanced" [toggleable]="true" collapsed="true">
+    <div class="flex gap-2">
+      <div class="flex flex-column gap-2 mb-3">
+        <label for="segmentSize" class="font-semibold">Segment size
+          <span class="pi pi-question-circle" pTooltip="Segment size - number of images per job (optional)"></span>
+        </label>
+        <p-inputNumber [(ngModel)]="segmentSize" id="segmentSize" name="segmentSize"/>
+      </div>
+      <div  class="flex flex-column gap-2 mb-3">
+        <label for="assignees" class="font-semibold">Assignees
+          <span class="pi pi-question-circle" pTooltip="Assign a list of users to this annotation task (optional)"></span>
+        </label>
+        <p-chips [(ngModel)]="userAssignees" id="assignees" name="assignees"/>
+      </div>
+    </div>
+    <div class="flex flex-column gap-2">
+      <label for="masksCollection" class="font-semibold">Mask collection
+        <span class="pi pi-question-circle" pTooltip="Mask collection - existing annotation masks (optional)"></span>
+      </label>
+      <p-autoComplete
+        [(ngModel)]="masksCollection"
+        [suggestions]="availableMasksCollections"
+        (completeMethod)="filterImgColl($event)"
+        [placeholder]=""
+        field="name" />
+    </div>
+  </p-fieldset>
+
+  <div class="flex justify-content-end gap-2 mt-3">
+    <p-button label="Cancel" severity="secondary" (onClick)="cancel()" />
+    <p-button label="Save" (onClick)="postConfiguration()" [disabled]="!imageAnnotationsCollection.name || !labels" type="submit"/>
+  </div>
+</form>
+<p-toast position="top-center"/>

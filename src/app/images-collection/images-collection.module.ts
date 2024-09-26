@@ -29,6 +29,14 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {CustomPipesModule} from '../custom-pipes/custom-pipes.module';
+import {ImagesCollectionCreateAnnotTaskComponent} from './images-collection-create-annot-task/images-collection-create-annot-task.component';
+import {ColorPickerModule} from 'primeng/colorpicker';
+import {ChipModule} from 'primeng/chip';
+import {InputGroupModule} from 'primeng/inputgroup';
+import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
+import {ChipsModule} from 'primeng/chips';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {AutoCompleteModule} from 'primeng/autocomplete';
 
 @NgModule({
   imports: [
@@ -55,6 +63,13 @@ import {CustomPipesModule} from '../custom-pipes/custom-pipes.module';
     RadioButtonModule,
     CheckboxModule,
     OverlayPanelModule,
+    ChipModule,
+    ChipsModule,
+    ColorPickerModule,
+    InputNumberModule,
+    InputGroupAddonModule,
+    InputGroupModule,
+    AutoCompleteModule,
     CustomPipesModule
   ],
   declarations: [
@@ -62,7 +77,8 @@ import {CustomPipesModule} from '../custom-pipes/custom-pipes.module';
     ImagesCollectionListComponent,
     ImagesCollectionNewComponent,
     ImagesCollectionTemplateComponent,
-    ImagesCollectionBatchImportComponent
+    ImagesCollectionBatchImportComponent,
+    ImagesCollectionCreateAnnotTaskComponent
   ]
 })
 export class ImagesCollectionModule { }

@@ -6,7 +6,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Job} from '../job/job';
-import {PaginatedImageAnnotations} from './image-annotation';
+import {ImageAnnotation, Label, PaginatedImageAnnotations} from './image-annotation';
 import {ImagesCollection} from '../images-collection/images-collection';
 
 
@@ -87,23 +87,38 @@ export class ImageAnnotationsService implements DataService<ImageAnnotationsColl
     return this.http.get<Job>(jobUrl);
   }
 
-  setupAnnotationProjectAndTask(imageCollection: ImagesCollection): Observable<any> {
+  createAnnotationsCollection(annotationsCollection: ImageAnnotationsCollection): Observable<ImageAnnotationsCollection> {
+    return this.http.post<ImageAnnotationsCollection>(this.imageAnnotationsCollectionsUrl, annotationsCollection);
+  }
+
+  addAnnotations(annotationsCollection: ImageAnnotationsCollection, annotations: ImageAnnotation[]): Observable<PaginatedImageAnnotations> {
+    return this.http.post<any>(`${this.imageAnnotationsCollectionsUrl}/${annotationsCollection.id}/annotations`, annotations);
+  }
+
+  setupAnnotationTask(name: string, labels: Label[], segmentSize: number): Observable<any> {
     // Example of implementation
     // return this.http.post<any>(`${this.imageAnnotationsApiUrl}/create`, {
     //   organization: {
     //     slug: "WIPP"
     //   },
-    //   project: {
-    //     name: imageCollection.name,
-    //     labels: [
-    //       { name: 'label1'},
-    //       { name: 'label2'}
-    //     ]
-    //   },
     //   task: {
-    //     name: imageCollection.name
+    //     name: name,
+    //     labels: labels,
+    //     segmentSize: segmentSize
     //   },
     // });
-    return of({});
+
+    return of({ taskId: 1141 });
+  }
+
+  uploadToAnnotationTask(annotationList: ImageAnnotation[], taskId: string, userAssigneesname: string[]): Observable<any> {
+    // Example of implementation
+    // return this.http.post<any>(`${this.imageAnnotationsApiUrl}/upload`, {
+    //   taskId: taskId,
+    //   userAssignees: userAssignees,
+    //   data: annotationList
+    // });
+
+    return of({ taskId: 1141 });
   }
 }
