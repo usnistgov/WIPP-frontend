@@ -7,7 +7,7 @@
     </div>
     <div class="flex flex-column w-6">
       <label for="framework" class="font-semibold">Framework *</label>
-      <p-dropdown required [options]="list_framework" [(ngModel)]="form.framework"
+      <p-dropdown required [options]="listFramework" [(ngModel)]="form.framework"
         name="model-card-framework" placeholder="Model card framework" />
     </div>
   </div>
@@ -16,10 +16,10 @@
     <div class="flex flex-column w-6">
       <label for="trainingdata" class="font-semibold">Training data</label>
       <p-inputGroup>
-        <input pInputText [(ngModel)]="train_data[0]" name="mc-traindata-key" placeholder="key" />
-        <input pInputText [(ngModel)]="train_data[1]" name="mc-traindata-val" placeholder="value" />
-        <p-button type="button" icon="pi pi-plus-circle" (onClick)="add_training('data', train_data[0], train_data[1])"
-          [disabled]="!train_data[0] || !train_data[1]" />
+        <input pInputText [(ngModel)]="trainData[0]" name="mc-traindata-key" placeholder="key" />
+        <input pInputText [(ngModel)]="trainData[1]" name="mc-traindata-val" placeholder="value" />
+        <p-button type="button" icon="pi pi-plus-circle" (onClick)="addTraining('data', trainData[0], trainData[1])"
+          [disabled]="!trainData[0] || !trainData[1]" />
       </p-inputGroup>
       <ul>
         <li *ngFor="let data of form.trainingData | keyvalue">
@@ -30,11 +30,11 @@
     <div class="flex flex-column w-6">
       <label for="trainingparameters" class="font-semibold">Training parameters</label>
       <p-inputGroup>
-        <input pInputText [(ngModel)]="train_params[0]" name="mc-trainparams-key" placeholder="key" />
-        <input pInputText [(ngModel)]="train_params[1]" name="mc-trainparams-val" placeholder="value" />
+        <input pInputText [(ngModel)]="trainParams[0]" name="mc-trainparams-key" placeholder="key" />
+        <input pInputText [(ngModel)]="trainParams[1]" name="mc-trainparams-val" placeholder="value" />
         <p-button type="button" icon="pi pi-plus-circle"
-          (onClick)="add_training('params', train_params[0], train_params[1])"
-          [disabled]="!train_params[0] || !train_params[1]" />
+          (onClick)="addTraining('params', trainParams[0], trainParams[1])"
+          [disabled]="!trainParams[0] || !trainParams[1]" />
       </p-inputGroup>
       <ul>
         <li *ngFor="let params of form.trainingParameters | keyvalue">
@@ -64,7 +64,7 @@
     </div>
     <div class="flex flex-column w-6">
       <label for="operationtype" class="font-semibold">Operation type *</label>
-      <p-multiSelect required [options]="list_operation_type" [(ngModel)]="form.operationType"
+      <p-multiSelect required [options]="listOperationType" [(ngModel)]="form.operationType"
         name="model-card-operation-type" placeholder="Select operation type(s)" />
     </div>
   </div>
@@ -72,12 +72,12 @@
   <div class="flex flex-row gap-3">
     <div class="flex flex-column w-6">
       <label for="architecture" class="font-semibold">Architecture *</label>
-      <p-dropdown required [options]="list_architecture" [(ngModel)]="form.architecture"
+      <p-dropdown required [options]="listArchitecture" [(ngModel)]="form.architecture"
         name="model-card-architecture" placeholder="Model card architecture" />
     </div>
     <div class="flex flex-column w-6">
       <label for="license" class="font-semibold">License *</label>
-      <p-dropdown required [options]="list_license" [(ngModel)]="form.license"
+      <p-dropdown required [options]="listLicense" [(ngModel)]="form.license"
         name="model-card-license" placeholder="Model card license" />
     </div>
   </div>
