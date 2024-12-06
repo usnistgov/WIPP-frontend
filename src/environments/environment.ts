@@ -6,7 +6,7 @@ import packageInfo from '../../package.json';
 export const environment = {
   production: false,
   version: packageInfo.version,
-  apiRootUrl: "http://129.6.58.34:8080/api",
+  apiRootUrl: 'http://localhost:8080/api',
   keycloak: {
     url: 'http://localhost:8081',
     realm: 'WIPP',
