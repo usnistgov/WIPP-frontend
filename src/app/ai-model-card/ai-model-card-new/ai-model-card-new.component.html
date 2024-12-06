@@ -1,0 +1,96 @@
+<form #myform="ngForm" class="flex flex-column gap-5">
+
+  <div class="flex flex-row gap-3">
+    <div class="flex flex-column w-6">
+      <label for="name" class="font-semibold">Name *</label>
+      <input pInputText required [(ngModel)]="form.name" name="model-card-name" placeholder="Model card name" />
+    </div>
+    <div class="flex flex-column w-6">
+      <label for="framework" class="font-semibold">Framework *</label>
+      <p-dropdown required [options]="listFramework" [(ngModel)]="form.framework"
+        name="model-card-framework" placeholder="Model card framework" />
+    </div>
+  </div>
+
+  <div class="flex flex-row gap-3">
+    <div class="flex flex-column w-6">
+      <label for="trainingdata" class="font-semibold">Training data</label>
+      <p-inputGroup>
+        <input pInputText [(ngModel)]="trainData[0]" name="mc-traindata-key" placeholder="key" />
+        <input pInputText [(ngModel)]="trainData[1]" name="mc-traindata-val" placeholder="value" />
+        <p-button type="button" icon="pi pi-plus-circle" (onClick)="addTraining('data', trainData[0], trainData[1])"
+          [disabled]="!trainData[0] || !trainData[1]" />
+      </p-inputGroup>
+      <ul>
+        <li *ngFor="let data of form.trainingData | keyvalue">
+          {{data.key}} -> {{data.value}}
+        </li>
+      </ul>
+    </div>
+    <div class="flex flex-column w-6">
+      <label for="trainingparameters" class="font-semibold">Training parameters</label>
+      <p-inputGroup>
+        <input pInputText [(ngModel)]="trainParams[0]" name="mc-trainparams-key" placeholder="key" />
+        <input pInputText [(ngModel)]="trainParams[1]" name="mc-trainparams-val" placeholder="value" />
+        <p-button type="button" icon="pi pi-plus-circle"
+          (onClick)="addTraining('params', trainParams[0], trainParams[1])"
+          [disabled]="!trainParams[0] || !trainParams[1]" />
+      </p-inputGroup>
+      <ul>
+        <li *ngFor="let params of form.trainingParameters | keyvalue">
+          {{params.key}} -> {{params.value}}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="flex flex-row gap-3">
+    <div class="flex flex-column w-6">
+      <label for="author" class="font-semibold">Author *</label>
+      <input pInputText required [(ngModel)]="form.author" name="model-card-author" placeholder="Model card author" />
+    </div>
+    <div class="flex flex-column w-6">
+      <label for="description" class="font-semibold">Description *</label>
+      <input pInputText required [(ngModel)]="form.description" name="model-card-description"
+        placeholder="Model card description" />
+    </div>
+  </div>
+
+  <div class="flex flex-row gap-3">
+    <div class="flex flex-column w-6">
+      <label for="citation" class="font-semibold">Citation *</label>
+      <input pInputText required [(ngModel)]="form.citation" name="model-card-citation"
+        placeholder="Model card citation" />
+    </div>
+    <div class="flex flex-column w-6">
+      <label for="operationtype" class="font-semibold">Operation type *</label>
+      <p-multiSelect required [options]="listOperationType" [(ngModel)]="form.operationType"
+        name="model-card-operation-type" placeholder="Select operation type(s)" />
+    </div>
+  </div>
+
+  <div class="flex flex-row gap-3">
+    <div class="flex flex-column w-6">
+      <label for="architecture" class="font-semibold">Architecture *</label>
+      <p-dropdown required [options]="listArchitecture" [(ngModel)]="form.architecture"
+        name="model-card-architecture" placeholder="Model card architecture" />
+    </div>
+    <div class="flex flex-column w-6">
+      <label for="license" class="font-semibold">License *</label>
+      <p-dropdown required [options]="listLicense" [(ngModel)]="form.license"
+        name="model-card-license" placeholder="Model card license" />
+    </div>
+  </div>
+
+  <div class="flex flex-row gap-3">
+    <div class="flex flex-column w-6">
+      <label for="publiclyshared" class="font-semibold">Publicly shared</label>
+      <p-checkbox [binary]="true" inputId="binary" />
+    </div>
+    <div class="flex justify-content-end gap-3">
+      <p-button label="Cancel" severity="secondary" (onClick)="cancel()" />
+      <p-button label="Save" type="submit" (onClick)="submit()" [disabled]="myform.form.invalid" />
+    </div>
+  </div>
+
+</form>

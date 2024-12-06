@@ -18,7 +18,6 @@ export class SearchWidgetComponent extends StringWidget {
   public data: Array<any>;
   public service: any;
 
-  //TODO fix widget
   constructor(
     private workflowService: WorkflowService,
     private injector: Injector

@@ -1,31 +1,34 @@
 <h1>Trained AI Models</h1>
 <div class="card">
   <p-table #dt
-           [value]="tensorflowModels"
-           [lazy]="true"
-           (onLazyLoad)="getTensorflowModels($event)"
-           dataKey="id"
-           [tableStyle]="{ 'min-width': '75rem' }"
-           [paginator]="true"
-           [rows]="10"
-           [rowsPerPageOptions]="[10, 25, 50]"
-           [totalRecords]="resultsLength"
-           selectionMode="single"
-           [showCurrentPageReport]="true"
-           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-           [globalFilterFields]="['name']"
+    [value]="aiModels"
+    [lazy]="true"
+    (onLazyLoad)="getAiModels($event)"
+    dataKey="id"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [totalRecords]="resultsLength"
+    selectionMode="single"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [globalFilterFields]="['name']"
   >
     <ng-template pTemplate="caption">
       <div class="flex align-items-center justify-content-between">
-        <span></span>
+        <p-button
+          label="Upload AI model"
+          icon="pi pi-plus"
+          (click)="displayNewAimodelModal()" />
         <span class="p-input-icon-left">
-                <i class="pi pi-search"></i>
-                <input
-                  pInputText
-                  type="text"
-                  (input)="dt.filterGlobal($event.target.value, 'contains')"
-                  placeholder="Search..." />
-            </span>
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($event.target.value, 'contains')"
+            placeholder="Search..." />
+        </span>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -42,14 +45,18 @@
         <th pSortableColumn="owner">
           Owner <p-sortIcon field="owner" />
         </th>
+        <th pSortableColumn="framework">
+          Framework <p-sortIcon field="framework" />
+        </th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-aiModel>
-      <tr routerLink="/tensorflow-models/{{aiModel.id}}" class="p-selectable-row">
+      <tr routerLink="/ai-models/{{aiModel.id}}" class="p-selectable-row">
         <td>{{ aiModel.name }}</td>
         <td>{{ aiModel.creationDate | date }}</td>
         <td><i [class]="aiModel.publiclyShared ? 'pi pi-globe' : 'pi pi-user'"></i></td>
         <td>{{ aiModel.owner }}</td>
+        <td>{{ aiModel.framework }}</td>
       </tr>
     </ng-template>
   </p-table>

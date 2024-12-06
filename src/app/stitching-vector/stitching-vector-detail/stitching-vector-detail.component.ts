@@ -1,13 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {StitchingVectorService} from '../stitching-vector.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {StitchingVector} from '../stitching-vector';
-import { MatPaginator } from '@angular/material/paginator';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Job} from '../../job/job';
-import {merge, of as observableOf} from 'rxjs';
 import {TimeSlice} from '../timeSlice';
 import {KeycloakService} from '../../services/keycloak/keycloak.service';
 import {DialogService} from 'primeng/dynamicdialog';
@@ -61,24 +57,6 @@ export class StitchingVectorDetailComponent implements OnInit {
       this.resultsLength = paginatedResult.page.totalElements;
       this.timeSlices = paginatedResult.data;
     });
-    // merge(this.timeSlicesPaginator.page)
-    //   .pipe(
-    //     startWith({}),
-    //     switchMap(() => {
-    //       const params = {
-    //         pageIndex: this.timeSlicesPaginator.pageIndex,
-    //         size: this.pageSize
-    //       };
-    //       return this.stitchingVectorService.getTimeSlices(this.stitchingVectorId, params);
-    //     }),
-    //     map(paginatedResult => {
-    //       this.resultsLength = paginatedResult.page.totalElements;
-    //       return paginatedResult.data;
-    //     }),
-    //     catchError(() => {
-    //       return observableOf([]);
-    //     })
-    //   ).subscribe(data => this.timeSlices = data);
   }
 
   getJob() {

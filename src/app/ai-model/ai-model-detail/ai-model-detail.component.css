@@ -1,0 +1,11 @@
+.form-group .value {
+    display: none;
+}
+
+.editing .value {
+    display: inline;
+}
+  
+.editing input {
+    display: none;
+}

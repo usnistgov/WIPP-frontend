@@ -1,0 +1,90 @@
+<form>
+  <div class="flex flex-column gap-3">
+
+    <div class="flex flex-row gap-3">
+      <div class="flex flex-column w-6">
+        <label for="name" class="font-semibold">Name*</label>
+        <input pInputText required [(ngModel)]="newModel.name" name="model-name" placeholder="Model name" />
+      </div>
+      <div class="flex flex-column w-6">
+        <label for="framework" class="font-semibold">Framework*</label>
+        <p-dropdown required [options]="model_framework" [(ngModel)]="newModel.framework" name="model-framework"
+          placeholder="Select a framework" />
+      </div>
+    </div>
+
+    <div class="flex flex-row">
+      <div class="flex flex-column w-6">
+        <label for="architecture" class="font-semibold">Architecture*</label>
+        <p-dropdown required [options]="list_architecture" [(ngModel)]="newCard.architecture" name="card-architecture"
+          placeholder="Select an architecture" />
+      </div>
+      <div class="flex flex-column w-6">
+        <label for="operationtype" class="font-semibold">Operation type(s)*</label>
+        <p-multiSelect [options]="list_operation_type" [(ngModel)]="newCard.operationType" name="model-operation-type"
+          placeholder="Select operation type(s)" />
+      </div>
+    </div>
+
+    <div class="flex flex-row">
+
+      <div class="flex flex-column w-6">
+        <label for="model" class="font-semibold">Model*</label>
+        <p-fileUpload required #modelUpload mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" accept=".zip"
+          customUpload="true" (uploadHandler)="modelUploadCustom($event.files)" />
+      </div>
+
+      <div class="flex flex-column w-6">
+        <label for="visibility" class="font-semibold">Visibility</label>
+        <p-checkbox [binary]="true" inputId="binary" [(ngModel)]="newModel.publiclyShared" name="publiclyShared"
+          label="Check if you want to publicly shared" />
+      </div>
+    </div>
+
+    <div class="flex flex-column">
+      <label for="description" class="font-semibold">Description*</label>
+      <textarea pInputTextarea [(ngModel)]="newCard.description" name="card-name"></textarea>
+    </div>
+
+    <div class="flex flex-row gap-3">
+
+      <div class="flex flex-column w-4">
+        <label for="inputs" class="font-semibold">Inputs</label>
+        <p-inputGroup>
+          <input pInputText [(ngModel)]="inputs[1]" name="mc-inputs-val" placeholder="value" />
+          <p-button type="button" icon="pi pi-plus-circle"
+            (onClick)="add_data('input', inputs[1])"
+            [disabled]="!inputs[1]" />
+        </p-inputGroup>
+      </div>
+      
+      <div class="flex flex-column w-4">
+        <label for="outputs" class="font-semibold">Outputs</label>
+        <p-inputGroup>
+          <input pInputText [(ngModel)]="outputs[1]" name="mc-outputs-val" placeholder="value" />
+          <p-button type="button" icon="pi pi-plus-circle"
+            (onClick)="add_data('output', outputs[1])"
+            [disabled]="!outputs[1]" />
+        </p-inputGroup>
+      </div>
+      
+      <div class="flex flex-column w-4">
+        <label for="inputs" class="font-semibold">Training Data</label>
+        <ul>
+          <li *ngFor="let data of newCard.trainingData | keyvalue">
+            {{data.key}} -> {{data.value}}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flex justify-content-end gap-2">
+      <p-button label="Cancel" (onClick)="cancel()" severity="secondary" />
+      <p-button label="Save" (onClick)="createModelAndCard()"
+        [disabled]="!newModel.name || !newModel.framework || !newCard.description || newCard.operationType.length == 0 || !newCard.architecture"
+        type="submit" />
+    </div>
+  </div>
+</form>
+
+<p-toast position="top-center" />

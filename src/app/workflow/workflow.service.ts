@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {environment} from '../../environments/environment';
-import {map} from 'rxjs/operators';
-import {PaginatedWorkflows, Workflow} from './workflow';
-import {Job, PaginatedJobs} from '../job/job';
-import {StitchingVector} from '../stitching-vector/stitching-vector';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators';
+import { PaginatedWorkflows, Workflow } from './workflow';
+import { Job, PaginatedJobs } from '../job/job';
+import { StitchingVector } from '../stitching-vector/stitching-vector';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'}),
@@ -84,7 +84,7 @@ export class WorkflowService {
   }
 
   createJob(job): Observable<Job> {
-      return this.http.post<Job>(this.jobsUrl, job);
+    return this.http.post<Job>(this.jobsUrl, job);
   }
 
   updateJob(job): Observable<Job> {
@@ -93,7 +93,7 @@ export class WorkflowService {
       params: {}
     };
     return this.http.patch<Job>(`${this.jobsUrl}/${job['id']}`, job, httpOptions);
-    }
+  }
 
   submitWorkflow(workflow): Observable<Workflow> {
     return this.http.post<Workflow>(

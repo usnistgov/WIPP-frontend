@@ -12,8 +12,8 @@ import {DynamicComponent} from './dynamic.component';
 import {ImagesCollectionTemplateComponent} from '../images-collection/images-collection-template/images-collection-template.component';
 import {StitchingVectorTemplateComponent} from '../stitching-vector/stitching-vector-template/stitching-vector-template.component';
 import {PyramidTemplateComponent} from '../pyramid/pyramid-template/pyramid-template.component';
-import {TensorflowModelTemplateComponent} from '../tensorflow-model/tensorflow-model-template/tensorflow-model-template.component';
-import {TensorboardLogsTemplateComponent} from '../tensorflow-model/tensorflow-model-template/tensorboard-logs-template.component';
+import {AiModelTemplateComponent} from '../ai-model/ai-model-template/ai-model-template.component';
+import {TensorboardLogsTemplateComponent} from '../ai-model/ai-model-template/tensorboard-logs-template.component';
 import {CsvCollectionTemplateComponent} from '../csv-collection/csv-collection-template/csv-collection-template.component';
 import {NotebookTemplateComponent} from '../notebook/notebook-template/notebook-template.component';
 import {GenericDataTemplateComponent} from '../generic-data/generic-data-template/generic-data-template.component';
@@ -60,8 +60,8 @@ export class DynamicContentComponent implements OnDestroy, AfterViewInit {
       case "pyramid":
         dynamicComponent = PyramidTemplateComponent;
         break;
-      case "tensorflowmodel":
-        dynamicComponent = TensorflowModelTemplateComponent;
+      case "aimodel":
+        dynamicComponent = AiModelTemplateComponent;
         break;
       case "tensorboardlogs":
         dynamicComponent = TensorboardLogsTemplateComponent;

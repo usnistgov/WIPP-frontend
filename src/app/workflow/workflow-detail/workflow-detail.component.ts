@@ -36,7 +36,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     stitchingVector: [],
     pyramidAnnotation: [],
     pyramid: [],
-    tensorflowModel: [],
+    aiModel: [],
     tensorboardLogs: [],
     csvCollection: [],
     notebook: [],
@@ -151,7 +151,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           type === 'stitchingVector' ||
           type === 'pyramid' ||
           type === 'pyramidAnnotation' ||
-          type === 'tensorflowModel' ||
+          type === 'aiModel' ||
+          type === 'tensorflowModel' || // legacy
           type === 'csvCollection' ||
           type === 'notebook' ||
           type == 'genericData') {
@@ -275,9 +276,8 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           switch (input.type) {
             case 'collection':
             case 'stitchingVector':
-            case  'pyramidAnnotation':
+            case 'pyramidAnnotation':
             case 'pyramid':
-            case 'tensorflowModel':
             case 'csvCollection':
             case 'notebook':
             case 'genericData':
@@ -285,6 +285,13 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
               inputSchema['widget'] = 'search';
               inputSchema['format'] = input.type;
               inputSchema['getOutputs'] = () => this.jobOutputs[input.type];
+              break;
+            case 'aiModel':
+            case 'tensorflowModel': // legacy
+              inputSchema['type'] = 'string';
+              inputSchema['widget'] = 'search';
+              inputSchema['format'] = 'aiModel';
+              inputSchema['getOutputs'] = () => this.jobOutputs['aiModel'];
               break;
             case 'enum':
               inputSchema['type'] = 'string';
@@ -536,7 +543,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       stitchingVector: [],
       pyramidAnnotation: [],
       pyramid: [],
-      tensorflowModel: [],
+      aiModel: [],
       tensorboardLogs: [],
       csvCollection: [],
       notebook: [],

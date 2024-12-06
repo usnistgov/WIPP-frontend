@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
           {
             label: 'AI models',
             icon: 'pi pi-sparkles',
-            routerLink: '/tensorflow-models'
+            routerLink: '/ai-models'
           },
           {
             label: 'Image annotations',

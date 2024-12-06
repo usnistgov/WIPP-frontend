@@ -1,0 +1,268 @@
+<h1 class="wipp-title">
+  AI Model: {{aiModel.name}}
+  <div style="float: right;">
+    <p-button icon="pi pi-download" (click)="openDownload(aiModel._links.download.href)" pTooltip="Download as zip"
+      tooltipPosition="left" [outlined]="true">
+    </p-button>
+    <p-button icon="pi pi-globe" *ngIf="!aiModel.publiclyShared && canEdit()" type="button"
+      pTooltip="Make collection public" tooltipPosition="left" [outlined]="true" (click)="makePublicAiModel();">
+    </p-button>
+    <p-button icon="pi pi-trash" type="button" pTooltip="Delete AI model" tooltipPosition="left" [outlined]="true"
+      (click)="popupDeleteModel();">
+    </p-button>
+  </div>
+</h1>
+
+<!-- AI Model Details -->
+
+<p-fieldset legend="AI Model Details" [toggleable]="true">
+  <div class="grid nested-grid">
+    <div class="col-12 md:col-6">
+      <div class="grid">
+        <div class="col-3 py-1 font-semibold">
+          Name:
+        </div>
+        <div class="col-9 py-1">
+          {{aiModel.name}}
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Framework:
+        </div>
+        <div class="col-9 py-1">
+          {{aiModel.framework}}
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Creation date:
+        </div>
+        <div class="col-9 py-1">
+          {{aiModel.creationDate | date}}
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Owner:
+        </div>
+        <div class="col-9 py-1">
+          {{aiModel.owner}}
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Source:
+        </div>
+        <div class="col-9 py-1">
+          <a *ngIf="job; else not_applicable" (click)="displayJobModal(job.id)" class="wipp-link" pTooltip="Show Job"
+            placement="left">
+            {{job.name}}
+          </a>
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Tensorboard Logs:
+        </div>
+        <div class="col-9 py-1">
+          <a *ngIf="tensorboardLogs; else not_applicable" href={{tensorboardLink}}
+            target="_blank">{{tensorboardLogs.name}}
+          </a>
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Visibility:
+        </div>
+        <div class="col-9 py-1">
+          <div *ngIf="aiModel.publiclyShared; else privateData">Public</div>
+          <ng-template #privateData>Private</ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-fieldset>
+
+<ng-template #not_applicable>N/A</ng-template>
+
+<!-- Tensorboard Logs Charts -->
+
+<p-fieldset legend="Tensorboard Logs Charts" [toggleable]="true" [collapsed]="true">
+  <div class="grid nested-grid" *ngIf="!tensorboardPlotable">
+    <div class="col-12 md:col-6">
+      <p>This AI model did not produce a tensorboard.</p>
+      <p>There are therefore no tensorboard results to display.</p>
+      <p>If you wish to obtain tensorboard results, please modify the plugin manifest used and restart your training.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid nested-grid" *ngIf="tensorboardPlotable">
+    <div class="col-12 md:col-6">
+      <div class="grid">
+        <div class="col-3 py-1 font-semibold">
+          Name:
+        </div>
+        <div class="col-9 py-1">
+          <a *ngIf="tensorboardLogs; else not_applicable" href={{tensorboardLink}}
+            target="_blank">{{tensorboardLogs.name}}
+          </a>
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Owner:
+        </div>
+        <div class="col-9 py-1">
+          {{tensorboardLogs.owner}}
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Date:
+        </div>
+        <div class="col-9 py-1">
+          {{tensorboardLogs.creationDate}}
+        </div>
+
+        <div class="col-3 py-1 font-semibold">Accuracy chart:</div>
+        <p-chart class="col-9 py-1" type="line" [data]="chartdata_accu"></p-chart>
+
+        <div class="col-3 py-1 font-semibold">Loss chart:</div>
+        <p-chart class="col-9 py-1" type="line" [data]="chartdata_loss"></p-chart>
+      </div>
+    </div>
+  </div>
+</p-fieldset>
+
+<!-- AI Model Card -->
+
+<p-fieldset legend="AI Model Card" [toggleable]="true">
+  <div *ngIf="!aiModelCardPlotable; else displayAIModelCard" class="grid nested-grid">
+    <div class="col-12 md:col-6">
+      <p>This AI model did not have a AI model card yet.</p>
+      <div style="display: flex;">
+        <p-button label="Create" (click)="displayNewAiModelCardModel()" icon="pi pi-plus-circle"></p-button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #displayAIModelCard>
+    <div style="float: right;">
+      <p class="font-semibold">Edit card:</p>
+      <p-button icon="pi pi-times" [outlined]="true" *ngIf="this.cancel" (click)="toggleCancel()"></p-button>
+      <p-button icon="pi pi-file-edit" [outlined]="true" *ngIf="this.editing" (click)="toggleEdit()"></p-button>
+      <p-button icon="pi pi-save" [outlined]="true" *ngIf="this.save" (click)="toggleSave()"></p-button>
+ 
+      <p class="font-semibold">Export card:</p>
+      <p-dropdown [options]="aiFramework" [(ngModel)]="selectedFramework" placeholder="Select a framework" />
+      <p-button icon="pi pi-eye" (click)="displayAiModelCardModal(aiModelCard.id);"
+        pTooltip="Display AI model card for selected framework" [outlined]="true" [disabled]="!selectedFramework">
+      </p-button>
+      <p-button icon="pi pi-download" (click)="exportAiModelCard(aiModelCard.id);"
+        pTooltip="Export AI model card for selected framework" [outlined]="true" [disabled]="!selectedFramework">
+      </p-button>
+    </div>
+
+    <form [formGroup]="form" novalidate>
+
+      <div class="grid nested-grid">
+        <div class="col-12 md:col-6">
+          <div class="grid">
+            <div class="col-4 py-1 font-semibold">Version:</div>
+            <div class="col-8 py-1">{{aiModelCard.version}}</div>
+
+            <div class="col-4 py-1 font-semibold">Name:</div>
+            <div class="col-8 py-1">
+              <div class="form-group" [ngClass]="{'editing': editing}">
+                <input pInputText type="text" class="form-control" formControlName="name" />
+                <div class="value">{{ aiModelCard.name || "N/A" }}</div>
+              </div>
+            </div>
+
+            <div class="col-4 py-1 font-semibold">Date:</div>
+            <div class="col-8 py-1">{{aiModelCard.date}}</div>
+
+            <div class="col-4 py-1 font-semibold">Framework:</div>
+            <div class="col-8 py-1">{{aiModelCard.framework || "N/A"}}</div>
+
+            <div class="col-4 py-1 font-semibold">Training Data:</div>
+            <div class="col-8 py-1">
+              <details>
+                <summary>Details</summary>
+                <div class="grid" *ngFor="let item of aiModelCard.trainingData | keyvalue">
+                  <div class="col-4 py-1 font-semibold">{{item.key}}:</div>
+                  <div class="col-8 py-1"><a href="/images-collection/{{item.value}}">link</a></div>
+                </div>
+              </details>
+            </div>
+
+            <div class="col-4 py-1 font-semibold">Training Parameters:</div>
+            <div class="col-8 py-1">
+              <details>
+                <summary>Details</summary>
+                <div class="grid" *ngFor="let item of aiModelCard.trainingParameters | keyvalue">
+                  <div class="col-4 py-1 font-semibold">{{item.key}}:</div>
+                  <div class="col-8 py-1">{{item.value}}</div>
+                </div>
+              </details>
+            </div>
+
+            <div class="col-4 py-1 font-semibold">Author:</div>
+            <div class="col-8 py-1">
+              <div class="form-group" [ngClass]="{'editing': editing}">
+                <input pInputText type="text" class="form-control" formControlName="author" />
+                <div class="value">{{ aiModelCard.author || "N/A" }}</div>
+              </div>
+            </div>
+
+            <div class="col-4 py-1 font-semibold">Description:</div>
+            <div class="col-8 py-1">
+              <div class="form-group" [ngClass]="{'editing': editing}">
+                <input pInputText type="text" class="form-control" formControlName="description" />
+                <div class="value">{{ aiModelCard.description || "N/A" }}</div>
+              </div>
+            </div>
+
+            <div class="col-4 py-1 font-semibold">Citation:</div>
+            <div class="col-8 py-1">
+              <div class="form-group" [ngClass]="{'editing': editing}">
+                <input pInputText type="text" class="form-control" formControlName="citation" />
+                <div class="value">{{ aiModelCard.citation || "N/A" }}</div>
+              </div>
+            </div>
+
+            <div class="col-4 py-1 font-semibold">Operation Type:</div>
+            <div class="col-8 py-1">
+              <details>
+                <summary>Details</summary>
+                <div class="grid" *ngFor="let item of aiModelCard.operationType | keyvalue">
+                  <div class="col-4 py-1 font-semibold">{{item.key}}:</div>
+                  <div class="col-8 py-1">{{item.value}}</div>
+                </div>
+              </details>
+            </div>
+
+            <div class="col-4 py-1 font-semibold">Architecture:</div>
+            <div class="col-8 py-1">{{aiModelCard.architecture || "N/A"}}</div>
+
+            <div class="col-4 py-1 font-semibold" *ngIf="tensorboardPlotable">Training:</div>
+            <div class="col-8 py-1" *ngIf="tensorboardPlotable">
+              <details>
+                <summary>Details</summary>
+                Compute in {{ aiModelCard.training["time"] }} seconds with {{ aiModelCard.training["epochs"] }} epochs
+                <br>
+                Achieves maxAccuracy of {{ aiModelCard.training["maxAccuracy"] }} and minLoss of {{
+                aiModelCard.training["minLoss"] }}
+              </details>
+            </div>
+
+            <div class="col-4 py-1 font-semibold" *ngIf="tensorboardPlotable">Testing:</div>
+            <div class="col-8 py-1" *ngIf="tensorboardPlotable">
+              <details>
+                <summary>Details</summary>
+                Compute in {{ aiModelCard.testing["time"] }} seconds with {{ aiModelCard.testing["epochs"] }} epochs <br>
+                Achieves maxAccuracy of {{ aiModelCard.testing["maxAccuracy"] }} and minLoss of {{
+                aiModelCard.testing["minLoss"] }}
+              </details>
+            </div>
+
+            <div class="col-4 py-1 font-semibold">License:</div>
+            <div class="col-8 py-1">{{aiModelCard.license || "N/A"}}</div>
+          </div>
+        </div>
+      </div>
+
+      
+    </form>
+
+  </ng-template>
+</p-fieldset>
+
+<p-confirmDialog />
+<p-toast />

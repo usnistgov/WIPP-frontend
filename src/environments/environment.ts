@@ -8,7 +8,7 @@ export const environment = {
   version: packageInfo.version,
   apiRootUrl: 'http://localhost:8080/api',
   keycloak: {
-    url: 'http://localhost:8081/auth',
+    url: 'http://localhost:8081',
     realm: 'WIPP',
     clientId: 'wipp-public-client'
   },

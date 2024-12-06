@@ -5,13 +5,13 @@ import {UnknownDynamicComponent} from './unknown-dynamic.component';
 
 @NgModule({
     imports: [
-        CommonModule,
+      CommonModule,
     ],
     declarations: [
-        DynamicContentComponent, UnknownDynamicComponent
+      DynamicContentComponent, UnknownDynamicComponent
     ],
     exports: [
-        DynamicContentComponent
+      DynamicContentComponent
     ]
 })
 export class DynamicContentModule { }

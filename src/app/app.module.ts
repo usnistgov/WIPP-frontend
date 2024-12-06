@@ -1,11 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './not-found/not-found.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ImagesCollectionModule } from './images-collection/images-collection.module';
 import { PluginModule } from './plugin/plugin.module';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
 import {WorkflowModule} from './workflow/workflow.module';
@@ -17,9 +17,9 @@ import {NotebookModule} from './notebook/notebook.module';
 import {AppConfigService} from './app-config.service';
 import {appInitializerFactory} from './app-init-factory';
 import { KeycloakService } from './services/keycloak/keycloak.service';
-import { KeycloakInterceptorService} from './services/keycloak/keycloak.interceptor.service';
+import { KeycloakInterceptorService } from './services/keycloak/keycloak.interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import {PyramidVisualizationModule} from './pyramid-visualization/pyramid-visualization.module';
+import { PyramidVisualizationModule } from './pyramid-visualization/pyramid-visualization.module';
 import { ForbiddenAccessComponent } from './forbidden-access/forbidden-access.component';
 import { GenericDataModule } from './generic-data/generic-data.module';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
@@ -48,7 +48,8 @@ import {ImageAnnotationsModule} from './image-annotations/image-annotations.modu
     StitchingVectorModule,
     PyramidModule,
     PyramidVisualizationModule,
-    TensorflowModelModule,
+    AiModelModule,
+    AiModelCardModule,
     CsvCollectionModule,
     NotebookModule,
     GenericDataModule,
@@ -79,7 +80,7 @@ import {ImageAnnotationsModule} from './image-annotations/image-annotations.modu
     },
     KeycloakService,
     ConfirmDialogService,
-    {provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy}
+    { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy }
   ],
   bootstrap: [AppComponent]
 })
