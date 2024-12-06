@@ -281,27 +281,6 @@ export class AiModelDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-
-  /*modelCardUploader(event: { files: any[]; }) {
-    // read file 
-    this.myreader(event.files[0], (err, aimodelcard) => {
-      aimodelcard["version"] = this.aiModel.creationDate;
-      aimodelcard["owner"] = this.aiModel.owner;
-      aimodelcard["aiModelId"] = this.aiModelId;
-      aimodelcard["name"] = this.aiModel.name;
-
-      // create aimodelcard
-      this.aiModelCardService.postAiModelCard(aimodelcard)
-        .subscribe(aimodelcard_response => {
-          this.aiModelCard = aimodelcard_response;
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Model card uploaded' });
-          this.aiModelCardPlotable = true;
-        }, err => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Upload model card failed' });
-        });
-    });
-  }*/
-
   toggleEdit() {
     this.editing = !this.editing;
     this.cancel = !this.cancel;
