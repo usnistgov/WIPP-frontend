@@ -267,7 +267,7 @@ export class AiModelDetailComponent implements OnInit, OnDestroy {
         // retrieve file name
         const filename: string = contentDisposition.split('; filename="')[1].trim();
         // save file
-        saveAs(response.body, filename);
+        //saveAs(response.body, filename); // TODO, TOFIX
       });
   }
 
@@ -301,7 +301,7 @@ export class AiModelDetailComponent implements OnInit, OnDestroy {
     this.aiModelCard.author = this.form.get('author').value;
     this.aiModelCard.description = this.form.get('description').value;
     this.aiModelCard.citation = this.form.get('citation').value;
-   
+
     this.aiModelCardService.updateAiModelCard(this.aiModelCard)
       .subscribe(mc => this.aiModelCard = mc);
   }
