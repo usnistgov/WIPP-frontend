@@ -2,7 +2,7 @@
   {{csvCollection.name}}
   <div style="display: inline-block;">
     <p-button icon="pi pi-download"
-              (click)="openDownload(csvCollection._links.download.href)"
+              (click)="downloadAllCsvFiles(csvCollection._links.download.href)"
               pTooltip="Download as zip"
               tooltipPosition="left"
               [outlined]="true">
@@ -174,11 +174,16 @@
         </td>
         <td>{{ csvFile.fileSize | bytes }}</td>
         <td>
+          <p-button icon="pi pi-eye" [outlined]="true" label="Show" size="small"
+                    *ngIf="!csvCollection.sourceJob && canEdit()"
+                    (click)="showSingleCsvFile(csvFile);"/>
+          <p-button icon="pi pi-download" [outlined]="true" label="Download" size="small"
+                    (click)="downloadSingleCsvFile(csvFile);"/>
           <p-button icon="pi pi-trash" [outlined]="true" label="Delete" size="small"
                     class="flex-auto md:flex-initial white-space-nowrap"
                     severity="danger"
-                    *ngIf="!csvCollection.locked  && !csvCollection.sourceJob && canEdit()"
-                    (click)="deleteCsvFile(csvFile);"/>
+                    *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()"
+                    (click)="deleteSingleCsvFile(csvFile);"/>
         </td>
       </tr>
     </ng-template>
@@ -186,3 +191,4 @@
 </div>
 
 <ng-template #jobNonAvailable>Uploaded</ng-template>
+<p-toast />
