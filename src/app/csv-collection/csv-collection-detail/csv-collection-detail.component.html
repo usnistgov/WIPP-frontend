@@ -4,13 +4,13 @@
     <p-button icon="pi pi-download"
               (click)="downloadAllCsvFiles(csvCollection._links.download.href)"
               pTooltip="Download as zip"
-              tooltipPosition="left"
-              [outlined]="true">
+              tooltipPosition="left">
     </p-button>
     <p-button icon="pi pi-trash" *ngIf="canEdit() && !csvCollection.locked && !csvCollection.sourceJob" type="button"
               pTooltip="Delete collection"
               tooltipPosition="left"
               [outlined]="true"
+              severity="danger"
               (click)="deleteCollection();">
     </p-button>
     <p-button icon="pi pi-lock-open" *ngIf="canEdit() && !csvCollection.locked && !csvCollection.sourceJob" type="button"
@@ -127,67 +127,21 @@
   </table>
 </div>
 
-<h2 style="margin-top: 2%">CSV Collection files</h2>
-<div class="card">
-  <div class='flex flex-column md:flex-row md:justify-content-between py-2'>
-    <div class='mb-4 md:mb-0 vertical-align-baseline'>
-      Total size: {{csvCollection.csvTotalSize | bytes}}
-    </div>
-    <div class='mb-3 md:mb-0' style="position:relative">
-    </div>
-    <div class="mb-3 md:mb-0 vertical-align-middle">
-    </div>
-    <div class='mb-2 md:mb-0'>
-      <p-button icon="pi pi-trash" *ngIf="canEdit() && !csvCollection.locked && !csvCollection.sourceJob"
-                size="small"
-                severity="danger"
-                pTooltip="Delete all files"
-                placement="left"
-                (click)="deleteAllCsvFiles()">
-      </p-button>
-    </div>
-  </div>
-  <p-table [value]="csv" [lazy]="true" *ngIf="csvCollection.id"
-           (onLazyLoad)="getCsvFiles($event)"
-           dataKey="id"
-           [tableStyle]="{ 'min-width': '75rem' }"
-           [paginator]="true"
-           [rows]="10"
-           [rowsPerPageOptions]="[10, 25, 50]"
-           [totalRecords]="resultsLengthCsv">
+<h2 style="margin-top: 2%">CSV Collection files ({{csvCollection.csvTotalSize | bytes}})</h2>
+
+<div *ngFor="let file of this.csv">
+  <p-fieldset [toggleable]=true [collapsed]=false>
     <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="fileName">
-          Name <p-sortIcon field="name" />
-        </th>
-        <th pSortableColumn="fileSize">
-          Size <p-sortIcon field="fileSize" />
-        </th>
-        <th>Actions</th>
-      </tr>
+      {{file.fileName}} ({{file.fileSize | bytes}})
     </ng-template>
-    <ng-template pTemplate="body" let-csvFile>
-      <tr>
-        <td>
-          {{ csvFile.fileName }}
-          <span [hidden]="!csvFile.importError"><br>{{csvFile.importError}}</span>
-        </td>
-        <td>{{ csvFile.fileSize | bytes }}</td>
-        <td>
-          <p-button icon="pi pi-eye" [outlined]="true" label="Show" size="small"
-                    *ngIf="!csvCollection.sourceJob && canEdit()"
-                    (click)="showSingleCsvFile(csvFile);"/>
-          <p-button icon="pi pi-download" [outlined]="true" label="Download" size="small"
-                    (click)="downloadSingleCsvFile(csvFile);"/>
-          <p-button icon="pi pi-trash" [outlined]="true" label="Delete" size="small"
-                    class="flex-auto md:flex-initial white-space-nowrap"
-                    severity="danger"
-                    *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()"
-                    (click)="deleteSingleCsvFile(csvFile);"/>
-        </td>
-      </tr>
+    <ng-template pTemplate="content">
+      <p-button icon="pi pi-eye" [outlined]="true" label="Preview" size="small" (click)="showSingleCsvFile(file);" />
+      <p-button icon="pi pi-download" [outlined]="true" label="Download" size="small" (click)="downloadSingleCsvFile(file);" />
+      <p-button icon="pi pi-trash" [outlined]="true" label="Delete" size="small" severity="danger"
+          *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()"
+          (click)="deleteSingleCsvFile(file);"/>
     </ng-template>
-  </p-table>
+  </p-fieldset>
 </div>
 
 <ng-template #jobNonAvailable>Uploaded</ng-template>
