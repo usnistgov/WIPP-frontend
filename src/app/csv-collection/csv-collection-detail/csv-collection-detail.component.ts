@@ -225,6 +225,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
     this.csvCollectionService.deleteCsvFile(csv).subscribe(result => {
       this.$throttleRefresh.next();
     });
+
+    this.messageService.add({ severity: 'success', summary: 'Delete', detail: 'File ' + csv.fileName + ' deleted' });
   }
 
   canEdit(): boolean {

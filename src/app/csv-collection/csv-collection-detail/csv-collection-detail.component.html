@@ -1,41 +1,24 @@
 <h1 class="wipp-title">
   {{csvCollection.name}}
   <div style="display: inline-block;">
-    <p-button icon="pi pi-download"
-              (click)="downloadAllCsvFiles(csvCollection._links.download.href)"
-              pTooltip="Download as zip"
-              tooltipPosition="left">
+    <p-button icon="pi pi-download" (click)="downloadAllCsvFiles(csvCollection._links.download.href)"
+      pTooltip="Download as zip" tooltipPosition="left">
     </p-button>
     <p-button icon="pi pi-trash" *ngIf="canEdit() && !csvCollection.locked && !csvCollection.sourceJob" type="button"
-              pTooltip="Delete collection"
-              tooltipPosition="left"
-              [outlined]="true"
-              severity="danger"
-              (click)="deleteCollection();">
+      pTooltip="Delete collection" tooltipPosition="left" [outlined]="true" severity="danger"
+      (click)="deleteCollection();">
     </p-button>
-    <p-button icon="pi pi-lock-open" *ngIf="canEdit() && !csvCollection.locked && !csvCollection.sourceJob" type="button"
-              pTooltip="Lock collection"
-              tooltipPosition="left"
-              [outlined]="true"
-              (click)="lockCollection();">
+    <p-button icon="pi pi-lock-open" *ngIf="canEdit() && !csvCollection.locked && !csvCollection.sourceJob"
+      type="button" pTooltip="Lock collection" tooltipPosition="left" [outlined]="true" (click)="lockCollection();">
     </p-button>
     <p-button icon="pi pi-lock" *ngIf="csvCollection.locked || csvCollection.sourceJob" type="button"
-              pTooltip="Collection locked"
-              tooltipPosition="left"
-              [disabled]="true"
-              [outlined]="true" >
+      pTooltip="Collection locked" tooltipPosition="left" [disabled]="true" [outlined]="true">
     </p-button>
     <p-button icon="pi pi-globe" *ngIf="!csvCollection.publiclyShared && canEdit()" type="button"
-              pTooltip="Make collection public"
-              tooltipPosition="left"
-              [outlined]="true"
-              (click)="makePublicCollection();">
+      pTooltip="Make collection public" tooltipPosition="left" [outlined]="true" (click)="makePublicCollection();">
     </p-button>
-    <a *ngIf="plotsUiLink" class="p-button p-button-outlined p-button-icon-only"
-              pTooltip="Visualize in Plots UI"
-              tooltipPosition="left"
-              [href]="plotsUiLink"
-              target="_blank">
+    <a *ngIf="plotsUiLink" class="p-button p-button-outlined p-button-icon-only" pTooltip="Visualize in Plots UI"
+      tooltipPosition="left" [href]="plotsUiLink" target="_blank">
       <span class="p-button-icon pi pi-check"></span>
     </a>
   </div>
@@ -67,10 +50,8 @@
           Source:
         </div>
         <div class="col-9 py-1">
-          <a *ngIf="job; else jobNonAvailable" (click)="displayJobModal(job.id)"
-             class="wipp-link"
-             pTooltip="Show Job"
-             placement="left">
+          <a *ngIf="job; else jobNonAvailable" (click)="displayJobModal(job.id)" class="wipp-link" pTooltip="Show Job"
+            placement="left">
             {{job.name}}
           </a>
         </div>
@@ -85,9 +66,8 @@
     </div>
     <div class="col-12 md:col-6">
       <div class="block p-1 flex justify-content-left" *ngIf="!(csvCollection.locked || csvCollection.sourceJob)">
-        <button pButton icon="pi pi-file-plus"
-                class="p-button p-button-secondary"
-                label="Add files to collection"  #browseBtn>
+        <button pButton icon="pi pi-file-plus" class="p-button p-button-secondary" label="Add files to collection"
+          #browseBtn>
         </button>
       </div>
     </div>
@@ -103,47 +83,57 @@
   </div>
   <table class="p-datatable">
     <thead class="p-datatable-thead">
-    <tr>
-      <th>#</th>
-      <th>File name</th>
-      <th>Size</th>
-      <th>Progress</th>
-      <th>Error</th>
-    </tr>
+      <tr>
+        <th>#</th>
+        <th>File name</th>
+        <th>Size</th>
+        <th>Progress</th>
+        <th>Error</th>
+      </tr>
     </thead>
     <tbody class="p-datatable-tbody">
-    <tr *ngFor="let file of flowHolder.files | slice:0:10; let index=index">
-      <td class="vert-align">{{index + 1}}</td>
-      <td class="vert-align">{{file.name}}</td>
-      <td class="vert-align">{{file.size | bytes}}</td>
-      <td *ngIf='!file.error'>
-        <p-progressBar aria-label="Upload progress" showValue='false' [value]="file.progress()*100.0" />
-      </td>
-      <td>
-        <span *ngIf='file.error'>{{file.errorMesage|| "Unknown upload error."}}</span>
-      </td>
-    </tr>
+      <tr *ngFor="let file of flowHolder.files | slice:0:10; let index=index">
+        <td class="vert-align">{{index + 1}}</td>
+        <td class="vert-align">{{file.name}}</td>
+        <td class="vert-align">{{file.size | bytes}}</td>
+        <td *ngIf='!file.error'>
+          <p-progressBar aria-label="Upload progress" showValue='false' [value]="file.progress()*100.0" />
+        </td>
+        <td>
+          <span *ngIf='file.error'>{{file.errorMesage|| "Unknown upload error."}}</span>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
 
 <h2 style="margin-top: 2%">CSV Collection files ({{csvCollection.csvTotalSize | bytes}})</h2>
 
-<div *ngFor="let file of this.csv">
-  <p-fieldset [toggleable]=true [collapsed]=false>
+<div class="card">
+  <p-table [value]="csv" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
-      {{file.fileName}} ({{file.fileSize | bytes}})
+        <tr>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Actions</th>
+        </tr>
     </ng-template>
-    <ng-template pTemplate="content">
-      <p-button icon="pi pi-eye" [outlined]="true" label="Preview" size="small"
-                (click)="showSingleCsvFile(file);" />
-      <p-button icon="pi pi-download" [outlined]="true" label="Download" size="small"
-                (click)="downloadSingleCsvFile(csvCollection._links.csvCollection.href, file.fileName);" />
-      <p-button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()"
+    <ng-template pTemplate="body" let-csv>
+        <tr>
+            <td>{{ csv.fileName }}</td>
+            <td>{{ csv.fileSize | bytes }}</td>
+            <td>
+              <p-button icon="pi pi-eye" [outlined]="true" label="Preview" size="small"
+                (click)="showSingleCsvFile(csv);" />
+              <p-button icon="pi pi-download" [outlined]="true" label="Download" size="small"
+                (click)="downloadSingleCsvFile(csvCollection._links.csvCollection.href, csv.fileName);" />
+              <p-button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()"
                 icon="pi pi-trash" [outlined]="true" label="Delete" size="small" severity="danger"
-                (click)="deleteSingleCsvFile(file);"/>
+                (click)="deleteSingleCsvFile(csv);"/>
+            </td>
+        </tr>
     </ng-template>
-  </p-fieldset>
+  </p-table>
 </div>
 
 <ng-template #jobNonAvailable>Uploaded</ng-template>
