@@ -135,11 +135,13 @@
       {{file.fileName}} ({{file.fileSize | bytes}})
     </ng-template>
     <ng-template pTemplate="content">
-      <p-button icon="pi pi-eye" [outlined]="true" label="Preview" size="small" (click)="showSingleCsvFile(file);" />
-      <p-button icon="pi pi-download" [outlined]="true" label="Download" size="small" (click)="downloadSingleCsvFile(file);" />
-      <p-button icon="pi pi-trash" [outlined]="true" label="Delete" size="small" severity="danger"
-          *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()"
-          (click)="deleteSingleCsvFile(file);"/>
+      <p-button icon="pi pi-eye" [outlined]="true" label="Preview" size="small"
+                (click)="showSingleCsvFile(file);" />
+      <p-button icon="pi pi-download" [outlined]="true" label="Download" size="small"
+                (click)="downloadSingleCsvFile(csvCollection._links.csvCollection.href, file.fileName);" />
+      <p-button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()"
+                icon="pi pi-trash" [outlined]="true" label="Delete" size="small" severity="danger"
+                (click)="deleteSingleCsvFile(file);"/>
     </ng-template>
   </p-fieldset>
 </div>

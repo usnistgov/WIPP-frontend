@@ -63,8 +63,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',
-      headers: function(file, chunk, isTest) {
-        return {Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}`};
+      headers: function (file, chunk, isTest) {
+        return { Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}` };
       }
     });
     this.$throttleRefresh.pipe(
@@ -236,10 +236,14 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
       window.location.href = downloadUrl['url']);
   }
 
-  downloadSingleCsvFile(csv: Csv): void {
-    // TODO
-    this.messageService.add({ severity: 'error', summary: 'TODO', detail: 'TODO' });
+  downloadSingleCsvFile(url: string, filename: string) {
+    let path = url + "/csv/" + filename + "/downloadRequest";
 
+    this.csvCollectionService.startDownload(path).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']
+    );
+
+    this.messageService.add({ severity: 'success', summary: 'Download', detail: 'File ' + filename + ' downloaded!' });
   }
 
   getCsvContent(csv: Csv): Observable<HttpResponse<Blob>> {
