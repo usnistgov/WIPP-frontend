@@ -267,7 +267,7 @@ export class AiModelDetailComponent implements OnInit, OnDestroy {
         // retrieve file name
         const filename: string = contentDisposition.split('; filename="')[1].trim();
         // save file
-        //saveAs(response.body, filename); // TODO, TOFIX
+        saveAs(response.body, filename);
       });
   }
 
