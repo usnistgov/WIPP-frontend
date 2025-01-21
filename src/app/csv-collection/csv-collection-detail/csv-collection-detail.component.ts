@@ -246,20 +246,24 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
     this.messageService.add({ severity: 'success', summary: 'Download', detail: 'File ' + filename + ' downloaded!' });
   }
 
-  getCsvContent(csv: Csv): Observable<HttpResponse<Blob>> {
-    return this.csvCollectionService.getContent(csv);
-  }
-
   showSingleCsvFile(csv: Csv): void {
-    this.getCsvContent(csv)
+    this.csvCollectionService.getContent(csv)
       .subscribe(async (response: HttpResponse<Blob>) => {
+        // get CSV file in form of byte[] from backend
         let body: string = await response.body["text"]();
-        let content: string[] = body.split(',');
+
+        let content: string[][] = body.split('\n') // get each line of the CSV
+          .map(v => v.split(',')); // get each element of each line
+
+        let cols = content[0]; // first CSV line = columns
+        content.shift(); // remove first line of content
+
+        // popup
         this.dialogService.open(CsvCollectionDetailModalComponent, {
           header: "CSV file content",
           position: "top",
-          width: "50vw",
-          data: { content: content }
+          width: "60vw",
+          data: { lines: content, cols: cols }
         })
       });
   }

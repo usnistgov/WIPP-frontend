@@ -1,5 +1,25 @@
 <div class="card">
-    <div *ngFor="let c of content">
-        <p> {{ c }} </p>
-    </div>
+    <p>Total number of lines: <b>{{linesLength}}</b> | Total number of columns: <b>{{colsLength}}</b></p>
+    <p-table
+        styleClass="p-datatable-striped"
+        [columns]="cols"
+        [value]="lines"
+        [paginator]="true"
+        [rows]="8"
+        [tableStyle]="{ 'min-width': '60rem' }">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{ col }}
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns; index as i">
+                    {{ rowData[i] }}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
 </div>

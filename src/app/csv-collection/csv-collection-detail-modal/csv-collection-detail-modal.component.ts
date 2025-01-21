@@ -11,7 +11,12 @@ import { DialogService, DynamicDialogComponent, DynamicDialogRef } from "primeng
 export class CsvCollectionDetailModalComponent implements OnInit {
 
     instance: DynamicDialogComponent | undefined;
-    content: string[];
+
+    lines: string[];
+    linesLength: number;
+
+    cols: string[];
+    colsLength: number;
 
     constructor(
         public modalReference: DynamicDialogRef,
@@ -22,7 +27,11 @@ export class CsvCollectionDetailModalComponent implements OnInit {
 
     ngOnInit() {
         if (this.instance && this.instance.data) {
-            this.content = this.instance.data["content"];
+            this.lines = this.instance.data["lines"];
+            this.linesLength = this.lines.length;
+
+            this.cols = this.instance.data["cols"];
+            this.colsLength = this.cols.length;
         }
     }
 }
