@@ -19,6 +19,9 @@ import OpenSeadragon from 'openseadragon';
 import {MessageService, SelectItem} from 'primeng/api';
 import {environment} from '../../../environments/environment';
 import {DialogService} from 'primeng/dynamicdialog';
+import {ImageAnnotationsService} from '../../image-annotations/image-annotations.service';
+import {ImagesCollectionCreateAnnotTaskComponent} from '../images-collection-create-annot-task/images-collection-create-annot-task.component';
+import {ImageAnnotationsCollection} from '../../image-annotations/image-annotations-collection';
 
 @Component({
   selector: 'app-images-collection-detail',
@@ -75,6 +78,8 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
   selectedImage: Image = undefined;
   osdViewer: OpenSeadragon.Viewer | undefined;
 
+  annotationsCollection: ImageAnnotationsCollection[];
+
   @ViewChild('browseBtn') browseBtn: ElementRef;
   @ViewChild('browseDirBtn') browseDirBtn: ElementRef;
   @ViewChild('dropArea') dropArea: ElementRef;
@@ -92,6 +97,7 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     private dialogService: DialogService,
     private messageService: MessageService,
     private imagesCollectionService: ImagesCollectionService,
+    private imageAnnotationsService: ImageAnnotationsService,
     private appConfigService: AppConfigService,
     private keycloakService: KeycloakService,
     private confirmDialogService: ConfirmDialogService,
@@ -540,6 +546,21 @@ export class ImagesCollectionDetailComponent implements OnInit, AfterViewInit {
     this.imagesCollectionService.getMetadataFiles(this.imagesCollection, params).subscribe(val =>
       this.metadataFiles2 = val.data
     );
+  }
+
+  annotate() {
+    this.dialogService.open(ImagesCollectionCreateAnnotTaskComponent, {
+      header: 'Create annotation task',
+      position: 'top',
+      width: '50vw',
+      data: {
+        imagesCollectionId: this.imageCollectionId
+      },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw'
+      }
+    });
   }
 
   ngOnDestroy() {

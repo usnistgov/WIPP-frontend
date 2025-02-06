@@ -1,0 +1,81 @@
+<h1 class="wipp-title">
+  {{imageAnnotationsCollection.name}}
+</h1>
+
+<p-fieldset legend="Details" [toggleable]="true">
+  <div class="grid nested-grid">
+    <div class="col-12 md:col-6">
+      <div class="grid">
+        <div class="col-3 py-1 font-semibold">
+          Name:
+        </div>
+        <div class="col-9 py-1">
+          {{imageAnnotationsCollection.name}}
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Creation date:
+        </div>
+        <div class="col-9 py-1">
+          {{imageAnnotationsCollection.creationDate | date}}
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Owner:
+        </div>
+        <div class="col-9 py-1">
+          {{imageAnnotationsCollection.owner}}
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Source:
+        </div>
+        <div class="col-9 py-1">
+          <a *ngIf="job; else jobNonAvailable" (click)="displayJobModal(job.id)"
+             class="wipp-link"
+             pTooltip="Show Job"
+             placement="left">
+            {{job.name}}
+          </a>
+        </div>
+        <div class="col-3 py-1 font-semibold">
+          Visibility:
+        </div>
+        <div class="col-9 py-1">
+          <div *ngIf="imageAnnotationsCollection.publiclyShared; else privateData">Public</div>
+          <ng-template #privateData>Private</ng-template>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</p-fieldset>
+
+<h2 style="margin-top: 2%">Annotation files</h2>
+<div class="card">
+  <p-table [value]="annotations" [lazy]="true" *ngIf="imageAnnotationsCollection.id"
+           (onLazyLoad)="getAnnotations($event)"
+           dataKey="id"
+           [tableStyle]="{ 'min-width': '75rem' }"
+           [paginator]="true"
+           [rows]="10"
+           [rowsPerPageOptions]="[10, 25, 50]"
+           [totalRecords]="resultsLength">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="imageFileName">
+          Image <p-sortIcon field="imageFileName" />
+        </th>
+        <th pSortableColumn="pending">
+          Pending <p-sortIcon field="pending" />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-annot>
+      <tr>
+        <td>{{ annot.imageFileName }}</td>
+        <td>{{ annot.pending }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<ng-template #jobNonAvailable>Uploaded</ng-template>
+<ng-template #nonApplicable>N/A</ng-template>
