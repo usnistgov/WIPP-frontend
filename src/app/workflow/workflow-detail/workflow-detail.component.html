@@ -125,7 +125,7 @@
       <ng-template #nodeTemplate let-node>
 
         <!--name of this node-->
-        <svg:g class="node" (click)="displayJobModal(node.id)">
+        <svg:g class="node" (click)="displayJobModal(node.id, node.data.color)">
           <svg:rect
             [attr.width]="node.dimension.width"
             [attr.height]="node.dimension.height"
