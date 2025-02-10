@@ -1,22 +1,22 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
-import {PluginService} from '../../plugin/plugin.service';
-import {WorkflowService} from '../workflow.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Workflow} from '../workflow';
-import {forkJoin, of as observableOf, Subject} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {Job} from '../../job/job';
-import {FormProperty, PropertyGroup} from 'ngx-schema-form/lib/model/formproperty';
-import {NgxSpinnerService} from 'ngx-spinner';
-import {AppConfigService} from '../../app-config.service';
+import { PluginService } from '../../plugin/plugin.service';
+import { WorkflowService } from '../workflow.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Workflow } from '../workflow';
+import { forkJoin, of as observableOf, Subject } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { JobDetailComponent } from '../../job/job-detail/job-detail.component';
+import { Job } from '../../job/job';
+import { FormProperty, PropertyGroup } from 'ngx-schema-form/lib/model/formproperty';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { AppConfigService } from '../../app-config.service';
 import urlJoin from 'url-join';
-import {JobService} from '../../job/job.service';
-import {dataMap} from '../../data-service';
-import {WorkflowNewComponent} from '../workflow-new/workflow-new.component';
-import {KeycloakService} from '../../services/keycloak/keycloak.service';
-import {DialogService} from 'primeng/dynamicdialog';
-import {MessageService} from 'primeng/api';
+import { JobService } from '../../job/job.service';
+import { dataMap } from '../../data-service';
+import { WorkflowNewComponent } from '../workflow-new/workflow-new.component';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-workflow-detail',
@@ -207,12 +207,12 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
           this.messageService.add({ severity: 'error', summary: 'Workflow submission failed', detail: error.error });
         }
       ).add(() => {
-      this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
-        this.workflow = workflow;
-        this.updateArgoUrl();
-        this.spinner.hide(); // if submission was successful, spinner is still spinning
+        this.workflowService.getWorkflow(this.workflowId).subscribe(workflow => {
+          this.workflow = workflow;
+          this.updateArgoUrl();
+          this.spinner.hide(); // if submission was successful, spinner is still spinning
+        });
       });
-    });
   }
 
   copyWorkflow() {
@@ -231,9 +231,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-   refreshPage() {
+  refreshPage() {
     window.location.reload();
-   }
+  }
 
   generateSchema(pluginList) {
     pluginList.forEach(plugin => {
@@ -395,18 +395,25 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  displayJobModal(jobId: string) {
+  displayJobModal(jobId: string, color: string) {
     this.dialogService.open(JobDetailComponent, {
       header: 'Job detail',
       position: 'top',
-      width: '50vw',
+      modal: false,
+      draggable: true,
+      style: {
+        borderStyle: 'solid',
+        borderWidth: 'medium',
+        borderColor: color,
+      },
       data: {
-        jobId: jobId
+        jobId: jobId,
       },
       breakpoints: {
         '960px': '75vw',
         '640px': '90vw'
-      }
+      },
+      duplicate: true
     });
   }
 
@@ -426,9 +433,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteJob(jobId: string) {
-    const job: Job  = this.jobs.find(jobA => jobA.id === jobId);
+    const job: Job = this.jobs.find(jobA => jobA.id === jobId);
     const jobDependencies = this.getDependencies(jobId);
-    let text = 'Are you sure you want to delete the job ' + job.name + '? \n' ;
+    let text = 'Are you sure you want to delete the job ' + job.name + '? \n';
     if (jobDependencies) {
       text += 'This job has dependencies which will be deleted too \n ';
     }
@@ -452,67 +459,68 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
 
   populateAndOpenCopyModal(jobId: string) {
     this.jobService.getJob(jobId).subscribe(jobToCopy => {
-        this.jobService.getPlugin(jobToCopy.wippExecutable).subscribe(plugin => {
-          this.selectedSchema = this.pluginList.find(x => x.id === plugin.id);
-          if (this.editMode) {
-            this.jobModel['id'] = jobId;
-          }
-          this.jobModel['taskName'] = jobToCopy.name.replace(this.workflow.name + '-', '');
-          if (!this.editMode) {
-            this.jobModel['taskName'] += '-copy';
-          }
-          this.jobModel['inputs'] = {};
-          const requests = [];
-          for (const input of Object.keys(jobToCopy.parameters)) {
-            // if input to copy is an existing WIPP object
-            if (this.selectedSchema.properties.inputs.properties[input]['widget']
-              && (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
-                || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search')) {
-              if (jobToCopy.parameters[input].indexOf('{') === -1) {
-                const id = jobToCopy.parameters[input];
-                // Resolve AbstractFactory
-                const injectable = dataMap.get(this.selectedSchema.properties.inputs.properties[input]['format']);
-                // Inject service
-                this.service = this.injector.get(injectable);
-                requests.push(this.service.getById(id).pipe(map(response => {
-                    response['data'] = response;
-                    response['inputName'] = input;
-                    return response;
-                  })
-                ));
-              } else {
-                // if input to copy is a WIPP object not created yet (output of a previous step not executed)
-                this.jobModel['inputs'][input] = {};
-                this.jobModel['inputs'][input]['id'] = jobToCopy.parameters[input];
-                const prevId = jobToCopy.parameters[input].substring(3, jobToCopy.parameters[input].indexOf('.'));
-                const prevOutputName = jobToCopy.parameters[input].substring(
-                  jobToCopy.parameters[input].indexOf('.'),
-                  jobToCopy.parameters[input].length - 3
-                );
-                const prevJob = this.jobs.find(x => x.id === prevId);
-                this.jobModel['inputs'][input]['name'] = '{{ ' + prevJob.name + prevOutputName + ' }}';
-                this.jobModel['inputs'][input]['virtual'] = true;
-                this.jobModel['inputs'][input]['sourceJob'] = prevId;
-              }
-            } else if (this.selectedSchema.properties.inputs.properties[input]['type'] === 'array') {
-              // if input to copy is an array of strings joined into a single string
-              this.jobModel['inputs'][input] = jobToCopy.parameters[input] ? jobToCopy.parameters[input].split(',') : null ;
+      this.jobService.getPlugin(jobToCopy.wippExecutable).subscribe(plugin => {
+        this.selectedSchema = this.pluginList.find(x => x.id === plugin.id);
+        if (this.editMode) {
+          this.jobModel['id'] = jobId;
+        }
+        this.jobModel['taskName'] = jobToCopy.name.replace(this.workflow.name + '-', '');
+        if (!this.editMode) {
+          this.jobModel['taskName'] += '-copy';
+        }
+        this.jobModel['inputs'] = {};
+        const requests = [];
+        for (const input of Object.keys(jobToCopy.parameters)) {
+          // if input to copy is an existing WIPP object
+          if (this.selectedSchema.properties.inputs.properties[input]['widget']
+            && (this.selectedSchema.properties.inputs.properties[input]['widget'] === 'search'
+              || this.selectedSchema.properties.inputs.properties[input]['widget']['id'] === 'search')) {
+            if (jobToCopy.parameters[input].indexOf('{') === -1) {
+              const id = jobToCopy.parameters[input];
+              // Resolve AbstractFactory
+              const injectable = dataMap.get(this.selectedSchema.properties.inputs.properties[input]['format']);
+              // Inject service
+              this.service = this.injector.get(injectable);
+              requests.push(this.service.getById(id).pipe(map(response => {
+                response['data'] = response;
+                response['inputName'] = input;
+                return response;
+              })
+              ));
             } else {
-              // if input to copy is a standard type (string, int...)
-              this.jobModel['inputs'][input] = jobToCopy.parameters[input] ? jobToCopy.parameters[input] : null ;
+              // if input to copy is a WIPP object not created yet (output of a previous step not executed)
+              this.jobModel['inputs'][input] = {};
+              this.jobModel['inputs'][input]['id'] = jobToCopy.parameters[input];
+              const prevId = jobToCopy.parameters[input].substring(3, jobToCopy.parameters[input].indexOf('.'));
+              const prevOutputName = jobToCopy.parameters[input].substring(
+                jobToCopy.parameters[input].indexOf('.'),
+                jobToCopy.parameters[input].length - 3
+              );
+              const prevJob = this.jobs.find(x => x.id === prevId);
+              this.jobModel['inputs'][input]['name'] = '{{ ' + prevJob.name + prevOutputName + ' }}';
+              this.jobModel['inputs'][input]['virtual'] = true;
+              this.jobModel['inputs'][input]['sourceJob'] = prevId;
             }
+          } else if (this.selectedSchema.properties.inputs.properties[input]['type'] === 'array') {
+            // if input to copy is an array of strings joined into a single string
+            this.jobModel['inputs'][input] = jobToCopy.parameters[input] ? jobToCopy.parameters[input].split(',') : null;
+          } else {
+            // if input to copy is a standard type (string, int...)
+            this.jobModel['inputs'][input] = jobToCopy.parameters[input] ? jobToCopy.parameters[input] : null;
           }
-          if (requests.length === 0) {
-            this.open();
-          } else {forkJoin(requests).subscribe(results => {
+        }
+        if (requests.length === 0) {
+          this.open();
+        } else {
+          forkJoin(requests).subscribe(results => {
             for (const result of results) {
               this.jobModel['inputs'][result['inputName']] = result['data'];
             }
             this.open();
           });
-          }
-        });
-      }
+        }
+      });
+    }
     );
   }
 
@@ -521,11 +529,11 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
     this.nodes = [];
     this.links = [];
     for (const job of data) {
-      const node = {id: job.id, label: job.name};
+      const node = { id: job.id, label: job.name };
       this.nodes.push(node);
       if (job.dependencies.length > 0) {
-        for (let i = 0; i < job.dependencies.length; i ++) {
-          const link = {id: 'link', source: job.dependencies[i], target: job.id};
+        for (let i = 0; i < job.dependencies.length; i++) {
+          const link = { id: 'link', source: job.dependencies[i], target: job.id };
           this.links.push(link);
         }
       }
@@ -562,9 +570,9 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
       this.workflow).subscribe(workflow => {
         this.refreshPage();
       },
-      error => {
-        this.messageService.add({ severity: 'error', summary: 'Unable to set workflow to public', detail: error.error });
-      });
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Unable to set workflow to public', detail: error.error });
+        });
   }
 
   canEdit(): boolean {
@@ -572,7 +580,7 @@ export class WorkflowDetailComponent implements OnInit, OnDestroy {
   }
 
   canCreate(): boolean {
-    return(this.keycloakService.isLoggedIn());
+    return (this.keycloakService.isLoggedIn());
   }
 
   ngOnDestroy() {
