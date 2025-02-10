@@ -23,8 +23,8 @@ export class JobDetailComponent implements OnInit {
 
   jobId: string;
   job: Job;
-  showInputs = false;
-  showOutputs = false;
+  showInputs = true;
+  showOutputs = true;
   plugin: Plugin;
   inputOrigins = [];
   workflow: Workflow;
