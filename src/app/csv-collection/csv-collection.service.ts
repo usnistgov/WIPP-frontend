@@ -35,7 +35,7 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
     }
     return this.http.get<any>(this.csvCollectionUrl, httpOptions).pipe(
       map((result: any) => {
-        result.data = result._embedded.csvCollections;
+        result.data = result._embedded === undefined ? null : result._embedded.csvCollections;
         return result;
       }));
   }
@@ -55,7 +55,7 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
     httpOptions.params = httpParams;
     return this.http.get<any>(this.csvCollectionUrl + "/search/findByNameContainingIgnoreCase", httpOptions).pipe(
       map((result: any) => {
-        result.data = result._embedded.csvCollections;
+        result.data = result._embedded === undefined ? null : result._embedded.csvCollections;
         return result;
       }));
   }
@@ -68,14 +68,21 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
     return this.http.get<Job>(jobUrl);
   }
 
-  getCsvFiles(csvCollection: CsvCollection): Observable<PaginatedCsv> {
+  getCsvFiles(csvCollection: CsvCollection, params): Observable<PaginatedCsv> {
     const httpOptions = {
       headers: new HttpHeaders({ "Content-Type": "application/json" }),
       params: {}
     };
+    if (params) {
+      const page = params.pageIndex ? params.pageIndex : null;
+      const size = params.size ? params.size : null;
+      const sort = params.sort ? params.sort : null;
+      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
+      httpOptions.params = httpParams;
+    }
     return this.http.get<Csv>(`${this.csvCollectionUrl}/${csvCollection.id}/csv`, httpOptions).pipe(
       map((result: any) => {
-        result.data = result._embedded.csvs;
+        result.data = result._embedded === undefined ? null : result._embedded.csvs;
         return result;
       }));
   }
