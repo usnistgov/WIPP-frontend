@@ -36,6 +36,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
   uploadOption = 'regular';
   csv: Csv[];
   resultsLengthCsv = 0;
+  pageSize = 10;
 
   $throttleRefresh: Subject<void> = new Subject<void>();
   flowHolder: Flow.IFlow;
@@ -194,7 +195,15 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
   }
 
   getCsvFiles(event): void {
-    this.csvCollectionService.getCsvFiles(this.csvCollection/*, params*/).subscribe(paginatedResult => {
+    const sortField = event?.sortField ? event.sortField : 'fileName,asc';
+    const pageIndex = event ? event.first / event.rows : 0;
+    const pageSize = event ? event.rows : this.pageSize;
+    const params = {
+      pageIndex: pageIndex,
+      size: pageSize,
+      sort: sortField
+    };
+    this.csvCollectionService.getCsvFiles(this.csvCollection, params).subscribe(paginatedResult => {
       this.resultsLengthCsv = paginatedResult.page.totalElements;
       this.csv = paginatedResult.data;
     });
@@ -219,6 +228,7 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
     this.csvCollectionService.deleteAllCsvFiles(this.csvCollection).subscribe(result => {
       this.$throttleRefresh.next();
     });
+    this.messageService.add({ severity: 'success', summary: 'Delete', detail: 'All files' });
   }
 
   deleteSingleCsvFile(csv: Csv): void {

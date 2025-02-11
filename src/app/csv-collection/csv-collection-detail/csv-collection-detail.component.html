@@ -107,31 +107,46 @@
   </table>
 </div>
 
-<h2 style="margin-top: 2%">CSV Collection files ({{csvCollection.csvTotalSize | bytes}})</h2>
+<h2 style="margin-top: 2%">CSV Collection files</h2>
 
 <div class="card">
-  <p-table [value]="csv" [tableStyle]="{ 'min-width': '50rem' }">
+  <div class='flex flex-column md:flex-row md:justify-content-between py-2'>
+    <div class='mb-4 md:mb-0 vertical-align-baseline'>
+      Total size: {{csvCollection.csvTotalSize | bytes}}
+    </div>
+    <div class='mb-3 md:mb-0' style="position:relative">
+    </div>
+    <div class="mb-3 md:mb-0 vertical-align-middle">
+    </div>
+    <div class='mb-2 md:mb-0'>
+      <p-button icon="pi pi-trash" *ngIf="canEdit() && !csvCollection.locked && !csvCollection.sourceJob" size="small"
+        severity="danger" pTooltip="Delete all files" placement="left" (click)="deleteAllCsvFiles()">
+      </p-button>
+    </div>
+  </div>
+
+  <p-table [value]="csv" [lazy]="true" *ngIf="csvCollection.id" (onLazyLoad)="getCsvFiles($event)" dataKey="id"
+    [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+    [totalRecords]="resultsLengthCsv">
     <ng-template pTemplate="header">
-        <tr>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Actions</th>
-        </tr>
+      <tr>
+        <th pSortableColumn="fileName">Name <p-sortIcon field="name"/></th>
+        <th pSortableColumn="fileSize">Size <p-sortIcon field="fileSize"/></th>
+        <th>Actions</th>
+      </tr>
     </ng-template>
     <ng-template pTemplate="body" let-csv>
-        <tr>
-            <td>{{ csv.fileName }}</td>
-            <td>{{ csv.fileSize | bytes }}</td>
-            <td>
-              <p-button icon="pi pi-eye" [outlined]="true" label="Preview" size="small"
-                (click)="showSingleCsvFile(csv);" />
-              <p-button icon="pi pi-download" [outlined]="true" label="Download" size="small"
-                (click)="downloadSingleCsvFile(csvCollection._links.csvCollection.href, csv.fileName);" />
-              <p-button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()"
-                icon="pi pi-trash" [outlined]="true" label="Delete" size="small" severity="danger"
-                (click)="deleteSingleCsvFile(csv);"/>
-            </td>
-        </tr>
+      <tr>
+        <td>{{ csv.fileName }} <span [hidden]="!csv.importError"><br>{{csv.importError}}</span></td>
+        <td>{{ csv.fileSize | bytes }}</td>
+        <td>
+          <p-button icon="pi pi-eye" [outlined]="true" label="Preview" size="small" (click)="showSingleCsvFile(csv);" />
+          <p-button icon="pi pi-download" [outlined]="true" label="Download" size="small"
+            (click)="downloadSingleCsvFile(csvCollection._links.csvCollection.href, csv.fileName);" />
+          <p-button *ngIf="!csvCollection.locked && !csvCollection.sourceJob && canEdit()" icon="pi pi-trash"
+            [outlined]="true" label="Delete" size="small" severity="danger" (click)="deleteSingleCsvFile(csv);" />
+        </td>
+      </tr>
     </ng-template>
   </p-table>
 </div>
