@@ -1,24 +1,30 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Job} from '../../job/job';
-import {ActivatedRoute, Router} from '@angular/router';
-import {JobDetailComponent} from '../../job/job-detail/job-detail.component';
-import {CsvCollectionService} from '../csv-collection.service';
-import {CsvCollection} from '../csv-collection';
-import {AppConfigService} from '../../app-config.service';
-import urljoin from 'url-join';
-import {KeycloakService} from '../../services/keycloak/keycloak.service';
-import {Subject} from 'rxjs';
-import * as Flow from '@flowjs/flow.js';
-import {auditTime, map, switchMap} from 'rxjs/operators';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
-import {Csv} from '../csv';
-import {DialogService} from 'primeng/dynamicdialog';
-import {MessageService} from 'primeng/api';
+import { HttpResponse } from '@angular/common/http';
+import { Job } from '../../job/job';
+import { JobDetailComponent } from '../../job/job-detail/job-detail.component';
+import { CsvCollectionService } from '../csv-collection.service';
+import { CsvCollection } from '../csv-collection';
+import { CsvCollectionDetailModalComponent } from "../csv-collection-detail-modal/csv-collection-detail-modal.component";
+import { AppConfigService } from '../../app-config.service';
+import { KeycloakService } from '../../services/keycloak/keycloak.service';
+import { Csv } from '../csv';
+import urljoin from 'url-join';
+import { Observable, Subject } from 'rxjs';
+import * as Flow from '@flowjs/flow.js';
+import { auditTime, map, switchMap } from 'rxjs/operators';
+
+import { DialogService } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-csv-collection-detail',
   templateUrl: './csv-collection-detail.component.html',
   styleUrls: ['./csv-collection-detail.component.css'],
+  imports: [TableModule, ToastModule],
   providers: [DialogService, MessageService]
 })
 export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -58,8 +64,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
     this.flowHolder = new Flow({
       uploadMethod: 'POST',
       method: 'octet',
-      headers: function(file, chunk, isTest) {
-        return {Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}`};
+      headers: function (file, chunk, isTest) {
+        return { Authorization: `Bearer ${self.keycloakService.getKeycloakAuth().token}` };
       }
     });
     this.$throttleRefresh.pipe(
@@ -127,13 +133,13 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
   makePublicCollection(): void {
     this.csvCollectionService.makePublicCsvCollection(
       this.csvCollection).subscribe(csvCollection => {
-      this.csvCollection = csvCollection;
-    }, error => {
-      this.messageService.add({ severity: 'error', summary: 'Unable to change visibility to public', detail: error.error });
-    });
+        this.csvCollection = csvCollection;
+      }, error => {
+        this.messageService.add({ severity: 'error', summary: 'Unable to change visibility to public', detail: error.error });
+      });
   }
   initFlow(): void {
-    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, {'accept': '.csv'});
+    this.flowHolder.assignBrowse([this.browseBtn.nativeElement], false, false, { 'accept': '.csv' });
 
     const id = this.route.snapshot.paramMap.get('id');
     const csvUploadUrl = this.csvCollectionService.getCsvUrl(this.csvCollection);
@@ -206,8 +212,8 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
   lockCollection(): void {
     this.csvCollectionService.lockCsvCollection(
       this.csvCollection).subscribe(csvCollection => {
-      this.csvCollection = csvCollection;
-    });
+        this.csvCollection = csvCollection;
+      });
   }
 
   deleteCollection(): void {
@@ -218,25 +224,60 @@ export class CsvCollectionDetailComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
-  deleteCsvFile(csv: Csv): void {
-    this.csvCollectionService.deleteCsvFile(csv).subscribe(result => {
-      this.$throttleRefresh.next();
-    });
-  }
-
   deleteAllCsvFiles(): void {
     this.csvCollectionService.deleteAllCsvFiles(this.csvCollection).subscribe(result => {
       this.$throttleRefresh.next();
     });
+    this.messageService.add({ severity: 'success', summary: 'Delete', detail: 'All files' });
+  }
+
+  deleteSingleCsvFile(csv: Csv): void {
+    this.csvCollectionService.deleteCsvFile(csv).subscribe(result => {
+      this.$throttleRefresh.next();
+    });
+
+    this.messageService.add({ severity: 'success', summary: 'Delete', detail: 'File ' + csv.fileName + ' deleted' });
   }
 
   canEdit(): boolean {
     return this.keycloakService.canEdit(this.csvCollection);
   }
 
-  openDownload(url: string) {
+  downloadAllCsvFiles(url: string) {
     this.csvCollectionService.startDownload(url).subscribe(downloadUrl =>
       window.location.href = downloadUrl['url']);
+  }
+
+  downloadSingleCsvFile(url: string, filename: string) {
+    let path = url + "/csv/" + filename + "/downloadRequest";
+
+    this.csvCollectionService.startDownload(path).subscribe(downloadUrl =>
+      window.location.href = downloadUrl['url']
+    );
+
+    this.messageService.add({ severity: 'success', summary: 'Download', detail: 'File ' + filename + ' downloaded!' });
+  }
+
+  showSingleCsvFile(csv: Csv): void {
+    this.csvCollectionService.getContent(csv)
+      .subscribe(async (response: HttpResponse<Blob>) => {
+        // get CSV file in form of byte[] from backend
+        let body: string = await response.body["text"]();
+
+        let content: string[][] = body.split('\n') // get each line of the CSV
+          .map(v => v.split(',')); // get each element of each line
+
+        let cols = content[0]; // first CSV line = columns
+        content.shift(); // remove first line of content
+
+        // popup
+        this.dialogService.open(CsvCollectionDetailModalComponent, {
+          header: "CSV file content",
+          position: "top",
+          width: "60vw",
+          data: { lines: content, cols: cols }
+        })
+      });
   }
 
   ngOnDestroy() {

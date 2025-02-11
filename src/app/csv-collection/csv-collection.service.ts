@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {Job} from '../job/job';
-import {CsvCollection, PaginatedCsvCollections} from './csv-collection';
-import {environment} from '../../environments/environment';
-import {DataService} from '../data-service';
-import {Csv, PaginatedCsv} from './csv';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { Job } from "../job/job";
+import { CsvCollection, PaginatedCsvCollections } from "./csv-collection";
+import { environment } from "../../environments/environment";
+import { DataService } from "../data-service";
+import { Csv, PaginatedCsv } from "./csv";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class CsvCollectionService implements DataService<CsvCollection, PaginatedCsvCollections> {
 
-  private csvCollectionUrl = environment.apiRootUrl + '/csvCollections';
+  private csvCollectionUrl = environment.apiRootUrl + "/csvCollections";
 
   constructor(private http: HttpClient) { }
 
@@ -23,39 +23,39 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
 
   get(params): Observable<PaginatedCsvCollections> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({ "Content-Type": "application/json" }),
       params: {}
     };
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
       const sort = params.sort ? params.sort : null;
-      const httpParams = new HttpParams().set('page', page).set('size', size).set('sort', sort);
+      const httpParams = new HttpParams().set("page", page).set("size", size).set("sort", sort);
       httpOptions.params = httpParams;
     }
     return this.http.get<any>(this.csvCollectionUrl, httpOptions).pipe(
       map((result: any) => {
-        result.data = result._embedded.csvCollections;
+        result.data = result._embedded === undefined ? null : result._embedded.csvCollections;
         return result;
       }));
   }
 
   getByNameContainingIgnoreCase(params, name): Observable<PaginatedCsvCollections> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({ "Content-Type": "application/json" }),
       params: {}
     };
-    let httpParams = new HttpParams().set('name', name);
+    let httpParams = new HttpParams().set("name", name);
     if (params) {
       const page = params.pageIndex ? params.pageIndex : null;
       const size = params.size ? params.size : null;
       const sort = params.sort ? params.sort : null;
-      httpParams = httpParams.set('page', page).set('size', size).set('sort', sort);
+      httpParams = httpParams.set("page", page).set("size", size).set("sort", sort);
     }
     httpOptions.params = httpParams;
-    return this.http.get<any>(this.csvCollectionUrl + '/search/findByNameContainingIgnoreCase', httpOptions).pipe(
+    return this.http.get<any>(this.csvCollectionUrl + "/search/findByNameContainingIgnoreCase", httpOptions).pipe(
       map((result: any) => {
-        result.data = result._embedded.csvCollections;
+        result.data = result._embedded === undefined ? null : result._embedded.csvCollections;
         return result;
       }));
   }
@@ -70,7 +70,7 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
 
   getCsvFiles(csvCollection: CsvCollection, params): Observable<PaginatedCsv> {
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({ "Content-Type": "application/json" }),
       params: {}
     };
     if (params) {
@@ -82,21 +82,21 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
     }
     return this.http.get<Csv>(`${this.csvCollectionUrl}/${csvCollection.id}/csv`, httpOptions).pipe(
       map((result: any) => {
-        result.data = result._embedded.csvs;
+        result.data = result._embedded === undefined ? null : result._embedded.csvs;
         return result;
       }));
   }
 
-    getCsvUrl(csvCollection: CsvCollection): string {
-      return `${this.csvCollectionUrl}/${csvCollection.id}/csv`;
+  getCsvUrl(csvCollection: CsvCollection): string {
+    return `${this.csvCollectionUrl}/${csvCollection.id}/csv`;
   }
 
   lockCsvCollection(csvCollection: CsvCollection): Observable<CsvCollection> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ "Content-Type": "application/json" }),
       params: {}
     };
-    return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, {locked: true}, httpOptions);
+    return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, { locked: true }, httpOptions);
   }
 
   deleteCsvCollection(csvCollection: CsvCollection) {
@@ -115,13 +115,17 @@ export class CsvCollectionService implements DataService<CsvCollection, Paginate
 
   makePublicCsvCollection(csvCollection: CsvCollection): Observable<CsvCollection> {
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      headers: new HttpHeaders({ "Content-Type": "application/json" }),
       params: {}
     };
-    return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, {publiclyShared: true}, httpOptions);
+    return this.http.patch<CsvCollection>(`${this.csvCollectionUrl}/${csvCollection.id}`, { publiclyShared: true }, httpOptions);
   }
 
   startDownload(url: string): Observable<string> {
     return this.http.get<string>(url);
+  }
+
+  getContent(csv: Csv): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${csv._links.self.href}/content`, { observe: "response", responseType: "blob" });
   }
 }
